@@ -1,0 +1,35 @@
+.progress .max { fill: #D8DCBF; }
+.progress .bar { fill: #2B6367; }
+
+.progress .label {
+    font-size:14px;
+    font-weight: normal;
+}
+
+.progress .text {
+    font-size:16px;
+    font-weight:bold; }
+
+#time-progress .percent {
+    font-size:16px;
+    font-weight:bold;
+    fill: #000; }
+
+.progress .percent {
+    font-size:16px;
+    font-weight:bold;
+    fill: #666666; }
+
+.axis line {
+	stroke: #D8DCBF;
+}
+
+.donut .arc path {
+	stroke: #fff;
+	stroke-width: 2px;
+}
+
+.legend-item {
+	border-bottom: solid 1px #C0C0C0;
+	background: #FFF;
+}

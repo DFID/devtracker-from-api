@@ -1,0 +1,38 @@
+---
+published: "true"
+title: Development Tracker
+
+---
+
+<%= partial "partials/projects-header", :locals => { :project => project, :active => "r4dDocs", :has_funded_projects => has_funded_projects} %>
+
+<div class="row">
+    <div class="twelve columns summary">    
+        <% r4dDocs = r4DApiDocFetch(project['iatiId']) || '' %>
+        <%if !r4dDocs.nil? && r4dDocs.length > 0 %>
+          <p>This project has supported the following research projects and/or publications</p>
+          <% r4dDocs.each do |s| %>
+            <a class="documentTitleLink" href="<%= s['link']%>"><%= s['title']%></a>
+            <br/>
+            <div class="documentContainer">
+              <ul class="legend-list">
+                <% (s['research_outputs']).each do |doc| %>
+                  <li>
+                    <div>
+                      <a href="<%= doc['link']%>"><%= doc['title']%></a>
+                      <span >(<%= Time.parse(doc['publication_date']).strftime("%Y")%>)</span>
+                    </div>                    
+                  </li>
+                <% end %>
+                <% total_count = getR4DDocsCountNotShowing(s['output_count'])%>                
+                <%if total_count > 0 %>
+                  <% link = getR4DSearchLink(s['object_id'])%>
+                  <a class="moreDocsLink" href="<%= link %>">..Find <%=total_count%> more publications on R4D</a>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        <% end %>
+        
+    </div>
+</div>

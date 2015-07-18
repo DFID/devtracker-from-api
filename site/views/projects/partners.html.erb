@@ -1,0 +1,56 @@
+---
+title: Development Tracker
+---
+
+<%= partial "partials/projects-header", :locals => { :project => project, :active => "partners", :has_funded_projects => true} %>
+<% if defined?(funding_project) then %>
+  <div class="row">
+      <div class="twelve columns results-info">
+        <h3 class="section-group-title">Funding Project</h3>
+        <div class="row">
+            <% if is_funded_by_dfid_project then %>
+              <div class="four columns summary">
+                  <h4>DFID</h4>     
+              </div>
+              <div class="eight columns">
+                  <ul>
+                      <li><a href="/projects/<%=funding_project['iatiId']%>"><%=funding_project['title']%></a><%=funding_project['description']%><span><%= number_to_currency(project['funds'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) %></span></li>
+                  </ul> 
+              </div>
+            <% else %>
+              <div class="four columns summary">
+                  <h4><%=funding_project['reporting']%></h4>         
+              </div>
+              <div class="eight columns">
+                  <ul>
+                      <li><a href="/projects/<%=funding_project['funded']%>"><%=funding_project['title']%></a><%=funding_project['description']%><span><%= number_to_currency(project['funds'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) %></span></li>
+                  </ul> 
+              </div>
+           <% end %>
+        </div>
+      </div>
+  </div>
+<% end %>
+<% if funded_projects.count > 0 then %> 
+  <div class="row">
+      <div class="twelve columns results-info">                 
+        <% if is_dfid_project(project['iatiId']) then %>
+          <h3 class="section-group-title">Partner Projects</h3>
+        <%else%>
+          <h3 class="section-group-title">Funded Projects</h3>
+        <%end%>
+        <% funded_projects.each do |funded_project| %>
+          <div class="row">
+              <div class="four columns summary">
+                  <h4><%=funded_project['reporting']%></h4>     
+              </div>
+              <div class="eight columns">
+                  <ul>
+                      <li><a href="/projects/<%=funded_project['funded']%>"><%=funded_project['title']%></a><%=funded_project['description']%><span><%= number_to_currency(funded_project['funds'], :unit=>currency_symbol(funded_project['currency']) || "£", :precision => 0) %></span></li>
+                  </ul> 
+              </div>
+          </div>
+        <% end %>
+      </div>
+  </div>
+<% end %>

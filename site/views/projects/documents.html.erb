@@ -1,0 +1,42 @@
+---
+published: "true"
+title: Development Tracker
+
+---
+
+<%= partial "partials/projects-header", :locals => { :project => project, :active => "documents", :has_funded_projects => has_funded_projects} %>
+
+<div class="row">
+    <div class="twelve columns summary">
+        <h2 class="visually-hidden">Documents</h2>
+        <p>DFID aim to be as transparent as possible however, in some cases, we are unable to show all the documents that are associated with a project, for example where there is a potential security risk. Documents for projects approved before January 2011 are not normally published.</p>
+
+        <table class="results-list">
+            <thead class="visually-hidden">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Doc Type</th>
+                    <th scope="col">Categories</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% documents.each do |document| %>
+                  <tr class="result-list-row">
+                      <th scope="row"><a href="<%=document['url']%>"><%= document['title'].gsub(/\.[^.]*$/, '') %></a></th>
+                      <td scope="col"><%= mime_type document['format'] %></td>
+                      <td scope="col">
+                        <% document['categories'].each do |category| %>
+                          <span class="category">
+                            <%=category%>
+                          </span>
+                        <% end %>
+                      </td>
+                  </tr>
+                <% end %>
+            </tbody>
+        </table>       
+        
+        
+        
+    </div>
+</div>

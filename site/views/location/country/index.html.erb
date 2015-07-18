@@ -1,0 +1,58 @@
+---
+title: Development Tracker
+---
+
+<%= partial "partials/location-title-bar" %>
+<%= partial "partials/location-tabs", :locals => { :active => "country" }  %>
+
+<!--[if lte IE 8]>
+    <div class="row">
+      <div class="disclaimer grey">
+          <p>The interactive map functionality is not supported by your browser.</p>
+      </div>
+    </div>
+<![endif]-->
+
+<!--[if lte IE 8]><div class="hide-interactive-map"><![endif]-->
+        <div class="row">
+            <div class="twelve columns map">
+                <script type="text/javascript">
+                    var countriesData = <%= dfid_country_projects_data %>;
+                </script>
+
+                <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+                <script src="/javascripts/leaflet/leaflet.js" type="text/javascript"></script>
+                <script src="/javascripts/leaflet/leaflet-googlemaps.js"></script>
+                <script src="/javascripts/leaflet/world.js" type="text/javascript"></script>
+                <link rel="stylesheet" href="/javascripts/leaflet/leaflet.css" />
+                <!--[if lte IE 8]><link rel="stylesheet" href="/javascripts/leaflet/leaflet.ie.css /><![endif]-->
+
+                <div id="map" role="presentation">
+                <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
+                  <img src="/images/country-map-legend.png" style="Map Legend"/>
+                  <h3>Total Project Budget for <%=current_financial_year%></h3>
+                </div>
+
+              </div>
+
+
+                <div class="disclaimer grey">
+                   <p><em>Disclaimer: </em>Country borders do not necessarily reflect the UK Government's official position.</p>
+                </div>
+                <script src="/javascripts/leaflet/indexmap.js" type="text/javascript"></script>
+            </div>
+        </div>
+<!--[if lte IE 8]></div><![endif]-->
+
+<div class="row">
+  <div class="twelve columns">
+    <h2 class="section-group-title">All Countries</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="twelve columns">
+    <% country_list.each do |country| %>
+      <a href="/countries/<%=country['code']%>"><%= country['name'] %></a> | 
+    <% end %>
+  </div>
+</div> 

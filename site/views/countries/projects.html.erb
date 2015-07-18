@@ -1,0 +1,26 @@
+---
+title: Development Tracker
+---
+
+<div id="page-title" class="row">
+    <div class="twelve columns">
+        <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
+        <div>
+            <div class="breadcrumb">
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/location/country/index.html">Aid by Location</a></li>
+                    <li><%= country['name'] %></li>
+                </ul>
+            </div>
+            <h1>
+                <img src="/images/flags/<%= country['code'].downcase%>.png" alt="Country Flag"><%= country['name'] %></small>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<%= partial "partials/countries-tabs", :locals => { :active => "projects", :country => country, :project_count => projects.size, :results_count => results.size } %>
+
+
+<%= partial "partials/project_list", :locals => { :projects => projects } %>

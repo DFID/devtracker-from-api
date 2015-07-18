@@ -1,0 +1,137 @@
+---
+title: Development Tracker
+---
+
+<div id="page-title" class="row">
+    <div class="twelve columns">
+        <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
+        <div>
+            <div class="breadcrumb">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li>Report Fraud</li>
+            </ul>
+        </div>
+            <h1>
+                Reporting fraud or corrupt practices
+            </h1>
+        </div>
+        
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelve columns summary">
+        <p>DFID’s Counter Fraud and Whistleblowing Unit (CFWU) is the central point for raising concerns and suspicions or allegations of fraud or corrupt practices. This includes both internal and external cases where DFID funds, assets or interests (including DFID’s reputation) are involved.</p>
+        <p>All suspicions of fraud or corruption must be reported. Please complete the form below giving as much detail as possible.</p>
+        <p>Alternatively any concerns can be reported by calling the <strong>confidential hotline</strong> on <strong>+44 (0) 1355 843747</strong> or in writing to the Head of Internal Audit, Abercrombie House, Eaglesham Road, East Kilbride, G75 8EA</p>
+    </div>
+</div>
+<div class="row">
+    <div class="nine columns">
+            <form id="fraud-report" name="fraud-report" action="/api/report/fraud" method="POST">
+              <fieldset>
+                <legend>Project Information <span>(mandatory)</span></legend>
+
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="country" class="inline">Country</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="country" name="country" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="project" class="inline">Project</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="project" name="project" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="description" class="inline">Description of concern</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <textarea id="description" name="description" class="eight" rows="10"></textarea>
+                    </div>
+                  </div>
+                  
+                <legend>Your contact details</legend>
+
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="name" class="inline">Name</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="name" name="name" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="email" class="inline">Email address</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="email" name="email" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="telno" class="inline">Telephone number</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="telno" name="telno" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="eight columns offset-by-four">
+                        <input type="submit" value="Send report" class="button"/>
+                    </div>
+                  </div>
+
+            </fieldset>
+          </form>
+      </div>
+    </div>
+
+<script type="text/javascript">
+  (function(global, undefined){
+    var MAX_LENGTH = 500;
+
+    function getParameterByName(name) {
+      
+      name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+      var results = regex.exec(window.location.search);
+      
+      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    $('#fraud-report').on('submit', function(){
+      var errors = []
+
+      if($('#country').val() == "" && $('#project').val() == "") {
+        errors.push("  - You must provide a country or project name!")
+      }
+
+      var description = $("#description").val();
+      if (description == "" || description.length > MAX_LENGTH) {
+        errors.push("  - You must provide a description that is less than or equal to 500 characters");
+      }
+
+      if (errors.length > 0) {
+        errors.unshift("Please ensure the following criteria is met before submitting your form:")
+        alert(errors.join("\n"));
+        return false;
+      } 
+
+      return true;
+    });
+
+    $("#country").val(getParameterByName("country"));
+    $("#project").val(getParameterByName("project"));
+    $("#description").val(getParameterByName("description"));
+  })(this)
+</script>

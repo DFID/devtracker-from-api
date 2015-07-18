@@ -1,0 +1,382 @@
+#countryMap img, object, embed { max-width: none; }
+#map.static-background svg { height: 100%; width: 100%;}
+#countryMap {
+    height : 480px;
+}
+#map {
+    width: 100%; 
+    height: 500px;
+}
+
+.static-background {
+    background-image: url(/images/map_transparent.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.truncate {
+    width: 200px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#feedback-banner {
+  background-color:#ADD8E6;position:relative;z-index:0;
+  border: 1px solid #a1acb2;
+  width:100%;
+  padding-top:20px;
+}
+
+.countryMap {
+    height : 380px;
+}
+
+.negative { }
+
+.leaflet-popup-tip-container { display: none; }
+
+div.progress { border: none;}
+
+.transactions-table th { font-weight: bold!important; }
+
+span.category { 
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #999999;
+  font-family: 'Helvetica Neue';
+}
+
+.leaflet-div-icon {
+    border: none!important;
+}
+
+.transactions-table td{
+  white-space: normal;
+}
+
+.marker.cluster {
+    background-image: url(/images/mapmarker.png);
+    font-family:"Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    height: 36px;
+    width: 18px;
+    border:none;
+    text-align:center;
+    font-size:1em;
+    line-height: 1.4em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.country-link, .region-link {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.location-button {
+  font-size: 1.6em;
+  margin-top: 30px;
+}
+
+.cookies ul {
+  margin-left:30px;
+}
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+  color: transparent!important;
+}
+
+.leaflet-popup-content-wrapper {
+  padding-right: 0px!important;
+}
+
+.location-popup {
+  min-width: 200px;
+  width:100%;
+}
+
+#countryMap .leaflet-popup-content{
+  width: 300px!important;
+}
+
+.location-popup .location-label {
+  font-weight: bold;
+}
+
+.location-popup .row {
+  margin-bottom:5px;
+}
+
+.location-popup.large {
+  max-height: 350px;
+  overflow-y:scroll;  
+}
+
+#disclaimer {
+  margin-bottom:15px;
+}
+
+
+#implementing-organisations ul
+{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;}
+
+.ie7 #map_container{
+    display: none;
+}
+
+.download-link {
+    padding-top:40px;
+    width:100%;
+    float:right;
+    text-align:right;
+}
+
+.sort-proj-sectors {
+    text-align: center;
+    margin: auto 0px;
+    width:25px;
+    height:25px;
+    border:none;
+    vertical-align: baseline;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    cursor:pointer;
+}
+
+.proj-filter-exp-collapse-sign{
+    width:20px;
+    height:20px;;
+    text-align: left;
+    vertical-align:top;
+    font-size:1.5em;
+    margin: 0px 2px 2px 2px;
+    border: none;
+    float:left;
+    cursor:pointer;
+}
+
+a.documentTitleLink{
+  font-size: 1.5em
+}
+
+ul.legend-list, ul.legend-list li{
+  border:none;
+}
+
+ul.legend-list li div span{
+  font-size:small; 
+  font-weight:bold; 
+  position:relative;
+}
+
+.documentContainer{
+  margin-top: 20px;
+}
+
+.moreDocsLink{
+  font-weight:bold; 
+  margin-left:1.5em;
+}
+
+.button-row {
+    padding-right: 40px;
+}
+
+.button-row span {
+  margin:0.5em 0em;
+}
+
+.button.inform {
+  background-color:#ffffff;
+  color:#000;
+  font-weight: bold;
+}
+.button.inform:hover {
+  background-color:#ffffff;
+  color:#000;
+}
+
+.envelope {
+  display:inline;
+  font-size:bigger;
+}
+
+/* CSS to control the information boxes */
+
+.more-info  {
+  display: none; 
+}
+
+.more-info-content {
+  background: #f8f8f8;
+ /*  top: 1em; */
+  position: absolute; 
+  margin: 8px 15px 0 0;
+  padding: 0.6em; 
+ /* right: 0; */
+  width: 80%;
+  z-index: 101;
+  list-style: none;
+  background: #f8f8f8;
+  border: 3px solid #097f96;
+  box-sizing: border-box;
+  zoom: 1;
+ /* font-size: 160%; */
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  font-family: "nta", Arial, sans-serif;
+}
+
+.more-info-container{
+  margin: 15px 0px 15px 0px; 
+}
+
+.more-info-title
+{
+  font-size: 27px;
+  font-weight: bold;  
+}
+
+.more-info-link{
+  cursor:pointer;
+}
+
+.move-up-4{
+  margin-top:-4px;
+}
+
+.move-down-4{
+  margin-top: 4px;
+}
+
+.more-info-link-spacer{
+  margin-left: 10px;
+}
+
+.float-right{
+  float:right;   
+}
+
+.float-left{
+  float:left;   
+}
+
+/*More Information CSS for landing page*/
+
+.top-five-header{
+    margin-bottom: 14px;
+    width:100%;    
+}
+
+.top-five-title{
+  font-size: 23px;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-style: normal;
+  color: #222222;
+  text-rendering: optimizeLegibility;
+  line-height: 1.1;
+  -webkit-margin-after: 1.33em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*More Information CSS for Project Page*/
+
+.project-country-title{
+  float:left;
+  font-size: 1.25em;
+  margin-bottom: 20px;
+}
+
+.move-message-box{
+  margin-top:-35px;
+  margin-right:90px;
+}
+
+.more-info-limit-size{
+  width: 320px;
+  margin-right: 689px;
+}
+
+/*More Information CSS for Country Page*/
+
+.country-info{
+  font-size: 27px;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizeLegibility;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  margin-top: 
+}
+
+/*More Information CSS for Transactions Page*/
+
+.trans-header-container{
+  float:left;
+  width:100%;
+  margin-bottom:14px;
+}
+
+.trans-header-left{
+  float:left; 
+  width:70%;
+  margin-bottom:5px;
+}
+
+.trans-header-right{
+  float:left; 
+  width:30%;
+  margin-bottom:5px;
+}
+
+.trans-type-title{
+  font-size: 27px;
+  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizelegibility;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  margin-top: 14px;
+}
+
+.trans-type-value{
+  font-size: 27px;
+  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizelegibility;
+  line-height: 1.1;
+  margin-top: 24px;
+}
+
+
+.trans-more-info-box-limiter{
+  width: 320px;
+  margin-right: 689px;
+  margin-top: 5px;
+}
+

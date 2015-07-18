@@ -1,0 +1,242 @@
+---
+title: Development Tracker
+---
+
+<%= partial "partials/projects-header", :locals => { :project => project, :active => "summary", :has_funded_projects => has_funded_projects} %>
+
+<div class="row">
+    <div class="twelve columns">
+        <% if(non_dfid_data) %>
+        <div id="disclaimer" class="disclaimer grey">
+            <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['organisation'] || "" %>. Please contact them if you have any questions about their data.</p>
+        </div>
+        <% end %>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="twelve columns summary">
+        <p class="project-description"><%= project['description'] %></p>
+
+    <%if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
+        <div class="project-country-title"> 
+          <strong>Benefitting country/region</strong>: <%= project['allRecipients'].join(", ") %>
+          
+           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
+           <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content more-info-limit-size">
+                        The country/countries/regions that have been identified as having project funds spent in it.
+                    </div>
+            </aside>
+        </div>  
+    <%end%>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="six columns">
+         <div class="more-info-container">  
+            <span class="more-info-title">Funding</span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
+            <aside id="moreinfo2" class="more-info">            
+                    <div class="more-info-content">
+                        Project budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
+                    </div>
+            </aside>
+         </div> 
+
+
+
+        <div id="funding-progress" style="height: 150px;" class="progress"></div>
+
+        <!--[if lte IE 8]>
+           <div>
+                <p><strong>Budget spend to date:</strong> <%= number_to_currency(project['totalProjectSpend'], :unit=>"£", :precision => 0) || 0.00 %></p>
+                <p><strong>Project budget:</strong> <%= number_to_currency(project['totalBudget'], :unit=>"£", :precision => 0) || 0.00 %> </p>
+           </div>
+        <![endif]-->
+        
+        <div class="more-info-container">  
+            <span class="more-info-title">Status - <%= activity_status(project['status']) %></span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        The current stage of the project, consistent with the International Aid Transparency Initiative's (IATI) classifications.
+                    </div>
+            </aside>
+        </div> 
+
+
+        <div id="time-progress" style="height: 150px;" class="progress"></div>
+
+        <!--[if lte IE 8]>
+            <div>
+                 <p><strong>Start Date:</strong> <%= format_date(choose_better_date(project['start-actual'], project['start-planned'])) %></p>
+                 <p><strong>End Date:</strong> <%= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
+            </div>
+        <![endif]-->
+
+        <% if (!project['implementingOrgs'].nil? && !project['implementingOrgs'].empty?)  %>
+
+            <div class="more-info-container">  
+                <span class="more-info-title">Implementing Organisation(s)</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
+                <aside id="moreinfo4" class="more-info">            
+                        <div class="more-info-content">
+                            Mapped from the Development Assistance Committee's (DAC) list for 'channel of delivery' codes and names - used by donors to report on their aid flows. 
+                        </div>
+                </aside>
+            </div>
+
+            <div id="implementing-organisations">
+                <ul>
+                    <% project['implementingOrgs'].each do |implementingOrgs| %>
+                    <li>
+                       <%= implementingOrgs %>
+                    </li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+    </div>
+
+
+    <div class="six columns" role="presentation">
+        <div id="countryMap" class="countryMap"></div>
+
+        <input type="hidden" id="countryName" value="<%= country_name(project['recipient']) %>">
+        <input type="hidden" id="countryCode" value="<%= project['recipient'] %>">
+        <input type="hidden" id="projectType" value="<%= project['projectType'] %>">
+       
+        
+        <script src="/javascripts/regionBounds.js" type="text/javascript"></script>
+        <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">
+        <script src="/javascripts/leaflet/leaflet.js"></script>
+        <script src="/javascripts/leaflet/leaflet-googlemaps.js"></script>
+        <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
+        <script type="text/javascript">
+            var mapType = "project";
+            var locations = <%=locations.to_json%>
+        </script>
+        <script src="/javascripts/countrymap.js" type="text/javascript"></script>
+
+        <div id="countryMapDisclaimer" class="disclaimer grey">
+            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="six columns">
+        <div class="more-info-container">  
+                <span class="more-info-title">Sector groups as a percentage of project budget</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5"><img src="/images/icon-information.png" alt="More information about project sector groups" class="more-info-link-middle"/></a>
+                <aside id="moreinfo5" class="more-info">            
+                        <div class="more-info-content">
+                            A project can have up to 8 sectors, which are displayed with percentage allocations that total up to 100%.  They are consistent with the Development Assistance Committee's (DAC) classifications.
+                        </div>
+                </aside>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <div id="sector-breakdown" class="donut"></div>
+            </div>
+            <div class="six columns">
+                <div id="sector-legend">
+                    <ul class="legend-list">
+                        <% (project_sector_groups(project['iatiId']) || []).each do |sector| %>
+                            <li><span class="theme-1 legend-color"></span>
+                                <div title="<%=sector[:sector] || "Other"%>" class='truncate'><%=sector[:sector]%></div>
+                                <em><%= sector[:formatted] %></em>
+                            </li>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+        <div class="more-info-container">  
+                <span class="more-info-title">Project budget vs actual spend</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink6" target="6"><img src="/images/icon-information.png" alt="More information about project budget vs actual spend" class="more-info-link-middle"/></a>
+                <aside id="moreinfo6" class="more-info">            
+                        <div class="more-info-content">
+                           A comparison of forecast spend and the total amount of money spent on the project to date.  Some budgets may not be shown if projects are in an active procurement phase.
+                        </div>
+                </aside>
+        </div>
+        <div id="budget-plan-spend-legend">
+            <div class="row">
+                <div class="six columns">
+                    <ul class="legend-list">
+                        <li><span class="theme-6 legend-color"></span>
+                            <div >Budget</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="six columns">
+                    <ul class="legend-list">
+                        <li><span class="theme-1 legend-color" style='background-color:#2B6367'></span>
+                            <div >Spend</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
+    </div>
+
+
+
+    <script type="text/javascript" src="/javascripts/donut.js"></script>
+    <script type="text/javascript" src="/javascripts/progress.js"></script>
+    <script type="text/javascript" src="/javascripts/bar.js"></script>
+
+    <script type="text/javascript">
+        (function(){
+            var sectors = <%= project_sector_groups(project['iatiId']).to_json %>;
+            charts.donut("#sector-breakdown", sectors, function(d) { return d.budget; }, function(d){ return d.sector }, function(d){ return d.formatted });
+            charts.donutLegend("#sector-legend", ".legend-color", 14, sectors, function(d){ return d.sector });
+
+            var funding = [ {label: "", text: "", value: 0},
+                            {label: "Budget spend to date", text: "<%= number_to_currency(project['totalProjectSpend'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) || 0.00 %>", value: <%= (project['totalProjectSpend'] || 0.00) %>},
+                            {label: "Project budget", text: "<%= number_to_currency(project['totalBudget'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) || 0.00 %>", value: <%= (project['totalBudget'] || 0.00) %>}]
+            charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
+
+            var time = [ {label: "Start",
+                          text: "<%= format_date(choose_better_date(project['start-actual'], project['start-planned'])) %>",
+                          value: <%= choose_better_date(project['start-actual'], project['start-planned']) %>},
+                         {label: "Progress by time",
+                          text: "",
+                          value: new Date().getTime()},
+                         {label: "End",
+                          text: "<%= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %>",
+                          value: <%= choose_better_date(project['end-actual'],   project['end-planned']) %>}];
+            charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
+
+            var budgets = <%= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
+            charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
+        })()
+    </script>
+
+
+</div>
+
+    <div class="row">
+        <div class="twelve columns download-link">
+            <p>Download IATI Data for <%= project['iatiId']%>: <a href="/api/access/activities/<%=project['iatiId'] %>" class="api-link button">JSON</a></p>
+            <%if !project['lastUpdatedDateTime'].nil?%>
+                <p>Project data last updated on <%= project['lastUpdatedDateTime'].strftime("%d/%m/%Y")%></p>
+            <% end %>
+        </div>
+    </div>

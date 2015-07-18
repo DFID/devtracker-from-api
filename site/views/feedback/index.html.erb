@@ -1,0 +1,96 @@
+---
+published: "true"
+title: Development Tracker
+
+---
+
+<div id="page-title" class="row">
+    <div class="twelve columns">
+        <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
+        <div>
+            <div class="breadcrumb">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li>Provide Feedback</li>
+            </ul>
+        </div>
+            <h1>
+                Feedback
+            </h1>
+        </div>
+        
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelve columns summary">
+        <p>
+          We value your feedback. This will help us understand what is important to you and shape future development
+        </p>
+        <p>
+          You can give us your feedback in one of two ways
+          <ol>
+          <li>By emailing us at <a href="mailto:devtracker-feedback@dfid.gov.uk?Subject=Feedback">devtracker-feedback@dfid.gov.uk</a></li>
+            <li>By completing the form below </li></ol>
+        <p>
+    </div>
+</div>
+<div class="row">
+    <div class="nine columns">
+            <form id="feedback-form" name="feedback-form" action="/api/report/feedback" method="POST">
+              <fieldset>
+                <legend>Details</legend>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="name" class="inline">Name</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="name" name="name" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="email" class="inline">Email Address</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <input type="text" id="email" name="email" class="eight" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="four mobile-one columns">
+                      <label for="description" class="inline">Description</label>
+                    </div>
+                    <div class="eight mobile-three columns">
+                      <textarea id="description" name="description" class="eight" rows="10"></textarea>
+                    </div>
+                  </div>
+                   <div class="row">
+                    <div class="eight columns offset-by-four">
+                        <input type="submit" value="Send report" class="button"/>
+                    </div>
+                  </div>
+                
+            </fieldset>
+          </form>
+      </div>
+    </div>
+
+
+  <script type="text/javascript"> 
+
+    $('#feedback-form').on('submit', function(){
+      var errors = []
+
+      if ($("#name").val() == "")        errors.push("  - Please provide your name");
+      if ($("#email").val() == "")       errors.push("  - Please provide your email address");
+      if ($("#description").val() == "") errors.push("  - Please provide some feedback");
+
+      if (errors.length > 0) {
+        errors.unshift("Please ensure the following criteria is met before submitting your form:")
+        alert(errors.join("\n"));
+        return false;
+      } 
+
+      return true;
+    });
+  </script>

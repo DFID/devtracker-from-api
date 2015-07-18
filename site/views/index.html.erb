@@ -1,0 +1,140 @@
+<!-- ---
+published: "true"
+title: Development Tracker
+layout: landing
+
+--- -->
+
+<div class="row">
+    <div class="ten columns">
+        <h3 style="font-size: 2em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
+    </div>
+    <div class="two columns" style="text-align:right;">
+        <img style="margin-top:20px;" src="/images/ukaid_logo.png" alt="UK aid from the British people">
+    </div>
+</div>
+<div class="row">
+    <div class="twelve columns">
+        <div id="search-bar">
+            <form action="/search" method="GET">
+                <div class="row">
+                    <div class="three columns">
+                        <label for="query">
+                            <h3 style="line-height:2em;">Search Projects</h3>
+                        </label>
+                    </div>
+                    <div class="six columns">
+                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
+                    </div>
+                    <div class="three columns">
+                        <input type="submit" value="Search" class="button">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<nav>
+    <div class="row" id="nav-entry">
+        <div class="six columns col">
+            <p>
+                <a href="/location/country" class="by-location">
+                    <span class="image-wrapper">
+                        <img src="/images/by-location.gif" alt="Aid by Location">
+                    </span>
+                    <span class="link-wrapper"><small>Explore aid by</small> Location</span>
+                </a>
+            </p>
+        </div>
+        <div class="six columns col">
+            <p>
+                <a href="/sector" class="by-sector">
+                    <span class="image-wrapper">
+                        <img src="/images/by-sector.gif" alt="Aid by Sector">
+                    </span>
+                    <span class="link-wrapper"><small>Explore aid by</small> Sector</span>
+                </a>
+            </p>
+
+        </div>
+    </div>
+</nav>
+
+
+<div class="row">
+    <div class="twelve columns">
+        <h3 class="section-group-title">UK AID TOP 5s</h3>
+    </div>
+</div>
+
+<div class="row top-5s">
+    <div class="four columns" id="top-5-countries">
+        <div class="top-five-header">        
+            <span class="top-five-title">Top 5 places we work</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
+            <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                        The countries where the most money has been identified as being
+                         spent solely in that country. 
+                    </div>
+            </aside>
+        </div>
+        <ol>
+        <% top_5_countries.each do |country| %>
+          <li>
+              <a href="/countries/<%= country['code'] %>" class="truncate" title="<%= country['name'] %>"> <%= country['name'] %> </a>
+              <em><span class="visually-hidden">Budget</span><%= format_billion_stg country['totalBudget'] %></em>
+          </li>
+        <% end %>
+        </ol>
+        <p>Project budgets for each country [<%= financial_year_formatter DateTime.now %>]</p>
+    </div>
+
+    <div class="four columns" id="top-5-sectors">
+        <%if !what_we_do.nil?  %>
+            <div class="top-five-header">        
+            <span class="top-five-title">Top 5 things we do</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 5 things we do"/></a>
+            <aside id="moreinfo2" class="more-info">            
+                    <div class="more-info-content">
+                        The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
+                     </div>
+            </aside>
+            <ol>
+                <% what_we_do.each do |sector| %>
+                    <li>
+                        <a href="/sector/<%=sector['code']%>"><%=sector['name']%></a>
+                        <em>&pound;<%=format_round_m sector['budget'] || 0.0 %></em>
+                    </li>
+                <% end %>
+            </ol>
+        </div>
+        <%end%>
+        <p>Project budgets for each sector [<%= financial_year_formatter DateTime.now %>]</p>
+    </div>
+
+    <div class="four columns" id="top-5-achiee">
+        <%if !what_we_achieve.nil?  %>
+        <div class="top-five-header">        
+            <span class="top-five-title">Top 5 things we achieve</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        A headline summary of DFID results from financial year 13/14.
+                    </div>
+            </aside>
+        </div>
+        <ol>
+          <% what_we_achieve.each do |entry| %>
+          <li>
+            <%= entry['title'] %>
+            <em><span class="visually-hidden">Achieved</span><%= entry['value'] %></em>
+          </li>
+          <% end %>
+        </ol>
+        <%end%>
+        <p>Results achieved (up to 2013/14 inclusive) from <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/331591/annual-report-accounts-2013-14a.pdf">DFID Annual Report 2013-14</a></p>
+    </div>
+
+</div>

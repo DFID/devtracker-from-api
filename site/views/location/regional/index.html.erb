@@ -1,0 +1,61 @@
+---
+title: Development Tracker
+---
+
+<%= partial "partials/location-title-bar" %>
+<%= partial "partials/location-tabs", :locals => { :active => "regional" } %>
+
+<div class="row">
+    <div class="twelve columns map">
+        <div id="map" class="static-background"></div>
+
+	    <div class="disclaimer grey">    
+	        <p><em>Disclaimer: </em>Country borders do not necessarily reflect the UK Government's official position.</p>
+	    </div>
+
+	    <script src="/javascripts/circlegraph.js" type="text/javascript"></script>
+	    <script type="text/javascript">
+	    	var projectsData = <%= dfid_regional_projects_data %>;
+	    	var regionsData = {
+	    		totalSpend : <%= dfid_total_projects_budget 'regional' %>,
+	    		regionalProjects : projectsData.filter(function(p) {
+	    			return p.budget > 0;
+	    		})
+	    	}
+
+	        var labels = {
+	            header : 'Total regional budget ' + '<%= current_financial_year %>',
+	            amount : '\u00A3' + '<%= format_million_stg dfid_total_projects_budget 'regional' %>'.replace('&pound;', '')
+	        }
+
+	       	var container = $('#map');
+	        var graph = new CircleGraph(container);
+	        graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+
+	        $(window).resize(function() {
+	        	if (container.width != graph.width) {
+	        		graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+	        	}	        	
+	        });
+	    </script>    
+    </div>
+</div>
+
+<div class="row">
+  <div class="twelve columns">
+  	<a class="button location-button" href="/regions" style="width:100%;">View All Regional Projects</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="twelve columns">
+    <h2 class="section-group-title">All Regions</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="twelve columns">
+  	<% region_list.each do |region| %>
+      <a href="/regions/<%=region['code']%>/projects"><%= region['name'] %></a> | 
+    <% end %>
+  </div>
+</div>
