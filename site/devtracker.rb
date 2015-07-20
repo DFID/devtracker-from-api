@@ -7,8 +7,8 @@ require 'json'
 require 'rest-client'
 #require 'sinatra-partial'
 #require 'money'
-require 'active_support'
-require 'strftime'
+#require 'active_support'
+#require 'strftime'
 
 #helpers
 require_relative 'helpers/formatters.rb'
@@ -18,8 +18,6 @@ require_relative 'helpers/lookups.rb'
 require_relative 'helpers/project_helpers.rb'
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
-
-#set :partial_template_engine, :erb
 
 #####################################################################
 #  HOME PAGE

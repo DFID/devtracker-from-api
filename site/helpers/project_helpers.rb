@@ -119,10 +119,12 @@ module ProjectHelpers
     def choose_better_date(actual, planned)
         # determines project actual start/end date - use actual date, planned date as a fallback
         unless actual.nil? || actual == ''
+            actual = Time.parse(actual)
             return (Time.at(actual).to_f * 1000.0).to_i
         end
 
         unless planned.nil? || planned == ''
+            planned = Time.parse(planned)
             return (Time.at(planned).to_f * 1000.0).to_i
         end
 

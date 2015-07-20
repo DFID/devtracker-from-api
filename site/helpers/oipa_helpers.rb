@@ -8,7 +8,7 @@ module OipaHelpers
   end
 
   def non_dfid_data(projectCode)
-    projectCode == "GB-1"
+    !projectCode[0, 4] == "GB-1"
   end
 
   def activityUrlOipa(projectCode,format)
