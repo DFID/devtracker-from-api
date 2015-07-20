@@ -5,10 +5,7 @@
 require 'sinatra'
 require 'json'
 require 'rest-client'
-#require 'sinatra-partial'
-#require 'money'
-#require 'active_support'
-#require 'strftime'
+require 'active_support'
 
 #helpers
 require_relative 'helpers/formatters.rb'
@@ -17,6 +14,7 @@ require_relative 'helpers/codelists.rb'
 require_relative 'helpers/lookups.rb'
 require_relative 'helpers/project_helpers.rb'
 
+#ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 #####################################################################
@@ -24,6 +22,7 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 #####################################################################
 
 get '/' do  #homepage
+	#read static data from JSON files for the front page
 	top5countries = JSON.parse(File.read('data/top5countries.json'))
 	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
@@ -90,10 +89,35 @@ get '/projects/:proj_id/transactions/?' do |n|
 	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
+	# get the transactions from the API
+	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
+  	tx = JSON.parse(oipa_tx)
+  	transactions = tx['results']
+
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
- 			project: project
+			project: project,
+ 			transactions: transactions
+ 		}
+end
+
+#Project transactions page (test)
+get '/projects/:proj_id/txtest/?' do |n|
+	# get the project data from the API
+	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+  	project = JSON.parse(oipa)
+
+	# get the transactions from the API
+	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
+  	tx = JSON.parse(oipa_tx)
+  	transactions = tx['results']
+
+	erb :'projects/testtx', 
+		:layout => :'layouts/layout',
+		:locals => {
+			project: project,
+ 			transactions: transactions
  		}
 end
 
