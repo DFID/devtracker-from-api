@@ -1,5 +1,5 @@
 #require "kramdown"
-#require 'uri'
+require 'uri'
 
 
 module Formatters
@@ -46,9 +46,9 @@ module Formatters
     "%.2f" % v + "%"
   end
 
-  # def format_query_string(s)
-  #   URI.escape(s)
-  # end
+  def format_query_string(s)
+     URI.escape(s)
+  end
 
   def financial_year_formatter(d)
 

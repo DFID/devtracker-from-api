@@ -1,5 +1,5 @@
-require "helpers/codelists"
-require "helpers/lookups"
+#require "helpers/codelists"
+#require "helpers/lookups"
 
 module ProjectHelpers
 
@@ -145,62 +145,62 @@ module ProjectHelpers
     end
 
     def project_budget_per_fy(projectId)
-        # project all budgets into a suitable format
-        budgets = coerce_budget_vs_spend_items(
-            @cms_db['project-budgets'].find(
-                { "id" => projectId }, :sort => ['date', Mongo::DESCENDING]
-            ), "budget"
-        )
+        # # project all budgets into a suitable format
+        # budgets = coerce_budget_vs_spend_items(
+        #     @cms_db['project-budgets'].find(
+        #         { "id" => projectId }, :sort => ['date', Mongo::DESCENDING]
+        #     ), "budget"
+        # )
 
-        # project all spends into a suitable format
-        spends = coerce_budget_vs_spend_items(
-            @cms_db['transactions'].find({
-                "project" => projectId,
-                'type'    => {
-                    '$in' => ['D', 'E']
-                }
-            }), "spend"
-        )
+        # # project all spends into a suitable format
+        # spends = coerce_budget_vs_spend_items(
+        #     @cms_db['transactions'].find({
+        #         "project" => projectId,
+        #         'type'    => {
+        #             '$in' => ['D', 'E']
+        #         }
+        #     }), "spend"
+        # )
 
-        # merge the series and sort by financial year
-        series = (spends + budgets).group_by { |item|
-            item['fy']
-        }.map { |fy, items|
-            # So we coerce this into a partially projected list of pairs
-            [
-                fy,
-                (items.find { |b| b['type'] == 'budget' } || {'value' => 0})['value'],
-                (items.find { |b| b['type'] == 'spend' } || {'value' => 0})['value']
-            ]
-        }.sort_by { |item| item.first }
+        # # merge the series and sort by financial year
+        # series = (spends + budgets).group_by { |item|
+        #     item['fy']
+        # }.map { |fy, items|
+        #     # So we coerce this into a partially projected list of pairs
+        #     [
+        #         fy,
+        #         (items.find { |b| b['type'] == 'budget' } || {'value' => 0})['value'],
+        #         (items.find { |b| b['type'] == 'spend' } || {'value' => 0})['value']
+        #     ]
+        # }.sort_by { |item| item.first }
 
-        # determine what range to show
-        current_financial_year = first_day_of_financial_year(DateTime.now)
+        # # determine what range to show
+        # current_financial_year = first_day_of_financial_year(DateTime.now)
 
-        # if range is 6 or less just show it
-        range = if series.size < 7 then
-          series
-        # if the last item in the list is less than or equal to 
-        # the current financial year get the last 6
-        elsif series.last.first <= current_financial_year
-          series.last(6)
-        # other wise show current FY - 3 years and cuurent FY + 3 years
-        else
-          index_of_now = series.index { |i| i[0] == current_financial_year }
+        # # if range is 6 or less just show it
+        # range = if series.size < 7 then
+        #   series
+        # # if the last item in the list is less than or equal to 
+        # # the current financial year get the last 6
+        # elsif series.last.first <= current_financial_year
+        #   series.last(6)
+        # # other wise show current FY - 3 years and cuurent FY + 3 years
+        # else
+        #   index_of_now = series.index { |i| i[0] == current_financial_year }
 
-          if index_of_now.nil? then
-            series.last(6)
-          else
-            series[[index_of_now-3,0].max..index_of_now+2]
-          end
-        end
+        #   if index_of_now.nil? then
+        #     series.last(6)
+        #   else
+        #     series[[index_of_now-3,0].max..index_of_now+2]
+        #   end
+        # end
 
-        # finally convert the range into a label format
-        range.each { |item| 
-          item[0] = financial_year_formatter(item[0]) 
-        }
+        # # finally convert the range into a label format
+        # range.each { |item| 
+        #   item[0] = financial_year_formatter(item[0]) 
+        # }
 
-        range
+        # range
     end
 
     def total_project_budget(projectId)
@@ -303,3 +303,5 @@ private
     end
 
 end
+
+helpers ProjectHelpers

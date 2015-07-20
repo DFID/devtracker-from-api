@@ -4,7 +4,7 @@ title: Development Tracker
 
 ---
 
-<%= partial "partials/projects-header", :locals => { :project => project, :active => "documents", :has_funded_projects => has_funded_projects} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "documents"} %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -20,14 +20,18 @@ title: Development Tracker
                 </tr>
             </thead>
             <tbody>
-                <% documents.each do |document| %>
+                <% 
+
+                project['document_links'].each do |document| %>
                   <tr class="result-list-row">
-                      <th scope="row"><a href="<%=document['url']%>"><%= document['title'].gsub(/\.[^.]*$/, '') %></a></th>
-                      <td scope="col"><%= mime_type document['format'] %></td>
+                      <th scope="row"><a href="<%=document['url']%>"><%= document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
                       <td scope="col">
-                        <% document['categories'].each do |category| %>
+                        <%=document['format']%>
+                      </td>
+                      <td scope="col">
+                        <% document['category'].each do |category| %>
                           <span class="category">
-                            <%=category%>
+                            <%=document_category category[1]%>
                           </span>
                         <% end %>
                       </td>

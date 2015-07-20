@@ -5,15 +5,15 @@
             <div class="breadcrumb">
                 <ul>
                     <li><a href="/index.html">Home</a></li>
-                    <li><a href="/countries/<%= project['recipient']%>/index.html"><%= associated_country project['recipient'] || "" %></a></li>
-                    <li title="<%= project['title'] %>"><%= project['title'] %></li>
+                    <li><a href="/countries/<%= project['recipient_countries']%>/index.html"><%= project['recipient_countries'] || "" %></a></li>
+                    <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
                 </ul>
             </div>
             <h1>
-                <%= project['title'] %> <small>[<%= project['iatiId'] %>]</small>
+                <%= project['title']['narratives'][0]['text'] %> <small>[<%= project['iati_identifier'] %>]</small>
             </h1>
             <div>
-                <%= project['organisation'] || "Department for International Development" %>
+                <%= project['reporting_organisation']['organisation']['name']['narratives'][0]['text'] || "Department for International Development TEST" %>
             </div>
         </div>
     </div>
@@ -25,24 +25,20 @@
             <div class="row">
                 <div class="button-row">
                     <span>
-                        <% projectTitle = project['title'] + " [" + project['iatiId'] + "]"%>
+                        <% projectTitle = project['title']['narratives'][0]['text'] + " [" + project['iati_identifier'] + "]"%>
                         <a href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
                     </span>
                 </div>
                 <div class="projects-nav">
                     <nav>
                         <ul class="tab-bar">
-                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/projects/<%=project['iatiId']%>">Summary</a></li>
-                            <li <%= active=="documents" ? "class='active'" : ""%>><a href="/projects/<%=project['iatiId']%>/documents">Documents (<%= project_documents project['iatiId'] %>)</a></li>
-                            <li <%= active=="transactions" ? "class='active'" : ""%>><a href="/projects/<%=project['iatiId']%>/transactions">Transactions</a></li>
-                            <% if has_funded_projects then %>
-                                <li <%= active=="partners" ? "class='active'" : ""%>><a href="/projects/<%=project['iatiId']%>/partners">Partners</a></li>
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>">Summary</a></li>
+                            <li <%= active=="documents" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                            <li <%= active=="transactions" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/transactions">Transactions</a></li>
+                            <% if has_funded_projects(project['iati_identifier']) then %>
+                                <li <%= active=="partners" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/partners">Partners</a></li>
                             <% end %>
-                            <% r4dDocs = r4DApiDocFetch(project['iatiId']) || '' %>
-                            <%if !r4dDocs.nil? && r4dDocs.length > 0 %>
-                                <li <%= active=="r4dDocs" ? "class='active'" : ""%>><a href="/projects/<%=project['iatiId']%>/r4dDocs">Research (<%= r4dDocs.length %>)</a></li>
-                            <% end %>
-
+                            <!-- TODO: bring back in r4dDocs element -->
                         </ul>
                     </nav>
                 </div>          

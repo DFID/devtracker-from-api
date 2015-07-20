@@ -1,5 +1,25 @@
 module CodeLists
 
+  @@countries = {
+    "PK"  => "Pakistan",
+    "AF"  => "Afghanistan"
+  }
+
+  @@document_categories = {
+    "A01" => "Pre- and post-project impact appraisal",
+    "A02" => "Objectives / Purpose of activity",
+    "A03" => "Intended ultimate beneficiaries",
+    "A04" => "Conditions",
+    "A05" => "Budget",
+    "A06" => "Summary information about contract",
+    "A07" => "Review of project performance and evaluation",
+    "A08" => "Results, outcomes and outputs",
+    "A09" => "Memorandum of understanding (If agreed by all parties)",
+    "A10" => "Tender",
+    "A11" => "Contract",
+    "A12" => "Activity web page"
+  }
+
   @@location_type = {
     "ADM1"  => "first-order administrative division",
     "ADM2"  => "second-order administrative division",
@@ -44,7 +64,7 @@ module CodeLists
     "CG" => "Credit Guarantee"  
   }
 
-  @@mime_types = {
+  @@iati_mime_types = {
     "application/msword" => "Word Document",
     "application/vnd.ms-excel" => "Excel Spreadsheet",
     "application/octet-stream" => "Binary file",
@@ -277,7 +297,7 @@ module CodeLists
     @@activity_statuses[code]
   end
 
-  def mime_type(code)
+  def iati_mime_type(code)
     @@mime_types[code]
   end
 
@@ -301,7 +321,17 @@ module CodeLists
     @@global_recipients
   end
 
+  def country_name(code)
+    @@countries[code]
+  end
+
+  def document_category(code)
+    @@document_categories[code]
+  end
+
   module_function :location_type
   module_function :geographical_precision
 
 end
+
+helpers CodeLists
