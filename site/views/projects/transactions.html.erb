@@ -1,107 +1,17 @@
----
+<!-- ---
 title: Development Tracker
----
+--- -->
 
- <%= erb "partials/projects-header", :locals => { :project => project, :active => "transactions"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "transactions"} %>
 
-<%# ------------------------------------------------------------------------ %>
-<%#                       B U D G E T S   T A B L E                          %>
-<%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-
-    <div class="section-group-title trans-header-container">
-      <div class="trans-header-left">
-        <span class="trans-type-title">Budget</span>
-        <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-           <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
-        </a> 
-        <aside id="moreinfo1" class="more-info">  
-              <div class="more-info-content trans-more-info-box-limiter">
-                The total amount of money available to spend.  Some budgets may not be shown if projects are in an active procurement phase.
-              </div>
-        </aside>   
-        <p style="margin-bottom:2px;">(Current approved budget)</p>
-       </div>  
-
-       <div class="trans-header-right">
-         <div class="<%= (total_project_budget project['iatiId']) < 0 ? 'negative' : ''%> float-right trans-type-value">
-           <%= number_to_currency((total_project_budget project['iatiId']), :unit=> currency_symbol(project['currency']) || "£", :precision =>0) %>
-         </div>
-       </div>        
-    </div>
-    <table class="transactions-table" style="width:100%">
-      <tbody>
-        <tr>
-          <th>Financial Year</th>
-          <th>Value</th>
-        </tr>
-        <% (project_budgets project['iatiId']).each do |project_budget| %>
-          <tr>
-            <td><%= project_budget[0] %></td>
-            <td><span class="<%= project_budget[1] < 0 ? 'negative' : ''%>"><%= number_to_currency(project_budget[1], :unit=> currency_symbol(project['currency']) || "£", :precision => 0) %></span></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<%# ------------------------------------------------------------------------ %>
-<%#                 I N C O M I N G   F U N D S   T A B L E                  %>
-<%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-    <% transaction_groups.select {|group| group['_id'] == 'IF' }.each do |transaction_group| %>
-      <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Incoming Funds</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
-               <img src="/images/icon-information.png" alt="More information about Incoming Funds" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfo2" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                   Funds that originate from a source other than the donor(s) reported in the activity.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;">(Funds received from an external funding source)</p>
-           </div>  
-
-           <div class="trans-header-right">
-             <div class="<%= transaction_group["total"] < 0 ? 'negative' : ''%> float-right trans-type-value"><%= number_to_currency(transaction_group["total"], :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%></div>
-           </div>        
-        </div>
-
-
-
-      <table class="transactions-table" style="width:100%">
-        <tbody>
-          <tr>
-            <th>Description</th>
-            <th width="30%">Provider</th>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
-          </tr>
-          <% transaction_group['transactions'].sort_by { | tx | -tx['date'].to_i }.each do |transaction| %>
-            <tr>
-              <td><%= transaction['description'] %></td>
-              <td width="30%"><%= transaction['provider-org'] + " (" + transaction['provider-activity-id'] + ")" %></td>
-              <td width="15%"><%=transaction['date'].strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= transaction['value'] < 0 ? 'negative' : ''%>" style="text-align:right;"><%= number_to_currency(transaction['value'], :unit=> currency_symbol(project['currency']) || "£", :precision => 0) %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-</div>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% transaction_groups.select {|group| group['_id'] == 'C' }.each do |transaction_group| %>
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Commitment</span>
@@ -117,7 +27,8 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= transaction_group["total"] < 0 ? 'negative' : ''%> float-right trans-type-value"><%= number_to_currency(transaction_group["total"], :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
+             <div class="<%#= transaction_group["value"].to_f < 0 ? 'negative' : ''%> float-right trans-type-value"><%#=transaction_group["value"].to_f %>
+              <%#= number_to_currency(transaction_group["value"].to_f, :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
              </div>
            </div>        
       </div> 
@@ -129,114 +40,119 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transaction_group['transactions'].sort_by { | tx | -tx['date'].to_i }.each do |transaction| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |commitment| %>
+          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
-              <td><%= transaction_description(transaction, transaction_group['_id']) %></td>
-              <td width="15%"><%= transaction['component']%></td>
-              <td width="15%"><%=transaction['date'].strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= transaction['value'] < 0 ? 'negative' : ''%>" style="text-align:right;"><%= number_to_currency(transaction['value'], :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
+              <td><%= commitment['description'] %></td>
+              <td width="15%"><%= commitment['activity']['id'] %></td>
+              <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
+              <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    <% end %>
+    <% #end %>
   </div>
 </div>
 
 <%# ------------------------------------------------------------------------ %>
-<%#                  D I S B U R S E M E N T S   T A B L E                   %>
+<%#                   D I S B U R S E M E N T S   T A B L E                  %>
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% transaction_groups.select {|group| group['_id'] == 'D' }.each do |transaction_group| %>
-      <div class="section-group-title trans-header-container">
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+     <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
-            <span class="trans-type-title">Disbursement</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4">
+            <span class="trans-type-title">Disbursements</span>
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo4" class="more-info">  
+            <aside id="moreinfo3" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    The amount placed at the disposal of a recipient country or agency.
+                    A firm obligation to provide resources of a specified amount.
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(Fund transfer to implementing agency)</p>
+            <p style="margin-bottom:2px;">(Obligation to provide funding)</p>
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= transaction_group["total"] < 0 ? 'negative' : ''%> float-right trans-type-value"><%= number_to_currency(transaction_group["total"], :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
+             <div class="<%#= transaction_group["value"].to_f < 0 ? 'negative' : ''%> float-right trans-type-value"><%#=transaction_group["value"].to_f %>
+              <%#= number_to_currency(transaction_group["value"].to_f, :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
              </div>
            </div>        
-      </div>       
+      </div> 
       <table class="transactions-table" style="width:100%">
         <tbody>
           <tr>
-            <th>Description</th>
-            <th>Receiver Org</th>
+            <th><%= "Activity Description" %></th>
             <th width="15%">Activity ID</th>
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transaction_group['transactions'].sort_by { | tx | -tx['date'].to_i }.each do |transaction| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
-              <td><%= transaction['description'] %></td>
-              <td><%= transaction['receiver-org'] %></td>
-              <td><%= transaction['component'] %></td>
-              <td width="15%"><%=transaction['date'].strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= transaction['value'] < 0 ? 'negative' : ''%>" style="text-align:right;"><%= number_to_currency(transaction['value'], :unit=> currency_symbol(project['currency']) || "£", :precision => 0) %></td>
+              <td><%= commitment['description'] %></td>
+              <td width="15%"><%= commitment['activity']['id'] %></td>
+              <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
+              <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    <% end %>
+    <% #end %>
   </div>
 </div>
 
 <%# ------------------------------------------------------------------------ %>
-<%#                    E X P E N D I T U R E   T A B L E                     %>
+<%#                   E X P E N D I T U R E   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% transaction_groups.select {|group| group['_id'] == 'E' }.each do |transaction_group| %>
-      <div class="section-group-title trans-header-container">
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+     <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Expenditure</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5">
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo5" class="more-info">  
+            <aside id="moreinfo3" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    Funds spent on goods and services.
+                    A firm obligation to provide resources of a specified amount.
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(Project spend)</p>
+            <p style="margin-bottom:2px;">(Obligation to provide funding)</p>
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= transaction_group["total"] < 0 ? 'negative' : ''%> float-right trans-type-value"><%= number_to_currency(transaction_group["total"], :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
+             <div class="<%#= transaction_group["value"].to_f < 0 ? 'negative' : ''%> float-right trans-type-value"><%#=transaction_group["value"].to_f %>
+              <%#= number_to_currency(transaction_group["value"].to_f, :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
              </div>
            </div>        
-      </div>      
+      </div> 
       <table class="transactions-table" style="width:100%">
         <tbody>
           <tr>
-            <th>Description</th>
-            <th width="15%">Receiver Org</th>
+            <th><%= "Activity Description" %></th>
             <th width="15%">Activity ID</th>
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transaction_group['transactions'].sort_by { | tx | -tx['date'].to_i }.each do |transaction| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == 'E' }.each do |commitment| %>
+          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
-              <td><%= transaction['description'] %></td>
-              <td><%= transaction['receiver-org'] %></td>
-              <td><%= transaction['component'] %></td>              
-              <td width="15%"><%=transaction['date'].strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= transaction['value'] < 0 ? 'negative' : ''%>" style="text-align:right;"><%= number_to_currency(transaction['value'], :unit=> currency_symbol(project['currency']) || "£", :precision => 0) %></td>
+              <td><%= commitment['description'] %></td>
+              <td width="15%"><%= commitment['activity']['id'] %></td>
+              <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
+              <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    <% end %>
+    <% #end %>
   </div>
 </div>
+
+<!-- do the same pattern for Disbursements and Expenditure -->

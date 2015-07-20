@@ -26,7 +26,9 @@ title: Development Tracker
                   <tr class="result-list-row">
                       <th scope="row"><a href="<%=document['url']%>"><%= document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
                       <td scope="col">
-                        <%=document['format']%>
+                        <%document['format'].each do |item| %>
+                        <%=item[1]%>
+                        <% end %>
                       </td>
                       <td scope="col">
                         <% document['category'].each do |category| %>
