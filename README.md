@@ -1,4 +1,4 @@
-# Development Tracker using an open public API
+# Development Tracker using the OIPA public API
 
 [![Build Status](https://travis-ci.org/DFID/devtracker-from-api.svg)](https://travis-ci.org/DFID/devtracker-from-api)
 
