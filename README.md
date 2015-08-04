@@ -13,3 +13,9 @@ The open public API being used in the [OIPA API](http://www.oipa.nl) built by Zi
 
 ## Get started
 The site is being developed using a Sinatra web framework and Ruby. To get started, go to the [Wiki](https://github.com/DFID/devtracker-from-api/wiki).
+
+    $ cd site
+    $ bundle
+    $ ruby devtracker.rb
+    ...
+    $ open http://localhost:4567
