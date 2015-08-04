@@ -1,4 +1,7 @@
 # Development Tracker using an open public API
+
+[![Build Status](https://travis-ci.org/DFID/devtracker-from-api.svg)](https://travis-ci.org/DFID/devtracker-from-api)
+
 This repository is to support the redevelopment of Development Tracker using the [OIPA open public API](http://www.oipa.nl) instead of the more complex data back-end used in the [orginal DevTracker](https://github.com/dfid/aid-platform-beta). 
 
 ## About DevTracker
