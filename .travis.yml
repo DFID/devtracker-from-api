@@ -1,5 +1,10 @@
----
 language: ruby
-
 rvm:
-  - 2.0.0
+- 2.0.0
+deploy:
+  provider: heroku
+  api_key:
+    secure: knWoPGjH54ZZgKAur2gLH4nQGmaznzbRezZvIb/WpgbiUuHNr9seuEt1DCJro639qdIeWnr/Y02WSnaU6wlN9UA0O9IvyhEtvGRKoOtGeVHiNnRQap0SnOl2vKs8DjxGck8kYg7NPz+OdwV8Pyr5zPbN2KHMf9oiWtUTdOLYTp5JRDJtKEqCLkHNrnfRRcFvGk+sD8IGifhaqe1Ytvb2pUn9xVcZwMz4xlcDYDfMhpGFMzDTfwEBkBGA8FY7TU3f4rsXgwmik7YNeKPFEP7U4BnaFpPHAwRNZz29rJfeSIvAGuy+JAaLIOmuOg8TaEMN9rOEiJLkSFXKzCcxUaiOmsZoq/pWqTdndyfV62dN65Y6xs0II5hVB6656g4ku5BPpdciQ19tJMEqvjhxkwGfpj7FxA/OTWTHv1zbb+qgmZqyRIuZUGft4e4Fm+4XSVXcf8r/J2EL/mncZEOmRHXxjDzBhDYesYIqdI3TjRLQLPbFQ+mB23D9QevYCMDtdxlcQThPF9GDtknk0+14nEOTtl4xvlCDHiEDxzGwCwadt4MbhtqftJH2ray/FDEi8Ttr+oFCQiFjaj5/i8i/3pc2EVf5XrVvEWBcx15ZVb8PIh7/0HfQDtO49+qNQ24EzwCdgQOsJ5ckMW1ssLbTz/yCg21BexOl6rGL9xn91io5wu4=
+  app: devtracker-from-api
+  on:
+    repo: DFID/devtracker-from-api
