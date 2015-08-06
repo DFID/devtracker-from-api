@@ -16,4 +16,4 @@ DevTracker uses open data published by the UK Government and its partners in the
 The open public API being used in the [OIPA API](http://www.oipa.nl) built by Zimmerman & Zimmerman.
 
 ## Get started
-The site is being developed using a Sinatra web framework and Ruby. To get started, go to the [Wiki](https://github.com/DFID/devtracker-from-api/wiki).
+The site is being developed using a Sinatra web framework and Ruby. To get started, go to the [Wiki](https://github.com/DFID/devtracker-from-api/wiki). We will be adding new guidance and features to the wiki as we go along.
