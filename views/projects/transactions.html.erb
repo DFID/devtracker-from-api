@@ -4,6 +4,57 @@ title: Development Tracker
 
 <%= erb :'partials/_projects-header', :locals => { :project => project, :active => "transactions"} %>
 
+<%# ------------------------------------------------------------------------ %>
+<%#                   I N C O M I N G   F U N D S   T A B L E                %>
+<%# ------------------------------------------------------------------------ %>
+<div class="row">
+  <div class="twelve columns transactions">
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
+    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+    <% incoming_funds=transactions.select {|group| group['transaction_type']['code'] == 'IF' } %>
+    <%if !incoming_funds.nil? && incoming_funds.length > 0 %>
+     <div class="section-group-title trans-header-container">
+          <div class="trans-header-left">
+            <span class="trans-type-title">Incoming Funds</span>
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
+               <img src="/images/icon-information.png" alt="More information about Incoming Funds" class="more-info-link-middle"/>
+            </a> 
+            <aside id="moreinfo2" class="more-info">  
+                  <div class="more-info-content trans-more-info-box-limiter">
+                   Funds that originate from a source other than the donor(s) reported in the activity.
+                  </div>
+            </aside>   
+            <p style="margin-bottom:2px;">(Funds received from an external funding source)</p>
+           </div>  
+
+           <div class="trans-header-right">
+             <div class="<%#= transaction_group["value"].to_f < 0 ? 'negative' : ''%> float-right trans-type-value"><%#=transaction_group["value"].to_f %>
+              <%#= number_to_currency(transaction_group["value"].to_f, :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
+             </div>
+           </div>        
+      </div> 
+      <table class="transactions-table" style="width:100%">
+        <tbody>
+          <tr>
+            <th><%= "Activity Description" %></th>
+            <th width="30%">Provider</th>
+            <th width="15%">Date</th>
+            <th width="15%" style="text-align:right;">Value</th>
+          </tr>
+          <% transactions.select {|group| group['transaction_type']['code'] == 'IF' }.each do |commitment| %>
+          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
+            <tr>
+              <td><%= commitment['description'] %></td>
+              <td width="30%"><%= commitment['provider_organisation_name'] + " (" + commitment['provider_activity'] + ")" %></td>
+              <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
+              <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
@@ -12,6 +63,8 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
     <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+    <% commitments=transactions.select {|group| group['transaction_type']['code'] == 'C' } %>
+    <%if !commitments.nil? && commitments.length > 0 %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Commitment</span>
@@ -51,7 +104,7 @@ title: Development Tracker
           <% end %>
         </tbody>
       </table>
-    <% #end %>
+    <% end %>
   </div>
 </div>
 
@@ -62,18 +115,20 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
     <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+    <% disbursement=transactions.select {|group| group['transaction_type']['code'] == 'D' } %>
+    <%if !disbursement.nil? && disbursement.length > 0 %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
-            <span class="trans-type-title">Disbursements</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
+            <span class="trans-type-title">Disbursement</span>
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo3" class="more-info">  
+            <aside id="moreinfo4" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    A firm obligation to provide resources of a specified amount.
+                    The amount placed at the disposal of a recipient country or agency.
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(Obligation to provide funding)</p>
+            <p style="margin-bottom:2px;">(Fund transfer to implementing agency)</p>
            </div>  
 
            <div class="trans-header-right">
@@ -86,6 +141,7 @@ title: Development Tracker
         <tbody>
           <tr>
             <th><%= "Activity Description" %></th>
+            <th width="15%">Receiver Org</th>
             <th width="15%">Activity ID</th>
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
@@ -94,6 +150,7 @@ title: Development Tracker
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= commitment['description'] %></td>
+              <td width="15%"><%= commitment['receiver_organisation_name'] %></td>
               <td width="15%"><%= commitment['activity']['id'] %></td>
               <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
               <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
@@ -101,7 +158,7 @@ title: Development Tracker
           <% end %>
         </tbody>
       </table>
-    <% #end %>
+    <% end %>
   </div>
 </div>
 
@@ -112,18 +169,20 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
     <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
+    <% expenditure=transactions.select {|group| group['transaction_type']['code'] == 'E' } %>
+    <%if !expenditure.nil? && expenditure.length > 0 %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Expenditure</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo3" class="more-info">  
+            <aside id="moreinfo5" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    A firm obligation to provide resources of a specified amount.
+                    Funds spent on goods and services.
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(Obligation to provide funding)</p>
+            <p style="margin-bottom:2px;">(Project spend)</p>
            </div>  
 
            <div class="trans-header-right">
@@ -136,6 +195,7 @@ title: Development Tracker
         <tbody>
           <tr>
             <th><%= "Activity Description" %></th>
+            <th width="15%">Receiver Org</th>
             <th width="15%">Activity ID</th>
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
@@ -144,6 +204,7 @@ title: Development Tracker
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= commitment['description'] %></td>
+              <td width="15%"><%= commitment['receiver_organisation_name'] %></td>
               <td width="15%"><%= commitment['activity']['id'] %></td>
               <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
               <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%=commitment['value'] %><%#= number_to_currency(commitment['value'].to_f, :unit=> currency_symbol(project['currency']) ||  "£", :precision => 0) %></td>
@@ -151,7 +212,7 @@ title: Development Tracker
           <% end %>
         </tbody>
       </table>
-    <% #end %>
+    <% end %>
   </div>
 </div>
 
