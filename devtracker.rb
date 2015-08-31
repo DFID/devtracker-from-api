@@ -90,7 +90,7 @@ get '/projects/:proj_id/transactions/?' do |n|
   	project = JSON.parse(oipa)
 
 	# get the transactions from the API
-	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
+	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}/transactions?format=json" #TEST: for Partner Project
   	tx = JSON.parse(oipa_tx)
   	transactions = tx['results']
 
