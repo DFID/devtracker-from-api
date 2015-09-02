@@ -32,16 +32,17 @@ module SectorHelpers
   		sectorValues  = JSON.parse(sectorValuesJSON)
 
   		highLevelSector = JSON.parse(File.read('data/test_sh.json'))
-  #		sectorValues  = JSON.parse(File.read('data/test_budget.json'))
+  	#	sectorValues  = JSON.parse(File.read('data/test_budget.json'))
 
 
 		highLevelSector.map do |elem| 
 	       {  
 	       	  :code          => elem["High Level Code (L1)"],
 	          :name          => elem["High Level Sector Description"],
-	          :budget        => sectorValues.find do |source|
-	                               source["sector"]["code"] == elem["Code (L3)"].to_s 
-	                            end["budget"]  
+			  :budget 		  => sectorValues.select do |source|
+                         			source["sector"]["code"] == elem["Code (L3)"].to_s 
+                      			end.map{|elem|elem["budget"]}.inject(:+)	                            
+
 	       } 
 		end
 
