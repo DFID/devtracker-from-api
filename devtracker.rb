@@ -42,12 +42,12 @@ end
 
 # examples:
 #http://devtracker.dfid.gov.uk/projects/GB-1-204024/
-# http://149.210.176.175/api/activities/GB-1-204024?format=json
+# http://dfid-oipa.zz-clients.net/api/activities/GB-1-204024?format=json
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 	
 	erb :'projects/summary', 
@@ -60,7 +60,7 @@ end
 #Project test page
 get '/projects/:proj_id/test/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 	
 	erb :'projects/test', 
@@ -73,7 +73,7 @@ end
 #Project documents page
 get '/projects/:proj_id/documents/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
 	erb :'projects/documents', 
@@ -86,11 +86,11 @@ end
 #Project transactions page
 get '/projects/:proj_id/transactions/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
 	# get the transactions from the API
-	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}/transactions?format=json" #TEST: for Partner Project
+	oipa_tx = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}/transactions?format=json" #TEST: for Partner Project
   	tx = JSON.parse(oipa_tx)
   	transactions = tx['results']
 
@@ -105,11 +105,11 @@ end
 #Project transactions page (test)
 get '/projects/:proj_id/txtest/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get "http://149.210.176.175/api/activities/#{n}?format=json"
+	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
 	# get the transactions from the API
-	oipa_tx = RestClient.get "http://149.210.176.175/api/activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
+	oipa_tx = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
   	tx = JSON.parse(oipa_tx)
   	transactions = tx['results']
 
