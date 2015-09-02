@@ -83,8 +83,8 @@ layout: landing
         <ol>
         <% top_5_countries.each do |country| %>
           <li>
-              <a href="/countries/<%= country['code'] %>" class="truncate" title="<%= country['name'] %>"> <%= country['name'] %> </a>
-              <em><span class="visually-hidden">Budget</span><%= format_billion_stg country['totalBudget'] %></em>
+             <!-- <a href="/countries/<%= country['code'] %>" class="truncate" title="<%= country['name'] %>"> <%= country['name'] %> </a> -->
+              <em><span class="visually-hidden">Budget</span><%= format_billion_stg country['budget'] %></em>
           </li>
         <% end %>
         </ol>
@@ -104,10 +104,11 @@ layout: landing
             <ol>
                 <% what_we_do.each do |sector| %>
                     <li>
-                        <a href="/sector/<%=sector['code']%>"><%=sector['name']%></a>
-                        <em>&pound;<%=format_round_m sector['budget'] || 0.0 %></em>
+                        <a href="/sector/<%=sector[:code]%>"><%=sector[:name]%></a>
+                         <em><%=sector[:budget]%></em>
+                      <!--  <em>&pound;<%=format_round_m sector[:budget] || 0.0 %></em> -->
                     </li>
-                <% end %>
+                <% end %>                
             </ol>
         </div>
         <%end%>
