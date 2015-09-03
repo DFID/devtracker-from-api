@@ -7,12 +7,17 @@ require 'json'
 require 'rest-client'
 require 'active_support'
 
-#helpers
+#helpers path
 require_relative 'helpers/formatters.rb'
 require_relative 'helpers/oipa_helpers.rb'
 require_relative 'helpers/codelists.rb'
 require_relative 'helpers/lookups.rb'
 require_relative 'helpers/project_helpers.rb'
+require_relative 'helpers/sector_helpers.rb'
+
+#helpers modules
+include SectorHelpers
+
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -23,16 +28,19 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
-	top5countries = JSON.parse(File.read('data/top5countries.json'))
+#	top5countries = JSON.parse(File.read('data/top5countries.json'))
 	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
+
+	countriesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&order_by=-budget"
+  	top5countries = JSON.parse(countriesJSON)
 
  	erb :index, 
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: top5sectors,
- 			what_we_achieve: top5results
+ 			what_we_do: high_level_sector_list,
+ 			what_we_achieve: top5results 	
  		}
 end
 

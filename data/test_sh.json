@@ -1,0 +1,22 @@
+[
+    {
+        "Code (L3)":11110,
+        "High Level Code (L1)":1,
+        "High Level Sector Description":"Education",
+        "Name":"Education policy and administrative management",
+        "Description":"Education sector policy, planning and programmes; aid to education ministries, administration and management systems; institution capacity building and advice; school management and governance; curriculum and materials development; unspecified education activities.",
+        "Category (L2)":111,
+        "Category Name":"Education, level unspecified",
+        "Category Description":"The codes in this category are to be used only when level of education is unspecified or unknown (e.g. training of primary school teachers should be coded under 11220)."
+    },
+    {
+        "Code (L3)":12110,
+        "High Level Code (L1)":2,
+        "High Level Sector Description":"Health",
+        "Name":"Health policy and administrative management",
+        "Description":"Health sector policy, planning and programmes; aid to health ministries, public health administration; institution capacity building and advice; medical insurance programmes; unspecified health activities.",
+        "Category (L2)":121,
+        "Category Name":"Health, general",
+        "Category Description":""
+    }
+]    
