@@ -1,8 +1,10 @@
 module SectorHelpers
 
+
 	def high_level_sectors_structure
+=begin
 		sectors = @cms_db['sector-hierarchies'].aggregate([{ 
-			"$group" => { 
+				"$group" => { 
 				"_id"  => "$highLevelCode",
 				"name" => {
 					"$first" => "$highLevelName"
@@ -18,9 +20,37 @@ module SectorHelpers
 		}}
 
 		calculate_hierarchy_structure(sectors)
+=end		
+	end
+	
+
+	def high_level_sector_list
+		
+	#	highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
+		
+		sectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
+  		sectorValues  = JSON.parse(sectorValuesJSON)
+
+  		highLevelSector = JSON.parse(File.read('data/test_sh.json'))
+  	#	sectorValues  = JSON.parse(File.read('data/test_budget.json'))
+
+
+		highLevelSector.map do |elem| 
+	       {  
+	       	  :code          => elem["High Level Code (L1)"],
+	          :name          => elem["High Level Sector Description"],
+			  :budget 		  => sectorValues.select do |source|
+                         			source["sector"]["code"] == elem["Code (L3)"].to_s 
+                      			end.map{|elem|elem["budget"]}.inject(:+)	                            
+
+	       } 
+		end
+
 	end
 
+
 	def sector_categories_structure(highLevelSectorCode)
+
 		sectors = @cms_db['sector-hierarchies'].aggregate([{
 			"$match" => {
 				"highLevelCode" => highLevelSectorCode
