@@ -54,14 +54,21 @@ end
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
+	
 	# get the project data from the API
 	oipa = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 	
+#  	has_funded_projects = funded_projects.size > 0
+	fundedProjectsAPI = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities?format=json&transaction_provider_activity=#{n}&page_size=1000"
+	fundedProjects = JSON.parse(fundedProjectsAPI)
+	has_funded_projects = fundedProjects['count'] > 0
+
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
  			project: project
+ 			has_funded_projects: has_funded_projects
  		}
 end
 
