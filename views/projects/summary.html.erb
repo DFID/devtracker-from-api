@@ -2,7 +2,7 @@
 title: Development Tracker
 --- -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "summary"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :active => "summary"} %>
 
 
 <div class="row">
@@ -110,6 +110,7 @@ title: Development Tracker
     <div class="six columns" role="presentation">
         <div id="countryMap" class="countryMap"></div>
 
+        <!--TODO - do some logic to get these  types-->
         <input type="hidden" id="countryName" value="<%= country_name(project['recipient']) %>">
         <input type="hidden" id="countryCode" value="<%= project['recipient'] %>">
         <input type="hidden" id="projectType" value="<%= project['projectType'] %>">
@@ -127,7 +128,8 @@ title: Development Tracker
         <script type="text/javascript">
             var mapType = "project";
             var locations = <%=project['locations']%>
-        </script>
+            console.log(locations);
+        </script> 
         <script src="/javascripts/countrymap.js" type="text/javascript"></script>
 
         <div id="countryMapDisclaimer" class="disclaimer grey">
