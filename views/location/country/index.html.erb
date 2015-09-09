@@ -1,9 +1,6 @@
----
-title: Development Tracker
----
 
-<%= partial "partials/location-title-bar" %>
-<%= partial "partials/location-tabs", :locals => { :active => "country" }  %>
+<%= erb :'partials/_location-title-bar'%>
+<%= erb :'partials/_location-tabs', :locals => { :active => "country" } %>
 
 <!--[if lte IE 8]>
     <div class="row">
@@ -17,7 +14,7 @@ title: Development Tracker
         <div class="row">
             <div class="twelve columns map">
                 <script type="text/javascript">
-                    var countriesData = <%= dfid_country_projects_data %>;
+                    
                 </script>
 
                 <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -51,8 +48,8 @@ title: Development Tracker
 </div>
 <div class="row">
   <div class="twelve columns">
-    <% country_list.each do |country| %>
-      <a href="/countries/<%=country['code']%>"><%= country['name'] %></a> | 
+    <% countries.each do |country| %>
+      <a href="/countries/<%=country['recipient_country']['code']%>"><%= country['recipient_country']['name'] %></a> | 
     <% end %>
   </div>
 </div> 

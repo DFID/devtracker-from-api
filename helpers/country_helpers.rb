@@ -74,41 +74,54 @@ module CountryHelpers
     sectors
   end
 
-  
-  def country_project_budgets(country_code)
-    projectCodes = @cms_db['projects'].find({
-      "projectType" => "country", "recipient" => country_code
-      }, :fields => ["iatiId"]).to_a.map{|b| b["iatiId"]}
-
-    project_budgets = @cms_db['project-budgets'].find({
-      "id" => {
-        "$in" => projectCodes
-      }
-    }).to_a.group_by{|b| first_day_of_financial_year Date.parse(b["date"])}.map{|date, budgets|
+  #New One based on API Call
+  def country_project_budgets(year_wise_budgets)
+    #projectCodes = @cms_db['projects'].find({
+      #{}"projectType" => "country", "recipient" => country_code
+      #}, :fields => ["iatiId"]).to_a.map{|b| b["iatiId"]}
+    #
+    project_budgets = []
+    
+    year_wise_budgets.each do |y|
+      if y["quarter"]==1
+          p=[y["quarter"],y["budget"],y["year"],y["year"]-1]
+      else
+          p=[y["quarter"],y["budget"],y["year"],y["year"]]
+      end
       
-      summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget["value"]}
-      [date, summedBudgets]
+      project_budgets << p        
+    end
 
-    }.sort
+    #project_budgets
+    #project_budgets = year_wise_budgets.group_by{|b| b["year"]}.map{|year, budgets|
+        #summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget["budget"]}
+        #[year, summedBudgets]
+        #}.sort
+     
+     fin_year_wise_budgets = project_budgets.group_by{|b| b[3]}.map{|year, budgets|
+        summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget[1]}
+        [year, summedBudgets]
+        }.sort   
 
     # determine what range to show
-      current_financial_year = first_day_of_financial_year(DateTime.now)
+      #current_financial_year = first_day_of_financial_year(DateTime.now)
+      current_financial_year = financial_year
 
     # if range is 6 or less just show it
-      range = if project_budgets.size < 7 then
-                project_budgets
+      range = if fin_year_wise_budgets.size < 7 then
+               fin_year_wise_budgets
               # if the last item in the list is less than or equal to 
               # the current financial year get the last 6
-              elsif project_budgets.last.first <= current_financial_year
-                project_budgets.last(6)
+              elsif fin_year_wise_budgets.last.first <= current_financial_year
+                fin_year_wise_budgets.last(6)
               # other wise show current FY - 3 years and cuurent FY + 3 years
               else
-                index_of_now = project_budgets.index { |i| i[0] == current_financial_year }
+                index_of_now = fin_year_wise_budgets.index { |i| i[0] == current_financial_year }
 
                 if index_of_now.nil? then
-                  project_budgets.last(6)
+                  fin_year_wise_budgets.last(6)
                 else
-                  project_budgets[[index_of_now-3,0].max..index_of_now+2]
+                  fin_year_wise_budgets[[index_of_now-3,0].max..index_of_now+2]
                 end
               end
 
@@ -119,19 +132,20 @@ module CountryHelpers
 
   end
 
-  def financial_year_formatter(d)
+  #New One based on API Call
+  def financial_year_formatter(y)
 
-    date = if(d.kind_of?(String)) then
-      Date.parse d
-    else
-      d
-    end
+    #date = if(d.kind_of?(String)) then
+      #Date.parse d
+    #else
+      #d
+    #end
 
-    if date.month < 4
-      "FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
-    else
-      "FY#{date.year.to_s[2..3]}/#{(date.year+1).to_s[2..3]}"
-    end
+    #if date.month < 4
+      #{}"FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
+    #else
+      "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
+    #end
   end
 
   def financial_year 
