@@ -11,3 +11,4 @@ gem 'activesupport'
 gem 'rack-test'
 gem 'rake-compiler'
 gem 'coveralls', require: false
+gem 'kramdown'

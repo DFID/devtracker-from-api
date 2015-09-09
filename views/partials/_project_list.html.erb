@@ -24,31 +24,31 @@
         </div>
         <% projects.each do |project| %>
             <div class="search-result">
-                <input type="hidden" name="status" value="<%= activity_status(project['status']) %>"/>
-                <input type="hidden" name="budget" value="<%= project['totalBudget'] %>"  class="sort-budget"/>
-                <input type="hidden" name="title" value="<%= project['title'] %>" class="sort-title"/>
-                <input type="hidden" name="sectors" value="<%=retrieve_high_level_sector_names(project["iatiId"])%>"/>
-                <input type="hidden" name="organizations" value="<%=project['participatingOrgs'].join('#')%>" />
-                <% if project['projectType'] == "country" %>
-                    <input type="hidden" name="countries" value="<%=country_name project['recipient']%>" />
-                <% end %>
-                <% if project['projectType'] == "regional" %>
-                    <input type="hidden" name="regions" value="<%=region_name project['recipient']%>"  />
-                <% end %>
-                <input type="hidden" name="organizations" value="<%=project['participatingOrgs'].join('#')%>" />
-                <input type="hidden" name="documents" value="<% if(project['documents'] != nil) then result = ""; project['documents'].each do |d| d['categories'].each do |c| result += c.strip + '#' end;
-                                            end; result = result.chop!; %><%= result %><% end%>" />
-                <input type="hidden" name="dateStart" value="<%= choose_better_date(project['start-actual'], project['start-planned']) %>"/>
-                <input type="hidden" name="dateEnd" value="<%= choose_better_date(project['end-actual'], project['end-planned']) %>"/>
+                <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
+                <input type="hidden" name="budget" value="<%#= project['totalBudget'] %>"  class="sort-budget"/>
+                <input type="hidden" name="title" value="<%= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
+                <input type="hidden" name="sectors" value="<%#=retrieve_high_level_sector_names(project["iatiId"])%>"/>
+                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
+                <%# if project['projectType'] == "country" %>
+                    <input type="hidden" name="countries" value="<%#=country_name project['recipient']%>" />
+                <%# end %>
+                <%# if project['projectType'] == "regional" %>
+                    <input type="hidden" name="regions" value="<%#=region_name project['recipient']%>"  />
+                <%# end %>
+                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
+                <input type="hidden" name="documents" value="<%# if(project['documents'] != nil) then result = ""; project['documents'].each do |d| d['categories'].each do |c| result += c.strip + '#' end;
+                                            end; result = result.chop!; %><%#= result %><%# end%>" />
+                <input type="hidden" name="dateStart" value="<%= choose_better_date(project['activity_dates']['start_actual'], project['activity_dates']['start_planned']) %>"/>
+                <input type="hidden" name="dateEnd" value="<%= choose_better_date(project['activity_dates']['end_actual'], project['activity_dates']['end_planned']) %>"/>
                 <h3>
-                    <a href="/projects/<%=project['iatiId']%>">
-                        <%=project['title']%> <small>[<%=project['iatiId']%>]</small>
+                    <a href="/projects/<%= project['iati_identifier'] %>">
+                        <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
                     </a>
                 </h3>
-                <span class="budget">Budget: <em> <%= number_to_currency(project['totalBudget'], :unit=>"£", :precision => 0) %></em></span>
-                <span>Status: <em><%= activity_status project['status']%></em></span>
-                <span>Reporting Org: <em><%= project['reportingOrg']%></em></span>
-                <p class="description"><%=project['description']%></p>
+                <span class="budget">Budget: <em> <%# number_to_currency(project['totalBudget'], :unit=>"£", :precision => 0) %></em></span>
+                <span>Status: <em><%= project['activity_status']['name']%></em></span>
+                <span>Reporting Org: <em><%= project['reporting_organisation']['organisation']['name']['narratives'][0]['text']%></em></span>
+                <p class="description"><%= project['descriptions'][0]['narratives'][0]['text']%></p>
             </div>
         <% end %>
     </div>
