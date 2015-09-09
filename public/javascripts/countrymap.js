@@ -48,8 +48,9 @@
     countryCode = "BD";
     countryName = "Bangladesh";
     var map;
-
-    alert("country map" + projectType);
+ 
+ // TODO Remove alert
+ //   alert("country map" + projectType);
 
     var osmHOT = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
                               maxZoom: 19,
@@ -69,7 +70,7 @@
 
 
     } else if (countryName && countryCode) {  
-        alert("countrycode + countryName");
+       // alert("countrycode + countryName");
         map = new L.Map('countryMap', {
             center: new L.LatLng(countryBounds[countryCode][0], countryBounds[countryCode][1]), 
             zoom: 6,
@@ -78,7 +79,7 @@
         //map.addLayer(new L.Google('ROADMAP'));
 
     } else if (countryCode) {
-        alert("countryCode only");
+       // alert("countryCode only");
         var bounds = regionBounds[countryCode];
         var boundary = new L.LatLngBounds(
             new L.LatLng(bounds.southwest.lat, bounds.southwest.lng),

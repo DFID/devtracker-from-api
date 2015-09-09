@@ -1,52 +1,32 @@
----
-title: Development Tracker
----
+<!-- title: Development Tracker -->
 
-<%= partial "partials/projects-header", :locals => { :project => project, :active => "partners", :has_funded_projects => true} %>
-<% if defined?(funding_project) then %>
-  <div class="row">
-      <div class="twelve columns results-info">
-        <h3 class="section-group-title">Funding Project</h3>
-        <div class="row">
-            <% if is_funded_by_dfid_project then %>
-              <div class="four columns summary">
-                  <h4>DFID</h4>     
-              </div>
-              <div class="eight columns">
-                  <ul>
-                      <li><a href="/projects/<%=funding_project['iatiId']%>"><%=funding_project['title']%></a><%=funding_project['description']%><span><%= number_to_currency(project['funds'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) %></span></li>
-                  </ul> 
-              </div>
-            <% else %>
-              <div class="four columns summary">
-                  <h4><%=funding_project['reporting']%></h4>         
-              </div>
-              <div class="eight columns">
-                  <ul>
-                      <li><a href="/projects/<%=funding_project['funded']%>"><%=funding_project['title']%></a><%=funding_project['description']%><span><%= number_to_currency(project['funds'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) %></span></li>
-                  </ul> 
-              </div>
-           <% end %>
-        </div>
-      </div>
-  </div>
-<% end %>
-<% if funded_projects.count > 0 then %> 
+<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjects => fundedProjects, :fundedProjectsCount => fundedProjectsCount, :active => "partners"} %>
+
+<% if fundedProjectsCount > 0 then %> 
   <div class="row">
       <div class="twelve columns results-info">                 
-        <% if is_dfid_project(project['iatiId']) then %>
+        
+        <%# TODO - identify and list any funding projects %>
+
+        <% if is_dfid_project(project['id']) then %>
           <h3 class="section-group-title">Partner Projects</h3>
         <%else%>
-          <h3 class="section-group-title">Funded Projects</h3>
+           <h3 class="section-group-title">Funded Projects</h3>
         <%end%>
-        <% funded_projects.each do |funded_project| %>
+          <% fundedProjects.each do |funded_project| %>
           <div class="row">
               <div class="four columns summary">
-                  <h4><%=funded_project['reporting']%></h4>     
+                  <h4>Organisation Name Placeholder</h4>     
               </div>
               <div class="eight columns">
                   <ul>
-                      <li><a href="/projects/<%=funded_project['funded']%>"><%=funded_project['title']%></a><%=funded_project['description']%><span><%= number_to_currency(funded_project['funds'], :unit=>currency_symbol(funded_project['currency']) || "£", :precision => 0) %></span></li>
+                     <%# TODO - deal with the situation where we have multiple languages %>
+                     <li><a href="/projects/<%=funded_project['id']%>"><%=funded_project['title']['narratives'][0]['text']%></a>
+                       <%#  <%=funded_project['description']%>
+                       Description Placeholder
+                       <%# TODO - format the budget correctly & ensure that there are no null currency values %>
+                       <span><%=funded_project['total_budget']['value']%></span>
+                     </li>
                   </ul> 
               </div>
           </div>

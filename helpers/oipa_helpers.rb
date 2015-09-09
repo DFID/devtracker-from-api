@@ -3,10 +3,6 @@
 
 module OipaHelpers
 
-  def has_funded_projects(projectCode)
-    false
-  end
-
   def non_dfid_data(projectCode)
     !projectCode[0, 4] == "GB-1"
   end
