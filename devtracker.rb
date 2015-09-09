@@ -17,6 +17,7 @@ require_relative 'helpers/sector_helpers.rb'
 
 #helpers modules
 include SectorHelpers
+include ProjectHelpers
 
 # set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -51,45 +52,43 @@ end
 #####################################################################
 
 # examples:
-#http://devtracker.dfid.gov.uk/projects/GB-1-204024/
-# http://149.210.176.175/api/activities/GB-1-204024?format=json
+# http://devtracker.dfid.gov.uk/projects/GB-1-204024/
+# http://dfid-oipa.zz-clients.net/api/activities/GB-1-204024?format=json
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
+	
 	# get the project data from the API
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 	
+	# get the funded projects from the API
+    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)
+			
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			project: project
+ 			project: project, 	 					 			
+ 			fundedProjectsCount: fundedProjectsData['count']
  		}
 end
 
-#Project test page
-get '/projects/:proj_id/test/?' do |n|
-	# get the project data from the API
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  	project = JSON.parse(oipa)
-	
-	erb :'projects/test', 
-		:layout => :'layouts/layout',
-		 :locals => {
- 			project: project
- 		}
-end
-
-#Project documents page
+# Project documents page
 get '/projects/:proj_id/documents/?' do |n|
 	# get the project data from the API
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
+    # get the funded projects from the API
+    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)	
+  	
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
- 			project: project
+ 			project: project,
+ 			fundedProjectsCount: fundedProjectsData['count']   
  		}
 end
 
@@ -104,30 +103,35 @@ get '/projects/:proj_id/transactions/?' do |n|
   	tx = JSON.parse(oipa_tx)
   	transactions = tx['results']
 
+    # get the funded projects from the API
+    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)
+	
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
 			project: project,
- 			transactions: transactions
+ 			transactions: transactions, 			
+ 			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
 
-#Project transactions page (test)
-get '/projects/:proj_id/txtest/?' do |n|
+#Project partners page
+get '/projects/:proj_id/partners/?' do |n|
 	# get the project data from the API
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
-	# get the transactions from the API
-	oipa_tx = RestClient.get settings.oipa_api_url + "activities/#{n}-101/transactions?format=json" #TEST: hard-coding -101
-  	tx = JSON.parse(oipa_tx)
-  	transactions = tx['results']
+	# get the funded projects from the API
+    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)	
 
-	erb :'projects/testtx', 
+	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
-			project: project,
- 			transactions: transactions
+			project: project, 			
+ 			fundedProjects: fundedProjectsData['results'],
+ 			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
 
