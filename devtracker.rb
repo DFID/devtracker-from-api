@@ -17,6 +17,7 @@ require_relative 'helpers/sector_helpers.rb'
 
 #helpers modules
 include SectorHelpers
+include ProjectHelpers
 
 # set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -64,13 +65,11 @@ get '/projects/:proj_id/?' do |n|
 	# get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
 	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-	fundedProjects = fundedProjectsData['results']     
-		
+			
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			project: project, 	 					
- 			fundedProjects: fundedProjects,
+ 			project: project, 	 					 			
  			fundedProjectsCount: fundedProjectsData['count']
  		}
 end
@@ -83,14 +82,12 @@ get '/projects/:proj_id/documents/?' do |n|
 
     # get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
-	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-	fundedProjects = fundedProjectsData['results']	
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)	
   	
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
  			project: project,
- 			fundedProjects: fundedProjects,
  			fundedProjectsCount: fundedProjectsData['count']   
  		}
 end
@@ -109,14 +106,12 @@ get '/projects/:proj_id/transactions/?' do |n|
     # get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
 	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-	fundedProjects = fundedProjectsData['results']		
-
+	
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
 			project: project,
- 			transactions: transactions,
- 			fundedProjects: fundedProjects, 
+ 			transactions: transactions, 			
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
@@ -129,14 +124,13 @@ get '/projects/:proj_id/partners/?' do |n|
 
 	# get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
-	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-	fundedProjects = fundedProjectsData['results']
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)	
 
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
 			project: project, 			
- 			fundedProjects: fundedProjects,
+ 			fundedProjects: fundedProjectsData['results'],
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
