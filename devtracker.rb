@@ -7,6 +7,7 @@ require 'json'
 require 'rest-client'
 require 'active_support'
 require 'kramdown'
+require 'pony'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -230,4 +231,27 @@ get '/fraud/?' do
 	erb :'fraud/index', :layout => :'layouts/layout'
 end  
 
+post '/fraud/index' do
+ Pony.mail({
+	:from => "devtracker-feedback@dfid.gov.uk",
+    :to => "devtracker-feedback@dfid.gov.uk",
+    :subject => "Report Fraud:" + params[:country],
+    :body => params[:description],
+    :via => :smtp,
+    :via_options => {
+     :address              => '127.0.0.1',
+     :port                 => '25',
+     :enable_starttls_auto => true,
+     #:user_name            => 'myemailaddress',
+     #:password             => 'mypassword',
+     :authentication       => :plain, 
+     :domain               => "localhost.localdomain" 
+     }
+    })
+    redirect '/success' 
+   end
+
+get('/success') do
+	erb :index, :layout => 'layouts/layout'
+end
 
