@@ -20,9 +20,9 @@ module Formatters
     "&pound;#{(v/1000000000.0).round(2)}bn"
   end
 
-  # def markdown_to_html(md)
-  #   Kramdown::Document.new(md || '').to_html
-  # end
+  def markdown_to_html(md)
+    Kramdown::Document.new(md || '').to_html
+  end
 
   def current_financial_year
     now = Time.new
@@ -50,19 +50,19 @@ module Formatters
      URI.escape(s)
   end
 
-  def financial_year_formatter(d)
+  def financial_year_formatter(y)
 
-      date = if(d.kind_of?(String)) then
-        Date.parse d
-      else
-        d
-      end
+      #date = if(d.kind_of?(String)) then
+        #Date.parse d
+      #else
+        #d
+      #end
 
-      if date.month < 4
-        "FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
-      else
-        "FY#{date.year.to_s[2..3]}/#{(date.year+1).to_s[2..3]}"
-      end
+      #if date.month < 4
+        #{}"FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
+      #else
+        "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
+      #end
     end
 
   def financial_year 

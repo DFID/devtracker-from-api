@@ -274,13 +274,20 @@ module ProjectHelpers
         @cms_db['documents'].find({ 'project' => projectCode}).count
     end
 
-private
 
     def first_day_of_financial_year(date_value)
         if date_value.month > 3 then
             Date.new(date_value.year, 4, 1)
         else
             Date.new(date_value.year - 1, 4, 1)
+        end
+    end
+
+    def last_day_of_financial_year(date_value)
+        if date_value.month > 3 then
+            Date.new(date_value.year + 1, 3, 31)
+        else
+            Date.new(date_value.year, 3, 31)
         end
     end 
 

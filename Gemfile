@@ -12,3 +12,4 @@ gem 'rack-test'
 gem 'rake-compiler'
 gem 'coveralls', require: false
 gem 'unicorn'
+gem 'kramdown'
