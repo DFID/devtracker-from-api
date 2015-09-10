@@ -25,10 +25,10 @@ include SectorHelpers
 include ProjectHelpers
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+# set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -242,18 +242,9 @@ post '/fraud/index' do
     :via => :smtp,
     :via_options => {
      :address              => '127.0.0.1',
-     :port                 => '25',
-     :enable_starttls_auto => true,
-     #:user_name            => 'myemailaddress',
-     #:password             => 'mypassword',
-     :authentication       => :plain, 
-     :domain               => "localhost.localdomain" 
+     :port                 => '25'
      }
     })
-    redirect '/success' 
+    redirect '/' 
    end
-
-get('/success') do
-	erb :index, :layout => 'layouts/layout'
-end
 
