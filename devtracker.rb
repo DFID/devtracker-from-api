@@ -25,7 +25,7 @@ include SectorHelpers
 include ProjectHelpers
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -53,7 +53,7 @@ get '/' do  #homepage
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list,
+ 			what_we_do: sector_budgets,
  			what_we_achieve: top5results 	
  		}
 end

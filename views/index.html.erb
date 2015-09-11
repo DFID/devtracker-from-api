@@ -92,25 +92,26 @@ layout: landing
     </div>
 
     <div class="four columns" id="top-5-sectors">
+        <%#= what_we_do  %>
         <%if !what_we_do.nil?  %>
             <div class="top-five-header">        
-            <span class="top-five-title">Top 5 things we do</span> 
-            <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 5 things we do"/></a>
-            <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                        The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
-                     </div>
-            </aside>
+                <span class="top-five-title">Top 5 things we do</span>
+                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 5 things we do"/></a>
+                <aside id="moreinfo2" class="more-info">            
+                        <div class="more-info-content">
+                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
+                         </div>
+                </aside>
+            </div> 
             <ol>
                 <% what_we_do.each do |sector| %>
                     <li>
-                        <a href="/sector/<%=sector[:code]%>"><%=sector[:name]%></a>
-                         <em><%=sector[:budget]%></em>
-                      <!--  <em>&pound;<%=format_round_m sector[:budget] || 0.0 %></em> -->
+                        <a href="/sector/<%=sector[0]%>"><%=sector[0]%></a>
+                         <em><span class="visually-hidden">Budget</span><%= format_million_stg sector[1] %></em>
+                      <!--  <em>&pound;<%#=format_round_m sector[:budget] || 0.0 %></em> -->
                     </li>
                 <% end %>                
-            </ol>
-        </div>
+            </ol>        
         <%end%>
         <p>Project budgets for each sector [<%= financial_year_formatter DateTime.now %>]</p>
     </div>

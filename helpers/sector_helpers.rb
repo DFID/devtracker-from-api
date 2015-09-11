@@ -1,7 +1,7 @@
 module SectorHelpers
 
 
-	def high_level_sectors_structure
+	def high_level_sectors_structure_legacy
 =begin
 		sectors = @cms_db['sector-hierarchies'].aggregate([{ 
 				"$group" => { 
@@ -22,7 +22,37 @@ module SectorHelpers
 		calculate_hierarchy_structure(sectors)
 =end		
 	end
-	
+
+	def sector_budgets
+
+		# TODO - Need to change the hard coded Budget period to variable
+		oipaSectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&order_by=-budget&format=json"
+		sectorValuesJSON=JSON.parse(oipaSectorValuesJSON)
+
+		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
+
+		sectorBudgets = []
+
+		sectorValuesJSON.each do |elem|
+			getHighLevelSector = highLevelSector.select {|h| h["Code (L3)"].to_s == elem["sector"]["code"]}.first
+
+			#!getHighLevelSector.nil?
+			if !getHighLevelSector.nil?  then
+				p = [getHighLevelSector["High Level Code (L1)"],getHighLevelSector["High Level Sector Description"],getHighLevelSector["Category (L2)"],getHighLevelSector["Category Name"],getHighLevelSector["Code (L3)"],getHighLevelSector["Name"],elem["budget"]]
+			    sectorBudgets << p  
+			end
+		end	
+
+		#sectorBudgets
+
+		sectorBudgets = sectorBudgets.group_by{|b| b[1]}.map{|h1Name, budgets|
+        		summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget[6]}
+        		[h1Name, summedBudgets]
+        }.sort
+
+        sectorBudgets.sort{|sectorBudgets,b| b[1] <=> sectorBudgets[1]}.first(5)
+
+	end
 
 	def high_level_sector_list
 		
