@@ -22,11 +22,15 @@ GEM
     json (1.8.3)
     kgio (2.9.3)
     kramdown (1.8.0)
+    mail (2.6.3)
+      mime-types (>= 1.16, < 3)
     mime-types (2.6.1)
     minitest (5.7.0)
     money (6.6.1)
       i18n (>= 0.6.4, <= 0.7.0)
     netrc (0.10.3)
+    pony (1.11)
+      mail (>= 2.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -77,6 +81,7 @@ DEPENDENCIES
   json
   kramdown
   money
+  pony
   rack-test
   rake-compiler
   rest-client
@@ -84,3 +89,6 @@ DEPENDENCIES
   rubygems-update
   sinatra
   unicorn
+
+BUNDLED WITH
+   1.10.6
