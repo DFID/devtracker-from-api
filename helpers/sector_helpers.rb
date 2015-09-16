@@ -23,34 +23,75 @@ module SectorHelpers
 =end		
 	end
 
+	def group_hashes arr, group_fields
+			  arr(0).group_by {|hash| hash.values_at(*group_fields).join ":" }.values.map do |grouped|
+			    grouped.inject do |merged, n|
+			      merged.merge(n) do |key, v1, v2|
+			        group_fields.include?(key) ? v1 : (v1.to_f + v2.to_f).to_s
+		      	  end
+		        end 
+		      end
+	end	
+
+
 	def sector_budgets
 
 		# TODO - Need to change the hard coded Budget period to variable
 		oipaSectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&order_by=-budget&format=json"
 		sectorValuesJSON=JSON.parse(oipaSectorValuesJSON)
-
 		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
+
+=begin
+		# Create an hash of DAC5 sector budgets from the API call input (i.e. flatten the data so that the budget is at the same level as the code and name attributes)
+		dac5SectorBudget = sectorValuesJSON.map do |elem| 
+							{
+								"Code (L3)"    => elem["sector"]["code"],
+						        :budget        => elem["budget"]
+						    }    
+		end	
+=end
+
+	
+		# Test code to show that value of contained in the high level sectors has been aggregated correctly
 
 		sectorBudgets = []
 
+		# Create an array of sector budgets from the API call input (i.e. flatten the data so that the budget is at the same level as the code and name attributes)
 		sectorValuesJSON.each do |elem|
-			getHighLevelSector = highLevelSector.select {|h| h["Code (L3)"].to_s == elem["sector"]["code"]}.first
+			p = [ elem["sector"]["code"], elem["budget"]]
+			sectorBudgets << p
+		end			
 
-			#!getHighLevelSector.nil?
+		highLevelSectorBudgets = []
+
+		sectorBudgets.each do |elem|	
+			getHighLevelSector = highLevelSector.select {|h| h["Code (L3)"].to_s == elem[0]}.first
 			if !getHighLevelSector.nil?  then
-				p = [getHighLevelSector["High Level Code (L1)"],getHighLevelSector["High Level Sector Description"],getHighLevelSector["Category (L2)"],getHighLevelSector["Category Name"],getHighLevelSector["Code (L3)"],getHighLevelSector["Name"],elem["budget"]]
-			    sectorBudgets << p  
+				p = ["High Level Code", getHighLevelSector["High Level Code (L1)"], "High Level Sector" ,getHighLevelSector["High Level Sector Description"], "Budget", elem[1]]
+		    	highLevelSectorBudgets << p  
 			end
-		end	
+		end			
 
-		#sectorBudgets
+		highLevelSectorBudgets
+		
+=begin  Create a hash table from the multi dimensional array to pass into the group by function
+		highLevelSectorBudgetsHash = Hash.new
+										highLevelSectorBudgets.each_index  do { |e|
 
-		sectorBudgets = sectorBudgets.group_by{|b| b[1]}.map{|h1Name, budgets|
-        		summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget[6]}
-        		[h1Name, summedBudgets]
-        }.sort
+										   # year = e[0]
+										   # month = e[1]
+										    entry = e[0]
 
-        sectorBudgets.sort{|sectorBudgets,b| b[1] <=> sectorBudgets[1]}.first(5)
+										    # Add to years array
+										   # years[year] ||= Hash.new
+										   # years[year][month] ||= Array.new
+										    highLevelSectorBudgetsHash["test"] << entry
+										} end
+
+		highLevelSectorBudgetsHash
+=end
+
+      	#	group_hashes highLevelSectorBudgetsHash, ["order", "idx", "account"]
 
 	end
 
