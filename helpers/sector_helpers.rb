@@ -96,26 +96,35 @@ module SectorHelpers
 	end
 
 	def high_level_sector_list
-		
-	#	highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
-		
+
 		sectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
+  		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
 
-  		highLevelSector = JSON.parse(File.read('data/test_sh.json'))
-  	#	sectorValues  = JSON.parse(File.read('data/test_budget.json'))
+#		highLevelSector.map do |elem| 
+#	       {  
+#	       	  :code          => elem["High Level Code (L1)"],
+#	          :name          => elem["High Level Sector Description"],
+#			  :budget 		  => sectorValues.select do |source|
+#                        			source["sector"]["code"] == elem["Code (L3)"].to_s 
+#                      			end.map{|elem|elem["budget"]}.inject(:+)	                            
+#	       } 
+#		end
 
-
-		highLevelSector.map do |elem| 
+		sectorValues.map do |elem| 
 	       {  
-	       	  :code          => elem["High Level Code (L1)"],
-	          :name          => elem["High Level Sector Description"],
-			  :budget 		  => sectorValues.select do |source|
-                         			source["sector"]["code"] == elem["Code (L3)"].to_s 
-                      			end.map{|elem|elem["budget"]}.inject(:+)	                            
-
+	       	   :code 		 => highLevelSector.find do |source|
+                         			source["Code (L3)"].to_s == elem["sector"]["code"]
+                      			end["High Level Code (L1)"],     
+			   :name 		 => highLevelSector.find do |source|
+                         			source["Code (L3)"].to_s == elem["sector"]["code"]
+                      			end["High Level Sector Description"],
+               :budget       => elem["budget"]      			                         			           			                          
 	       } 
-		end
+	     end
+   
+   	   # ToDo - get this working	
+	   # group_hashes sectorValues, [":code", ":name"]
 
 	end
 
