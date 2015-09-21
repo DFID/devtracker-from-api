@@ -311,6 +311,19 @@ module ProjectHelpers
         }
     end
 
+    #New Function for API Based Devtracker
+    def h2Activity_title(h2Activities,h2ActivityId)
+        h2Activity = h2Activities.select {|activity| activity['id'] == h2ActivityId}.first
+        h2Activity['title']['narratives'][0]['text']
+    end
+
+    def sum_transaction_value(transactionType)
+        summedBudgets = transactionType.reduce(0) {|memo, t| memo + t['value'].to_f}
+        
+        #total_transaction_value['summedBudgets']
+
+    end
+
 end
 
 helpers ProjectHelpers
