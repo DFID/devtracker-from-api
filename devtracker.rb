@@ -8,6 +8,7 @@ require 'rest-client'
 require 'active_support'
 require 'kramdown'
 require 'pony'
+require 'money'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -160,9 +161,14 @@ get '/projects/:proj_id/transactions/?' do |n|
   	project = JSON.parse(oipa)
 
 	# get the transactions from the API
-	oipa_tx = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json" #TEST: for Partner Project
-  	tx = JSON.parse(oipa_tx)
-  	transactions = tx['results']
+	oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{n}&page_size=400" 
+  	transactionsJSON = JSON.parse(oipaTransactionsJSON)
+  	transactions = transactionsJSON['results']
+
+  	#get details of H2 Activities from the API
+  	oipaH2ActivitiesJSON = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{n}&page_size=400"
+    h2ActivitiesJSON=JSON.parse(oipaH2ActivitiesJSON)
+    h2Activities=h2ActivitiesJSON['results']
 
     # get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
@@ -172,7 +178,8 @@ get '/projects/:proj_id/transactions/?' do |n|
 		:layout => :'layouts/layout',
 		:locals => {
 			project: project,
- 			transactions: transactions, 			
+ 			transactions: transactions,
+ 			h2Activities: h2Activities, 			
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
