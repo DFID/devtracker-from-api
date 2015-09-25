@@ -16,18 +16,8 @@ module SectorHelpers
 		sectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
   		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
-
-#		highLevelSector.map do |elem| 
-#	       {  
-#	       	  :code          => elem["High Level Code (L1)"],
-#	          :name          => elem["High Level Sector Description"],
-#			  :budget 		  => sectorValues.select do |source|
-#                        			source["sector"]["code"] == elem["Code (L3)"].to_s 
-#                      			end.map{|elem|elem["budget"]}.inject(:+)	                            
-#	       } 
-#		end
-
-		 highLevelSectorBudget = sectorValues.map do |elem| 
+        
+        highLevelSectorBudget = sectorValues.map do |elem| 
 	       {  
 	       	   :code 		 => highLevelSector.find do |source|
                          			source["Code (L3)"].to_s == elem["sector"]["code"]
@@ -38,9 +28,31 @@ module SectorHelpers
                :budget       => elem["budget"]      			                         			           			                          
 	       } 
 	     end
-   		
-	    group_hashes  highLevelSectorBudget, [:code,:name]
-  	  
+=begin  		
+		highLevelSectorBudget = sectorValues.map do |elem| 
+	       {  
+	       	  code, name, budget = '', '', 0
+	       	 
+	       	  highLevelSector.find do |source|
+	       	  {	 
+	       	   	if source["Code (L3)"].to_s == elem["sector"]["code"] then
+	       	   		code 		 = source["High Level Code (L1)"]     
+			   		name 		 = source["High Level Sector Description"]
+               		budget       = elem["budget"] 		
+               	 end   		       	  
+	       	  }end	
+
+	       	  if code != '' and name != '' and budget != 0 then
+	       	  	:code => code,
+	       	  	:name => name,
+	       	  	:budget => budget	
+	       	   end	
+	       } 
+	     end
+=end
+	    hiLevSecBudAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
+	    hiLevSecBudAggSorted = hiLevSecBudAggregated.sort_by{ |k| k[:budget].to_f}.reverse
+	    hiLevSecBudAggSorted.first(5)	    	  
 	end
 
 	

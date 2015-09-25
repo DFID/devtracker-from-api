@@ -94,11 +94,6 @@ layout: landing
     <div class="four columns" id="top-5-sectors">
         <%#= what_we_do  %>
         <%if !what_we_do.nil?  %>
-
-            <%= what_we_do.length %>
-            <br/><br/>
-            <%= what_we_do %>
-
            <div class="top-five-header">        
                 <span class="top-five-title">Top 5 things we do</span>
                 <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 5 things we do"/></a>
@@ -109,12 +104,11 @@ layout: landing
                 </aside>
             </div> 
             <ol>
-   <%#             <% what_we_do.each do |sector| %>
-    <%#                <li>
-    <%#                    <a href="/sector/<%=sector[0]%> <%# "><%=sector[0]%></a>
-     <%#                    <em><span class="visually-hidden">Budget</span><%= format_million_stg sector[1] %></em>
-     <%#                   <em>&pound;<%#=format_round_m sector[:budget] || 0.0 %></em>
-     <%#               </li>
+                <% what_we_do.each do |sector| %>
+                    <li>
+                       <a href="/sector/<%=sector[:code]%>"><%=sector[:name]%></a>
+                       <em><span class="visually-hidden">Budget</span><%= format_million_stg sector[:budget].to_f %></em>                       
+                    </li>
                 <% end %>                
             </ol>        
         <%end%>
