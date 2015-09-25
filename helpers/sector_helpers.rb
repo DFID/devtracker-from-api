@@ -11,7 +11,7 @@ module SectorHelpers
 		      end
 	end	
 
-	def high_level_sector_list
+	def high_level_sector_list 
 
 		sectorValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)

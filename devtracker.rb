@@ -26,10 +26,10 @@ include SectorHelpers
 include ProjectHelpers
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+# set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -202,6 +202,35 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
+
+#####################################################################
+#  SECTOR PAGES
+#####################################################################
+# examples:
+# http://devtracker.dfid.gov.uk/sector/
+# Project summary page
+get '/sector' do
+	# get the project data from the API
+  #  oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
+  #	project = JSON.parse(oipa)
+
+	# get the funded projects from the API
+ #   fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
+	#fundedProjectsData = JSON.parse(fundedProjectsAPI)
+			
+	erb :'sector/index', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			high_level_sector_structure: high_level_sector_list
+ 		}
+		
+end
+
+
+
+
+
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################

@@ -37,13 +37,13 @@ title: Development Tracker
                 <span id="sortSectBudgPer" class="sort-proj-sectors">▲</span>
             </div>
             <ul class="sector-list">
-                <% (high_level_sectors_structure || []).each do |sector| %>
+                <% (high_level_sector_structure || []).each do |sector| %>
                     <li>
-                        <a href="/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%></a>
+                       <a href="/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%> </a>
                         <div class="progress">
-                            <em><%=format_percentage sector[:percentage]%></em>
-                            <span class="meter" style="width: <%=format_percentage sector[:cellWidth]%>"></span>
-                            <span class="sector-value" style="float:right;">&pound;<%=format_round_m sector[:budget] || 0.0 %></span>
+            <%#                  <em><%=format_percentage sector[:percentage]%> <%# </em>
+        <%#                      <span class="meter" style="width: <%=format_percentage sector[:cellWidth]%> <%# "></span> #%>
+                            <span class="sector-value" style="float:right;">&pound;<%=format_round_m sector[:budget].to_f || 0.0 %> </span>
                         </div>
                     </li>
                 <% end %>
