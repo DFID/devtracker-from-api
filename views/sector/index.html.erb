@@ -1,6 +1,3 @@
----
-title: Development Tracker
----
 <div id="page-title" class="row">
     <div class="twelve columns">
         <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
@@ -36,18 +33,19 @@ title: Development Tracker
                 Budget %
                 <span id="sortSectBudgPer" class="sort-proj-sectors">▲</span>
             </div>
+
             <ul class="sector-list">
-                <% (high_level_sector_structure || []).each do |sector| %>
+                <% (high_level_sector_list || []).each do |sector| %>
                     <li>
                        <a href="/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%> </a>
-                        <div class="progress">
-            <%#                  <em><%=format_percentage sector[:percentage]%> <%# </em>
-        <%#                      <span class="meter" style="width: <%=format_percentage sector[:cellWidth]%> <%# "></span> #%>
-                            <span class="sector-value" style="float:right;">&pound;<%=format_round_m sector[:budget].to_f || 0.0 %> </span>
-                        </div>
+                         <div class="progress">
+                           <%#   <em><%=format_percentage sector[:percentage]%> <%# </em>
+                           <%#   <span class="meter" style="width: <%=format_percentage sector[:cellWidth]%> <%# "></span> #%>
+                             <span class="sector-value" style="float:right;">&pound;<%=format_round_m sector[:budget].to_f || 0.0 %> </span>
+                         </div>
                     </li>
                 <% end %>
-            </ul>
+             </ul> 
             </div>
         </div>
 

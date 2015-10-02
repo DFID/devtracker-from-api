@@ -54,7 +54,7 @@ get '/' do  #homepage
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list, 
+ 			what_we_do: high_level_sector_list( settings.oipa_api_url, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end
@@ -208,24 +208,26 @@ end
 #####################################################################
 # examples:
 # http://devtracker.dfid.gov.uk/sector/
-# Project summary page
-get '/sector' do
-	# get the project data from the API
-  #  oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  #	project = JSON.parse(oipa)
 
-	# get the funded projects from the API
- #   fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
-	#fundedProjectsData = JSON.parse(fundedProjectsAPI)
-			
-	erb :'sector/index', 
+# High Level Sector summary page
+get '/sector/?' do
+	# Get the high level sector data from the API
+  	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			high_level_sector_structure: high_level_sector_list
- 		}
-		
+ 			high_level_sector_list: high_level_sector_list( settings.oipa_api_url, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 		}		
 end
 
+# Category Page (e.g. Three Digit DAC Sector) 
+get '/sector/:CategoryCode/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/categories', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			category_list: category_list( settings.oipa_api_url, "all_sectors", "Category (L2)", "Category Name", "High Level Code (L1)")
+ 		}		
+end
 
 
 
