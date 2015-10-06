@@ -8,7 +8,7 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/sector">Aid by Sector</a></li>
-                    <li><%= category_list[:highLevelDesc] %></li> 
+                    <li><%= category_list[:parentDesc] %></li> 
                 </ul>
             </div>
             <h1>
@@ -21,21 +21,21 @@
 
 <div class="row">
     <div class="twelve columns content">
-        <h2 class="section-group-title"><%= category_list[:highLevelDesc] %> Sector Breakdown</h2>
+        <h2 class="section-group-title"><%= category_list[:parentDesc] %> Sector Breakdown</h2>
         <div class="row">
             <div class="four columns summary">
-                <p><%= category_list[:highLevelDesc] %></p>               
+                <p><%= category_list[:parentDesc] %></p>               
  <%#                <a class="button" href="/sector/<%=sector['_id']%> <%#  /projects" style="width:100%;">View All <%= sector['sectorName'] %> <%#  Projects</a> #%>
             </div>
             <div class="eight columns">
                <ul class="sector-list">
-                    <% (category_list[:categoriesData]).each do |category| %>
+                    <% (category_list[:sectorData]).each do |category| %>
                         <li>
-                            <a href="/sector/<%=category[:highLevelCode]%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
+                            <a href="/sector/<%=category[:parentCode]%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
                             <div class="progress">
-                                   <em><%=format_percentage (category[:budget].to_f/category_list[:totalBudget])%> </em>
-                                   <span class="meter" style="width: <%=format_percentage (category[:budget].to_f/category_list[:totalBudget])%>"></span>
-<%#                                <span class="meter" style="width: <%=format_percentage category[:cellWidth]%> <%#   "></span>  #%>
+                                   <%budgetPercentage = 100*category[:budget].to_f/category_list[:totalBudget].to_f %>
+                                   <em><%=format_percentage budgetPercentage%> </em>
+                                   <span class="meter" style="width:  <%=format_percentage budgetPercentage%>"></span>
                                    <span>£<%=format_round_m category[:budget].to_f || 0.0 %> </span>                                
                             </div> 
                         </li> 

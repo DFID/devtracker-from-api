@@ -225,10 +225,19 @@ get '/sector/:CategoryCode/?' do
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			category_list: category_list( settings.oipa_api_url, "all_sectors", "Category (L2)", "Category Name", "High Level Code (L1)")
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "all_sectors", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
 
+# Sector Page (e.g. Five Digit DAC Sector) 
+get '/sector/:CategoryCode/categories/:SectorCode/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/sectors', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "all_sectors", "Code (L3)", "Name", "Category (L2)", "Category Name")
+ 		}		
+end
 
 
 
