@@ -5,15 +5,59 @@ title: Development Tracker
 <%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------ %>
+<%#                       B U D G E T S   T A B L E                          %>
+<%# ------------------------------------------------------------------------ %>
+<div class="row">
+  <div class="twelve columns transactions">
+
+    <div class="section-group-title trans-header-container">
+      <div class="trans-header-left">
+        <span class="trans-type-title">Budget</span>
+        <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+           <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
+        </a> 
+        <aside id="moreinfo1" class="more-info">  
+              <div class="more-info-content trans-more-info-box-limiter">
+                The total amount of money available to spend.  Some budgets may not be shown if projects are in an active procurement phase.
+              </div>
+        </aside>   
+        <p style="margin-bottom:2px;">(Current approved budget)</p>
+       </div>  
+       <% projectBudgets=financial_year_wise_budgets(yearWiseBudgets,"P") %>
+       <% totalProjectBudget=sum_budget_value(projectBudgets).to_f %>
+       <div class="trans-header-right">
+         <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+           <%=  Money.new(totalProjectBudget.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+         </div>
+       </div>        
+    </div>
+    <table class="transactions-table" style="width:100%">
+      <tbody>
+        <tr>
+          <th>Financial Year</th>
+          <th>Value</th>
+        </tr>
+        <% projectBudgets.each do |projectBudget| %>
+          <tr>
+            <td><%= projectBudget[0] %></td>
+            <td><span class="<%= projectBudget[1].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectBudget[1].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%# ------------------------------------------------------------------------ %>
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
     <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
     <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
-    <% incoming_funds=transactions.select {|group| group['transaction_type']['code'] == 'IF' } %>
-    <%if !incoming_funds.nil? && incoming_funds.length > 0 %>
-    <% totalIncomingFund=sum_transaction_value(commitments).to_f %>
+    <% incomingFunds=transactions.select {|group| group['transaction_type']['code'] == 'IF' } %>
+    <%if !incomingFunds.nil? && incomingFunds.length > 0 %>
+    <% totalIncomingFund=sum_transaction_value(incomingFunds).to_f %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Incoming Funds</span>
@@ -29,7 +73,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= sum_transaction_value(incoming_funds).to_f < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalIncomingFund*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= totalIncomingFund.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalIncomingFund.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -44,9 +88,10 @@ title: Development Tracker
           <% transactions.select {|group| group['transaction_type']['code'] == 'IF' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
             <tr>
               <td><%= incomingFund['description'] %></td>
-              <td width="30%"><%= incomingFund['provider_organisation_name'] + " (" + incomingFund['provider_activity'] + ")" %></td>
+              <td width="30%"><%= incomingFund['provider_organisation_name'] + " (" + 
+              if incomingFund['provider_activity'].nil? then '' else incomingFund['provider_activity'] end + ")" %></td>
               <td width="15%"><%= Date.parse(incomingFund['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= incomingFund['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(incomingFund['value'].to_f*100, incomingFund['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= incomingFund['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(incomingFund['value'].to_f.round(0)*100, incomingFund['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -80,9 +125,9 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalCommitments < 0 ? 'negative' : ''%> float-right trans-type-value">
+             <div class="<%= totalCommitments.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
               <%#= number_to_currency(transaction_group["value"].to_f, :unit=> currency_symbol(project['currency']) || "£", :precision => 0)%>
-              <%= Money.new(totalCommitments*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+              <%= Money.new(totalCommitments.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -98,9 +143,9 @@ title: Development Tracker
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= h2Activity_title(h2Activities,commitment['activity']['id']) %></td>
-              <td width="15%"><%= commitment['activity']['id'] %></td>
+              <td width="15%"><%= is_dfid_project(commitment['activity']['id']) ? commitment['activity']['id'] : ''  %></td>
               <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= commitment['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(commitment['value'].to_f*100, commitment['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= commitment['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(commitment['value'].to_f.round(0)*100, commitment['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -134,7 +179,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalDisbursements < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalDisbursements*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= totalDisbursements.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalDisbursements.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -154,7 +199,7 @@ title: Development Tracker
               <td width="15%"><%= disbursement['receiver_organisation_name'] %></td>
               <td width="15%"><%= disbursement['activity']['id'] %></td>
               <td width="15%"><%= Date.parse(disbursement['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= disbursement['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(disbursement['value'].to_f*100, disbursement['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= disbursement['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(disbursement['value'].to_f.round(0)*100, disbursement['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -188,7 +233,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalExpenditures < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalExpenditures*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= totalExpenditures.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalExpenditures.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -206,9 +251,9 @@ title: Development Tracker
             <tr>
               <td><%= expenditure['description'] %></td>
               <td width="15%"><%= expenditure['receiver_organisation_name'] %></td>
-              <td width="15%"><%= expenditure['activity']['id'] %></td>
+              <td width="15%"><%= is_dfid_project(expenditure['activity']['id']) ? expenditure['activity']['id'] : ''%></td>
               <td width="15%"><%= Date.parse(expenditure['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= expenditure['value'].to_f < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(expenditure['value'].to_f*100, expenditure['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= expenditure['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(expenditure['value'].to_f.round(0)*100, expenditure['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
           <% end %>
         </tbody>
