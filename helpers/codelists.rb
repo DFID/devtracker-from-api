@@ -65,13 +65,12 @@ module CodeLists
   }
 
   @@iati_mime_types = {
-    "application/msword" => "Word Document",
-    "application/vnd.ms-excel" => "Excel Spreadsheet",
+    "application/msword" => "Microsoft Word Document",
+    "application/vnd.ms-excel" => "Microsoft Excel Spreadsheet",
     "application/octet-stream" => "Binary file",
     "application/pdf" => "PDF Document",
     "text/html" => "Web Page",
-    "application/vnd.oasis.opendocument.text" => "Open Word Document"
-
+    "application/vnd.oasis.opendocument.text" => "Open Document Format"
   }
 
   @@transaction_titles = {
