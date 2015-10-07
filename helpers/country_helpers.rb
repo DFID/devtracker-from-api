@@ -75,21 +75,21 @@ module CountryHelpers
   end
 
   #New One based on API Call
-  def country_project_budgets(year_wise_budgets)
+  def country_project_budgets(yearWiseBudgets)
     #projectCodes = @cms_db['projects'].find({
       #{}"projectType" => "country", "recipient" => country_code
       #}, :fields => ["iatiId"]).to_a.map{|b| b["iatiId"]}
     #
-    project_budgets = []
+    projectBudgets = []
     
-    year_wise_budgets.each do |y|
+    yearWiseBudgets.each do |y|
       if y["quarter"]==1
           p=[y["quarter"],y["budget"],y["year"],y["year"]-1]
       else
           p=[y["quarter"],y["budget"],y["year"],y["year"]]
       end
       
-      project_budgets << p        
+      projectBudgets << p        
     end
 
     #project_budgets
@@ -98,30 +98,30 @@ module CountryHelpers
         #[year, summedBudgets]
         #}.sort
      
-     fin_year_wise_budgets = project_budgets.group_by{|b| b[3]}.map{|year, budgets|
+     finYearWiseBudgets = projectBudgets.group_by{|b| b[3]}.map{|year, budgets|
         summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget[1]}
         [year, summedBudgets]
         }.sort   
 
     # determine what range to show
       #current_financial_year = first_day_of_financial_year(DateTime.now)
-      current_financial_year = financial_year
+      currentFinancialYear = financial_year
 
     # if range is 6 or less just show it
-      range = if fin_year_wise_budgets.size < 7 then
-               fin_year_wise_budgets
+      range = if finYearWiseBudgets.size < 7 then
+               finYearWiseBudgets
               # if the last item in the list is less than or equal to 
               # the current financial year get the last 6
-              elsif fin_year_wise_budgets.last.first <= current_financial_year
-                fin_year_wise_budgets.last(6)
+              elsif finYearWiseBudgets.last.first <= currentFinancialYear
+                finYearWiseBudgets.last(6)
               # other wise show current FY - 3 years and cuurent FY + 3 years
               else
-                index_of_now = fin_year_wise_budgets.index { |i| i[0] == current_financial_year }
+                index_of_now = finYearWiseBudgets.index { |i| i[0] == currentFinancialYear }
 
                 if index_of_now.nil? then
-                  fin_year_wise_budgets.last(6)
+                  finYearWiseBudgets.last(6)
                 else
-                  fin_year_wise_budgets[[index_of_now-3,0].max..index_of_now+2]
+                  finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
                 end
               end
 

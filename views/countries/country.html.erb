@@ -64,7 +64,7 @@
                        Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
                     </div>
                 </aside>
-                <span><strong><%= total_project_budgets[0]['budget'].to_f.round(0)%></strong></span>
+                <span><strong><%= Money.new(total_project_budgets[0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></strong></span>
             </li>
             <!--<li class="fact-item">
                 Project budget as % of DFID budget
@@ -173,7 +173,7 @@
  <script>
  
      (function(){
-        var budgets =<%= ([["Year", "Budget"]]) + (country_project_budgets year_wise_budgets)%>;
+        var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
         //alert(budgets);
 
         charts.bar("#budget-year-chart", budgets, ".2s", null, null, ["#D8DCBF"]);

@@ -37,3 +37,21 @@ end
 def getR4DDocsCountNotShowing(output_count)
 		output_count.to_i - 5 
 end
+
+def get_document_category(projectId)
+	oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json"
+  	project = JSON.parse(oipa)
+  	documents=project['document_links']
+
+  	if documents.length>0 then
+  		result = "";
+  		documents.each do |document|
+  			if !document['category']['code'].nil? then 
+  				result += document_category(document['category']['code'].to_s.strip) + '#' 
+  			end
+  		end
+  		result = result.chop!
+  	else
+  		result=""
+  	end		
+end
