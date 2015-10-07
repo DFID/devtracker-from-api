@@ -35,7 +35,7 @@ module SectorHelpers
 
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
-		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
+		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
   		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
         
@@ -73,9 +73,9 @@ module SectorHelpers
 	end
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
-	def sector_parent_data_list(apiUrl, listType, code, description, parentCodeType, parentDescriptionType)
+	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
 
-		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&order_by=-budget&format=json"
+		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorHierarchy = JSON.parse(File.read('data/sector_hierarchies.json'))
         
@@ -96,24 +96,44 @@ module SectorHelpers
 	     end
 
 	     #TODO - test the input to see that there is no bad data comming in
-	     
-	     #Remove all items from the data structure aren't related to the selected parent code 
-	     selectedCodes = budgetData.delete_if { |h| h[:parentCode].to_s != "122" }
+	     if pageType == "category"
+	     	inputCode = urlHighLevelSectorCode
+	     	sectorHierarchyPath = {	     
+	     			:highLevelSectorCode => inputCode,			
+	     			:highLevelSectorDescription => sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]
+	     	}	     	
+	     else	
+	     	inputCode = urlCategoryCode
+	     	sectorHierarchyPath = {	     			
+	     			:highLevelSectorCode => urlHighLevelSectorCode,	
+	     			:highLevelSectorDescription => sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode}["High Level Sector Description"],	
+	     			:categoryCode => inputCode,	 
+	     			:categoryDescription => sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]	     		
+	     	}
+		 end
 
-	     #Aggregate all of the budget values for each child code & sort the list by name
-	  	 selectedCodesBudgetAggregated = group_hashes  selectedCodes, [:code,:name,:parentCode]
-	  	 selectedCodesBudgetAggregatedSorted = selectedCodesBudgetAggregated.sort_by{ |k| k[:name]}
+		 #Return the parent's description
+	  	 parentDescription  = sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]
+
+	     #Remove all items from the data structure aren't related to the selected parent code 
+	     selectedCodes = budgetData.delete_if { |h| h[:parentCode].to_s != inputCode }
+
+	     if pageType == "category"
+	     	#Aggregate all of the budget values for each child code & sort the list by name
+	  	 	selectedCodesBudgetAggregated = group_hashes  selectedCodes, [:code,:name,:parentCode]
+	     	selectedCodesBudgetAggregatedSorted = selectedCodesBudgetAggregated.sort_by{ |k| k[:name]}
+		 else
+		 	#DAC 5 digit sector code budgets are pre-aggregated in the API 
+		 	selectedCodesBudgetAggregatedSorted = selectedCodes.sort_by{ |k| k[:name]}	
+		 end 		     	
 	 
 	  	 #Calculate the sum of all of the budgets in the data structure 
-	  	 totalBudget = Float(selectedCodesBudgetAggregated.map { |s| s[:budget].to_f }.inject(:+))
-    
-	  	 #Return the parent's description
-	   	 parentDescription  = sectorHierarchy.find { |i| i[parentCodeType].to_s == "122" }[parentDescriptionType]
-	   	 
+	  	 totalBudget = Float(selectedCodesBudgetAggregatedSorted.map { |s| s[:budget].to_f }.inject(:+))
+       	 
 	   	 returnObject = {
 				  :sectorData  => selectedCodesBudgetAggregatedSorted,
 				  :totalBudget => totalBudget,
-				  :parentDesc  => parentDescription				  				  
+				  :sectorHierarchyPath => sectorHierarchyPath  	  				  
     			}	  			
 	 end
 end

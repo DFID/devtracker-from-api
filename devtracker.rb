@@ -1,4 +1,4 @@
-# devtracker.rb
+#devtracker.rb
 #require 'rubygems'
 #require 'bundler'
 #Bundler.setup
@@ -220,22 +220,22 @@ get '/sector/?' do
 end
 
 # Category Page (e.g. Three Digit DAC Sector) 
-get '/sector/:CategoryCode/?' do
+get '/sector/:high_level_sector_code/?' do
 	# Get the three digit DAC sector data from the API
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "all_sectors", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description")
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category")
  		}		
 end
 
 # Sector Page (e.g. Five Digit DAC Sector) 
-get '/sector/:CategoryCode/categories/:SectorCode/?' do
+get '/sector/:high_level_sector_code/categories/:category_code/?' do
 	# Get the three digit DAC sector data from the API
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "all_sectors", "Code (L3)", "Name", "Category (L2)", "Category Name")
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code])
  		}		
 end
 
