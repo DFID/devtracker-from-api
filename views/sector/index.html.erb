@@ -41,7 +41,7 @@
                          <div class="progress">
                              <%budgetPercentage = 100*sector[:budget].to_f/high_level_sector_list[:totalBudget].to_f %>
                              <em><%=format_percentage budgetPercentage %></em>
-                             <span class="meter" style="width: <%=format_percentage budgetPercentage%>"></span> 
+                             <span class="meter" style="width: <%=format_percentage (2*budgetPercentage)%>"></span> 
                              <span class="sector-value" style="float:right;">&pound;<%=format_round_m sector[:budget].to_f || 0.0 %> </span>
                          </div>
                     </li>

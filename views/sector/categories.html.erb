@@ -35,7 +35,7 @@
                             <div class="progress">
                                    <%budgetPercentage = 100*category[:budget].to_f/category_list[:totalBudget].to_f %>
                                    <em><%=format_percentage budgetPercentage%> </em>
-                                   <span class="meter" style="width: budgetPercentage<%#  <%=format_percentage budgetPercentage%>"></span>
+                                   <span class="meter" style="width: <%=format_percentage (0.7*budgetPercentage)%>"></span>
                                    <span>£<%=format_round_m category[:budget].to_f || 0.0 %> </span>                                
                             </div> 
                         </li> 
