@@ -222,11 +222,11 @@ get '/location/country/?' do
 end
 
 get '/department' do 
-	erb :'department/index', :layout => :'layouts/layout'
+	erb :'department/department', :layout => :'layouts/layout'
 end
 
 get '/about/?' do
-	erb :'about/index', :layout => :'layouts/layout'
+	erb :'about/about', :layout => :'layouts/layout'
 end
 
 get '/cookies/?' do
@@ -234,7 +234,7 @@ get '/cookies/?' do
 end  
 
 get '/faq/?' do
-	erb :'faq/index', :layout => :'layouts/layout'
+	erb :'faq/faq', :layout => :'layouts/layout'
 end 
 
 get '/feedback/?' do
