@@ -18,16 +18,21 @@ require_relative 'helpers/lookups.rb'
 require_relative 'helpers/project_helpers.rb'
 require_relative 'helpers/sector_helpers.rb'
 require_relative 'helpers/country_helpers.rb'
+require_relative 'helpers/document_helpers.rb'
+require_relative 'helpers/common_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
 include Formatters
 include SectorHelpers
 include ProjectHelpers
+include CommonHelpers
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
+set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
+set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 # Server Machine: set global settings
 # set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
@@ -46,8 +51,10 @@ get '/' do  #homepage
 #	top5countries = JSON.parse(File.read('data/top5countries.json'))
 	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
-
-	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&order_by=-budget&page_size=5"
+	#current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+	#current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+	
+	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"
   	top5countries = JSON.parse(countriesJSON)
 
  	erb :index, 
@@ -66,14 +73,14 @@ countriesInfo = JSON.parse(File.read('data/countryInfo.json'))
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+	#current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+	#current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
     country = countriesInfo.select {|country| country['code'] == n}.first
     oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
     total_projects = JSON.parse(oipa_total_projects)
     oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&activity_status=2&format=json"
     active_projects = JSON.parse(oipa_active_projects)
-    oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{n}"
+    oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{n}"
     total_project_budgets= JSON.parse(oipa_total_project_budgets)
     oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter"
     year_wise_budgets= JSON.parse(oipa_year_wise_budgets)
@@ -160,10 +167,18 @@ get '/projects/:proj_id/transactions/?' do |n|
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
-	# get the transactions from the API
-	oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{n}&page_size=400" 
+	# get the transactions from the API & get quarterly budget for H1 Activity
+	if is_dfid_project(project['id']) then
+		oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{n}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+		oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{n}&order_by=year,quarter"
+	else
+		oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{n}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+		oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{n}&order_by=year,quarter"
+	end
+			
   	transactionsJSON = JSON.parse(oipaTransactionsJSON)
-  	transactions = transactionsJSON['results']
+  	transactions = transactionsJSON['results'] 	
+  	yearWiseBudgets= JSON.parse(oipaYearWiseBudgets)
 
   	#get details of H2 Activities from the API
   	oipaH2ActivitiesJSON = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{n}&page_size=400"
@@ -179,6 +194,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 		:locals => {
 			project: project,
  			transactions: transactions,
+ 			yearWiseBudgets: yearWiseBudgets,
  			h2Activities: h2Activities, 			
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
@@ -248,9 +264,9 @@ end
 
 #Aid By Location Page
 get '/location/country/?' do
-	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+	#current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+	#current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
   	countries = JSON.parse(oipa_countries)
 
 	erb :'location/country/index', 
@@ -258,6 +274,10 @@ get '/location/country/?' do
 		:locals => {
 			:countries => countries
 		}
+end
+
+get '/department' do
+	erb :'department/index', :layout => :'layouts/layout'
 end
 
 get '/about/?' do

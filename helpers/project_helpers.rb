@@ -313,15 +313,26 @@ module ProjectHelpers
 
     #New Function for API Based Devtracker
     def h2Activity_title(h2Activities,h2ActivityId)
-        h2Activity = h2Activities.select {|activity| activity['id'] == h2ActivityId}.first
-        h2Activity['title']['narratives'][0]['text']
+        if h2Activities.length>0 then
+            h2Activity = h2Activities.select {|activity| activity['id'] == h2ActivityId}.first
+            h2Activity['title']['narratives'][0]['text']
+        else
+            ""
+        end        
     end
 
     def sum_transaction_value(transactionType)
         summedBudgets = transactionType.reduce(0) {|memo, t| memo + t['value'].to_f}
         
         #total_transaction_value['summedBudgets']
+    end
 
+    def sum_budget_value(projectBudgets)
+        if !projectBudgets.nil? && projectBudgets.length > 0 then
+            summedBudgets = projectBudgets.reduce(0) {|memo, t| memo + t[1].to_f}
+        else
+            summedBudgets =0
+        end    
     end
 
 end
