@@ -1,4 +1,4 @@
-# devtracker.rb
+#devtracker.rb
 #require 'rubygems'
 #require 'bundler'
 #Bundler.setup
@@ -29,10 +29,11 @@ include ProjectHelpers
 include CommonHelpers
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+# set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -62,7 +63,7 @@ get '/' do  #homepage
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list, 
+ 			what_we_do: high_level_sector_list( settings.oipa_api_url, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end
@@ -218,6 +219,46 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
+
+#####################################################################
+#  SECTOR PAGES
+#####################################################################
+# examples:
+# http://devtracker.dfid.gov.uk/sector/
+
+# High Level Sector summary page
+get '/sector/?' do
+	# Get the high level sector data from the API
+  	erb :'sector/index', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			high_level_sector_list: high_level_sector_list( settings.oipa_api_url, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 		}		
+end
+
+# Category Page (e.g. Three Digit DAC Sector) 
+get '/sector/:high_level_sector_code/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/categories', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category")
+ 		}		
+end
+
+# Sector Page (e.g. Five Digit DAC Sector) 
+get '/sector/:high_level_sector_code/categories/:category_code/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/sectors', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code])
+ 		}		
+end
+
+
+
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################
