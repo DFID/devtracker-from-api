@@ -273,7 +273,7 @@ get '/location/country/?' do
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
-			:countries => countries
+			:countries => countries.sort_by{ |k| k['recipient_country']['name']}
 		}
 end
 

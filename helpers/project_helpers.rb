@@ -52,19 +52,23 @@ module ProjectHelpers
     def dfid_country_projects_data
         
         oipaCountryProjectValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&budget_period_start=2015-04-01&budget_period_end=2016-03-31&group_by=recipient_country&aggregations=count,budget&order_by=-budget"
-        result = JSON.parse(oipaCountryProjectValuesJSON)
+        projectValues = JSON.parse(oipaCountryProjectValuesJSON)
 
-        result = result.map do |elem|
+        # Map the input data structure so that it matches the required input for Tilestream 
+        projectValuesMapInput = projectValues.map do |elem|
         {
             elem["recipient_country"]["code"] => {  
-               :country => elem["recipient_country"]["name"],
-               :id => elem["recipient_country"]["code"],
-               :projects => elem["count"],
-               :budget => elem["budget"],
-               :flag => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
+               "country" => elem["recipient_country"]["name"],
+               "id" => elem["recipient_country"]["code"],
+               "projects" => elem["count"],
+               "budget" => elem["budget"],
+               "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
            }
-        }
+        }        
         end
+        
+        # Edit the returned hash object so that the data is in the correct format (e.g. remove enclosing [])
+        projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
 
