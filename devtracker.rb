@@ -1,4 +1,4 @@
-# devtracker.rb
+#devtracker.rb
 #require 'rubygems'
 #require 'bundler'
 #Bundler.setup
@@ -8,21 +8,25 @@ require 'rest-client'
 require 'active_support'
 require 'kramdown'
 require 'pony'
+require 'money'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
 require_relative 'helpers/oipa_helpers.rb'
 require_relative 'helpers/codelists.rb'
 require_relative 'helpers/lookups.rb'
+require_relative 'helpers/common_helpers.rb'
 require_relative 'helpers/project_helpers.rb'
 require_relative 'helpers/sector_helpers.rb'
 require_relative 'helpers/country_helpers.rb'
+
 
 #Helper Modules
 include CountryHelpers
 include Formatters
 include SectorHelpers
 include ProjectHelpers
+include CommonHelpers
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -30,11 +34,17 @@ set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 # Server Machine: set global settings
 # set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
+
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
+
 #####################################################################
 #  Common Variable Assingment
 #####################################################################
+
+set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
+set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
+
 
 #####################################################################
 #  HOME PAGE
@@ -46,14 +56,14 @@ get '/' do  #homepage
 	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
 
-	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&order_by=-budget&page_size=5"
+	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"
   	top5countries = JSON.parse(countriesJSON)
 
  	erb :index, 
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: sector_budgets,
+ 			what_we_do: high_level_sector_list( settings.oipa_api_url, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end
@@ -65,15 +75,13 @@ countriesInfo = JSON.parse(File.read('data/countryInfo.json'))
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
     country = countriesInfo.select {|country| country['code'] == n}.first
     oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
     total_projects = JSON.parse(oipa_total_projects)
     oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&activity_status=2&format=json"
     active_projects = JSON.parse(oipa_active_projects)
-    oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{n}"
-    total_project_budgets= JSON.parse(oipa_total_project_budgets)
+	oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{n}" 
+	total_project_budgets= JSON.parse(oipa_total_project_budgets)
     oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter"
     year_wise_budgets= JSON.parse(oipa_year_wise_budgets)
 
@@ -110,6 +118,7 @@ get '/countries/:country_code/projects/?' do |n|
 		 		}
 		 			
 end
+
 #####################################################################
 #  PROJECTS PAGES
 #####################################################################
@@ -159,10 +168,23 @@ get '/projects/:proj_id/transactions/?' do |n|
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
-	# get the transactions from the API
-	oipa_tx = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json" #TEST: for Partner Project
-  	tx = JSON.parse(oipa_tx)
-  	transactions = tx['results']
+	# get the transactions from the API & get quarterly budget for H1 Activity
+	if is_dfid_project(project['id']) then
+		oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{n}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+		oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{n}&order_by=year,quarter"
+	else
+		oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{n}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+		oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{n}&order_by=year,quarter"
+	end		
+
+  	transactionsJSON = JSON.parse(oipaTransactionsJSON)
+  	transactions = transactionsJSON['results']
+	yearWiseBudgets= JSON.parse(oipaYearWiseBudgets)
+
+  	#get details of H2 Activities from the API
+  	oipaH2ActivitiesJSON = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{n}&page_size=400"
+    h2ActivitiesJSON=JSON.parse(oipaH2ActivitiesJSON)
+    h2Activities=h2ActivitiesJSON['results']
 
     # get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000"	
@@ -172,7 +194,9 @@ get '/projects/:proj_id/transactions/?' do |n|
 		:layout => :'layouts/layout',
 		:locals => {
 			project: project,
- 			transactions: transactions, 			
+ 			transactions: transactions,
+ 			yearWiseBudgets: yearWiseBudgets,
+ 			h2Activities: h2Activities, 			
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
@@ -195,6 +219,46 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjectsCount: fundedProjectsData['count']  
  		}
 end
+
+#####################################################################
+#  SECTOR PAGES
+#####################################################################
+# examples:
+# http://devtracker.dfid.gov.uk/sector/
+
+# High Level Sector summary page
+get '/sector/?' do
+	# Get the high level sector data from the API
+  	erb :'sector/index', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			high_level_sector_list: high_level_sector_list( settings.oipa_api_url, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 		}		
+end
+
+# Category Page (e.g. Three Digit DAC Sector) 
+get '/sector/:high_level_sector_code/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/categories', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category")
+ 		}		
+end
+
+# Sector Page (e.g. Five Digit DAC Sector) 
+get '/sector/:high_level_sector_code/categories/:category_code/?' do
+	# Get the three digit DAC sector data from the API
+  	erb :'sector/sectors', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code])
+ 		}		
+end
+
+
+
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################
@@ -203,8 +267,8 @@ end
 get '/location/country/?' do
 	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
 	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
-  	countries = JSON.parse(oipa_countries)
+	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+	countries = JSON.parse(oipa_countries)
 
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
@@ -213,8 +277,12 @@ get '/location/country/?' do
 		}
 end
 
+get '/department' do 
+	erb :'department/department', :layout => :'layouts/layout'
+end
+
 get '/about/?' do
-	erb :'about/index', :layout => :'layouts/layout'
+	erb :'about/about', :layout => :'layouts/layout'
 end
 
 get '/cookies/?' do
@@ -222,7 +290,7 @@ get '/cookies/?' do
 end  
 
 get '/faq/?' do
-	erb :'faq/index', :layout => :'layouts/layout'
+	erb :'faq/faq', :layout => :'layouts/layout'
 end 
 
 get '/feedback/?' do
@@ -247,4 +315,3 @@ post '/fraud/index' do
     })
     redirect '/' 
    end
-

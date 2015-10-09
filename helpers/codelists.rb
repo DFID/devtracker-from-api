@@ -65,12 +65,12 @@ module CodeLists
   }
 
   @@iati_mime_types = {
-    "application/msword" => "Word Document",
-    "application/vnd.ms-excel" => "Excel Spreadsheet",
+    "application/msword" => "Microsoft Word Document",
+    "application/vnd.ms-excel" => "Microsoft Excel Spreadsheet",
     "application/octet-stream" => "Binary file",
     "application/pdf" => "PDF Document",
-    "text/html" => "Web Page"
-
+    "text/html" => "Web Page",
+    "application/vnd.oasis.opendocument.text" => "Open Document Format"
   }
 
   @@transaction_titles = {
@@ -298,7 +298,7 @@ module CodeLists
   end
 
   def iati_mime_type(code)
-    @@mime_types[code]
+    @@iati_mime_types[code]
   end
 
   def sector(code)

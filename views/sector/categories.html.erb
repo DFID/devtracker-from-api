@@ -1,6 +1,4 @@
----
-title: Development Tracker
----
+<%# title: Development Tracker #%>
 
 <div id="page-title" class="row">
     <div class="twelve columns">
@@ -10,7 +8,7 @@ title: Development Tracker
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/sector">Aid by Sector</a></li>
-                    <li><%= sector['sectorName'] %></li>
+                    <li><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %></li> 
                 </ul>
             </div>
             <h1>
@@ -23,25 +21,26 @@ title: Development Tracker
 
 <div class="row">
     <div class="twelve columns content">
-        <h2 class="section-group-title"><%= sector['sectorName'] %> Sector Breakdown</h2>
+        <h2 class="section-group-title"><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %> Sector Breakdown</h2>
         <div class="row">
             <div class="four columns summary">
-                <p><%= sector['sectorName'] %></p>
-                <a class="button" href="/sector/<%=sector['_id']%>/projects" style="width:100%;">View All <%= sector['sectorName'] %> Projects</a>
+                <p><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %></p>               
+                 <a class="button" href="/sector/<%=category_list[:sectorHierarchyPath][:highLevelSectorCode]%>/projects" style="width:100%;">View All <%= category_list[:sectorHierarchyPath][:highLevelSectorDescription]%> Projects</a> 
             </div>
             <div class="eight columns">
-                <ul class="sector-list">
-                    <% (sector_categories_structure(sector['_id']) || []).each do |category| %>
+               <ul class="sector-list">
+                    <% (category_list[:sectorData]).each do |category| %>
                         <li>
-                            <a href="/sector/<%=sector['_id']%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
+                            <a href="/sector/<%=category[:parentCode]%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
                             <div class="progress">
-                                <em><%=format_percentage category[:percentage]%></em>
-                                <span class="meter" style="width: <%=format_percentage category[:cellWidth]%>"></span>
-                                <span>£<%=format_round_m category[:budget] || 0.0 %></span>                                
-                            </div>
-                        </li>
+                                   <%budgetPercentage = 100*category[:budget].to_f/category_list[:totalBudget].to_f %>
+                                   <em><%=format_percentage budgetPercentage%> </em>
+                                   <span class="meter" style="width: <%=format_percentage (0.7*budgetPercentage)%>"></span>
+                                   <span>£<%=format_round_m category[:budget].to_f || 0.0 %> </span>                                
+                            </div> 
+                        </li> 
                     <% end %>
-                </ul>
+                </ul>  
             </div>
         </div>
     </div>

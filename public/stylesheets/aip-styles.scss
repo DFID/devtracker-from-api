@@ -314,7 +314,7 @@ Sector breakdown
 #nav-entry p a{
   color: #000;
   text-transform: uppercase;
-  font-size: 2.2em;
+  font-size: 1.8em;
   margin-bottom: 0px;
 }
 #nav-entry p a:focus{
@@ -338,7 +338,7 @@ Sector breakdown
 .link-wrapper {
   position: relative;
   display: block;
-  width: 8em;
+  width: 7em;
   height: 2.5em;
   margin-top: -2.9em ;
   background-color: #FFF;
@@ -910,6 +910,13 @@ a.button {
   font-size: $normal;
   margin-bottom: 0;
 }
+
+/* department styles
+-----------------------------------------------*/
+.url-margin {
+  margin-bottom: 21px;
+}
+
 /* Footer styles
 -----------------------------------------------*/
 #footer {
