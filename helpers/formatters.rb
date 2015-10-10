@@ -50,20 +50,20 @@ module Formatters
      URI.escape(s)
   end
 
-  def financial_year_formatter(y)
+   def financial_year_formatter(d)
 
-      #date = if(d.kind_of?(String)) then
-        #Date.parse d
-      #else
-        #d
-      #end
-
-      #if date.month < 4
-        #{}"FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
-      #else
-        "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
-      #end
+    date = if(d.kind_of?(String)) then
+      Date.parse d
+    else
+      d
     end
+
+    if date.month < 4
+      "FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
+    else
+      "FY#{date.year.to_s[2..3]}/#{(date.year+1).to_s[2..3]}"
+    end
+  end
 
   def financial_year 
       now = Time.new
