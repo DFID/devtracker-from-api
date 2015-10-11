@@ -1,15 +1,11 @@
----
-title: Development Tracker
----
-
 <div id="page-title" class="row">
     <div class="twelve columns">
         <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
         <div>
             <div class="breadcrumb">
                 <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/location/country/index.html">Aid by Location</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/location/country">Aid by Location</a></li>
                     <li><%= country['name'] %></li>
                 </ul>
             </div>
@@ -20,26 +16,28 @@ title: Development Tracker
     </div>
 </div>
 
-<%= partial "partials/countries-tabs", :locals => { :active => "results", :country => country, :project_count => projects.size, :results_count => results.size } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
 
 <div class="row">
     <div class="twelve columns content results-info">
-        <h3 class="section-group-title">Results achieved (up to 2012/13 inclusive)</h3>
+        <h3 class="section-group-title">Results achieved (up to 2014/15 inclusive)</h3>
 
-        <% results.each do |result| %>
+        <%#= results %>    
+        <%= results_hash %>
+        <%# results.each do |result| %>
         <div class="row">
             <div class="four columns summary">
-                <h3><%= result['_id'] %></h3>     
+                <h3><%#= result['_id'] %></h3>     
             </div>
             <div class="eight columns">
                 <ul>
-                    <% result['countryResult'].each_with_index do |result_description, index| %>
-                    <li><%= result_description %><span><%=number_with_delimiter(result['resultTotal'][index], :delimiter => ',') %></span></li>
-                    <% end %>
+                    <%# result['countryResult'].each_with_index do |result_description, index| %>
+                    <li><%#= result_description %><span><%#=number_with_delimiter(result['resultTotal'][index], :delimiter => ',') %></span></li>
+                    <%# end %>
                 </ul> 
             </div>
         </div>
-        <% end %>
+        <%# end %>
     </div>   
 </div>
 <div class="row">

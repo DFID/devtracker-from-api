@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects['count'], :results_count => country['resultsCount'] } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
 <%#=projects.size%>
 <%# projects.each do |project| %>
     <%#= project['iati_identifier'] %>

@@ -29,12 +29,12 @@ include ProjectHelpers
 include CommonHelpers
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 # Server Machine: set global settings
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -70,12 +70,12 @@ end
 #  COUNTRY PAGES
 #####################################################################
 countriesInfo = JSON.parse(File.read('data/countryInfo.json'))
+resultsInfo = JSON.parse(File.read('data/results.json'))
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-	#current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	#current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
     country = countriesInfo.select {|country| country['code'] == n}.first
+    results = resultsInfo.select {|result| result['code'] == n}
     oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
     total_projects = JSON.parse(oipa_total_projects)
     oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&activity_status=2&format=json"
@@ -96,7 +96,8 @@ get '/countries/:country_code/?' do |n|
  			total_projects: total_projects,
  			active_projects: active_projects,
  			total_project_budgets: total_project_budgets,
- 			year_wise_budgets: year_wise_budgets
+ 			year_wise_budgets: year_wise_budgets,
+ 			results: results
  		}
 end
 
@@ -104,6 +105,7 @@ end
 get '/countries/:country_code/projects/?' do |n|
 	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
 		country=countriesInfo.select {|country| country['code'] == n}.first
+		results = resultsInfo.select {|result| result['code'] == n}
 		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
 	    total_projects = JSON.parse(oipa_total_projects)
 		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,descriptions,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=1000"
@@ -114,10 +116,30 @@ get '/countries/:country_code/projects/?' do |n|
 			:locals => {
 		 		country: country,
 		 		total_projects: total_projects,
-		 		projects: projects
+		 		projects: projects,
+		 		results: results
 		 		}
 		 			
 end
+
+#Country Results Page
+get '/countries/:country_code/results/?' do |n|		
+		country = countriesInfo.select {|country| country['code'] == n}.first
+		results = resultsInfo.select {|result| result['code'] == n}
+		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
+	    total_projects = JSON.parse(oipa_total_projects)
+		
+		erb :'countries/results', 
+			:layout => :'layouts/layout',
+			:locals => {
+		 		country: country,
+		 		total_projects: total_projects,
+		 		results: results,
+		 		results_hash: results_hash
+		 		}
+		 			
+end
+
 #####################################################################
 #  PROJECTS PAGES
 #####################################################################
