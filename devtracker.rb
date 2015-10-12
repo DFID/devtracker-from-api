@@ -20,6 +20,7 @@ require_relative 'helpers/sector_helpers.rb'
 require_relative 'helpers/country_helpers.rb'
 require_relative 'helpers/document_helpers.rb'
 require_relative 'helpers/common_helpers.rb'
+require_relative 'helpers/results_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -27,6 +28,7 @@ include Formatters
 include SectorHelpers
 include ProjectHelpers
 include CommonHelpers
+include ResultsHelper
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -35,9 +37,10 @@ set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.n
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 # Server Machine: set global settings
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
-
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
+
+
 #####################################################################
 #  Common Variable Assingment
 #####################################################################
@@ -69,7 +72,7 @@ end
 #####################################################################
 #  COUNTRY PAGES
 #####################################################################
-countriesInfo = JSON.parse(File.read('data/countryInfo.json'))
+countriesInfo = JSON.parse(File.read('data/countries.json'))
 resultsInfo = JSON.parse(File.read('data/results.json'))
 
 # Country summary page
@@ -126,6 +129,7 @@ end
 get '/countries/:country_code/results/?' do |n|		
 		country = countriesInfo.select {|country| country['code'] == n}.first
 		results = resultsInfo.select {|result| result['code'] == n}
+		resultsPillar = results_pillar_wise_indicators(n,results)
 		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
 	    total_projects = JSON.parse(oipa_total_projects)
 		
@@ -135,7 +139,7 @@ get '/countries/:country_code/results/?' do |n|
 		 		country: country,
 		 		total_projects: total_projects,
 		 		results: results,
-		 		results_hash: results_hash
+		 		resultsPillar: resultsPillar
 		 		}
 		 			
 end

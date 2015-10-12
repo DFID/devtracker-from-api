@@ -16,33 +16,29 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
-
+<%= erb :'partials/_countries-tabs', :locals => { :active => "results", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
 <div class="row">
     <div class="twelve columns content results-info">
         <h3 class="section-group-title">Results achieved (up to 2014/15 inclusive)</h3>
-
-        <%#= results %>    
-        <%= results_hash %>
-        <%# results.each do |result| %>
-        <div class="row">
-            <div class="four columns summary">
-                <h3><%#= result['_id'] %></h3>     
-            </div>
-            <div class="eight columns">
-                <ul>
-                    <%# result['countryResult'].each_with_index do |result_description, index| %>
-                    <li><%#= result_description %><span><%#=number_with_delimiter(result['resultTotal'][index], :delimiter => ',') %></span></li>
-                    <%# end %>
-                </ul> 
-            </div>
-        </div>
-        <%# end %>
+            <% resultsPillar[country['code']][0].each do |pillar| %>
+                <div class="row">
+                    <div class="four columns summary">
+                    <h3><%= pillar[0] %></h3>
+                    </div>
+                    <div class="eight columns">
+                        <ul>
+                            <% pillar[1].each do |pillarData| %>
+                                <li><%= pillarData[0] %><span><%= pillarData[1] %></span></li>
+                            <% end %>
+                        </ul>
+                    </div>
+                </div>
+            <% end %>
     </div>   
 </div>
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Source: <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/330463/Results-by-country.xlsx" target="_blank">Results by Country</a> (from <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/331591/annual-report-accounts-2013-14a.pdf"  target="_blank">DFID Annual Report and Accounts 2013-2014 Datasets</a>)</p>
+        <p>Source: <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/449373/Results_by_country.xlsx" target="_blank">Results by Country</a> (from <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2014-15-results"  target="_blank">DFID Annual Report and Accounts 2014-2015 Datasets</a>)</p>
     </div>
 </div>
 
