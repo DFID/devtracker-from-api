@@ -51,19 +51,24 @@ module Formatters
   end
 
   def financial_year_formatter(y)
+    #expecting a year as a 4-digit string
+    "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
+  end
 
-      #date = if(d.kind_of?(String)) then
-        #Date.parse d
-      #else
-        #d
-      #end
-
-      #if date.month < 4
-        #{}"FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
-      #else
-        "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
-      #end
+   def financial_year_formatter_from_fulldate(d)
+    #expecting a full date string
+    date = if(d.kind_of?(String)) then
+      Date.parse d
+    else
+      d
     end
+
+    if date.month < 4
+      "FY#{(date.year-1).to_s[2..3]}/#{date.year.to_s[2..3]}"
+    else
+      "FY#{date.year.to_s[2..3]}/#{(date.year+1).to_s[2..3]}"
+    end
+  end
 
   def financial_year 
       now = Time.new
