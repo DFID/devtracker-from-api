@@ -1,7 +1,3 @@
-#devtracker.rb
-#require 'rubygems'
-#require 'bundler'
-#Bundler.setup
 require 'sinatra'
 require 'json'
 require 'rest-client'
@@ -19,6 +15,10 @@ require_relative 'helpers/common_helpers.rb'
 require_relative 'helpers/project_helpers.rb'
 require_relative 'helpers/sector_helpers.rb'
 require_relative 'helpers/country_helpers.rb'
+require_relative 'helpers/document_helpers.rb'
+require_relative 'helpers/common_helpers.rb'
+require_relative 'helpers/results_helper.rb'
+
 
 
 #Helper Modules
@@ -27,6 +27,7 @@ include Formatters
 include SectorHelpers
 include ProjectHelpers
 include CommonHelpers
+include ResultsHelper
 
 # Developer Machine: set global settings
 # set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -34,9 +35,9 @@ include CommonHelpers
 # Server Machine: set global settings
 
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
-
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
+
 
 #####################################################################
 #  Common Variable Assingment
@@ -71,11 +72,13 @@ end
 #####################################################################
 #  COUNTRY PAGES
 #####################################################################
-countriesInfo = JSON.parse(File.read('data/countryInfo.json'))
+countriesInfo = JSON.parse(File.read('data/countries.json'))
+resultsInfo = JSON.parse(File.read('data/results.json'))
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
     country = countriesInfo.select {|country| country['code'] == n}.first
+    results = resultsInfo.select {|result| result['code'] == n}
     oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
     total_projects = JSON.parse(oipa_total_projects)
     oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&activity_status=2&format=json"
@@ -96,7 +99,8 @@ get '/countries/:country_code/?' do |n|
  			total_projects: total_projects,
  			active_projects: active_projects,
  			total_project_budgets: total_project_budgets,
- 			year_wise_budgets: year_wise_budgets
+ 			year_wise_budgets: year_wise_budgets,
+ 			results: results
  		}
 end
 
@@ -104,6 +108,7 @@ end
 get '/countries/:country_code/projects/?' do |n|
 	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
 		country=countriesInfo.select {|country| country['code'] == n}.first
+		results = resultsInfo.select {|result| result['code'] == n}
 		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
 	    total_projects = JSON.parse(oipa_total_projects)
 		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,descriptions,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=1000"
@@ -114,7 +119,27 @@ get '/countries/:country_code/projects/?' do |n|
 			:locals => {
 		 		country: country,
 		 		total_projects: total_projects,
-		 		projects: projects
+		 		projects: projects,
+		 		results: results
+		 		}
+		 			
+end
+
+#Country Results Page
+get '/countries/:country_code/results/?' do |n|		
+		country = countriesInfo.select {|country| country['code'] == n}.first
+		results = resultsInfo.select {|result| result['code'] == n}
+		resultsPillar = results_pillar_wise_indicators(n,results)
+		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
+	    total_projects = JSON.parse(oipa_total_projects)
+		
+		erb :'countries/results', 
+			:layout => :'layouts/layout',
+			:locals => {
+		 		country: country,
+		 		total_projects: total_projects,
+		 		results: results,
+		 		resultsPillar: resultsPillar
 		 		}
 		 			
 end
