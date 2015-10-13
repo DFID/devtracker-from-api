@@ -127,8 +127,10 @@ title: Development Tracker
         <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
         <script type="text/javascript">
             var mapType = "project";
-            var locations = <%=project['locations']%>
-            console.log(locations);
+            //alert("getting locations");
+            var testvariable = "John";
+            var locations = <%=project['locations'].to_json%>
+            //alert(locations);
         </script> 
         <script src="/javascripts/countrymap.js" type="text/javascript"></script>
 
