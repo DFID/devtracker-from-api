@@ -39,8 +39,8 @@
     var projectType = $("#projectType").val();
     //TODO - get some logic to determine project type
     //projectType = "country";
-    countryCode = "BD";
-    countryName = "Bangladesh";
+    //countryCode = "BD";
+    //countryName = "Bangladesh";
     var map;
  
  // TODO Remove alert
@@ -64,9 +64,14 @@
 
 
     } else if (countryName && countryCode) {  
+        
+        if (countryBounds[countryCode][2] != null)
+            zoomFactor = countryBounds[countryCode][2];
+            else zoomFactor = 6;
+
         map = new L.Map('countryMap', {
             center: new L.LatLng(countryBounds[countryCode][0], countryBounds[countryCode][1]), 
-            zoom: 6,
+            zoom: zoomFactor,  
             layers: [osmHOT]
         });
         //map.addLayer(new L.Google('ROADMAP'));
