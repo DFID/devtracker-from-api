@@ -50,37 +50,25 @@ module ProjectHelpers
     end
 
     def dfid_country_projects_data
-        result = @cms_db['projects'].aggregate([{
-                "$match" => {
-                    "projectType" => "country",
-                    "status" => {
-                        "$lt" => 3
-                    }
+        oipaCountryProjectValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&budget_period_start=2015-04-01&budget_period_end=2016-03-31&group_by=recipient_country&aggregations=count,budget&order_by=-budget"
+        projectValues = JSON.parse(oipaCountryProjectValuesJSON)
+        countriesList = JSON.parse(File.read('data/countries.json'))
+        # Map the input data structure so that it matches the required input for Tilestream
+        projectValuesMapInput = projectValues.map do |elem|
+        {
+            elem["recipient_country"]["code"] => {
+                 "country" => countriesList.find do |source|
+                                  source["code"].to_s == elem["recipient_country"]["code"]
+                              end["name"],  
+                 "id" => elem["recipient_country"]["code"],
+                 "projects" => elem["count"],
+                 "budget" => elem["budget"],
+                 "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
                 }
-            }, {
-                "$group" => { 
-                    "_id" => "$recipient", 
-                    "total" => {
-                        "$sum" => "$currentFYBudget"
-                    }
-                }
-            }, {
-                "$sort" => {
-                    "_id" => -1
-                }
-            }]
-        )
-        result.map { |country| {
-            country['_id'] => {
-                :country  =>  (@cms_db['countries'].find({ "code" => country['_id'] }).first || { 'name' => '' })['name'],
-                :id       => country['_id'],
-                :projects => @cms_db['projects'].find({ "recipient" => country['_id'], "projectType" => "country"}).count(),
-                :budget   => (@cms_db['country-stats'].find({"code" => country['_id']}).first || { 'totalBudget' => 0 })['totalBudget'],
-                :flag     => '/images/flags/' + country['_id'].downcase + '.png'
-            }
-        }}.inject({}) { |obj, entry| 
-            obj.merge! entry
-        }.to_json
+        }
+        end
+        # Edit the returned hash object so that the data is in the correct format (e.g. remove enclosing [])
+        projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
     def dfid_regional_projects_data
