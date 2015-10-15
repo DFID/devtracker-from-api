@@ -611,10 +611,17 @@ a.button {
   font-size: 1.25em;
   margin: 0 0 1em; }
 
+.summary h2 {
+  font-size:22px;
+}
+
+.summary ul {
+  margin-left:20px;
+}
 .summary li {
   font-size: 1.25em;
   margin: 0.5em 0;
-  border-top: 1px solid #e4e4e4; }
+  border: none }
 
 .info-notice {
   background: url(https://djb1962t8apu5.cloudfront.net/static/icon-information.png) no-repeat 0 50%;
