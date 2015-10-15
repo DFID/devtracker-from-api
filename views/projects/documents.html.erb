@@ -1,4 +1,4 @@
-<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :active => "documents"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "documents"} %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -18,16 +18,21 @@
 
                 project['document_links'].each do |document| %>
                   <tr class="result-list-row">
-                      <th scope="row"><a href="<%=document['url']%>"><%= document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
+                      <th scope="row"><a href="<%=document['url']%>"><%= document['title'][0]['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
+                      <% if document['title'][0]['narratives'][0]['language']['code'] != "en" then%>
+                         <td scope="col">
+                            <span class="category">
+                              <%= document['title'][0]['narratives'][0]['language']['name'] %> Language
+                            </span>
+                         </td>
+                      <% end %>    
                       <td scope="col">
-                        <%#document['format'].each do |item| %>
                         <%= iati_mime_type document['format']['code'] %>
-                        <%# end %>
                       </td>
                       <td scope="col">
-                        <% document['category'].each do |category| %>
+                        <% document['categories'].each do |category| %>
                           <span class="category">
-                            <%=document_category category[1]%>
+                            <%= category['name']%>
                           </span>
                         <% end %>
                       </td>

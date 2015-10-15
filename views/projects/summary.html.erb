@@ -2,14 +2,14 @@
 title: Development Tracker
 --- -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :active => "summary"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
 
 
 <div class="row">
     <div class="twelve columns">
-        <% if(non_dfid_data(project['reporting_organisation']['organisation']['code'])) %>
+        <% if(non_dfid_data(project['reporting_organisation'][0]['ref'])) %>
         <div id="disclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['organisation'] || "" %>. Please contact them if you have any questions about their data.</p>
+            <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['reporting_organisation'][0]['narratives'][0]['text'] || "" %>. Please contact them if you have any questions about their data.</p>
         </div>
         <% end %>
     </div>
@@ -18,7 +18,7 @@ title: Development Tracker
 
 <div class="row">
     <div class="twelve columns summary">
-        <p class="project-description"><%= project['descriptions'][0]['narratives'][0]['text'] %></p>
+        <p class="project-description"><%= project['description'][0]['narratives'][0]['text'] %></p>
 
     <!-- TODO add recipients -->
     <%if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
