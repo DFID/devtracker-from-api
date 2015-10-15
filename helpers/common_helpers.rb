@@ -48,11 +48,19 @@ module CommonHelpers
                   finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
                 end
               end
-
+              tempFYear = ""
+              tempFYAmount = ""
+              finalData = []
               # finally convert the range into a label format
               range.each { |item| 
-                item[0] = financial_year_formatter(item[0]) 
+                item[0] = financial_year_formatter(item[0])
+                tempFYear  = tempFYear + "'" + item[0] + "'" + ","
+                tempFYAmount = tempFYAmount + "'" + item[1].to_s + "'" + ","
               }
+              finalData[0] = tempFYear
+              finalData[1] = tempFYAmount
+              return finalData
+
     elsif (type=="P") then
     	finYearWiseBudgets.each { |item| 
           item[0] = financial_year_formatter(item[0]) 

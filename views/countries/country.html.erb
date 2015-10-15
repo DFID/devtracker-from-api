@@ -169,27 +169,82 @@
  <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
  <script src="/javascripts/bar.js"></script>
+ <% budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
- 
-     (function(){
-        var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
-        //alert(budgets);
+    $(document).ready(function() {
+        var yTicks = [];
+        var chart = c3.generate({
+            bindto: '#budget-year-chart',
+            legend: {
+                show: false
+            },
+            tooltip: {
+                format: {
+                    value: function(value){
+                        return value;
+                    }
+                }
+            },
+            bar: {
+                width: {
+                    ratio: .5
+                }
+            },
+            data: {
+                x: 'x',
+                columns: [
+                    ['x', <%= budgetYearData[0] %>],
+                    ['Financial Year', <%= budgetYearData[1] %>]
+                ],
+                type: 'bar'
+            },
+            color: {
+                pattern: ['#d8dcbf']
+            },
+            axis:{
+                x:{
+                    type: 'category'
+                },
+                y: {
+                    tick: {
+                        count: 6,
+                        format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                    },
+                }
+            },
+        });
+        /*This code is for generating the grid line values for the bar chart*/
+        var tempString = [];
+        yTicks.pop();
+        for(i = 0; i < 5; i++) {
+            tempString[i] = yTicks.pop().replace("M","") + '000000';
+        }
+        /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
+        yTicks = [];
+        /* Generating the grid lines */
+        for(i=0;i<tempString.length;i++){
+            yTicks = [];
+            chart.ygrids.add({value: tempString[i]});
+        }
+    });
 
-        charts.bar("#budget-year-chart", budgets, ".2s", null, null, ["#D8DCBF"]);
+    /*
+(function(){
+var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
+//alert(budgets);
+charts.bar("#budget-year-chart", budgets, ".2s", null, null, ["#D8DCBF"]);
+/*var sectors = "Health"//<%#= (sector_groups country[1]).to_json %>
+charts.donut("#sectorChart", sectors, function(d) {
+return d.total;
+}, function(d){
+return d.name
+}, function(d) {
+return d.percentage;
+});
+charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ return d.name });
+})()
 
-        /*var sectors = "Health"//<%#= (sector_groups country[1]).to_json %>
-                charts.donut("#sectorChart", sectors, function(d) {
-                  return d.total;
-                }, function(d){
-                  return  d.name
-                }, function(d) {
-                  return d.percentage;
-                });
-
-        charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ return d.name });*/
-     
-         })()
- 
+    */
  </script>
 
 
