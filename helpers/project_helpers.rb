@@ -131,6 +131,20 @@ module ProjectHelpers
         return 0
     end
 
+    def choose_better_date_label(actual, planned)
+        # determines project actual start/end date - use actual date, planned date as a fallback
+        unless actual.nil? || actual == ''
+            return "Actual"
+        end
+
+        unless planned.nil? || planned == ''
+            return "Planned"
+        end
+
+        return ""
+    end
+
+
     def project_budgets(projectId)
         project_budgets = @cms_db['project-budgets'].find({
               'id' => projectId
