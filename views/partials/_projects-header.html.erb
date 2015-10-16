@@ -15,8 +15,8 @@
                 <%= project['title']['narratives'][0]['text'] %> <small>[<%= project['iati_identifier'] %>]</small>
             </h1>
             <h2>
-                <%= project['reporting_organisation'][0]['narratives'][0]['text'] || "Department for International Development" %>
-            </h2>
+                <%= reporting_organisation(project['reporting_organisation']) %>
+             </h2>
         </div>
     </div>
 </div>

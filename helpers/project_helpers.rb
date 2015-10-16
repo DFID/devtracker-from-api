@@ -355,6 +355,15 @@ module ProjectHelpers
         #fundingProject = fundingProjectDetails['results'][0]
     end
 
+    def reporting_organisation(org)
+        begin
+            reporting_organisation = org[0]['narratives'][0]['text']
+        rescue
+            reporting_organisation = org[0]['type']['name']
+        end
+    end
+
+
 end
 
 helpers ProjectHelpers
