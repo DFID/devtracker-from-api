@@ -345,7 +345,7 @@ module ProjectHelpers
         if !projectBudgets.nil? && projectBudgets.length > 0 then
             summedBudgets = projectBudgets.reduce(0) {|memo, t| memo + t[1].to_f}
         else
-            summedBudgets =0
+            summedBudgets = 0
         end    
     end
 
@@ -355,11 +355,11 @@ module ProjectHelpers
         #fundingProject = fundingProjectDetails['results'][0]
     end
 
-    def reporting_organisation(org)
+    def reporting_organisation(project)
         begin
-            reporting_organisation = org[0]['narratives'][0]['text']
+            organisation = project['reporting_organisation'][0]['narratives'][0]['text']
         rescue
-            reporting_organisation = org[0]['type']['name']
+            organisation = project['reporting_organisation'][0]['type']['name']
         end
     end
 
