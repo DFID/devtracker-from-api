@@ -95,4 +95,44 @@ module CommonHelpers
     end
   end
 
+  def plannedStartDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "1"
+      end["iso_date"]
+    rescue
+      nil
+    end
+  end
+
+  def actualStartDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "2"
+      end["iso_date"]
+    rescue
+      nil
+    end
+  end
+
+  def plannedEndDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "3"
+      end["iso_date"]
+    rescue
+      nil
+    end   
+  end
+
+  def actualEndDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "4"
+      end["iso_date"]
+    rescue
+      nil
+    end
+  end
+
 end

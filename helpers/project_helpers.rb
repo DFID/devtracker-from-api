@@ -131,6 +131,20 @@ module ProjectHelpers
         return 0
     end
 
+    def choose_better_date_label(actual, planned)
+        # determines project actual start/end date - use actual date, planned date as a fallback
+        unless actual.nil? || actual == ''
+            return "Actual"
+        end
+
+        unless planned.nil? || planned == ''
+            return "Planned"
+        end
+
+        return ""
+    end
+
+
     def project_budgets(projectId)
         project_budgets = @cms_db['project-budgets'].find({
               'id' => projectId
@@ -331,7 +345,7 @@ module ProjectHelpers
         if !projectBudgets.nil? && projectBudgets.length > 0 then
             summedBudgets = projectBudgets.reduce(0) {|memo, t| memo + t[1].to_f}
         else
-            summedBudgets =0
+            summedBudgets = 0
         end    
     end
 
@@ -340,6 +354,15 @@ module ProjectHelpers
         fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
         #fundingProject = fundingProjectDetails['results'][0]
     end
+
+    def reporting_organisation(project)
+        begin
+            organisation = project['reporting_organisation'][0]['narratives'][0]['text']
+        rescue
+            organisation = project['reporting_organisation'][0]['type']['name']
+        end
+    end
+
 
 end
 
