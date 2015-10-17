@@ -48,11 +48,19 @@ module CommonHelpers
                   finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
                 end
               end
-
+              tempFYear = ""
+              tempFYAmount = ""
+              finalData = []
               # finally convert the range into a label format
               range.each { |item| 
-                item[0] = financial_year_formatter(item[0]) 
+                item[0] = financial_year_formatter(item[0])
+                tempFYear  = tempFYear + "'" + item[0] + "'" + ","
+                tempFYAmount = tempFYAmount + "'" + item[1].to_s + "'" + ","
               }
+              finalData[0] = tempFYear
+              finalData[1] = tempFYAmount
+              return finalData
+
     elsif (type=="P") then
     	finYearWiseBudgets.each { |item| 
           item[0] = financial_year_formatter(item[0]) 
@@ -84,6 +92,46 @@ module CommonHelpers
       now.year-1
     else
       now.year
+    end
+  end
+
+  def plannedStartDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "1"
+      end["iso_date"]
+    rescue
+      nil
+    end
+  end
+
+  def actualStartDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "2"
+      end["iso_date"]
+    rescue
+      nil
+    end
+  end
+
+  def plannedEndDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "3"
+      end["iso_date"]
+    rescue
+      nil
+    end   
+  end
+
+  def actualEndDate(dates)
+    begin
+      dates.find do |s|
+        s["type"]["code"].to_s == "4"
+      end["iso_date"]
+    rescue
+      nil
     end
   end
 
