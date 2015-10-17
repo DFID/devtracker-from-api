@@ -101,29 +101,27 @@
     // create the geopoints if any are defined
     if(map) {
         //alert("start processing datapoints");
-        var url = "http://dfid-oipa.zz-clients.net/api/activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,reporting_organisation,iati_identifier,locations&page_size=";
+        var url = "http://dfid-oipa.zz-clients.net/api/activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500";
 
         $.getJSON(url, function (iati) {
         //iterate through every activity
             iati.results.forEach(function (d) {
                 var iatiIdentifier = d.iati_identifier;
                 var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
-                var reportingOrg = d.reporting_organisation.organisation.code;
-                var reportingOrgName = d.reporting_organisation.organisation.name.narratives[0].text;
                 var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
+                console.log(iatiIdentifier);
                 
                 //iterate over each location
                 d.locations.forEach(function (p) {
-                    var latlng = L.latLng(p.point.coordinates);
+                    var latlng = L.latLng(p.point.coordinates[0],p.point.coordinates[1]);
                     var marker = new L.circleMarker(latlng, markerOptions());
-                    console.log(reportingOrg);
+                    console.log(p.point.coordinates[0],p.point.coordinates[1]);
                     
                     //create popup text
                     var locationName = p.name.narratives[0].text;
-                    marker.bindPopup("<a href='" + dtUrl + "'>" + title + "</a>" + "<br />" + locationName);
+                    marker.bindPopup("<a href='" + dtUrl + "'>" + title + "(" + iatiIdentifier + ")</a>" + "<br />" + locationName);
                     
-                    //add to the right layer (by reporting org)
-                    //addReportingOrgLayer(reportingOrg, marker);
+                    //add to the map layer
                     map.addLayer(marker);
                 });
             });

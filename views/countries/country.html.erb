@@ -63,7 +63,7 @@
                        Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
                     </div>
                 </aside>
-                <span><strong><%= Money.new(total_project_budgets[0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></strong></span>
+                <span><strong><%= if(total_project_budgets) then Money.new(total_project_budgets[0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end%></strong></span>
             </li>
             <!--<li class="fact-item">
                 Project budget as % of DFID budget
@@ -169,7 +169,7 @@
  <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
  <script src="/javascripts/bar.js"></script>
- <% budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
+ <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
     $(document).ready(function() {
         var yTicks = [];
@@ -246,7 +246,7 @@ charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ r
 
     */
  </script>
-
+<%end%>
 
 
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
