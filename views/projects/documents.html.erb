@@ -21,8 +21,8 @@
                       <th scope="row"><a href="<%=document['url']%>"><%= document['title'][0]['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
                       <% if document['title'][0]['narratives'][0]['language']['code'] != "en" then%>
                          <td scope="col">
-                            <span class="category">
-                              <%= document['title'][0]['narratives'][0]['language']['name'] %> Language
+                            <span class="language">
+                              <%= document['title'][0]['narratives'][0]['language']['name'] %>
                             </span>
                          </td>
                       <% end %>    

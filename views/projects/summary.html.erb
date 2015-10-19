@@ -17,7 +17,7 @@ title: Development Tracker
 
 <div class="row">
     <div class="twelve columns summary">
-        <p class="project-description"><%= project['description'][0]['narratives'][0]['text'] %></p>
+        <p class="project-description"><%= project['description'].length>0 ? project['description'][0]['narratives'][0]['text'] : "" %></p>
 
     <!-- TODO add recipients -->
     <%if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>

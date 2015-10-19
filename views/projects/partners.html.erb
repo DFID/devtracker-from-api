@@ -17,7 +17,7 @@
                   </div>
                   <div class="eight columns">
                       <ul>
-                          <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['description'][0]['narratives'][0]['text']%><span><%= Money.new(fundingProject[1].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span></li>
+                          <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['description'][0]['narratives'][0]['text']%><span><%= Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetails['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span></li>
                       </ul> 
                   </div>
               </div>
