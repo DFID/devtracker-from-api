@@ -2,7 +2,7 @@
 title: Development Tracker
 --- -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
 
 <div class="row">
     <div class="twelve columns">
@@ -110,8 +110,9 @@ title: Development Tracker
         <div id="countryMap" class="countryMap"></div>
 
         <!--TODO - do some logic to get these  types-->
+        <input type="hidden" id="countryOrRegion" value="<%= countryOrRegion %>">
         <input type="hidden" id="countryName" value="<%= country_name(project['recipient']) %>">
-        <input type="hidden" id="countryCode" value="<%= project['recipient'] %>">
+        <input type="hidden" id="countryCode" value="<%= countryOrRegion[0][0]['country']['code'] %>">
         <input type="hidden" id="projectType" value="<%= project['projectType'] %>">
        
         
@@ -126,10 +127,7 @@ title: Development Tracker
         <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
         <script type="text/javascript">
             var mapType = "project";
-            //alert("getting locations");
-            var testvariable = "John";
             var locations = <%=project['locations'].to_json%>
-            //alert(locations);
         </script> 
         <script src="/javascripts/countrymap.js" type="text/javascript"></script>
 

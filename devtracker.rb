@@ -5,7 +5,7 @@ require 'active_support'
 require 'kramdown'
 require 'pony'
 require 'money'
-require 'oj'
+#require 'oj'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -84,8 +84,8 @@ get '/countries/:country_code/?' do |n|
     oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&activity_status=2&format=json"
     active_projects = JSON.parse(oipa_active_projects)
 	oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{n}" 
-	#total_project_budgets= JSON.parse_nil(oipa_total_project_budgets)
- 	total_project_budgets= Oj.load_nil(oipa_total_project_budgets)
+	total_project_budgets= JSON.parse_nil(oipa_total_project_budgets)
+ 	#total_project_budgets= Oj.load_nil(oipa_total_project_budgets)
     oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter"
     year_wise_budgets= JSON.parse_nil(oipa_year_wise_budgets)
 	
@@ -109,7 +109,7 @@ get '/countries/:country_code/projects/?' do |n|
 		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
 	    total_projects = JSON.parse(oipa_total_projects)
 		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=1000"
-		projects_list= Oj.load(oipa_project_list)
+		projects_list= JSON.parse(oipa_project_list)
 		projects = projects_list['results']
 		erb :'countries/projects', 
 			:layout => :'layouts/layout',
@@ -153,6 +153,12 @@ get '/projects/:proj_id/?' do |n|
 	# get the project data from the API
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
+
+  	#get the country/region data from the API
+  	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+  	countryOrRegionData = JSON.parse(countryOrRegionAPI)
+  	#countryOrRegion = countryOrRegionData['results']
+  	countryOrRegion = get_country_or_region(n)
 	
 	# get the funding projects from the API
   	fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json&transaction_type=IF&page_size=1000&fields=url" 
@@ -165,7 +171,8 @@ get '/projects/:proj_id/?' do |n|
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			project: project, 	 					 			
+ 			project: project,
+ 			countryOrRegion: countryOrRegion,	 					 			
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjectsCount: fundingProjectsData['count']
  		}
