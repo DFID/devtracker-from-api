@@ -157,32 +157,32 @@ module CountryHelpers
     end
   end
 
-  def top_5_countries
-    @cms_db['country-stats'].aggregate([{
-      "$sort" => {
-        "totalBudget" => -1
-      }
-    },{
-      "$limit" => 5
-    }]).map do |totals|  
-      name = @cms_db['countries'].find_one({
-        'code' => totals['code']
-      })['name']
+  # def top_5_countries
+  #   @cms_db['country-stats'].aggregate([{
+  #     "$sort" => {
+  #       "totalBudget" => -1
+  #     }
+  #   },{
+  #     "$limit" => 5
+  #   }]).map do |totals|  
+  #     name = @cms_db['countries'].find_one({
+  #       'code' => totals['code']
+  #     })['name']
 
-      {
-        'code'        => totals['code'],
-        'name'        => name,
-        'totalBudget' => totals['totalBudget']
-      }
-    end
-  end
+  #     {
+  #       'code'        => totals['code'],
+  #       'name'        => name,
+  #       'totalBudget' => totals['totalBudget']
+  #     }
+  #   end
+  # end
 
-  def country_name(countryCode)
-    result = @cms_db['countries'].find({
-      'code' => countryCode
-    })
-    (result.first || { 'name' => '' })['name']
-  end
+  # def country_name(countryCode)
+  #   result = @cms_db['countries'].find({
+  #     'code' => countryCode
+  #   })
+  #   (result.first || { 'name' => '' })['name']
+  # end
 
   def get_country_or_region(projectId)
     #get the data
@@ -190,11 +190,18 @@ module CountryHelpers
     countryOrRegionData = JSON.parse(countryOrRegionAPI)
     data = countryOrRegionData['results']
 
-    #iterate through the array
+    #iterate through the array to get unique countries or regions
     countries = data.collect{ |activity| activity['recipient_countries']}.compact.uniq
     #regions = data.collect{ |activity| activity['recipient_regions'][0]['region']['code']}.compact.uniq
 
-    if (countries.length > 0) then result = countries
+    #simple single result, projectType = country
+    if (countries.length > 0) then 
+      result = countries
+      #result = countries[0][0].merge({"projectType" => "country"})
+    #if multiple countries, projectType = global
+
+    #if a region, projectType = regional
+
     #else result = regions
     end
 
