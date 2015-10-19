@@ -2,7 +2,7 @@
 title: Development Tracker
 --- -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :active => "transactions"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                       B U D G E T S   T A B L E                          %>
@@ -53,9 +53,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
-    <% incomingFunds=transactions.select {|group| group['transaction_type']['code'] == 'IF' } %>
+    <% incomingFunds=transactions.select {|group| group['transaction_type']['code'] == '1' } %>
     <%if !incomingFunds.nil? && incomingFunds.length > 0 %>
     <% totalIncomingFund=sum_transaction_value(incomingFunds).to_f %>
      <div class="section-group-title trans-header-container">
@@ -85,7 +83,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == 'IF' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
             <tr>
               <td><%= incomingFund['description'] %></td>
               <td width="30%"><%= incomingFund['provider_organisation_name'] + " (" + 
@@ -105,9 +103,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
-    <% commitments=transactions.select {|group| group['transaction_type']['code'] == 'C' } %>
+    <% commitments=transactions.select {|group| group['transaction_type']['code'] == '2' } %>
     <%if !commitments.nil? && commitments.length > 0 %>
     <% totalCommitments=sum_transaction_value(commitments).to_f %>
      <div class="section-group-title trans-header-container">
@@ -139,7 +135,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == 'C' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |commitment| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |commitment| %>
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= h2Activity_title(h2Activities,commitment['activity']['id']) %></td>
@@ -159,9 +155,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
-    <% disbursements=transactions.select {|group| group['transaction_type']['code'] == 'D' } %>
+    <% disbursements=transactions.select {|group| group['transaction_type']['code'] == '3' } %>
     <%if !disbursements.nil? && disbursements.length > 0 %>
     <% totalDisbursements=sum_transaction_value(disbursements).to_f %>
      <div class="section-group-title trans-header-container">
@@ -192,7 +186,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == 'D' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |disbursement| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |disbursement| %>
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= disbursement['description'] %></td>
@@ -213,9 +207,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'C' }.each do |transaction_group| %>
-    <% #transactions.select {|group| group['transaction_type']['code'] == 'D' }.each do |commitment| %>
-    <% expenditures=transactions.select {|group| group['transaction_type']['code'] == 'E' } %>
+    <% expenditures=transactions.select {|group| group['transaction_type']['code'] == '4' } %>
     <%if !expenditures.nil? && expenditures.length > 0 %>
     <% totalExpenditures=sum_transaction_value(expenditures).to_f %>
      <div class="section-group-title trans-header-container">
@@ -246,7 +238,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == 'E' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |expenditure| %>
+          <% transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |expenditure| %>
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= expenditure['description'] %></td>
@@ -261,5 +253,3 @@ title: Development Tracker
     <% end %>
   </div>
 </div>
-
-<!-- do the same pattern for Disbursements and Expenditure -->

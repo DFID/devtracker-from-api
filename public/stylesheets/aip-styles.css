@@ -100,6 +100,11 @@
 #page-title img + div {
   padding-right: 90px; }
 
+#page-title h2 {
+  font-size: 1.5em;
+  color: #6b6b6b;
+}
+
 .dfid-logo {
   border-left: 3px solid #002878;
   font-size: 1.25em;
