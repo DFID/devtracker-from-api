@@ -285,22 +285,46 @@ end
 
 
 #####################################################################
-#  STATIC PAGES
+#  COUNTRY REGION & GLOBAL PROJECT MAP PAGES
 #####################################################################
 
 #Aid By Location Page
 get '/location/country/?' do
-	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
-	countries = JSON.parse(oipa_countries)
-
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
-			:countries => countries
+			:dfid_country_map_data => 	dfid_country_map_data,
+			:dfid_complete_country_list => 	dfid_complete_country_list
 		}
 end
+
+# Aid by Region Page
+get '/location/regional/?' do 
+	erb :'location/regional/index', 
+		:layout => :'layouts/layout',
+		:locals => {
+			#TODO Get the data structure in here
+			:dfid_regional_projects_data => dfid_regional_projects_data			
+		}
+end
+
+# Aid by Region Page
+get '/location/global/?' do 
+	erb :'location/global/index', 
+		:layout => :'layouts/layout',
+		:locals => {
+			#TODO Get the data structure in here
+			:dfid_regional_projects_data => dfid_global_projects_data			
+		}
+end
+
+
+
+
+#####################################################################
+#  STATIC PAGES
+#####################################################################
+
 
 get '/department' do 
 	erb :'department/department', :layout => :'layouts/layout'

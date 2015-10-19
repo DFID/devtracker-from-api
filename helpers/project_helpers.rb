@@ -49,10 +49,14 @@ module ProjectHelpers
         (result.first || { 'total' => 0 })['total']
     end
 
-    def dfid_country_projects_data
-        oipaCountryProjectValuesJSON = RestClient.get "http://dfid-oipa.zz-clients.net/api/activities/aggregations?reporting_organisation=GB-1&budget_period_start=2015-04-01&budget_period_end=2016-03-31&group_by=recipient_country&aggregations=count,budget&order_by=-budget"
+    def dfid_country_map_data
+        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+        
+        oipaCountryProjectValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectValues = JSON.parse(oipaCountryProjectValuesJSON)
         countriesList = JSON.parse(File.read('data/countries.json'))
+        
         # Map the input data structure so that it matches the required input for Tilestream
         projectValuesMapInput = projectValues.map do |elem|
         {
@@ -71,14 +75,92 @@ module ProjectHelpers
         projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
-    def dfid_regional_projects_data
-        # aggregates budgets of the dfid regional projects grouping them by regions
-        @cms_db['regions'].find().map { |region| {
-            :region => region['name'],
-            :code   => region['code'],
-            :budget => dfid_region_projects_budget(region['code']) || 0
-        }}.to_json
+    def dfid_complete_country_list
+        
+        oipaAllDfidProjectsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count,budget"
+        allDfidProjects = JSON.parse(oipaAllDfidProjectsJSON)
+        countriesList = JSON.parse(File.read('data/countries.json'))
+
+        # Map the input data structure so that the appropriate country names are used
+        allDfidProjectsMapInput = allDfidProjects.map do |elem|
+        {
+                "code" => elem["recipient_country"]["code"],   
+                "name" => countriesList.find do |source|
+                               source["code"].to_s == elem["recipient_country"]["code"]
+                             end["name"]                                             
+        }
+        end
+
+        # Sort the countries by name
+        allDfidProjectsSorted = allDfidProjectsMapInput.sort_by{ |k| k["name"]}
     end
+
+    def dfid_regional_projects_data
+        
+        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
+
+        # aggregates budgets of the dfid regional projects grouping them by regions
+        oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
+        allRegions = JSON.parse(oipaAllRegionsJSON)
+
+        # Map the input data structure so that it matches the required input for the Regions map
+        allRegionsChartData = allRegions.map do |elem|
+        {
+            "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
+            "code" => elem["recipient_region"]["code"],
+            "budget" => elem["budget"]                           
+        }
+        end
+               
+        #Find the total budget for all of the Regions
+        totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
+
+        #Format the Budget for use on the region chart
+        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
+
+        #Format the output of the chart data
+        allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
+
+        returnObject = {
+            :regionsData => allRegionsChartDataFormatted,
+            :totalBudget => totalBudget,  
+            :totalBudgetFormatted => totalBudgetFormatted                              
+         }
+    end
+
+    def dfid_global_projects_data
+        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
+
+        # aggregates budgets of the dfid regional projects grouping them by regions
+        oipaGlobalProjectsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=reporting_organisation&aggregations=count,budget&order_by=-budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&xml_source_ref=dfid-ns1,dfid-ns2,zz";
+        allGlobalProjects = JSON.parse(oipaGlobalProjectsJSON)
+
+        # Map the input data structure so that it matches the required input for the Regions map
+        globalProjectsChartData = allGlobalProjects.map do |elem|
+        {
+            "budget" => elem["budget"]                           
+        }
+        end
+               
+        #Find the total budget for all of the Regions
+        totalBudget = Float(globalProjectsChartData.map { |s| s["budget"].to_f }.inject(:+))
+
+        #Format the Budget for use on the region chart
+        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
+
+        #Format the output of the chart data
+   #     allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
+
+        returnObject = {
+    #        :regionsData => allRegionsChartDataFormatted,
+            :totalBudget => totalBudget,  
+            :totalBudgetFormatted => totalBudgetFormatted                              
+         }        
+    end
+
+
 
     def dfid_global_projects
         @@global_recipients.map { |code, name|
@@ -100,9 +182,7 @@ module ProjectHelpers
         }
     end
 
-    def dfid_global_projects_data
-        dfid_global_projects.to_json
-    end
+    
 
     def choose_better_date(actual, planned)
         # determines project actual start/end date - use actual date, planned date as a fallback
