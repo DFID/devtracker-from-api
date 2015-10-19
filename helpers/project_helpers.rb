@@ -130,34 +130,25 @@ module ProjectHelpers
     end
 
     def dfid_global_projects_data
-        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
+        
+        globalProjectsData = JSON.parse(File.read('data/globalProjectsData.json')).sort_by{ |k| k["region"]}
 
-        # aggregates budgets of the dfid regional projects grouping them by regions
-        oipaGlobalProjectsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=reporting_organisation&aggregations=count,budget&order_by=-budget&budget_period_start=2015-04-01&budget_period_end=2016-03-31&xml_source_ref=dfid-ns1,dfid-ns2,zz";
-        allGlobalProjects = JSON.parse(oipaGlobalProjectsJSON)
+        #Format the output of globalProjectsData
+        globalProjectsDataFormatted = globalProjectsData.to_s.gsub("=>",":")
 
-        # Map the input data structure so that it matches the required input for the Regions map
-        globalProjectsChartData = allGlobalProjects.map do |elem|
-        {
-            "budget" => elem["budget"]                           
-        }
-        end
-               
         #Find the total budget for all of the Regions
-        totalBudget = Float(globalProjectsChartData.map { |s| s["budget"].to_f }.inject(:+))
+        totalBudget = Float(globalProjectsData.map { |s| s["budget"].to_f }.inject(:+))
 
         #Format the Budget for use on the region chart
         totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
 
-        #Format the output of the chart data
-   #     allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
-
         returnObject = {
-    #        :regionsData => allRegionsChartDataFormatted,
+            :globalData => globalProjectsDataFormatted,
+            :globalDataJSON => globalProjectsData,
             :totalBudget => totalBudget,  
             :totalBudgetFormatted => totalBudgetFormatted                              
          }        
+
     end
 
 
