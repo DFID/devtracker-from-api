@@ -116,6 +116,10 @@ module ProjectHelpers
 
     end
 
+    def is_dfid_project(projectCode)   
+        projectCode[0, 4] == "GB-1"
+    end
+
     def first_day_of_financial_year(date_value)
         if date_value.month > 3 then
             Date.new(date_value.year, 4, 1)
@@ -133,7 +137,18 @@ module ProjectHelpers
     end 
 
 
-    # TODO Delete these functions if they're no longer required
+    # TODO Delete these methods if they're no longer required
+
+    def transaction_description(transaction, transactionType)
+        if(transactionType == "C")
+            transaction['title'] || ""
+        elsif(transactionType == "IF")
+            transaction_title(transactionType)
+        else
+            transaction['description']
+        end
+    end
+
 
     def choose_better_date(actual, planned)
         # determines project actual start/end date - use actual date, planned date as a fallback
