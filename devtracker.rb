@@ -30,10 +30,10 @@ include CommonHelpers
 include ResultsHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+  set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-  set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+# set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -54,8 +54,6 @@ set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
-#	top5countries = JSON.parse(File.read('data/top5countries.json'))
-	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
 
 	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"

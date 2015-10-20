@@ -1,0 +1,70 @@
+[
+  {
+    "code":"298",
+    "name":"Africa"    
+  },
+  {
+    "code":"798",
+    "name":"Asia"    
+  },
+  {
+    "code":"BL",
+    "name":"Balkan Regional"    
+  },
+  {
+    "code":"CP",
+    "name":"Central Africa Regional"    
+  },
+  {
+    "code":"EA",
+    "name":"East Africa"    
+  },
+  {
+    "code":"ED",
+    "name":"East Europe Regional"
+  },
+  {
+    "code":"EF",
+    "name":"EECAD Regional"    
+  },
+  {
+    "code":"89",
+    "name":"Europe"    
+  },
+  {
+    "code":"FA",
+    "name":"Francophone Africa"    
+  },
+  {
+    "code":"IB",
+    "name":"Indian Ocean Asia Regional"    
+  },
+  {
+    "code":"LE",
+    "name":"Latin America Regional"    
+  },
+  {
+    "code":"589",
+    "name":"Middle East"    
+  },
+  {
+    "code":"189",
+    "name":"North of Sahara"    
+  },
+  {
+    "code":"OT",
+    "name":"Overseas Territories"    
+  },
+  {
+    "code":"SQ",
+    "name":"South East Asia"    
+  },
+  {
+    "code":"289",
+    "name":"South of Sahara"    
+  },
+  {
+    "code":"380",
+    "name":"West Indies"    
+  }
+]  

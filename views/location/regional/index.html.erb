@@ -49,15 +49,9 @@
   </div>
 </div>
 <div class="row">
-	<%= dfid_regional_projects_data [:regionsData] %>
-
-	<%= dfid_regional_projects_data [:totalBudget] %>
-
-	<%= dfid_regional_projects_data [:totalBudgetFormatted] %>
-
-<%#  <div class="twelve columns">
-  	<% region_list.each do |region| %> <%#
-      <a href="/regions/<%=region['code']%> <%# /projects"><%= region['name'] %> <%#  </a> | 
+  <div class="twelve columns">
+  	<% dfid_complete_region_list.each do |region| %> 
+      <a href="/regions/<%=region['code']%>/projects"><%= region['name'] %></a> | 
     <% end %>
   </div>
 </div>
