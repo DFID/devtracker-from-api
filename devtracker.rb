@@ -30,6 +30,7 @@ include CommonHelpers
 include ResultsHelper
 
 # Developer Machine: set global settings
+
 # set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
@@ -108,9 +109,9 @@ get '/countries/:country_code/projects/?' do |n|
 	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
 		country=countriesInfo.select {|country| country['code'] == n}.first
 		results = resultsInfo.select {|result| result['code'] == n}
-		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
+		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&page_size=10&page=1"
 	    total_projects = JSON.parse(oipa_total_projects)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=1000"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1"
 		projects_list= JSON.parse(oipa_project_list)
 		projects = projects_list['results']
 		erb :'countries/projects', 
