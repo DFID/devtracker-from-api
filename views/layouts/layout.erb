@@ -67,6 +67,17 @@
           scrollFrom: 'top'           // 'top' or 'bottom'
 
         });
+        $('#scrollUp').hover(function(){
+          $('#scrollUp').stop();
+          $('#scrollUp').animate({
+            paddingBottom: 30
+          });
+        },function(){
+          $('#scrollUp').stop();
+          $('#scrollUp').animate({
+            paddingBottom: 10
+          });
+        });
       });
     </script> 
   </head>
