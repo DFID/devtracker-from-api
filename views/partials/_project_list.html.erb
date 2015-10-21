@@ -27,7 +27,7 @@
                 }).done(function(json){
                     $('#showResults').html("");
                     $.each(json.results,function(i,result){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+'</a></h3><span class="budget">Budget: <em> £'+addCommas(result.total_child_budgets)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisation[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.total_child_budgets)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisation[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
                         $('#showResults').append(tempString);
                     });
                 })
@@ -54,7 +54,9 @@
                 <div id="light-pagination"></div>
             </div>
         </div>
-        <div class="modal"><!-- Place at bottom of page --></div>
+        <div class="modal">
+            <div>Loading Data <br /> Please Wait</div>
+        </div>
         <div id="showResults">
             <!--<div>
                 Showing
