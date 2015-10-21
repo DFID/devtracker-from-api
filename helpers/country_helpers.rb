@@ -191,14 +191,37 @@ module CountryHelpers
     data = countryOrRegionData['results']
 
     #iterate through the array
-    countries = data.collect{ |activity| activity['recipient_countries']}.compact.uniq
-    #regions = data.collect{ |activity| activity['recipient_regions'][0]['region']['code']}.compact.uniq
+    countries = data.collect{ |activity| activity['recipient_countries']}.uniq
+    regions = data.collect{ |activity| activity['recipient_regions']}.uniq
 
-    if (countries.length > 0) then result = countries
-    #else result = regions
+    #project type logic
+    countryList = ""
+
+    if(!countries[0].empty?) then 
+      numberOfCountries = countries.count
+    else 
+      numberOfCountries = 0
     end
 
-    countryOrRegion = result
+    if(!regions[0].empty?) then numberOfRegions = regions.count
+    else numberOfRegions = 0
+    end
+
+    if(numberOfCountries == 1 && numberOfRegions == 0) then 
+      projectType = "country"
+    elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
+      projectType = "region"
+    else projectType = "global"
+    end
+
+    returnObject = {
+          :recipient_countries  => countries,
+          :recipient_regions => regions,
+          :projectType => projectType,
+          :countriesCount => numberOfCountries,
+          :regionsCount => numberOfRegions,
+          :recipient_countries_label => countryList
+          } 
 
   end
 
