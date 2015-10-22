@@ -157,32 +157,32 @@ module CountryHelpers
     end
   end
 
-  def top_5_countries
-    @cms_db['country-stats'].aggregate([{
-      "$sort" => {
-        "totalBudget" => -1
-      }
-    },{
-      "$limit" => 5
-    }]).map do |totals|  
-      name = @cms_db['countries'].find_one({
-        'code' => totals['code']
-      })['name']
+  # def top_5_countries
+  #   @cms_db['country-stats'].aggregate([{
+  #     "$sort" => {
+  #       "totalBudget" => -1
+  #     }
+  #   },{
+  #     "$limit" => 5
+  #   }]).map do |totals|  
+  #     name = @cms_db['countries'].find_one({
+  #       'code' => totals['code']
+  #     })['name']
 
-      {
-        'code'        => totals['code'],
-        'name'        => name,
-        'totalBudget' => totals['totalBudget']
-      }
-    end
-  end
+  #     {
+  #       'code'        => totals['code'],
+  #       'name'        => name,
+  #       'totalBudget' => totals['totalBudget']
+  #     }
+  #   end
+  # end
 
-  def country_name(countryCode)
-    result = @cms_db['countries'].find({
-      'code' => countryCode
-    })
-    (result.first || { 'name' => '' })['name']
-  end
+  # def country_name(countryCode)
+  #   result = @cms_db['countries'].find({
+  #     'code' => countryCode
+  #   })
+  #   (result.first || { 'name' => '' })['name']
+  # end
 
   def get_country_or_region(projectId)
     #get the data

@@ -44,9 +44,9 @@
     var countryCode = $("#countryCode").val();
     var projectType = $("#projectType").val();
     //TODO - get some logic to determine project type
-    projectType = "country";
-    countryCode = "BD";
-    countryName = "Bangladesh";
+    //projectType = "country";
+    //countryCode = "BD";
+    //countryName = "Bangladesh";
     var map;
  
  // TODO Remove alert
