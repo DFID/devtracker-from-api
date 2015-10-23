@@ -30,11 +30,10 @@ include CommonHelpers
 include ResultsHelper
 
 # Developer Machine: set global settings
-
-# set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+  set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-  set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+# set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -369,6 +368,21 @@ get '/feedback/?' do
 	erb :'feedback/index', :layout => :'layouts/layout'
 end 
 
+post '/feedback/index' do
+ Pony.mail({
+	:from => "devtracker-feedback@dfid.gov.uk",
+    :to => "devtracker-feedback@dfid.gov.uk",
+    :subject => "DevTracker Feedback",
+    :body => "<p>" + params[:email] + "</p><p>" + params[:name] + "</p><p>" + params[:description] + "</p>",
+    :via => :smtp,
+    :via_options => {
+     :address              => '127.0.0.1',
+     :port                 => '25'
+     }
+    })
+    redirect '/' 
+end
+
 get '/fraud/?' do
 	erb :'fraud/index', :layout => :'layouts/layout'
 end  
@@ -377,8 +391,8 @@ post '/fraud/index' do
  Pony.mail({
 	:from => "devtracker-feedback@dfid.gov.uk",
     :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => "Report Fraud:" + params[:country],
-    :body => params[:description],
+    :subject => params[:country] + " " + params[:project],
+    :body => "<p>" + params[:country] + "</p>" + "<p>" + params[:project] + "</p>" + "<p>" + params[:description] + "</p>" + "<p>" + params[:name] + "</p>" + "<p>" + params[:email] + "</p>" + "<p>" + params[:telno] + "</p>",
     :via => :smtp,
     :via_options => {
      :address              => '127.0.0.1',
@@ -386,4 +400,4 @@ post '/fraud/index' do
      }
     })
     redirect '/' 
-   end
+end
