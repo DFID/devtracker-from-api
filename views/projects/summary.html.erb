@@ -107,14 +107,15 @@ title: Development Tracker
 
 
     <div class="six columns" role="presentation">
+        <div><%= countryOrRegion %></div>
+        <div><%= countryOrRegion[:label] %></div>
         <div id="countryMap" class="countryMap"></div>
 
         <!--TODO - do some logic to get these  types-->
-        <div><%= countryOrRegion %></div>
-        <input type="hidden" id="countryOrRegion" value="<%#= countryOrRegion %>">
-        <input type="hidden" id="countryName" value="<%= country_name(project['recipient']) %>">
-        <input type="hidden" id="countryCode" value="<%#= countryOrRegion[0][0]['country']['code'] %>">
-        <input type="hidden" id="projectType" value="<%= project['projectType'] %>">
+
+        <input type="hidden" id="countryName" value="<%= countryOrRegion[:name] %>">
+        <input type="hidden" id="countryCode" value="<%= countryOrRegion[:code] %>">
+        <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
 
        
         <script src="/javascripts/regionBounds.js" type="text/javascript"></script>

@@ -191,36 +191,55 @@ module CountryHelpers
     data = countryOrRegionData['results']
 
     #iterate through the array
-    countries = data.collect{ |activity| activity['recipient_countries']}.uniq
-    regions = data.collect{ |activity| activity['recipient_regions']}.uniq
+    countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
+    regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
 
     #project type logic
-    countryList = ""
+    name = ""
+    code = ""
+    label = ""
 
-    if(!countries[0].empty?) then 
+    if(!countries.empty?) then 
       numberOfCountries = countries.count
     else 
       numberOfCountries = 0
     end
 
-    if(!regions[0].empty?) then numberOfRegions = regions.count
+    if(!regions.empty?) then 
+      numberOfRegions = regions.count
     else numberOfRegions = 0
     end
 
+    #single country case
     if(numberOfCountries == 1 && numberOfRegions == 0) then 
       projectType = "country"
+      name = countries[0]['country']['name']
+      code = countries[0]['country']['code']
+      label = name
+    #single region case
     elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
       projectType = "region"
-    else projectType = "global"
+      name = regions[0]['region']['name']
+      code = regions[0]['region']['code']
+      label = name
+    #other cases - multiple countries/regions
+    #elsif (numberOfRegions > 1 && numberOfCountries == 0) then
+    #  projectType = "region"
+    else 
+      projectType = "global"
+      label = "Global project"
+      #label = countries.select {|c| c['country'].select {|n| n['name']}}
     end
 
     returnObject = {
           :recipient_countries  => countries,
           :recipient_regions => regions,
+          :name => name,
+          :code => code,
           :projectType => projectType,
+          :label => label,
           :countriesCount => numberOfCountries,
-          :regionsCount => numberOfRegions,
-          :recipient_countries_label => countryList
+          :regionsCount => numberOfRegions
           } 
 
   end
