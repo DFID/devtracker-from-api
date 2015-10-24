@@ -184,6 +184,8 @@ module CountryHelpers
   #   (result.first || { 'name' => '' })['name']
   # end
 
+
+
   def get_country_or_region(projectId)
     #get the data
     countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
@@ -195,10 +197,6 @@ module CountryHelpers
     regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
 
     #project type logic
-    name = ""
-    code = ""
-    label = ""
-
     if(!countries.empty?) then 
       numberOfCountries = countries.count
     else 
@@ -227,8 +225,20 @@ module CountryHelpers
     #  projectType = "region"
     else 
       projectType = "global"
-      label = "Global project"
-      #label = countries.select {|c| c['country'].select {|n| n['name']}}
+    end
+
+    #generate the text label for the country or region
+    globalLabel = []
+    countries.map do |c|
+      globalLabel << c['country']['name']
+    end
+    regions.map do |r|
+      globalLabel << r['region']['name']
+    end
+    label = globalLabel.sort.join(", ")
+
+    if (label.length == 0 && projectType == "global") then 
+      label = "Global project" 
     end
 
     returnObject = {
@@ -243,6 +253,4 @@ module CountryHelpers
           } 
 
   end
-
-
 end

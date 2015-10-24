@@ -18,20 +18,6 @@ title: Development Tracker
 <div class="row">
     <div class="twelve columns summary">
         <p class="project-description"><%= project['description'][0]['narratives'][0]['text'] %></p>
-
-    <!-- TODO add recipients -->
-    <%if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
-        <div class="project-country-title"> 
-          <strong>Benefitting country/region</strong>: <%= project['allRecipients'].join(", ") %>
-          
-           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
-           <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content more-info-limit-size">
-                        The country/countries/regions that have been identified as having project funds spent in it.
-                    </div>
-            </aside>
-        </div>  
-    <%end%>
     </div>
 
 </div>
@@ -107,8 +93,21 @@ title: Development Tracker
 
 
     <div class="six columns" role="presentation">
-        <div><%= countryOrRegion %></div>
-        <div><%= countryOrRegion[:label] %></div>
+    <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
+        <div class="project-country-title"> 
+          <strong>Benefitting country/region</strong>: <%= countryOrRegion[:label] %>
+          
+           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
+           <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content more-info-limit-size">
+                        The country/countries/regions that benefit from this project.
+                    </div>
+            </aside>
+        </div>  
+    <%#end%>
+
+        <div><%#= countryOrRegion %></div>
+        <div><%#= countryOrRegion[:label] %></div>
         <div id="countryMap" class="countryMap"></div>
 
         <!--TODO - do some logic to get these  types-->

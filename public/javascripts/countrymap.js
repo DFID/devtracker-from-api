@@ -43,10 +43,6 @@
     var countryName = $("#countryName").val();
     var countryCode = $("#countryCode").val();
     var projectType = $("#projectType").val();
-    //TODO - get some logic to determine project type
-    //projectType = "country";
-    //countryCode = "BD";
-    //countryName = "Bangladesh";
     var map;
  
  // TODO Remove alert
@@ -72,7 +68,7 @@
     } else if (projectType == "country" && countryName && countryCode) {  
         map = new L.Map('countryMap', {
             center: new L.LatLng(countryBounds[countryCode][0], countryBounds[countryCode][1]), 
-            zoom: 6,
+            zoom: countryBounds[countryCode][2] || 6,
             layers: [osmHOT]
         });
         //map.addLayer(new L.Google('ROADMAP'));
