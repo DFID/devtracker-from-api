@@ -301,7 +301,7 @@ ul.legend-list li div span{
 /*More Information CSS for Project Page*/
 
 .project-country-title{
-  float:left;
+  /*float:left;*/
   font-size: 1.25em;
   margin-bottom: 20px;
 }

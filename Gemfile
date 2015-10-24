@@ -14,3 +14,4 @@ gem 'coveralls', require: false
 gem 'unicorn'
 gem 'kramdown'
 gem 'pony'
+gem 'oj'

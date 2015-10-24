@@ -157,31 +157,100 @@ module CountryHelpers
     end
   end
 
-  def top_5_countries
-    @cms_db['country-stats'].aggregate([{
-      "$sort" => {
-        "totalBudget" => -1
-      }
-    },{
-      "$limit" => 5
-    }]).map do |totals|  
-      name = @cms_db['countries'].find_one({
-        'code' => totals['code']
-      })['name']
+  # def top_5_countries
+  #   @cms_db['country-stats'].aggregate([{
+  #     "$sort" => {
+  #       "totalBudget" => -1
+  #     }
+  #   },{
+  #     "$limit" => 5
+  #   }]).map do |totals|  
+  #     name = @cms_db['countries'].find_one({
+  #       'code' => totals['code']
+  #     })['name']
 
-      {
-        'code'        => totals['code'],
-        'name'        => name,
-        'totalBudget' => totals['totalBudget']
-      }
+  #     {
+  #       'code'        => totals['code'],
+  #       'name'        => name,
+  #       'totalBudget' => totals['totalBudget']
+  #     }
+  #   end
+  # end
+
+  # def country_name(countryCode)
+  #   result = @cms_db['countries'].find({
+  #     'code' => countryCode
+  #   })
+  #   (result.first || { 'name' => '' })['name']
+  # end
+
+
+
+  def get_country_or_region(projectId)
+    #get the data
+    countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+    countryOrRegionData = JSON.parse(countryOrRegionAPI)
+    data = countryOrRegionData['results']
+
+    #iterate through the array
+    countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
+    regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+
+    #project type logic
+    if(!countries.empty?) then 
+      numberOfCountries = countries.count
+    else 
+      numberOfCountries = 0
     end
-  end
 
-  def country_name(countryCode)
-    result = @cms_db['countries'].find({
-      'code' => countryCode
-    })
-    (result.first || { 'name' => '' })['name']
-  end
+    if(!regions.empty?) then 
+      numberOfRegions = regions.count
+    else numberOfRegions = 0
+    end
 
+    #single country case
+    if(numberOfCountries == 1 && numberOfRegions == 0) then 
+      projectType = "country"
+      name = countries[0]['country']['name']
+      code = countries[0]['country']['code']
+      label = name
+    #single region case
+    elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
+      projectType = "region"
+      name = regions[0]['region']['name']
+      code = regions[0]['region']['code']
+      label = name
+    #other cases - multiple countries/regions
+    #elsif (numberOfRegions > 1 && numberOfCountries == 0) then
+    #  projectType = "region"
+    else 
+      projectType = "global"
+    end
+
+    #generate the text label for the country or region
+    globalLabel = []
+    countries.map do |c|
+      globalLabel << c['country']['name']
+    end
+    regions.map do |r|
+      globalLabel << r['region']['name']
+    end
+    label = globalLabel.sort.join(", ")
+
+    if (label.length == 0 && projectType == "global") then 
+      label = "Global project" 
+    end
+
+    returnObject = {
+          :recipient_countries  => countries,
+          :recipient_regions => regions,
+          :name => name,
+          :code => code,
+          :projectType => projectType,
+          :label => label,
+          :countriesCount => numberOfCountries,
+          :regionsCount => numberOfRegions
+          } 
+
+  end
 end
