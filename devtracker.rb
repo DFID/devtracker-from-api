@@ -140,6 +140,56 @@ get '/countries/:country_code/results/?' do |n|
 end
 
 #####################################################################
+#  REGION PAGES
+#####################################################################
+#TODO: need region information
+regionsInfo = JSON.parse(File.read('data/regions.json'))
+
+# Region summary page
+get '/regions/:region_code/?' do |n|
+    region = regionsInfo.select {|region| region['code'] == n}.first
+    
+    oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&format=json"
+    total_projects = JSON.parse(oipa_total_projects)
+    oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&activity_status=2&format=json"
+    active_projects = JSON.parse(oipa_active_projects)
+	oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=budget&recipient_region=#{n}" 
+	total_project_budgets= JSON.parse_nil(oipa_total_project_budgets)
+    oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter"
+    year_wise_budgets= JSON.parse_nil(oipa_year_wise_budgets)
+	
+	erb :'regions/region', 
+		:layout => :'layouts/layout',
+		:locals => {
+ 			region: region,
+ 			total_projects: total_projects,
+ 			active_projects: active_projects,
+ 			total_project_budgets: total_project_budgets,
+ 			year_wise_budgets: year_wise_budgets
+ 		}
+end
+
+
+#Region Project List Page
+get '/regions/:region_code/projects/?' do |n|
+	region=regionsInfo.select {|region| region['code'] == n}.first
+		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&format=json&page_size=10&page=1"
+	    total_projects = JSON.parse(oipa_total_projects)
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1"
+		projects_list= JSON.parse(oipa_project_list)
+		projects = projects_list['results']
+		
+		erb :'regions/projects', 
+			:layout => :'layouts/layout',
+			:locals => {
+		 		region: region,
+		 		total_projects: total_projects,
+		 		projects: projects
+		 		}
+		 			
+end
+
+#####################################################################
 #  PROJECTS PAGES
 #####################################################################
 # examples:

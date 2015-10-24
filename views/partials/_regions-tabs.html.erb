@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="twelve columns">
+        <div class="tab-bar-container">
+            <div class="row">
+
+                <div class="projects-nav">
+                    <nav>
+                        <ul class="tab-bar">
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/regions/<%= region['code'] %>">Summary</a></li>
+                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/regions/<%= region['code'] %>/projects">All Projects (<%=project_count%>)</a></li>
+                        </ul>
+                    </nav>
+                </div>  
+
+                 <div class="button-row">
+                    <% regionSubscription = false
+                    if project_count > 0  && regionSubscription%>
+                    <span>
+                        <a href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string region['code'] %>" title="Subscribe to receive updates on <%= region['name'] %> by email" class="button inform">&#9993; Subscribe</a>
+                    </span>
+                    <% end %>
+                     <span>
+                        <a href="/fraud?region=<%= format_query_string region['name'] %>" class="button serious" title="Report fraud">Report Fraud</a>
+                    </span>
+                </div>  
+
+            </div>
+        </div>
+    </div>
+</div>

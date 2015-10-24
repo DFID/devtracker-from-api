@@ -21,7 +21,11 @@
             itemsOnPage: 10,
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
+                <% if (!defined?(country).nil?) then %>
                 var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=<%= country["code"] %>&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page='+ pageNumber;
+                <% elsif (!defined?(region).nil?) then %>
+                 var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=<%= region["code"] %>&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page='+ pageNumber;
+               <% end %>
                 $.getJSON(oipaLink,{
                     format: "json"
                 }).done(function(json){
