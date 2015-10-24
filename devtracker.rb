@@ -265,8 +265,7 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjects: fundedProjectsData['results'],
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count'],
- 			countryOrRegion: countryOrRegion 
+ 			fundingProjectsCount: fundingProjectsData['count']
  		}
 end
 
