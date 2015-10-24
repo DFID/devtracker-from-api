@@ -213,18 +213,22 @@ module CountryHelpers
       projectType = "country"
       name = countries[0]['country']['name']
       code = countries[0]['country']['code']
-      label = name
+      breadcrumbLabel = name
+      breadcrumbUrl = "/countries/" + code
     #single region case
     elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
       projectType = "region"
       name = regions[0]['region']['name']
       code = regions[0]['region']['code']
-      label = name
+      breadcrumbLabel = name
+      breadcrumbUrl = "/regions/" + code
     #other cases - multiple countries/regions
     #elsif (numberOfRegions > 1 && numberOfCountries == 0) then
     #  projectType = "region"
     else 
       projectType = "global"
+      breadcrumbLabel = "Global"
+      breadcrumbUrl = "/location/global"
     end
 
     #generate the text label for the country or region
@@ -248,6 +252,8 @@ module CountryHelpers
           :code => code,
           :projectType => projectType,
           :label => label,
+          :breadcrumbLabel => breadcrumbLabel,
+          :breadcrumbUrl => breadcrumbUrl,
           :countriesCount => numberOfCountries,
           :regionsCount => numberOfRegions
           } 
