@@ -53,8 +53,6 @@ set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
-#	top5countries = JSON.parse(File.read('data/top5countries.json'))
-	top5sectors = JSON.parse(File.read('data/top5sectors.json'))
 	top5results = JSON.parse(File.read('data/top5results.json'))
 
 	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"
@@ -106,9 +104,9 @@ get '/countries/:country_code/projects/?' do |n|
 	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
 		country=countriesInfo.select {|country| country['code'] == n}.first
 		results = resultsInfo.select {|result| result['code'] == n}
-		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
+		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&page_size=10&page=1"
 	    total_projects = JSON.parse(oipa_total_projects)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=1000"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1"
 		projects_list= JSON.parse(oipa_project_list)
 		projects = projects_list['results']
 		erb :'countries/projects', 
@@ -157,7 +155,6 @@ get '/projects/:proj_id/?' do |n|
   	#get the country/region data from the API
   	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
   	countryOrRegionData = JSON.parse(countryOrRegionAPI)
-  	#countryOrRegion = countryOrRegionData['results']
   	countryOrRegion = get_country_or_region(n)
 	
 	# get the funding projects from the API
@@ -268,7 +265,8 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjects: fundedProjectsData['results'],
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']  
+ 			fundingProjectsCount: fundingProjectsData['count'],
+ 			countryOrRegion: countryOrRegion 
  		}
 end
 
@@ -312,22 +310,46 @@ end
 
 
 #####################################################################
-#  STATIC PAGES
+#  COUNTRY REGION & GLOBAL PROJECT MAP PAGES
 #####################################################################
 
 #Aid By Location Page
 get '/location/country/?' do
-	current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-	current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-	oipa_countries = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
-	countries = JSON.parse(oipa_countries)
-
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
-			:countries => countries
+			:dfid_country_map_data => 	dfid_country_map_data,
+			:dfid_complete_country_list => 	dfid_complete_country_list
 		}
 end
+
+# Aid by Region Page
+get '/location/regional/?' do 
+	erb :'location/regional/index', 
+		:layout => :'layouts/layout',
+		:locals => {
+			#TODO Get the data structure in here
+			:dfid_regional_projects_data => dfid_regional_projects_data			
+		}
+end
+
+# Aid by Region Page
+get '/location/global/?' do 
+	erb :'location/global/index', 
+		:layout => :'layouts/layout',
+		:locals => {
+			#TODO Get the data structure in here
+			:dfid_regional_projects_data => dfid_global_projects_data			
+		}
+end
+
+
+
+
+#####################################################################
+#  STATIC PAGES
+#####################################################################
+
 
 get '/department' do 
 	erb :'department/department', :layout => :'layouts/layout'
@@ -349,6 +371,21 @@ get '/feedback/?' do
 	erb :'feedback/index', :layout => :'layouts/layout'
 end 
 
+post '/feedback/index' do
+ Pony.mail({
+	:from => "devtracker-feedback@dfid.gov.uk",
+    :to => "devtracker-feedback@dfid.gov.uk",
+    :subject => "DevTracker Feedback",
+    :body => "<p>" + params[:email] + "</p><p>" + params[:name] + "</p><p>" + params[:description] + "</p>",
+    :via => :smtp,
+    :via_options => {
+     :address              => '127.0.0.1',
+     :port                 => '25'
+     }
+    })
+    redirect '/' 
+end
+
 get '/fraud/?' do
 	erb :'fraud/index', :layout => :'layouts/layout'
 end  
@@ -357,8 +394,8 @@ post '/fraud/index' do
  Pony.mail({
 	:from => "devtracker-feedback@dfid.gov.uk",
     :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => "Report Fraud:" + params[:country],
-    :body => params[:description],
+    :subject => params[:country] + " " + params[:project],
+    :body => "<p>" + params[:country] + "</p>" + "<p>" + params[:project] + "</p>" + "<p>" + params[:description] + "</p>" + "<p>" + params[:name] + "</p>" + "<p>" + params[:email] + "</p>" + "<p>" + params[:telno] + "</p>",
     :via => :smtp,
     :via_options => {
      :address              => '127.0.0.1',
@@ -366,4 +403,4 @@ post '/fraud/index' do
      }
     })
     redirect '/' 
-   end
+end

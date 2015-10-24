@@ -25,7 +25,7 @@
     <!--[if gte IE 9]><!--><link href="/stylesheets/fonts.css" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
 
 
-    <script src="/javascripts/jquery.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery-1.9.0.min.js" type="text/javascript"></script>
     <!--[if lt IE 9]>
       <script src="/javascripts/ie-compat.js?1435740689" type="text/javascript"></script>
     <![endif]-->
@@ -40,8 +40,7 @@
     <link href="/stylesheets/graph-styles.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/main.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/c3.css" rel="stylesheet" type="text/css">
-
-    
+    <script src="/javascripts/jquery.scrollUp.min.js" type="text/javascript"></script>
    <!--  <script>  
         jQuery(function(){
           jQuery('.more-info-link').click( function(){
@@ -50,21 +49,37 @@
          });  
     </script> -->
     <script> 
-    $(document).ready(function() {
-         $(".more-info-link").click(function(e){
-            e.stopPropagation();
-            $("#moreinfo"+$(this).attr('target')).toggle();
-           });
-         
-         $(".more-info").on('click', function(e){
-            e.stopPropagation();
-          });
+      $(document).ready(function() {
+        $(".more-info-link").click(function(e){
+          e.stopPropagation();
+          $("#moreinfo"+$(this).attr('target')).toggle();
+        });
 
-         $(document).on('click', function(e){
-            $(".more-info").hide(); 
-          });           
+        $(".more-info").on('click', function(e){
+          e.stopPropagation();
+        });
+
+        $(document).on('click', function(e){
+          $(".more-info").hide(); 
+        });
+        $.scrollUp({
+          scrollName: 'scrollUp',
+          scrollFrom: 'top'           // 'top' or 'bottom'
+
+        });
+        $('#scrollUp').hover(function(){
+          $('#scrollUp').stop();
+          $('#scrollUp').animate({
+            paddingBottom: 30
+          });
+        },function(){
+          $('#scrollUp').stop();
+          $('#scrollUp').animate({
+            paddingBottom: 10
+          });
+        });
       });
-  </script> 
+    </script> 
   </head>
   <body>
     <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
@@ -83,6 +98,7 @@
 
     <div class="page-wrapper">
                <%= yield %>
+               <div id="toTop"></div>
     </div><!-- end page-wrapper -->  
     
     <footer id="footer" role="contentinfo">
@@ -109,7 +125,6 @@
         </div>
       </div>
     </footer>
-    
     <!-- <%=DateTime.now%> -->
   </body>
 </html>
