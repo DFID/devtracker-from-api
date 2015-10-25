@@ -20,9 +20,9 @@ title: Development Tracker
         <p class="project-description"><%= project['description'].length>0 ? project['description'][0]['narratives'][0]['text'] : "" %></p>
 
     <!-- TODO add recipients -->
-    <%if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
+    <%#if recipients.length > 0 %>
         <div class="project-country-title"> 
-          <strong>Benefitting country/region</strong>: <%= project['allRecipients'].join(", ") %>
+          <strong>Benefitting country/region</strong>: <%#= recipients.join("+") %>
           
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
            <aside id="moreinfo1" class="more-info">            
@@ -31,7 +31,7 @@ title: Development Tracker
                     </div>
             </aside>
         </div>  
-    <%end%>
+    <%#end%>
     </div>
 
 </div>

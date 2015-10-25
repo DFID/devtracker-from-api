@@ -86,8 +86,8 @@ title: Development Tracker
           <% transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
             <tr>
               <td><%= incomingFund['description'] %></td>
-              <td width="30%"><%= incomingFund['provider_organisation_name'] + " (" + 
-              if incomingFund['provider_activity'].nil? then '' else incomingFund['provider_activity'] end + ")" %></td>
+              <td width="30%"><%= if incomingFund['provider_organisation'].nil? then '' else incomingFund['provider_organisation']['narratives'][0]['text'] + 
+              if incomingFund['provider_organisation']['provider_activity_id'].nil? then '' else " (" + incomingFund['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
               <td width="15%"><%= Date.parse(incomingFund['transaction_date']).strftime("%d %b %Y")%></td>
               <td width="15%" class="<%= incomingFund['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(incomingFund['value'].to_f.round(0)*100, incomingFund['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
