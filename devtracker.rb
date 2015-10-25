@@ -57,12 +57,12 @@ get '/' do  #homepage
 
 	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"
   	top5countries = JSON.parse(countriesJSON)
-
+  	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
  	erb :index, 
  		:layout => :'layouts/layout', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list( settings.oipa_api_url, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			what_we_do: high_level_sector_list( sectorValuesJSON, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end
@@ -86,7 +86,41 @@ get '/countries/:country_code/?' do |n|
  	#total_project_budgets= Oj.load_nil(oipa_total_project_budgets)
     oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter"
     year_wise_budgets= JSON.parse_nil(oipa_year_wise_budgets)
-	
+    totalDFIDBudget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=reporting_organisation&aggregations=budget"
+	totalDFIDBudget = JSON.parse(totalDFIDBudget)
+	OperationalBudget = (JSON.parse(File.read('data/countries_operational_budgets.json'))).select {|result| result['code'] == n}
+
+	#this is the data for the donut
+	CountrySpecificsectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}"
+	PercentageArray = Array.new
+	hlsl = high_level_sector_list( CountrySpecificsectorValuesJSON, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+	tempHash = {}
+	hlsl[:sectorsData].each do |sector|
+		sectorGroupPercentage = (100*sector[:budget].to_f/hlsl[:totalBudget].to_f).round(2)
+		tempHash[sector[:name]] = sectorGroupPercentage
+		PercentageArray.push(sectorGroupPercentage)
+	end
+	PercentageArray.sort!
+
+
+	#Fixing the donut data here
+	counter = 0
+	tempValues = ''
+	tempValueNames = ''
+	otherPercentage = 0.0
+	while !PercentageArray.empty?
+		if(counter < 5)
+		    counter = counter + 1
+		    tempValue = PercentageArray.pop
+		    #tempValues.concat(tempValue.to_s + ",")
+		    #tempValueNames = tempValueNames + tempHash.key(tempValue) + ','
+		    tempValues.concat("['"+tempHash.key(tempValue)+"',"+tempValue.to_s+"],")
+		else
+		    otherPercentage = otherPercentage + PercentageArray.pop
+		end
+	end
+	tempValues.concat("['Other',"+ otherPercentage.to_s+"]")
+
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -95,6 +129,9 @@ get '/countries/:country_code/?' do |n|
  			active_projects: active_projects,
  			total_project_budgets: total_project_budgets,
  			year_wise_budgets: year_wise_budgets,
+ 			total_dfid_budget: totalDFIDBudget,
+ 			operationalBudget: OperationalBudget,
+ 			tempValues: tempValues,
  			results: results
  		}
 end
@@ -278,10 +315,11 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
+	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			high_level_sector_list: high_level_sector_list( settings.oipa_api_url, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list( sectorValuesJSON, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
 
