@@ -15,21 +15,6 @@
 <div class="row">
     <div class="twelve columns summary">
         <p class="project-description"><%= project['description'].length>0 ? project['description'][0]['narratives'][0]['text'] : "" %></p>
-
-    <!-- TODO add recipients -->
-    <%#if recipients.length > 0 %>
-        <div class="project-country-title"> 
-          <strong>Benefitting country/region</strong>: <%#= recipients.join("+") %>
-          
-           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
-           <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content more-info-limit-size">
-                        The country/countries/regions that have been identified as having project funds spent in it.
-                    </div>
-            </aside>
-        </div>  
-    <%#end%>
-        <p class="project-description"><%= project['description'][0]['narratives'][0]['text'] %></p>
     </div>
 
 </div>
@@ -78,8 +63,8 @@
                  <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
             </div>
         <![endif]-->
-
-        <% if (!project['implementingOrgs'].nil? && !project['implementingOrgs'].empty?)  %>
+        <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <% if (implementingOrgs.length>0)  %>
 
             <div class="more-info-container">  
                 <span class="more-info-title">Implementing Organisation(s)</span> 
@@ -93,9 +78,9 @@
 
             <div id="implementing-organisations">
                 <ul>
-                    <% project['implementingOrgs'].each do |implementingOrgs| %>
+                    <% implementingOrgs.sort{ |a,b| a['narratives'][0]['text']  <=> b['narratives'][0]['text'] }.each do |implementingOrg| %>
                     <li>
-                       <%= implementingOrgs %>
+                       <%= implementingOrg['narratives'][0]['text'] %>
                     </li>
                     <% end %>
                 </ul>
