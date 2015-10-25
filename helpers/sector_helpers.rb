@@ -37,7 +37,7 @@ module SectorHelpers
 
 		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
-  		highLevelSector = JSON.parse(File.read('data/sector_hierarchies.json'))
+  		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
         
         #Create a data structure to map each DAC 5 sector code to a high level sector code          
         highLevelSectorBudget = sectorValues.map do |elem| 
@@ -77,7 +77,7 @@ module SectorHelpers
 
 		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
-  		sectorHierarchy = JSON.parse(File.read('data/sector_hierarchies.json'))
+  		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
         
         # Create a data structure that holds: budget, child code, child description & parent code
         budgetData = sectorValues.map do |elem| 

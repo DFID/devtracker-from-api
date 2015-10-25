@@ -5,9 +5,9 @@
             <div class="breadcrumb">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <%if project['recipient_countries'].length == 1 %>
-                        <li><a href="/countries/<%= project['recipient_countries'][0]['country']['code']%>/"><%= project['recipient_countries'][0]['country']['name'] || "" %></a></li>
-                    <% end %>
+                    <%#if countryOrRegion[:projectType] == "country" %>
+                        <li><a href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
+                    <%# end %>
                     <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
                 </ul>
             </div>

@@ -70,4 +70,78 @@ module CountryHelpers
       now.year
     end
   end
+
+  def get_country_or_region(projectId)
+    #get the data
+    countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+    countryOrRegionData = JSON.parse(countryOrRegionAPI)
+    data = countryOrRegionData['results']
+
+    #iterate through the array
+    countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
+    regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+
+    #project type logic
+    if(!countries.empty?) then 
+      numberOfCountries = countries.count
+    else 
+      numberOfCountries = 0
+    end
+
+    if(!regions.empty?) then 
+      numberOfRegions = regions.count
+    else numberOfRegions = 0
+    end
+
+    #single country case
+    if(numberOfCountries == 1 && numberOfRegions == 0) then 
+      projectType = "country"
+      name = countries[0]['country']['name']
+      code = countries[0]['country']['code']
+      breadcrumbLabel = name
+      breadcrumbUrl = "/countries/" + code
+    #single region case
+    elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
+      projectType = "region"
+      name = regions[0]['region']['name']
+      code = regions[0]['region']['code']
+      breadcrumbLabel = name
+      breadcrumbUrl = "/regions/" + code
+    #other cases - multiple countries/regions
+    #elsif (numberOfRegions > 1 && numberOfCountries == 0) then
+    #  projectType = "region"
+    else 
+      projectType = "global"
+      breadcrumbLabel = "Global"
+      breadcrumbUrl = "/location/global"
+    end
+
+    #generate the text label for the country or region
+    globalLabel = []
+    countries.map do |c|
+      globalLabel << c['country']['name']
+    end
+    regions.map do |r|
+      globalLabel << r['region']['name']
+    end
+    label = globalLabel.sort.join(", ")
+
+    if (label.length == 0 && projectType == "global") then 
+      label = "Global project" 
+    end
+
+    returnObject = {
+          :recipient_countries  => countries,
+          :recipient_regions => regions,
+          :name => name,
+          :code => code,
+          :projectType => projectType,
+          :label => label,
+          :breadcrumbLabel => breadcrumbLabel,
+          :breadcrumbUrl => breadcrumbUrl,
+          :countriesCount => numberOfCountries,
+          :regionsCount => numberOfRegions
+          } 
+
+  end
 end

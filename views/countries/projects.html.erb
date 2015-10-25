@@ -25,4 +25,4 @@
     <%#=project['reporting_organisation']['organisation']['name']['narratives'][0]['text']%>
     <%#=project['activity_status']['name']%>
 <%# end %>
-<%= erb :'partials/_project_list', :locals => { :projects => projects } %>
+<%= erb :'partials/_project_list', :locals => { :projects => projects, :country => country, :project_count => total_projects['count'] } %>

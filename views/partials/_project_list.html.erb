@@ -4,70 +4,112 @@
 <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/javascripts/filterProjectsList.js"></script>
 <script type="text/javascript" src="/javascripts/formatDate.js"></script>
-
+<link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
+<script>
+    $(document).ready(function() {
+        function addCommas(num) {   
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        $( document ).ajaxStart(function() {
+            $('.modal').show();
+        });
+        $( document ).ajaxStop(function() {
+            $('.modal').hide();
+        });
+        $('#light-pagination').pagination({
+            items: <%= project_count %>,
+            itemsOnPage: 10,
+            cssStyle: 'compact-theme',
+            onPageClick: function(pageNumber,event){
+                var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=<%= country["code"] %>&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page='+ pageNumber;
+                $.getJSON(oipaLink,{
+                    format: "json"
+                }).done(function(json){
+                    $('#showResults').html("");
+                    $.each(json.results,function(i,result){
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.total_child_budgets)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisation[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
+                        $('#showResults').append(tempString);
+                    });
+                })
+                .fail(function(json){
+                    $('#showResults').text('Results loading failed');
+                });
+            }
+        });
+    });
+</script>
 <div class="row project-results">
     <div class="nine columns push-three" id="search-results">
-        <div>
-            <b>Sort results by:</b>
+        <div class="row">
+            <div class="five columns">
+                <b>Sort results by:</b>
             &nbsp;
             Title
             <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
             &nbsp;
             Budget
             <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▲</span>
+            </div>
+            <div class="seven columns">
+                <div id="light-pagination"></div>
+            </div>
         </div>
-
-        <div>
-            Showing
-            <span name="afterFilteringAmount" style="display:inline;"></span>
-            <span name="numberofResults" value="@results.size" style="display:inline;"><%=projects.size%></span> results
+        <div class="modal">
+            <div>Loading Data <br /> Please Wait</div>
         </div>
-        <% projects.sort{ |a,b| b['total_child_budgets']  <=> a['total_child_budgets']}.each do |project| %>
-            <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
-            
-            <input type="hidden" name="budget" value="<%= project['total_child_budgets'] %>"  class="sort-budget"/>
-            
-            <input type="hidden" name="title" value="<%= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
-            
-            <input type="hidden" name="dateStart" value="<%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>"/>
-            
-            <input type="hidden" name="dateEnd" value="<%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>"/>
+        <div id="showResults">
+            <!--<div>
+                Showing
+                <span name="afterFilteringAmount" style="display:inline;"></span>
+                <span name="numberofResults" value="@results.size" style="display:inline;"><%=projects.size%></span> results
+            </div> -->
+            <% projects.sort{ |a,b| b['total_child_budgets']  <=> a['total_child_budgets']}.each do |project| %>
+                <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
+                
+                <input type="hidden" name="budget" value="<%= project['total_child_budgets'] %>"  class="sort-budget"/>
+                
+                <input type="hidden" name="title" value="<%= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
+                
+                <input type="hidden" name="dateStart" value="<%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>"/>
+                
+                <input type="hidden" name="dateEnd" value="<%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>"/>
 
-            <input type="hidden" name="sectors" value="<%#=retrieve_high_level_sector_names(project["iatiId"])%>"/>
-            
-            <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
-            
-            <%# if project['projectType'] == "country" %>
-                <input type="hidden" name="countries" value="<%#=country_name project['recipient']%>" />
-            <%# end %>
-            <%# if project['projectType'] == "regional" %>
-                <input type="hidden" name="regions" value="<%#=region_name project['recipient']%>"  />
-            <%# end %>
-            
-            <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
-            
-            <input type="hidden" name="documents" value="<%# 
-                #if(project['documents'] != nil) then result = ""; 
-                #project['documents'].each do |d| 
-                #    d['categories'].each do |c| 
-                #        result += c.strip + '#' 
-                #    end;
-                #end; 
-                #result = result.chop!; %>
-                <%#= get_document_category project['iati_identifier'] %><%# end%>" />
+                <input type="hidden" name="sectors" value="<%#=retrieve_high_level_sector_names(project["iatiId"])%>"/>
+                
+                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
+                
+                <%# if project['projectType'] == "country" %>
+                    <input type="hidden" name="countries" value="<%#=country_name project['recipient']%>" />
+                <%# end %>
+                <%# if project['projectType'] == "regional" %>
+                    <input type="hidden" name="regions" value="<%#=region_name project['recipient']%>"  />
+                <%# end %>
+                
+                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
+                
+                <input type="hidden" name="documents" value="<%# 
+                    #if(project['documents'] != nil) then result = ""; 
+                    #project['documents'].each do |d| 
+                    #    d['categories'].each do |c| 
+                    #        result += c.strip + '#' 
+                    #    end;
+                    #end; 
+                    #result = result.chop!; %>
+                    <%#= get_document_category project['iati_identifier'] %><%# end%>" />
 
-            <div class="search-result">
-                <h3>
-                    <a href="/projects/<%= project['iati_identifier'] %>">
-                        <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
-                    </a>
-                </h3>
-                <span class="budget">Budget: <em> <%= Money.new(project['total_child_budgets'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
-                <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                <span>Reporting Org: <em><%= project['reporting_organisation'][0]['narratives'][0]['text']%></em></span>
-                <p class="description"><%= project['description'][0]['narratives'][0]['text']%></p>
-             </div>
-        <% end %>
+                <div class="search-result">
+                    <h3>
+                        <a href="/projects/<%= project['iati_identifier'] %>">
+                            <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
+                        </a>
+                    </h3>
+                    <span class="budget">Budget: <em> <%= Money.new(project['total_child_budgets'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                    <span>Reporting Org: <em><%= project['reporting_organisation'][0]['narratives'][0]['text']%></em></span>
+                    <p class="description"><%= project['description'][0]['narratives'][0]['text']%></p>
+                 </div>
+            <% end %>
+        </div>
     </div>
 
     <div class="three columns pull-nine">
@@ -111,4 +153,5 @@
         </div>
     </div>
     <script src="/javascripts/sortProjectsList.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
 </div>
