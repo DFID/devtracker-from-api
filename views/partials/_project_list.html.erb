@@ -67,7 +67,7 @@
                 <span name="afterFilteringAmount" style="display:inline;"></span>
                 <span name="numberofResults" value="@results.size" style="display:inline;"><%=projects.size%></span> results
             </div> -->
-            <% projects.sort{ |a,b| b['total_child_budgets']  <=> a['total_child_budgets']}.each do |project| %>
+            <% projects.each do |project| %>
                 <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
                 
                 <input type="hidden" name="budget" value="<%= project['total_child_budgets'] %>"  class="sort-budget"/>
