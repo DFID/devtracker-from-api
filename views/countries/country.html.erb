@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :tempValues => tempValues } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :c3ReadyDonutData => c3ReadyDonutData } %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -181,19 +181,6 @@
             <div class="twelve columns">
                 <div id="sectorChart"></div>
             </div>
-           <!-- <div class="six columns">
-                <div id="sectorLegend">
-                    <ul class="legend-list">
-                        <%# (sector_groups country['code']).each do |sector| %>
-                            <li><span class="theme-1 legend-color"></span>
-                                <div title="<%#=sector['name'] || "Other"%>" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                <%#=sector['name'] || "Other"%></div>
-                                <em><%#= sector['percentage'] %><span class="visually-hidden">projects</span></em>
-                            </li>
-                        <%# end %>
-                    </ul>
-                </div>
-            </div> -->
          </div>
          
     </div>
@@ -229,7 +216,7 @@
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%= tempValues %>
+                    <%= c3ReadyDonutData %>
                 ],
                 type : 'donut',
                 onclick: function (d, i) { console.log("onclick", d, i); },
