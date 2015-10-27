@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :c3ReadyDonutData => c3ReadyDonutData } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :countrySectorGraphData => countrySectorGraphData } %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -216,7 +216,7 @@
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%= c3ReadyDonutData %>
+                    <%= countrySectorGraphData %>
                 ],
                 type : 'donut',
                 onclick: function (d, i) { console.log("onclick", d, i); },

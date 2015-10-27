@@ -260,7 +260,7 @@ module CountryHelpers
 
   end
 
-  def c3_Ready_Donut_Data(countrySpecificsectorValuesJSONLink)
+  def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
     budgetPercentageArray = Array.new
     highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
     sectorWithTopBudgetHash = {}
