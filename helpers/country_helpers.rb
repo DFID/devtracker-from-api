@@ -259,4 +259,31 @@ module CountryHelpers
           } 
 
   end
+
+  def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
+    budgetPercentageArray = Array.new
+    highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+    sectorWithTopBudgetHash = {}
+    highLevelSectorListData[:sectorsData].each do |sector|
+      sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
+      sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
+      budgetPercentageArray.push(sectorGroupPercentage)
+    end
+    budgetPercentageArray.sort!
+    #Fixing the donut data here
+    topFiveTracker = 0
+    c3ReadyDonutData = ''
+    otherBudgetPercentage = 0.0
+    while !budgetPercentageArray.empty?
+      if(topFiveTracker < 5)
+          topFiveTracker = topFiveTracker + 1
+          tempBudgetValue = budgetPercentageArray.pop
+          c3ReadyDonutData.concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+      else
+          otherBudgetPercentage = otherBudgetPercentage + budgetPercentageArray.pop
+      end
+    end
+    c3ReadyDonutData.concat("['Other',"+ otherBudgetPercentage.to_s+"]")
+    return c3ReadyDonutData
+  end
 end

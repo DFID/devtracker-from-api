@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :countrySectorGraphData => countrySectorGraphData } %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -53,6 +53,40 @@
                 <span><strong><%#= number_to_currency(country_organisation_plan['operationalBudget'], :unit=>"£", :precision => 0) %></strong></span>
                 </li>-->
             <%# end %>
+            <%#= PercentageArray %>
+            <%#= tempHash.key(47.16) %>
+
+
+
+
+            <% if operationalBudget.length > 0 then %>
+                <li class="fact-item">
+                Operational Plan Budget <strong><%= current_financial_year %></strong>
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
+                </a>
+                <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
+                    </div>
+                </aside>
+                <span><strong><%= Money.new(operationalBudget[0]['operationalBudget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
+                </li>
+            <% else %>
+                <li class="fact-item">
+                Operational Plan Budget <strong><%= current_financial_year %></strong>
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
+                </a>
+                <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
+                    </div>
+                </aside>
+                <span><strong>£0</strong></span>
+                </li>
+            <% end %>
+            <% if(total_project_budgets) then %>
             <li class="fact-item">
                 Total Project Budget for <strong><%= current_financial_year %></strong>
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="2">
@@ -65,10 +99,29 @@
                 </aside>
                 <span><strong><%= if(total_project_budgets) then Money.new(total_project_budgets[0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end%></strong></span>
             </li>
-            <!--<li class="fact-item">
+            <% else %>
+                <li class="fact-item">
+                Total Project Budget for <strong><%= current_financial_year %></strong>
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="2">
+                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
+                </a>
+                <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                       Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
+                    </div>
+                </aside>
+                <span><strong>£0</strong></span>
+                </li>
+            <% end %>
+            <li class="fact-item">
                 Project budget as % of DFID budget
-                <span><strong><%#= (stats['totalBudget']/(dfid_total_budget.nonzero? || 1) * 100).round(2) || "&nbsp;" %>%</strong></span>
-            </li>-->
+<!--                <span><strong><%#= (stats['totalBudget']/(dfid_total_budget.nonzero? || 1) * 100).round(2) || "&nbsp;" %>%</strong></span> -->
+                <% if(total_project_budgets) then %>
+                <span><strong><%= ((total_project_budgets[0]['budget'].round(2) / total_dfid_budget[0]['budget'].round(2))*100).round(2) %>%</strong></span>
+                <% else %>
+                    <span><strong>0%</strong></span>
+                <% end %>
+            </li>
             <li class="fact-item">
                 Active Projects
                 <span><strong><%= active_projects['count'] || "&nbsp;" %></strong></span>
@@ -125,21 +178,8 @@
             </aside>
          </div>
          <div class="row">
-            <div class="six columns">
+            <div class="twelve columns">
                 <div id="sectorChart"></div>
-            </div>
-            <div class="six columns">
-                <div id="sectorLegend">
-                    <ul class="legend-list">
-                        <%# (sector_groups country['code']).each do |sector| %>
-                            <li><span class="theme-1 legend-color"></span>
-                                <div title="<%#=sector['name'] || "Other"%>" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-                                <%#=sector['name'] || "Other"%></div>
-                                <em><%#= sector['percentage'] %><span class="visually-hidden">projects</span></em>
-                            </li>
-                        <%# end %>
-                    </ul>
-                </div>
             </div>
          </div>
          
@@ -172,6 +212,21 @@
  <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
     $(document).ready(function() {
+        var donut = c3.generate({
+            bindto: '#sectorChart',
+            data: {
+                columns: [
+                    <%= countrySectorGraphData %>
+                ],
+                type : 'donut',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            /*donut: {
+                title: "Iris Petal Width"
+            }*/
+        });
         var yTicks = [];
         var chart = c3.generate({
             bindto: '#budget-year-chart',
