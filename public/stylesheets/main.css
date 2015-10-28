@@ -479,3 +479,8 @@ g.c3-axis-y > g:last-child {
     border-right: 1px solid #CBCBCB;
     text-decoration: none;
 }
+
+#sectorChart {
+  font-size: 12px;
+  height: 250px;
+}
