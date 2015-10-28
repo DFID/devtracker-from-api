@@ -220,7 +220,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 	end		
 
   	transactionsJSON = JSON.parse(oipaTransactionsJSON)
-  	transactions = transactionsJSON['results']
+  	transactions = transactionsJSON['results'].select {|transaction| !transaction['transaction_type'].nil? }
 	yearWiseBudgets= JSON.parse(oipaYearWiseBudgets)
 	#yearWiseBudgets=yearWiseBudgets['results']
 

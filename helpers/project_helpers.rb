@@ -117,7 +117,7 @@ module ProjectHelpers
     end
 
     def is_dfid_project(projectCode)   
-        projectCode[0, 4] == "GB-1"
+        projectCode[0, 5] == "GB-1-"
     end
 
     def first_day_of_financial_year(date_value)
@@ -249,7 +249,7 @@ module ProjectHelpers
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         data=implementingOrgsDetails['results']
 
-        implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
+        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
         implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
     end
 end
