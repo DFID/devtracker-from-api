@@ -205,7 +205,7 @@ module ProjectHelpers
     #New Function for API Based Devtracker
     def h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
-            h2Activity = h2Activities.select {|activity| activity['id'] == h2ActivityId}.first
+            h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
             h2Activity['title']['narratives'][0]['text']
         else
             ""
@@ -234,9 +234,9 @@ module ProjectHelpers
 
     def reporting_organisation(project)
         begin
-            organisation = project['reporting_organisation'][0]['narratives'][0]['text']
+            organisation = project['reporting_organisations'][0]['narratives'][0]['text']
         rescue
-            organisation = project['reporting_organisation'][0]['type']['name']
+            organisation = project['reporting_organisations'][0]['type']['name']
         end
     end
 
@@ -249,11 +249,9 @@ module ProjectHelpers
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         data=implementingOrgsDetails['results']
 
-        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
+        implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
         implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
     end
-
-
 end
 
 helpers ProjectHelpers

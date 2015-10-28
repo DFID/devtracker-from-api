@@ -222,6 +222,7 @@ get '/projects/:proj_id/transactions/?' do |n|
   	transactionsJSON = JSON.parse(oipaTransactionsJSON)
   	transactions = transactionsJSON['results']
 	yearWiseBudgets= JSON.parse(oipaYearWiseBudgets)
+	#yearWiseBudgets=yearWiseBudgets['results']
 
 	#get the country/region data from the API
   	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
@@ -271,7 +272,7 @@ get '/projects/:proj_id/partners/?' do |n|
   	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url,id,title,total_budget,description,reporting_organisation"
+    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url,id,title,description,reporting_organisations,activity_aggregations,default_currency"
 	fundedProjectsData = JSON.parse(fundedProjectsAPI)
 
 

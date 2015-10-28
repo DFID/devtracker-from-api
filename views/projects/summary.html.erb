@@ -3,9 +3,9 @@
 
 <div class="row">
     <div class="twelve columns">
-        <% if(non_dfid_data(project['reporting_organisation'][0]['ref'])) %>
+        <% if(non_dfid_data(project['reporting_organisations'][0]['ref'])) %>
         <div id="disclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['reporting_organisation'][0]['narratives'][0]['text'] || "" %>. Please contact them if you have any questions about their data.</p>
+            <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['reporting_organisations'][0]['narratives'][0]['text'] || "" %>. Please contact them if you have any questions about their data.</p>
         </div>
         <% end %>
     </div>
@@ -192,9 +192,7 @@
         </div>
         <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
     </div>
-
-
-
+    
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
@@ -206,8 +204,8 @@
             charts.donutLegend("#sector-legend", ".legend-color", 14, sectors, function(d){ return d.sector });
 
             var funding = [ {label: "", text: "", value: 0},
-                            {label: "Spend to date", text: "<%#= number_to_currency(project['totalProjectSpend'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) || 0.00 %>", value: <%= (project['totalProjectSpend'] || 0.00) %>},
-                            {label: "Project budget", text: "<%= Money.new(project['total_child_budgets'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %><%#= number_to_currency(project['total_child_budgets'], :unit=>currency_symbol(project['currency']) || "£", :precision => 0) || 0.00 %>", value: <%= (project['total_child_budgets'] || 0.00) %>}]
+                            {label: "Spend to date", text: "<%= Money.new(project['activity_aggregations']['total_disbursement_value'].to_f.round(0)*100 + project['activity_aggregations']['total_expenditure_value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= (project['activity_aggregations']['total_disbursement_value'] + project['activity_aggregations']['total_expenditure_value']) %>},
+                            {label: "Project budget", text: "<%= if is_dfid_project(project['id']) then Money.new(project['activity_aggregations']['total_child_budget_value'].to_f.round(0)*100,project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) else Money.new(project['activity_aggregations']['total_budget_value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) end %>", value: <%= if is_dfid_project(project['id']) then project['activity_aggregations']['total_child_budget_value'] else project['activity_aggregations']['total_budget_value'] end %>}]
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
