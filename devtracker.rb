@@ -105,6 +105,7 @@ get '/countries/:country_code/?' do |n|
 end
 
 #Country Project List Page
+countryAllProjectFilters = JSON.parse(File.read('data/countryProjectsFilters.json'))
 get '/countries/:country_code/projects/?' do |n|
 	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
 		country=countriesInfo.select {|country| country['code'] == n}.first
@@ -120,7 +121,8 @@ get '/countries/:country_code/projects/?' do |n|
 		 		country: country,
 		 		total_projects: total_projects,
 		 		projects: projects,
-		 		results: results
+		 		results: results,
+		 		countryAllProjectFilters: countryAllProjectFilters
 		 		}
 		 			
 end

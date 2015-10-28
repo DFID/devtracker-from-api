@@ -36,6 +36,43 @@
                 });
             }
         });
+        var budgetMax = <%= countryAllProjectFilters["budget_higher_bound"] %>;
+        $("#slider-vertical").slider({
+            orientation: "horizontal",
+            range: true,
+            min: 0,
+            max: budgetMax,
+            step : (Math.round(budgetMax / 100) * 100)/100,
+            values: [0,budgetMax],
+            slide: function( event, ui ) {
+                $( "#amount" ).html( "£" + ui.values[ 0 ] + " - £" + ui.values[ 1 ] );
+            }
+            /*change: function( event, ui ) {
+                //TO DO
+            }*/
+        });
+        $( "#amount" ).html( "£" + $( "#slider-vertical" ).slider( "values", 0 ) + " - £" + $( "#slider-vertical" ).slider( "values", 1 ) );
+        var minStartDt = "<%= countryAllProjectFilters["budget_date_range"]["start_date"] %>";
+        var maxEndDt = "<%= countryAllProjectFilters["budget_date_range"]["end_date"] %>";
+        minStartDt = new Date (minStartDt.slice(0,10));
+        maxEndDt = new Date (maxEndDt.slice(0,10));
+        $("#date-slider-vertical").slider({
+            orientation: "horizontal",
+           range:true,
+           min: Date.parse(minStartDt),
+           max: Date.parse(maxEndDt),
+           step: 86400000,
+           values: [Date.parse(minStartDt), Date.parse(maxEndDt)],
+           slide: function(event, ui){
+                var startDt = new Date(ui.values[0]);
+                var endDt = new Date(ui.values[1]);
+                $('#date-range').html(startDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + endDt.customFormat("#DD# #MMM# #YYYY#"));
+            }
+            /*change: function(event, ui){
+                //TO DO
+            }*/
+        });
+        $('#date-range').html(minStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + maxEndDt.customFormat("#DD# #MMM# #YYYY#"));
     });
 </script>
 <div class="row project-results">
@@ -63,7 +100,7 @@
                 <span name="afterFilteringAmount" style="display:inline;"></span>
                 <span name="numberofResults" value="@results.size" style="display:inline;"><%=projects.size%></span> results
             </div> -->
-            <% projects.sort{ |a,b| b['total_child_budgets']  <=> a['total_child_budgets']}.each do |project| %>
+            <% projects.each do |project| %>
                 <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
                 
                 <input type="hidden" name="budget" value="<%= project['total_child_budgets'] %>"  class="sort-budget"/>
@@ -103,10 +140,10 @@
                             <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
                         </a>
                     </h3>
-                    <span class="budget">Budget: <em> <%= Money.new(project['total_child_budgets'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <span class="budget">Budget: <em> <%#= Money.new(project['total_child_budgets'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <span>Reporting Org: <em><%= project['reporting_organisation'][0]['narratives'][0]['text']%></em></span>
-                    <p class="description"><%= project['description'][0]['narratives'][0]['text']%></p>
+                    <span>Reporting Org: <em><%#= project['reporting_organisation'][0]['narratives'][0]['text']%></em></span>
+                    <p class="description"><%#= project['description'][0]['narratives'][0]['text']%></p>
                  </div>
             <% end %>
         </div>
@@ -118,6 +155,15 @@
             <div name="status">
                 <div class="proj-filter-exp-collapse-sign">+</div>
                 <span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Status</h3></span>
+                <ul>
+                    <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                        <li>
+                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" name="status"><%= statuses["name"] %>
+                            </label>
+                        </li>
+                    <% end %>
+                </ul>
             </div>
             <div name="locations">
                 <h3>Locations</h3>
@@ -133,14 +179,41 @@
             <div name="sectors">
                 <div class="proj-filter-exp-collapse-sign">+</div>
                 <span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span>
+                <ul>
+                    <% countryAllProjectFilters["sectors"].each do |sectors| %>
+                        <li>
+                            <label for="sectors_<%= sectors["code"] %>" title=" <%= sectors["name"] %>">
+                                <input id="sectors_<%= sectors["code"] %>" type="checkbox" value="<%= sectors["code"] %>" name="sectors"><%= sectors["name"] %>
+                            </label>
+                        </li>
+                    <% end %>
+                </ul>
             </div>
             <div name="organizations">
                 <div class="proj-filter-exp-collapse-sign">+</div>
                 <span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span>
+                <ul>
+                    <% countryAllProjectFilters["implementing_organizations"].each do |organizations| %>
+                        <li>
+                            <label for="organizations_<%= organizations["code"] %>" title=" <%= organizations["name"] %>">
+                                <input id="organizations_<%= organizations["code"] %>" type="checkbox" value="<%= organizations["code"] %>" name="organizations"><%= organizations["name"] %>
+                            </label>
+                        </li>
+                    <% end %>
+                </ul>
             </div>
             <div name="documents">
                 <div class="proj-filter-exp-collapse-sign">+</div>
                 <span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span>
+                <ul>
+                    <% countryAllProjectFilters["document_categories"].each do |documents| %>
+                        <li>
+                            <label for="documents_<%= documents["code"] %>" title=" <%= documents["name"] %>">
+                                <input id="documents_<%= documents["code"] %>" type="checkbox" value="<%= documents["code"] %>" name="documents"><%= documents["name"] %>
+                            </label>
+                        </li>
+                    <% end %>
+                </ul>
             </div>
             <div name="budget">
                 <h3>Budget Value</h3>

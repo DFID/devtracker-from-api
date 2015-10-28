@@ -4,11 +4,12 @@
 
     getHiddenFieldsValues();
     sortFilters();
-    addCheckboxesFilters();
+    //addCheckboxesFilters();
     setOnChange();
     attachFilterExpColClickEvent();
     budgetFilteringSetUp();
-    dateFilteringSetUp();
+    //dateFilteringSetUp();
+    hideInputCheckbox();
 
   });
 
@@ -54,7 +55,7 @@
     return ($.inArray(true, array)!= -1);
   }
 
-function dateFilteringSetUp(){
+/*function dateFilteringSetUp(){
 
     var divsToCheck = $('input[name=status][type="hidden"]').parent('div');
     var minStartDt = new Date();
@@ -123,7 +124,7 @@ function dateFilteringSetUp(){
 
     $('#date-range').html(minStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + maxEndDt.customFormat("#DD# #MMM# #YYYY#"));
 
-}
+}*/
 
   function budgetFilteringSetUp() {
     var divsToCheck = $('input[name=status][type="hidden"]').parent('div');
@@ -135,7 +136,7 @@ function dateFilteringSetUp(){
       }
     });
 
-    $( "#slider-vertical" ).slider({
+    /*$( "#slider-vertical" ).slider({
       orientation: "horizontal",
       range: true,
       min: min,
@@ -162,7 +163,7 @@ function dateFilteringSetUp(){
         }
         displayResultsAmount();
       }
-    });
+    });*/
 
     $("#amount").html( ("" + min).replace(/(\d)(?=(?:\d{3})+$)/g, "$1,") +" - "+(""+max).replace(/(\d)(?=(?:\d{3})+$)/g, "$1,"));
   }
@@ -426,5 +427,15 @@ function dateFilteringSetUp(){
         "<input type='checkbox' name='"+name+"' id='"+ uid +"' value='"+value+"'/>" + value +
       "</label>" +
     "</li>";
+  }
+
+  function hideInputCheckbox(){
+    $("div[name=status] ul").css('display', 'none');
+    $("div[name=sectors] ul").css('display', 'none');
+    $("div[name=organizations] ul").css('display', 'none');
+    $("div[name=countries] ul").css('display', 'none');
+    $("div[name=regions] ul").css('display', 'none');
+    $("div[name=documents] ul").css('display', 'none');
+    $("div[name=locations]").hide() ;
   }
 })(jQuery)
