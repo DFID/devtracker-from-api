@@ -12,6 +12,7 @@ module ProjectHelpers
         
         oipaCountryProjectValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectValues = JSON.parse(oipaCountryProjectValuesJSON)
+        projectValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
         # Map the input data structure so that it matches the required input for Tilestream
@@ -63,6 +64,7 @@ module ProjectHelpers
         # aggregates budgets of the dfid regional projects that are active in the current FY
         oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
         allCurrentRegions = JSON.parse(oipaAllRegionsJSON)
+        allCurrentRegions = allCurrentRegions['results']
 
         # Map the input data structure so that it matches the required input for the Regions map
         allRegionsChartData = allCurrentRegions.map do |elem|
@@ -117,7 +119,7 @@ module ProjectHelpers
     end
 
     def is_dfid_project(projectCode)   
-        projectCode[0, 4] == "GB-1"
+        projectCode[0, 5] == "GB-1-"
     end
 
     def first_day_of_financial_year(date_value)
@@ -205,7 +207,7 @@ module ProjectHelpers
     #New Function for API Based Devtracker
     def h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
-            h2Activity = h2Activities.select {|activity| activity['id'] == h2ActivityId}.first
+            h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
             h2Activity['title']['narratives'][0]['text']
         else
             ""
@@ -234,13 +236,24 @@ module ProjectHelpers
 
     def reporting_organisation(project)
         begin
-            organisation = project['reporting_organisation'][0]['narratives'][0]['text']
+            organisation = project['reporting_organisations'][0]['narratives'][0]['text']
         rescue
-            organisation = project['reporting_organisation'][0]['type']['name']
+            organisation = project['reporting_organisations'][0]['type']['name']
         end
     end
 
+    def get_implementing_orgs(projectId)
+        if is_dfid_project(projectId) then
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+        else
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=2&id=#{projectId}&fields=participating_organisations"    
+        end    
+        implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
+        data=implementingOrgsDetails['results']
 
+        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
+        implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
+    end
 end
 
 helpers ProjectHelpers

@@ -1,6 +1,6 @@
 <!-- title: Development Tracker -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners"} %>
 
   <% if fundingProjectsCount > 0 then %>
       <div class="row">
@@ -10,17 +10,19 @@
                     summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget['value'].to_f}
                     [provider_activity_id, summedBudgets]} %>
             <% fundingProjects.each do |fundingProject| %>
-                <% fundingProjectDetails= get_funding_project_Details(fundingProject[0])%>
-                <div class="row">        
-                  <div class="four columns summary">
-                      <h4><%= fundingProjectDetails['reporting_organisation'][0]['narratives'][0]['text'] %></h4>         
+                <% if fundingProject[0].length>4 %>
+                  <% fundingProjectDetails= get_funding_project_Details(fundingProject[0])%>
+                  <div class="row">        
+                    <div class="four columns summary">
+                        <h4><%= fundingProjectDetails['reporting_organisations'][0]['narratives'][0]['text'] %></h4>         
+                    </div>
+                    <div class="eight columns">
+                        <ul>
+                            <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['description'][0]['narratives'][0]['text']%><span><%= Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetails['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span></li>
+                        </ul> 
+                    </div>
                   </div>
-                  <div class="eight columns">
-                      <ul>
-                          <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['description'][0]['narratives'][0]['text']%><span><%= Money.new(fundingProject[1].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span></li>
-                      </ul> 
-                  </div>
-              </div>
+                <% end %>
             <% end %>
           </div>
       </div>
@@ -35,20 +37,22 @@
                  <h3 class="section-group-title">Funded Projects</h3>
               <%end%>
                 <% fundedProjects.each do |fundedProject| %>
-                <div class="row">
-                    <div class="four columns summary">
-                        <h4><%= if fundedProject['reporting_organisation'][0]['narratives'].length==0 then '' else fundedProject['reporting_organisation'][0]['narratives'][0]['text'] end %></h4>
+                  <%# if fundedProject['id'] != project['id'] then%>
+                    <div class="row">
+                        <div class="four columns summary">
+                            <h4><%= if fundedProject['reporting_organisations'][0]['narratives'].length==0 then '' else fundedProject['reporting_organisations'][0]['narratives'][0]['text'] end %></h4>
+                        </div>
+                        <div class="eight columns">
+                            <ul>
+                               <%# TODO - deal with the situation where we have multiple languages %>
+                               <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                                 <%=fundedProject['description'][0]['narratives'][0]['text'] %>
+                                 <span><%= Money.new(fundedProject['activity_aggregations']['total_incoming_funds_value'].to_f.round(0)*100,fundedProject['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                               </li>
+                            </ul> 
+                        </div>
                     </div>
-                    <div class="eight columns">
-                        <ul>
-                           <%# TODO - deal with the situation where we have multiple languages %>
-                           <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
-                             <%=fundedProject['description'][0]['narratives'][0]['text'] %>
-                             <span><%#= Money.new(fundedProject['total_budget']['value'].to_f.round(0)*100, if fundedProject['total_budget']['currency'].nil? then "GBP" else fundedProject['total_budget']['currency']['code'] end ).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span>
-                           </li>
-                        </ul> 
-                    </div>
-                </div>
+                  <%# end %>  
               <% end %>
           </div>
       </div>

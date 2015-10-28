@@ -39,26 +39,6 @@
     <div class="six columns">
         <h3>Key Info</h3>
         <ul class="info-list vertical">
-            <%# if country_organisation_plan!= nil then %>
-                <!--<li class="fact-item">
-                Operational Plan Budget <strong><%#= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
-                    </div>
-                </aside>
-                <span><strong><%#= number_to_currency(country_organisation_plan['operationalBudget'], :unit=>"£", :precision => 0) %></strong></span>
-                </li>-->
-            <%# end %>
-            <%#= PercentageArray %>
-            <%#= tempHash.key(47.16) %>
-
-
-
-
             <% if operationalBudget.length > 0 then %>
                 <li class="fact-item">
                 Operational Plan Budget <strong><%= current_financial_year %></strong>
@@ -72,21 +52,7 @@
                 </aside>
                 <span><strong><%= Money.new(operationalBudget[0]['operationalBudget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
                 </li>
-            <% else %>
-                <li class="fact-item">
-                Operational Plan Budget <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
-                    </div>
-                </aside>
-                <span><strong>£0</strong></span>
-                </li>
             <% end %>
-            <% if(total_project_budgets) then %>
             <li class="fact-item">
                 Total Project Budget for <strong><%= current_financial_year %></strong>
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="2">
@@ -97,27 +63,13 @@
                        Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
                     </div>
                 </aside>
-                <span><strong><%= if(total_project_budgets) then Money.new(total_project_budgets[0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end%></strong></span>
+                <span><strong><%= if (total_project_budget['count']>0) then Money.new(total_project_budget['results'][0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) else Money.new(0, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end %></strong></span>
             </li>
-            <% else %>
-                <li class="fact-item">
-                Total Project Budget for <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="2">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
-                    </div>
-                </aside>
-                <span><strong>£0</strong></span>
-                </li>
-            <% end %>
             <li class="fact-item">
                 Project budget as % of DFID budget
 <!--                <span><strong><%#= (stats['totalBudget']/(dfid_total_budget.nonzero? || 1) * 100).round(2) || "&nbsp;" %>%</strong></span> -->
-                <% if(total_project_budgets) then %>
-                <span><strong><%= ((total_project_budgets[0]['budget'].round(2) / total_dfid_budget[0]['budget'].round(2))*100).round(2) %>%</strong></span>
+                <% if (total_project_budget['count']>0) then %>
+                <span><strong><%= ((total_project_budget['results'][0]['budget'].round(2) / total_dfid_budget['results'][0]['budget'].round(2))*100).round(2) %>%</strong></span>
                 <% else %>
                     <span><strong>0%</strong></span>
                 <% end %>

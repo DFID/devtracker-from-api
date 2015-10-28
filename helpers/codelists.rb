@@ -67,6 +67,7 @@ module CodeLists
   @@iati_mime_types = {
     "application/msword" => "Microsoft Word Document",
     "application/vnd.ms-excel" => "Microsoft Excel Spreadsheet",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "Microsoft Excel Spreadsheet",
     "application/octet-stream" => "Binary file",
     "application/pdf" => "PDF Document",
     "text/html" => "Web Page",
