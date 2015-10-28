@@ -12,6 +12,7 @@ module ProjectHelpers
         
         oipaCountryProjectValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectValues = JSON.parse(oipaCountryProjectValuesJSON)
+        projectValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
         # Map the input data structure so that it matches the required input for Tilestream
@@ -63,6 +64,7 @@ module ProjectHelpers
         # aggregates budgets of the dfid regional projects that are active in the current FY
         oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
         allCurrentRegions = JSON.parse(oipaAllRegionsJSON)
+        allCurrentRegions = allCurrentRegions['results']
 
         # Map the input data structure so that it matches the required input for the Regions map
         allRegionsChartData = allCurrentRegions.map do |elem|

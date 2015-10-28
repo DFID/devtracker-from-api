@@ -190,7 +190,7 @@ title: Development Tracker
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= if !disbursement['description'].nil? then disbursement['description']['narratives'][0]['text'] else "" end %></td>
-              <td width="15%"><%= if !disbursement['receiver_organisation'].nil? then disbursement['receiver_organisation']['narratives'][0]['text'] else "" end %></td>
+              <td width="15%"><%= if !disbursement['receiver_organisation'].nil? then if disbursement['receiver_organisation']['narratives'].length > 0 then disbursement['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <td width="15%"><%= disbursement['activity']['id'] %></td>
               <td width="15%"><%= Date.parse(disbursement['transaction_date']).strftime("%d %b %Y")%></td>
               <td width="15%" class="<%= disbursement['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(disbursement['value'].to_f.round(0)*100, disbursement['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
@@ -242,7 +242,7 @@ title: Development Tracker
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= if !expenditure['description'].nil? then expenditure['description']['narratives'][0]['text'] else "" end %></td>
-              <td width="15%"><%= if !expenditure['receiver_organisation'].nil? then expenditure['receiver_organisation']['narratives'][0]['text'] else "" end %></td>
+              <td width="15%"><%= if !expenditure['receiver_organisation'].nil? then if expenditure['receiver_organisation']['narratives'].length > 0 then expenditure['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <td width="15%"><%= is_dfid_project(expenditure['activity']['id']) ? expenditure['activity']['id'] : ''%></td>
               <td width="15%"><%= Date.parse(expenditure['transaction_date']).strftime("%d %b %Y")%></td>
               <td width="15%" class="<%= expenditure['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(expenditure['value'].to_f.round(0)*100, expenditure['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
