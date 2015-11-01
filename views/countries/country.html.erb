@@ -17,7 +17,7 @@
 </div>
 
 <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :countrySectorGraphData => countrySectorGraphData } %>
-
+<%#= test %>
 <div class="row">
     <div class="twelve columns summary">
         <h2 class="visually-hidden">Summary</h2>
@@ -158,27 +158,69 @@
 </div>
 
 
- <script src="/javascripts/donut.js"></script>
+<!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
- <script src="/javascripts/bar.js"></script>
+ <script src="/javascripts/bar.js"></script> -->
+
  <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
     $(document).ready(function() {
-        var donut = c3.generate({
+        /*var donut = c3.generate({
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%= countrySectorGraphData %>
+                    <%= countrySectorGraphData[0] %>
                 ],
                 type : 'donut',
                 onclick: function (d, i) { console.log("onclick", d, i); },
                 onmouseover: function (d, i) { console.log("onmouseover", d, i); },
                 onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-            },
+            },*/
             /*donut: {
                 title: "Iris Petal Width"
             }*/
+        //});
+
+
+
+        var stacked = c3.generate({
+            bindto: '#sectorChart',
+            data: {
+                columns: [
+                    <%= countrySectorGraphData[0] %>
+                ],
+                type: 'bar',
+                groups: [
+                    <%= countrySectorGraphData[1] %>
+                ]
+            },
+            tooltop: {
+                grouped: false
+            },
+            axis: {
+                rotated: true,
+                x: {
+                    show: false
+                },
+                y: {
+                    //show: false
+                }
+            },
+            bar: {
+                width: {
+                    ratio: .5
+                }
+            },
+            grid: {
+                y: {
+                    lines: [{
+                        value: 0
+                    }]
+                }
+            }
         });
+
+
         var yTicks = [];
         var chart = c3.generate({
             bindto: '#budget-year-chart',
