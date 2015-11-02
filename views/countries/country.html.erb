@@ -158,27 +158,57 @@
 </div>
 
 
- <script src="/javascripts/donut.js"></script>
+<!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
- <script src="/javascripts/bar.js"></script>
+ <script src="/javascripts/bar.js"></script> -->
+
  <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
     $(document).ready(function() {
-        var donut = c3.generate({
+        var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%= countrySectorGraphData %>
+                    <%= countrySectorGraphData[0] %>
                 ],
-                type : 'donut',
-                onclick: function (d, i) { console.log("onclick", d, i); },
-                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+                type: 'bar',
+                labels: true,
+                groups: [
+                    <%= countrySectorGraphData[1] %>
+                ]
             },
-            /*donut: {
-                title: "Iris Petal Width"
-            }*/
+            tooltop: {
+                grouped: false
+            },
+            axis: {
+                rotated: true,
+                x: {
+                    show: true
+                },
+                y: {
+                    label: '%'
+                }
+            },
+            bar: {
+                width: {
+                    ratio: .5
+                }
+            },
+            grid: {
+                y: {
+                    lines: [{
+                        value: 0
+                    }]
+                }
+            },
+            tooltip: {
+                format: {
+                    title: function (x) { return '%' }
+                }
+            }
         });
+
+
         var yTicks = [];
         var chart = c3.generate({
             bindto: '#budget-year-chart',
@@ -210,7 +240,8 @@
             },
             axis:{
                 x:{
-                    type: 'category'
+                    type: 'category',
+                    show: true
                 },
                 y: {
                     tick: {

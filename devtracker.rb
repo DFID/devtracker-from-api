@@ -88,7 +88,7 @@ get '/countries/:country_code/?' do |n|
     totalDFIDBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=reporting_organisation&aggregations=budget"
 	totalDFIDBudget = JSON.parse(totalDFIDBudgetJSON)
 	OperationalBudget = (JSON.parse(File.read('data/countries_operational_budgets.json'))).select {|result| result['code'] == n}
-	countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
+	countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
