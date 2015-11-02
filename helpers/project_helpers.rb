@@ -1,6 +1,7 @@
 #require "helpers/codelists"
 #require "helpers/lookups"
 
+
 module ProjectHelpers
 
     
@@ -153,22 +154,37 @@ module ProjectHelpers
         implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
     end
 
-    def get_project_sector_graph_data(countrySpecificsectorValuesJSONLink)
-    
-        projectSectorData = JSON.parse(countrySpecificsectorValuesJSONLink)
-        if projectSectorData['count'] > 0
-            projectSector= projectSectorData['results'] 
+    def get_project_sector_graph_data(projectId)
+        if is_dfid_project(projectId) then
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000"
+        else
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000"  
+        end
+        projectSectorGraph = JSON.parse(projectSectorGraphJSON)
+        
+        c3ReadyStackBarData = Array.new
+        
+        if projectSectorGraph['count'] > 0
+            projectSector= projectSectorGraph['results'] 
             totalBudgets = projectSector.reduce(0) {|memo, t| memo + t['budget'].to_f} 
             #highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
             #sectorWithTopBudgetHash = {}
-            c3ReadyDonutData = ''
+            c3ReadyStackBarData[0] = ''
+            c3ReadyStackBarData[1] = '['
             projectSector.each do |sector|
                 sectorGroupPercentage = (100*sector['budget'].to_f/totalBudgets.to_f).round(2)
-                c3ReadyDonutData.concat("['"+sector['sector']['name']+"',"+sectorGroupPercentage.to_s+"],")
+                c3ReadyStackBarData[0].concat("['"+sector['sector']['name']+"',"+sectorGroupPercentage.to_s+"],")
+                #c3ReadyDonutData[0].concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+                c3ReadyStackBarData[1].concat("'"+sector['sector']['name']+"',")
             end
-            return c3ReadyDonutData
+            #c3ReadyStackBarData[0].chop
+            #c3ReadyStackBarData[1].chop
+            c3ReadyStackBarData[1].concat(']')
+            return c3ReadyStackBarData
         else
-            return c3ReadyDonutData = '["No data available for this view",0]'
+            c3ReadyStackBarData[0] = '["No data available for this view",0]'
+            c3ReadyStackBarData[1] = "['No data available for this view']"
+            return c3ReadyStackBarData
         end
     end
 
@@ -308,4 +324,4 @@ module ProjectHelpers
 
 end
 
-helpers ProjectHelpers
+#helpers ProjectHelpers

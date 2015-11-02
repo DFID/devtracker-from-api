@@ -154,19 +154,14 @@ get '/projects/:proj_id/?' do |n|
 	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
   	project = JSON.parse(oipa)
 
-  	#get project sectorwise graph  data
-  	if is_dfid_project(project['id']) then
-		projectSectorGraphData = get_project_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{n}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000")	
-	end
-  	
+  	countryOrRegion = get_country_or_region(n)
+
   	#get total project budget and spend Data
   	projectBudget = get_project_budget(n)
 
-  	#get the country/region data from the API
-  	#countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
-  	#countryOrRegionData = JSON.parse(countryOrRegionAPI)
-  	countryOrRegion = get_country_or_region(n)
-	
+  	#get project sectorwise graph  data
+  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	
 	# get the funding projects from the API
   	fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json&transaction_type=1&page_size=1000&fields=url" 
   	fundingProjectsData = JSON.parse(fundingProjectsAPI)
@@ -182,7 +177,8 @@ get '/projects/:proj_id/?' do |n|
  			countryOrRegion: countryOrRegion,	 					 			
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjectsCount: fundingProjectsData['count'],
- 			projectBudget: projectBudget
+ 			projectBudget: projectBudget,
+ 			projectSectorGraphData: projectSectorGraphData
  		}
 end
 

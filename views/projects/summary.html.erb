@@ -196,7 +196,6 @@
         <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
 
     </div>
-    
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
@@ -229,20 +228,47 @@
     </script>
     <script>
     $(document).ready(function() {
-        var donut = c3.generate({
+        var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%#= projectSectorGraphData %>
+                    <%= projectSectorGraphData[0] %>
                 ],
-                type : 'donut',
-                onclick: function (d, i) { console.log("onclick", d, i); },
-                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+                type: 'bar',
+                labels: false,
+                groups: [
+                    <%= projectSectorGraphData[1] %>
+                ]
             },
-            /*donut: {
-                title: "Iris Petal Width"
-            }*/
+            tooltop: {
+                grouped: false
+            },
+            axis: {
+                rotated: true,
+                x: {
+                    show: true
+                },
+                y: {
+                    label: '%'
+                }
+            },
+            bar: {
+                width: {
+                    ratio: .5
+                }
+            },
+            grid: {
+                y: {
+                    lines: [{
+                        value: 0
+                    }]
+                }
+            },
+            tooltip: {
+                format: {
+                    title: function (x) { return '%' }
+                }
+            }
         });
     });
  </script>
