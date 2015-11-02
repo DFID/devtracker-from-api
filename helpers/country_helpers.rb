@@ -145,39 +145,8 @@ module CountryHelpers
 
   end
 
+  #This is the new method which returns data for generating a stacked bar chart based on sector data
   def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
-    budgetPercentageArray = Array.new
-    resultCount = JSON.parse(countrySpecificsectorValuesJSONLink)
-    if resultCount["count"] > 0
-      highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
-      sectorWithTopBudgetHash = {}
-      highLevelSectorListData[:sectorsData].each do |sector|
-        sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
-        sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
-        budgetPercentageArray.push(sectorGroupPercentage)
-      end
-      budgetPercentageArray.sort!
-      #Fixing the donut data here
-      topFiveTracker = 0
-      c3ReadyDonutData = ''
-      otherBudgetPercentage = 0.0
-      while !budgetPercentageArray.empty?
-        if(topFiveTracker < 5)
-            topFiveTracker = topFiveTracker + 1
-            tempBudgetValue = budgetPercentageArray.pop
-            c3ReadyDonutData.concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
-        else
-            otherBudgetPercentage = otherBudgetPercentage + budgetPercentageArray.pop
-        end
-      end
-      c3ReadyDonutData.concat("['Other',"+ otherBudgetPercentage.to_s+"]")
-      return c3ReadyDonutData
-    else
-      return c3ReadyDonutData = '["No data available for this view",0]'
-    end
-  end
-
-  def get_country_sector_graph_data2(countrySpecificsectorValuesJSONLink)
     budgetArray = Array.new
     resultCount = JSON.parse(countrySpecificsectorValuesJSONLink)
     c3ReadyDonutData = Array.new
@@ -188,9 +157,6 @@ module CountryHelpers
         sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
         sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
         budgetArray.push(sectorGroupPercentage)
-
-        #sectorWithTopBudgetHash[sector[:name]] = sector[:budget].to_f.round(2)
-        #budgetArray.push(sector[:budget].to_f.round(2))
       end
       budgetArray.sort!
       #Fixing the donut data here

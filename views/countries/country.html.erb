@@ -165,24 +165,6 @@
  <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
  <script>
     $(document).ready(function() {
-        /*var donut = c3.generate({
-            bindto: '#sectorChart',
-            data: {
-                columns: [
-                    <%= countrySectorGraphData[0] %>
-                ],
-                type : 'donut',
-                onclick: function (d, i) { console.log("onclick", d, i); },
-                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-            },*/
-            /*donut: {
-                title: "Iris Petal Width"
-            }*/
-        //});
-
-
-
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -190,6 +172,7 @@
                     <%= countrySectorGraphData[0] %>
                 ],
                 type: 'bar',
+                labels: true,
                 groups: [
                     <%= countrySectorGraphData[1] %>
                 ]
@@ -200,10 +183,10 @@
             axis: {
                 rotated: true,
                 x: {
-                    show: false
+                    show: true
                 },
                 y: {
-                    //show: false
+                    label: '%'
                 }
             },
             bar: {
@@ -216,6 +199,11 @@
                     lines: [{
                         value: 0
                     }]
+                }
+            },
+            tooltip: {
+                format: {
+                    title: function (x) { return '%' }
                 }
             }
         });
@@ -252,7 +240,8 @@
             },
             axis:{
                 x:{
-                    type: 'category'
+                    type: 'category',
+                    show: true
                 },
                 y: {
                     tick: {
