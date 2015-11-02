@@ -484,3 +484,11 @@ g.c3-axis-y > g:last-child {
   font-size: 12px;
   height: 250px;
 }
+
+.c3-grid line {
+  stroke: #d8dcbf !important;
+}
+
+#budget-year-chart .c3-axis-y .tick line {
+  stroke: transparent !important;
+}

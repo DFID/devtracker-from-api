@@ -145,35 +145,47 @@ module CountryHelpers
 
   end
 
+  #This is the new method which returns data for generating a stacked bar chart based on sector data
   def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
-    budgetPercentageArray = Array.new
+    budgetArray = Array.new
     resultCount = JSON.parse(countrySpecificsectorValuesJSONLink)
+    c3ReadyDonutData = Array.new
     if resultCount["count"] > 0
       highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
       sectorWithTopBudgetHash = {}
       highLevelSectorListData[:sectorsData].each do |sector|
         sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
         sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
-        budgetPercentageArray.push(sectorGroupPercentage)
+        budgetArray.push(sectorGroupPercentage)
       end
-      budgetPercentageArray.sort!
+      budgetArray.sort!
       #Fixing the donut data here
       topFiveTracker = 0
-      c3ReadyDonutData = ''
+      c3ReadyDonutData[0] = ''
       otherBudgetPercentage = 0.0
-      while !budgetPercentageArray.empty?
+      c3ReadyDonutData[1] = '['
+      while !budgetArray.empty?
         if(topFiveTracker < 5)
-            topFiveTracker = topFiveTracker + 1
-            tempBudgetValue = budgetPercentageArray.pop
-            c3ReadyDonutData.concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+          topFiveTracker = topFiveTracker + 1
+          tempBudgetValue = budgetArray.pop
+          c3ReadyDonutData[0].concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+          c3ReadyDonutData[1].concat("'"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',")
         else
-            otherBudgetPercentage = otherBudgetPercentage + budgetPercentageArray.pop
+          otherBudgetPercentage = otherBudgetPercentage + budgetArray.pop
         end
       end
-      c3ReadyDonutData.concat("['Other',"+ otherBudgetPercentage.to_s+"]")
-      return c3ReadyDonutData
+      if(topFiveTracker == 5)
+        c3ReadyDonutData[0].concat("['Others',"+ otherBudgetPercentage.round(2).to_s+"]")
+        c3ReadyDonutData[1].concat("'Others']")
+        return c3ReadyDonutData
+      else
+        c3ReadyDonutData[1].concat(']')
+        return c3ReadyDonutData
+      end
     else
-      return c3ReadyDonutData = '["No data available for this view",0]'
+      c3ReadyDonutData[0] = '["No data available for this view",0]'
+      c3ReadyDonutData[1] = "['No data available for this view']"
+      return c3ReadyDonutData
     end
   end
 end
