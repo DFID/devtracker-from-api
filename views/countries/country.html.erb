@@ -162,8 +162,7 @@
  <script src="/javascripts/progress.js"></script>
  <script src="/javascripts/bar.js"></script> -->
 
- <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
- <script>
+<script>
     $(document).ready(function() {
         var stacked = c3.generate({
             bindto: '#sectorChart',
@@ -172,7 +171,7 @@
                     <%= countrySectorGraphData[0] %>
                 ],
                 type: 'bar',
-                labels: true,
+                labels: false,
                 groups: [
                     <%= countrySectorGraphData[1] %>
                 ]
@@ -208,62 +207,63 @@
             }
         });
 
-
-        var yTicks = [];
-        var chart = c3.generate({
-            bindto: '#budget-year-chart',
-            legend: {
-                show: false
-            },
-            tooltip: {
-                format: {
-                    value: function(value){
-                        return value;
-                    }
-                }
-            },
-            bar: {
-                width: {
-                    ratio: .5
-                }
-            },
-            data: {
-                x: 'x',
-                columns: [
-                    ['x', <%= budgetYearData[0] %>],
-                    ['Financial Year', <%= budgetYearData[1] %>]
-                ],
-                type: 'bar'
-            },
-            color: {
-                pattern: ['#d8dcbf']
-            },
-            axis:{
-                x:{
-                    type: 'category',
-                    show: true
+        <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
+            var yTicks = [];
+            var chart = c3.generate({
+                bindto: '#budget-year-chart',
+                legend: {
+                    show: false
                 },
-                y: {
-                    tick: {
-                        count: 6,
-                        format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                tooltip: {
+                    format: {
+                        value: function(value){
+                            return value;
+                        }
+                    }
+                },
+                bar: {
+                    width: {
+                        ratio: .5
+                    }
+                },
+                data: {
+                    x: 'x',
+                    columns: [
+                        ['x', <%= budgetYearData[0] %>],
+                        ['Financial Year', <%= budgetYearData[1] %>]
+                    ],
+                    type: 'bar'
+                },
+                color: {
+                    pattern: ['#d8dcbf']
+                },
+                axis:{
+                    x:{
+                        type: 'category',
+                        show: true
                     },
-                }
-            },
-        });
-        /*This code is for generating the grid line values for the bar chart*/
-        var tempString = [];
-        yTicks.pop();
-        for(i = 0; i < 5; i++) {
-            tempString[i] = yTicks.pop().replace("M","") + '000000';
-        }
-        /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
-        yTicks = [];
-        /* Generating the grid lines */
-        for(i=0;i<tempString.length;i++){
+                    y: {
+                        tick: {
+                            count: 6,
+                            format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                        },
+                    }
+                },
+            });
+            /*This code is for generating the grid line values for the bar chart*/
+            var tempString = [];
+            yTicks.pop();
+            for(i = 0; i < 5; i++) {
+                tempString[i] = yTicks.pop().replace("M","") + '000000';
+            }
+            /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
             yTicks = [];
-            chart.ygrids.add({value: tempString[i]});
-        }
+            /* Generating the grid lines */
+            for(i=0;i<tempString.length;i++){
+                yTicks = [];
+                chart.ygrids.add({value: tempString[i]});
+            }
+        <%end%>
     });
 
     /*
@@ -283,8 +283,7 @@ charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ r
 })()
 
     */
- </script>
-<%end%>
+</script>
 
 
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
