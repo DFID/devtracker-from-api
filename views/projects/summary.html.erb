@@ -148,16 +148,21 @@
                         </div>
                 </aside>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <div class="six columns">
                 <div id="sector-breakdown" class="donut"></div>
             </div>
             <div class="six columns">
                 <div id="sector-legend">
                     <ul class="legend-list">
-                        <!-- add back in the sectors -->
+                        
                     </ul>
                 </div>
+            </div>
+        </div>-->
+        <div class="row">
+            <div class="twelve columns">
+                <div id="sectorChart"></div>
             </div>
         </div>
     </div>
@@ -191,6 +196,7 @@
             </div>
         </div>
         <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
+
     </div>
     
     <script type="text/javascript" src="/javascripts/donut.js"></script>
@@ -199,13 +205,13 @@
 
     <script type="text/javascript">
         (function(){
-            var sectors = <%= project['sectors'] %>;
-            charts.donut("#sector-breakdown", sectors, function(d) { return d.budget; }, function(d){ return d.sector }, function(d){ return d.formatted });
-            charts.donutLegend("#sector-legend", ".legend-color", 14, sectors, function(d){ return d.sector });
+            //var sectors = <%#= project['sectors'] %>;
+            //charts.donut("#sector-breakdown", sectors, function(d) { return d.budget; }, function(d){ return d.sector }, function(d){ return d.formatted });
+            //charts.donutLegend("#sector-legend", ".legend-color", 14, sectors, function(d){ return d.sector });
 
             var funding = [ {label: "", text: "", value: 0},
-                            {label: "Spend to date", text: "<%= Money.new(project['activity_aggregations']['total_disbursement_value'].to_f.round(0)*100 + project['activity_aggregations']['total_expenditure_value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= (project['activity_aggregations']['total_disbursement_value'] + project['activity_aggregations']['total_expenditure_value']) %>},
-                            {label: "Project budget", text: "<%= if is_dfid_project(project['id']) then Money.new(project['activity_aggregations']['total_child_budget_value'].to_f.round(0)*100,project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) else Money.new(project['activity_aggregations']['total_budget_value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) end %>", value: <%= if is_dfid_project(project['id']) then project['activity_aggregations']['total_child_budget_value'] else project['activity_aggregations']['total_budget_value'] end %>}]
+                            {label: "Spend to date", text: "<%= Money.new(projectBudget[:spendBudget].to_f.round(0)*100 , project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= projectBudget[:spendBudget].to_f.round(0) %>},
+                            {label: "Project budget", text: "<%= Money.new(projectBudget[:actualBudget].to_f.round(0)*100 , project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= projectBudget[:actualBudget].to_f.round(0) %>}]
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
@@ -223,7 +229,25 @@
             charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
         })()
     </script>
-
+    <script>
+    $(document).ready(function() {
+        var donut = c3.generate({
+            bindto: '#sectorChart',
+            data: {
+                columns: [
+                    <%#= projectSectorGraphData %>
+                ],
+                type : 'donut',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            /*donut: {
+                title: "Iris Petal Width"
+            }*/
+        });
+    });
+ </script>
 
 </div>
 

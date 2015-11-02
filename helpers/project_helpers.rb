@@ -35,7 +35,6 @@ module ProjectHelpers
 
     def dfid_complete_country_list
         countriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
-
         #The API call code was replaced to reduce the page load times
         
 #        oipaAllDfidProjectsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count,budget"
@@ -53,7 +52,7 @@ module ProjectHelpers
 #        end
 
         # Sort the countries by name
-#        allDfidProjectsSorted = allDfidProjectsMapInput.sort_by{ |k| k["name"]}
+#        allDfidProjectsSorted = allDfidProjectsMapInput.sort_by{ |k| k["name"]}    
     end
 
     def dfid_regional_projects_data
@@ -118,6 +117,122 @@ module ProjectHelpers
 
     end
 
+    def h2Activity_title(h2Activities,h2ActivityId)
+        if h2Activities.length>0 then
+            h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
+            h2Activity['title']['narratives'][0]['text']
+        else
+            ""
+        end        
+    end
+
+    def get_funding_project_Details(projectId)
+        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json" 
+        fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
+        #fundingProject = fundingProjectDetails['results'][0]
+    end
+
+    def reporting_organisation(project)
+        begin
+            organisation = project['reporting_organisations'][0]['narratives'][0]['text']
+        rescue
+            organisation = project['reporting_organisations'][0]['type']['name']
+        end
+    end
+
+    def get_implementing_orgs(projectId)
+        if is_dfid_project(projectId) then
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+        else
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=2&id=#{projectId}&fields=participating_organisations"    
+        end    
+        implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
+        data=implementingOrgsDetails['results']
+
+        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
+        implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
+    end
+
+    def get_project_sector_graph_data(countrySpecificsectorValuesJSONLink)
+    
+        projectSectorData = JSON.parse(countrySpecificsectorValuesJSONLink)
+        if projectSectorData['count'] > 0
+            projectSector= projectSectorData['results'] 
+            totalBudgets = projectSector.reduce(0) {|memo, t| memo + t['budget'].to_f} 
+            #highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+            #sectorWithTopBudgetHash = {}
+            c3ReadyDonutData = ''
+            projectSector.each do |sector|
+                sectorGroupPercentage = (100*sector['budget'].to_f/totalBudgets.to_f).round(2)
+                c3ReadyDonutData.concat("['"+sector['sector']['name']+"',"+sectorGroupPercentage.to_s+"],")
+            end
+            return c3ReadyDonutData
+        else
+            return c3ReadyDonutData = '["No data available for this view",0]'
+        end
+    end
+
+    def get_project_budget(projectId)
+        if is_dfid_project(projectId) then
+            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
+        else
+            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
+        end
+
+        projectBudget=JSON.parse(projectBudgetJSON)
+
+        if projectBudget['count'] > 0 then
+            projectBudget = projectBudget['results'][0]
+
+            if !projectBudget.key?('disbursement') && !projectBudget.key?('expenditure') then
+                spendBudget = 0
+            elsif !projectBudget.key?('disbursement') then
+                spendBudget = projectBudget['expenditure']
+            elsif !projectBudget.key?('expenditure') then
+                spendBudget = projectBudget['disbursement']    
+            else
+                spendBudget = projectBudget['expenditure'] + projectBudget['disbursement']
+            end
+
+            if !projectBudget.key?('budget') then
+                actualBudget=0
+            else
+                actualBudget = projectBudget['budget']
+            end    
+        else
+            spendBudget = 0
+            actualBudget = 0
+        end
+
+        returnObject = {
+            :spendBudget => spendBudget,
+            :actualBudget => actualBudget
+          }        
+    end
+    
+
+    #def transaction_description(transaction, transactionType)
+    #    if(transactionType == "C")
+    #        transaction['title'] || ""
+    #    elsif(transactionType == "IF")
+    #        transaction_title(transactionType)
+    #    else
+    #        transaction['description']
+    #    end
+    #end
+
+    def get_sum_transaction(transactionType)
+        summedBudgets = transactionType.reduce(0) {|memo, t| memo + t['value'].to_f}
+    end
+
+    def get_sum_budget(projectBudgets)
+        if !projectBudgets.nil? && projectBudgets.length > 0 then
+            summedBudgets = projectBudgets.reduce(0) {|memo, t| memo + t[1].to_f}
+        else
+            summedBudgets = 0
+        end    
+    end
+
     def is_dfid_project(projectCode)   
         projectCode[0, 5] == "GB-1-"
     end
@@ -136,21 +251,7 @@ module ProjectHelpers
         else
             Date.new(date_value.year, 3, 31)
         end
-    end 
-
-
-    # TODO Delete these methods if they're no longer required
-
-    def transaction_description(transaction, transactionType)
-        if(transactionType == "C")
-            transaction['title'] || ""
-        elsif(transactionType == "IF")
-            transaction_title(transactionType)
-        else
-            transaction['description']
-        end
     end
-
 
     def choose_better_date(actual, planned)
         # determines project actual start/end date - use actual date, planned date as a fallback
@@ -180,7 +281,7 @@ module ProjectHelpers
         return ""
     end
 
-   
+    
     def coerce_budget_vs_spend_items(cursor, type) 
         cursor.to_a.group_by { |b| 
             # we want to group them by the first day of 
@@ -203,57 +304,8 @@ module ProjectHelpers
 
     #End TODO
 
+    
 
-    #New Function for API Based Devtracker
-    def h2Activity_title(h2Activities,h2ActivityId)
-        if h2Activities.length>0 then
-            h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
-            h2Activity['title']['narratives'][0]['text']
-        else
-            ""
-        end        
-    end
-
-    def sum_transaction_value(transactionType)
-        summedBudgets = transactionType.reduce(0) {|memo, t| memo + t['value'].to_f}
-        
-        #total_transaction_value['summedBudgets']
-    end
-
-    def sum_budget_value(projectBudgets)
-        if !projectBudgets.nil? && projectBudgets.length > 0 then
-            summedBudgets = projectBudgets.reduce(0) {|memo, t| memo + t[1].to_f}
-        else
-            summedBudgets = 0
-        end    
-    end
-
-    def get_funding_project_Details(projectId)
-        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json" 
-        fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
-        #fundingProject = fundingProjectDetails['results'][0]
-    end
-
-    def reporting_organisation(project)
-        begin
-            organisation = project['reporting_organisations'][0]['narratives'][0]['text']
-        rescue
-            organisation = project['reporting_organisations'][0]['type']['name']
-        end
-    end
-
-    def get_implementing_orgs(projectId)
-        if is_dfid_project(projectId) then
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
-        else
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=2&id=#{projectId}&fields=participating_organisations"    
-        end    
-        implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
-        data=implementingOrgsDetails['results']
-
-        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
-        implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
-    end
 end
 
 helpers ProjectHelpers
