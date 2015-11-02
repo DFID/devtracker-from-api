@@ -367,8 +367,24 @@ get '/location/global/?' do
 		}
 end
 
+#####################################################################
+#  Search PAGE
+#####################################################################
 
-
+get '/search/?' do
+	query = params['query']
+	#oipa_project_list = RestClient.get settings.oipa_api_url + 'activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1'
+	oipa_project_list = RestClient.get settings.oipa_api_url + '/activities?format=json&reporting_organisation=GB-1&q="#{query}"'
+	projects_list= JSON.parse(oipa_project_list)
+	projects = projects_list['results']
+	erb :'search/search',
+	:layout => :'layouts/layout',
+	:locals => {
+		projects: projects,
+		results: results,
+		:query => query			
+	}
+end
 
 #####################################################################
 #  STATIC PAGES
