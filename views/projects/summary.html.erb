@@ -175,7 +175,7 @@
                         </div>
                 </aside>
         </div>
-        <div id="budget-plan-spend-legend">
+        <!--<div id="budget-plan-spend-legend">
             <div class="row">
                 <div class="six columns">
                     <ul class="legend-list">
@@ -192,10 +192,11 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
 
     </div>
+
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
@@ -222,8 +223,8 @@
                           value: <%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>}];
             charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
-            var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
-            charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
+            //var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
+            //charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
         })()
     </script>
     <script>
@@ -270,6 +271,65 @@
                 }
             }
         });
+        <% budgetYearData = project_budget_per_fy(project['id']) %>
+            
+            var yTicks = [];
+            var chart = c3.generate({
+                bindto: '#budget-plan-spend',
+                legend: {
+                    show: true
+                },
+                tooltip: {
+                    format: {
+                        value: function(value){
+                            return value;
+                        }
+                    }
+                },
+                bar: {
+                    width: {
+                        ratio: .5
+                    }
+                },
+                data: {
+                    x: 'x',
+                    columns: [
+                        ['x', <%= budgetYearData[0] %>],
+                        ['Budget', <%= budgetYearData[1] %>],
+                        ['Spend', <%= budgetYearData[2] %>]
+                    ],
+                    type: 'bar'
+                },
+                color: {
+                    pattern: ["#D8DCBF", "#2B6367"]
+                },
+                axis:{
+                    x:{
+                        type: 'category',
+                        show: true
+                    },
+                    y: {
+                        tick: {
+                            count: 6,
+                            format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                        },
+                    }
+                },
+            });
+            /*This code is for generating the grid line values for the bar chart*/
+            var tempString = [];
+            yTicks.pop();
+            for(i = 0; i < 5; i++) {
+                tempString[i] = yTicks.pop().replace("M","") + '000000';
+            }
+            /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
+            yTicks = [];
+            /* Generating the grid lines */
+            for(i=0;i<tempString.length;i++){
+                yTicks = [];
+                //chart.ygrids.add({value: tempString[i]});
+            }
+        
     });
  </script>
 

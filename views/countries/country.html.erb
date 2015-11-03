@@ -208,11 +208,12 @@
         });
 
         <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
+            
             var yTicks = [];
             var chart = c3.generate({
                 bindto: '#budget-year-chart',
                 legend: {
-                    show: false
+                    show: true
                 },
                 tooltip: {
                     format: {
@@ -230,7 +231,7 @@
                     x: 'x',
                     columns: [
                         ['x', <%= budgetYearData[0] %>],
-                        ['Financial Year', <%= budgetYearData[1] %>]
+                        ['Project Budget', <%= budgetYearData[1] %>]
                     ],
                     type: 'bar'
                 },
@@ -265,7 +266,7 @@
             }
         <%end%>
     });
-
+    
     /*
 (function(){
 var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
@@ -285,7 +286,8 @@ charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ r
     */
 </script>
 
-
+<%#= budgetYearData[0] %>
+            <%#= budgetYearData[1] %>
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">

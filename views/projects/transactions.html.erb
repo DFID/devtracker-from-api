@@ -39,8 +39,8 @@ title: Development Tracker
         </tr>
         <% projectBudgets.each do |projectBudget| %>
           <tr>
-            <td><%= projectBudget[0] %></td>
-            <td><span class="<%= projectBudget[1].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectBudget[1].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
+            <td><%= projectBudget['fy'] %></td>
+            <td><span class="<%= projectBudget['value'].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
           </tr>
         <% end %>
       </tbody>
