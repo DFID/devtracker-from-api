@@ -106,114 +106,108 @@ end
 
 #Country Project List Page
 get '/countries/:country_code/projects/?' do |n|
-	#countriesInfo.select {|country| country['code'] == n}.each do |country|		
-		country=countriesInfo.select {|country| country['code'] == n}.first
-		results = resultsInfo.select {|result| result['code'] == n}
-		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&page_size=10&page=1"
-	    total_projects = JSON.parse(oipa_total_projects)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1"
-		projects_list= JSON.parse(oipa_project_list)
-		projects = projects_list['results']
-		erb :'countries/projects', 
-			:layout => :'layouts/layout',
-			:locals => {
-		 		country: country,
-		 		total_projects: total_projects,
-		 		projects: projects,
-		 		results: results
-		 		}
+	
+	country=countriesInfo.select {|country| country['code'] == n}.first
+	results = resultsInfo.select {|result| result['code'] == n}
+	#oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&page_size=10&page=1"
+    #total_projects = JSON.parse(oipa_total_projects)
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisations,iati_identifier,participating_organisations,activity_dates,activity_aggregations&page_size=10&page=1"
+	projects= JSON.parse(oipa_project_list)
+	#projects = projects_list['results']
+	erb :'countries/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+	 		country: country,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		results: results
+	 		}
 		 			
 end
 
 #Country Results Page
 get '/countries/:country_code/results/?' do |n|		
-		country = countriesInfo.select {|country| country['code'] == n}.first
-		results = resultsInfo.select {|result| result['code'] == n}
-		resultsPillar = results_pillar_wise_indicators(n,results)
-		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
-	    total_projects = JSON.parse(oipa_total_projects)
-		
-		erb :'countries/results', 
-			:layout => :'layouts/layout',
-			:locals => {
-		 		country: country,
-		 		total_projects: total_projects,
-		 		results: results,
-		 		resultsPillar: resultsPillar
-		 		}
+	country = countriesInfo.select {|country| country['code'] == n}.first
+	results = resultsInfo.select {|result| result['code'] == n}
+	resultsPillar = results_pillar_wise_indicators(n,results)
+	oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json"
+    total_projects = JSON.parse(oipa_total_projects)
+	
+	erb :'countries/results', 
+		:layout => :'layouts/layout',
+		:locals => {
+	 		country: country,
+	 		total_projects: total_projects,
+	 		results: results,
+	 		resultsPillar: resultsPillar
+	 		}
 		 			
 end
 
 #####################################################################
 #  PROJECTS PAGES
 #####################################################################
-# examples:
-# http://devtracker.dfid.gov.uk/projects/GB-1-204024/
-# http://dfid-oipa.zz-clients.net/api/activities/GB-1-204024?format=json
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  	project = JSON.parse(oipa)
+  	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
-  	countryOrRegionData = JSON.parse(countryOrRegionAPI)
   	countryOrRegion = get_country_or_region(n)
-	
-	# get the funding projects from the API
-  	fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json&transaction_type=1&page_size=1000&fields=url" 
-  	fundingProjectsData = JSON.parse(fundingProjectsAPI)
 
-	# get the funded projects from the API
-    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url,id"	
-	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-			
+  	#get total project budget and spend Data
+  	projectBudget = get_project_budget(n)
+
+  	#get project sectorwise graph  data
+  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	
+	# get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
+
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
+	
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
- 			fundedProjectsCount: fundedProjectsData['count'],
- 			fundingProjectsCount: fundingProjectsData['count']
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			projectBudget: projectBudget,
+ 			projectSectorGraphData: projectSectorGraphData
  		}
 end
 
 # Project documents page
 get '/projects/:proj_id/documents/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  	project = JSON.parse(oipa)
+	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
-  	countryOrRegionData = JSON.parse(countryOrRegionAPI)
   	countryOrRegion = get_country_or_region(n)
 
-  	# get the funding projects from the API
-  	fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json&transaction_type=1&page_size=1000&fields=url" 
-  	fundingProjectsData = JSON.parse(fundingProjectsAPI)
+  	# get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
 
-	# get the funded projects from the API
-    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url"	
-	fundedProjectsData = JSON.parse(fundedProjectsAPI)	
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
   	
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
  			project: project,
  			countryOrRegion: countryOrRegion,
- 			fundedProjectsCount: fundedProjectsData['count'],
- 			fundingProjectsCount: fundingProjectsData['count']   
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount 
  		}
 end
 
 #Project transactions page
 get '/projects/:proj_id/transactions/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  	project = JSON.parse(oipa)
+	project = get_h1_project_details(n)
 
 	# get the transactions from the API & get quarterly budget for H1 Activity
 	if is_dfid_project(project['id']) then
@@ -227,11 +221,9 @@ get '/projects/:proj_id/transactions/?' do |n|
   	transactionsJSON = JSON.parse(oipaTransactionsJSON)
   	transactions = transactionsJSON['results'].select {|transaction| !transaction['transaction_type'].nil? }
 	yearWiseBudgets= JSON.parse(oipaYearWiseBudgets)
-	#yearWiseBudgets=yearWiseBudgets['results']
+	
 
 	#get the country/region data from the API
-  	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
-  	countryOrRegionData = JSON.parse(countryOrRegionAPI)
   	countryOrRegion = get_country_or_region(n)
 
   	#get details of H2 Activities from the API
@@ -239,13 +231,11 @@ get '/projects/:proj_id/transactions/?' do |n|
     h2ActivitiesJSON=JSON.parse(oipaH2ActivitiesJSON)
     h2Activities=h2ActivitiesJSON['results']
 
-    # get the funding projects from the API
-  	fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{n}/transactions?format=json&transaction_type=1&page_size=1000&fields=url" 
-  	fundingProjectsData = JSON.parse(fundingProjectsAPI)
+    # get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
 
-	# get the funded projects from the API
-    fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url,id"	
-	fundedProjectsData = JSON.parse(fundedProjectsAPI)
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
 	
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
@@ -255,20 +245,17 @@ get '/projects/:proj_id/transactions/?' do |n|
  			transactions: transactions,
  			yearWiseBudgets: yearWiseBudgets,
  			h2Activities: h2Activities, 			
- 			fundedProjectsCount: fundedProjectsData['count'],
- 			fundingProjectsCount: fundingProjectsData['count']  
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount 
  		}
 end
 
 #Project partners page
 get '/projects/:proj_id/partners/?' do |n|
 	# get the project data from the API
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{n}?format=json"
-  	project = JSON.parse(oipa)
+	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{n}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
-  	countryOrRegionData = JSON.parse(countryOrRegionAPI)
   	countryOrRegion = get_country_or_region(n)
 
   	# get the funding projects from the API
@@ -279,7 +266,6 @@ get '/projects/:proj_id/partners/?' do |n|
 	# get the funded projects from the API
     fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{n}&page_size=1000&fields=url,id,title,description,reporting_organisations,activity_aggregations,default_currency"
 	fundedProjectsData = JSON.parse(fundedProjectsAPI)
-
 
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
@@ -366,8 +352,6 @@ get '/location/global/?' do
 			:dfid_regional_projects_data => dfid_global_projects_data			
 		}
 end
-
-
 
 
 #####################################################################
