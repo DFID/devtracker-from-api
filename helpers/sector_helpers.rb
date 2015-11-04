@@ -35,8 +35,9 @@ module SectorHelpers
 
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
-		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
-  		sectorValues  = JSON.parse(sectorValuesJSON)
+		#sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
+  		sectorValues  = JSON.parse(apiUrl)
+  		sectorValues  = sectorValues['results'] 
   		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
         
         #Create a data structure to map each DAC 5 sector code to a high level sector code          
@@ -72,11 +73,13 @@ module SectorHelpers
 
 	end
 
+
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
 
 		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(sectorValuesJSON)
+  		sectorValues  = sectorValues['results']
   		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
         
         # Create a data structure that holds: budget, child code, child description & parent code

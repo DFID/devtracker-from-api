@@ -58,6 +58,23 @@ span.category {
   font-family: 'Helvetica Neue';
 }
 
+span.language { 
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #0000A0;
+  font-family: 'sans-serif';
+}
+
 .leaflet-div-icon {
     border: none!important;
 }
@@ -461,4 +478,17 @@ g.c3-axis-y > g:last-child {
     border-top: 1px solid #CBCBCB;
     border-right: 1px solid #CBCBCB;
     text-decoration: none;
+}
+
+#sectorChart {
+  font-size: 12px;
+  height: 250px;
+}
+
+.c3-grid line {
+  stroke: #d8dcbf !important;
+}
+
+#budget-year-chart .c3-axis-y .tick line {
+  stroke: transparent !important;
 }

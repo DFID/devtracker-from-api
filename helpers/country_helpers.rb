@@ -1,85 +1,6 @@
 module CountryHelpers
 
-  # Groups all the countries by their alphabetical listing
-  def country_list
-
-    # first get all the country codes we care about
-    relevant_country_codes = @cms_db['projects'].find({ 'projectType' => 'country' }, :fields => ['recipient']).to_a.map { |c| c['recipient'] }
-
-    # first we get a list of all countries
-    all_countries = @cms_db['countries'].find({'code' => { '$in' => relevant_country_codes }}).to_a
-
-    # we convert the hash to an array and [LETTER, GROUPING] and 
-    # sort it alphabetically
-    all_countries.sort_by { |country| country['name'].upcase }
-  end
-
-  def dfid_total_budget
-    # aggregates the budgets from all projects
-    @cms_db['projects'].aggregate([{ 
-      "$group" => { 
-        "_id"   => nil,  
-        "total" => { 
-          "$sum" => "$currentFYBudget"  
-        }  
-      } 
-    }]).first['total'].to_f
-  end
-
-  def active_projects(countryCode)
-    @cms_db['projects'].find({  'projectType' => "country",
-                                'recipient' => countryCode,
-                                'status' => { '$lt'=> 3 }
-                              }).count()
-  end
-
-  def sector_groups(countryCode) 
-    sectors = @cms_db['sector-breakdowns'].find({'country' => countryCode}).sort({'total' => -1}).to_a.map { |sector|
-      higher = @cms_db['sector-hierarchies'].find_one({ "sectorCode" => sector['sector'].to_i })       
-      higher = higher || {
-        "highLevelCode" => 0,
-        "highLevelName" => "Other"
-      }
-
-      {
-        "sector" => higher['highLevelCode'],
-        "name"   => higher['highLevelName'],
-        "total"  => sector['total']
-      }
-    }.select { |sector| 
-        sector['sector'] != 0 
-    }.group_by { |sector| 
-        sector['sector']
-    }.map { |sector, counts|
-      {
-        'sector' => sector,
-        'name'   => counts.first['name'],
-        'total'  => counts.map { |c| c['total'] }.inject(:+)
-      }
-    }.sort_by { |s| -s['total']}
-
-    if sectors.count > 5 then
-        sectors = sectors[0..4] << {
-            'name'  => "Other",
-            'total' => sectors[5..-1].map { |s| s['total'] }.inject(:+)
-        }
-    end
-
-    total = (sectors.map { |s| s['total'] }.inject(:+) || 0) + 0.0
-
-    sectors.each { |s| 
-      s['percentage'] = format_percentage(s['total'] / total * 100) 
-    }
-
-    sectors
-  end
-
-  #New One based on API Call
   def country_project_budgets(yearWiseBudgets)
-    #projectCodes = @cms_db['projects'].find({
-      #{}"projectType" => "country", "recipient" => country_code
-      #}, :fields => ["iatiId"]).to_a.map{|b| b["iatiId"]}
-    #
     projectBudgets = []
     
     yearWiseBudgets.each do |y|
@@ -91,12 +12,6 @@ module CountryHelpers
       
       projectBudgets << p        
     end
-
-    #project_budgets
-    #project_budgets = year_wise_budgets.group_by{|b| b["year"]}.map{|year, budgets|
-        #summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget["budget"]}
-        #[year, summedBudgets]
-        #}.sort
      
      finYearWiseBudgets = projectBudgets.group_by{|b| b[3]}.map{|year, budgets|
         summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget[1]}
@@ -132,7 +47,6 @@ module CountryHelpers
 
   end
 
-  #New One based on API Call
   def financial_year_formatter(y)
 
     #date = if(d.kind_of?(String)) then
@@ -156,35 +70,6 @@ module CountryHelpers
       now.year
     end
   end
-
-  # def top_5_countries
-  #   @cms_db['country-stats'].aggregate([{
-  #     "$sort" => {
-  #       "totalBudget" => -1
-  #     }
-  #   },{
-  #     "$limit" => 5
-  #   }]).map do |totals|  
-  #     name = @cms_db['countries'].find_one({
-  #       'code' => totals['code']
-  #     })['name']
-
-  #     {
-  #       'code'        => totals['code'],
-  #       'name'        => name,
-  #       'totalBudget' => totals['totalBudget']
-  #     }
-  #   end
-  # end
-
-  # def country_name(countryCode)
-  #   result = @cms_db['countries'].find({
-  #     'code' => countryCode
-  #   })
-  #   (result.first || { 'name' => '' })['name']
-  # end
-
-
 
   def get_country_or_region(projectId)
     #get the data
@@ -258,5 +143,49 @@ module CountryHelpers
           :regionsCount => numberOfRegions
           } 
 
+  end
+
+  #This is the new method which returns data for generating a stacked bar chart based on sector data
+  def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
+    budgetArray = Array.new
+    resultCount = JSON.parse(countrySpecificsectorValuesJSONLink)
+    c3ReadyDonutData = Array.new
+    if resultCount["count"] > 0
+      highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+      sectorWithTopBudgetHash = {}
+      highLevelSectorListData[:sectorsData].each do |sector|
+        sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
+        sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
+        budgetArray.push(sectorGroupPercentage)
+      end
+      budgetArray.sort!
+      #Fixing the donut data here
+      topFiveTracker = 0
+      c3ReadyDonutData[0] = ''
+      otherBudgetPercentage = 0.0
+      c3ReadyDonutData[1] = '['
+      while !budgetArray.empty?
+        if(topFiveTracker < 5)
+          topFiveTracker = topFiveTracker + 1
+          tempBudgetValue = budgetArray.pop
+          c3ReadyDonutData[0].concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+          c3ReadyDonutData[1].concat("'"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',")
+        else
+          otherBudgetPercentage = otherBudgetPercentage + budgetArray.pop
+        end
+      end
+      if(topFiveTracker == 5)
+        c3ReadyDonutData[0].concat("['Others',"+ otherBudgetPercentage.round(2).to_s+"]")
+        c3ReadyDonutData[1].concat("'Others']")
+        return c3ReadyDonutData
+      else
+        c3ReadyDonutData[1].concat(']')
+        return c3ReadyDonutData
+      end
+    else
+      c3ReadyDonutData[0] = '["No data available for this view",0]'
+      c3ReadyDonutData[1] = "['No data available for this view']"
+      return c3ReadyDonutData
+    end
   end
 end
