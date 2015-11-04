@@ -1,5 +1,3 @@
-
-
 <div class="page-wrapper">
     <div class="row" id="page-title">
         <div class="twelve columns">
@@ -59,7 +57,6 @@
     </div>
     <link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
     <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
-    <!--<script type="text/javascript" src="/javascripts/filterProjectsList.js"></script> -->
     <script type="text/javascript" src="/javascripts/formatDate.js"></script>
     <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
     <div class="row project-results">
@@ -88,44 +85,28 @@
                     <span id="numberofResults" value="@results.size" style="display:inline;"><%#= project_count%></span> projects found
                 </div> -->
                 <div>
-                    Now showing projects
-                    <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                    Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
+                    <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                    <% else %>
+                    <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
+                    <%end%>
                 </div>
                 <% projects.each do |project| %>
-                <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
-                <input type="hidden" name="budget" value="<%= project['activity_aggregations']['total_child_budget_value'] %>"  class="sort-budget"/>
-                <input type="hidden" name="title" value="<%= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
-                <input type="hidden" name="dateStart" value="<%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>"/>
-                <input type="hidden" name="dateEnd" value="<%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>"/>
-                <input type="hidden" name="sectors" value="<%#=retrieve_high_level_sector_names(project["iatiId"])%>"/>
-                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
-                <%# if project['projectType'] == "country" %>
-                <input type="hidden" name="countries" value="<%#=country_name project['recipient']%>" />
-                <%# end %>
-                <%# if project['projectType'] == "regional" %>
-                <input type="hidden" name="regions" value="<%#=region_name project['recipient']%>"  />
-                <%# end %>
-                <input type="hidden" name="organizations" value="<%# project['participating_organisations'].each do |p| result +=p['organisation']['name']['narratives'][0]['text'].strip + '#' end; result = result.chop!; %><%#= result %><%#=project['participatingOrgs'].join('#')%>" />
-                <input type="hidden" name="documents" value="<%# 
-                    #if(project['documents'] != nil) then result = ""; 
-                    #project['documents'].each do |d| 
-                    #    d['categories'].each do |c| 
-                    #        result += c.strip + '#' 
-                    #    end;
-                    #end; 
-                    #result = result.chop!; %>
-                    <%#= get_document_category project['iati_identifier'] %><%# end%>" />
                 <div class="search-result">
-                    <h3>
+                    <h3>    
+                        <%unless project['iati_identifier'].nil? %>
                         <a href="/projects/<%= project['iati_identifier'] %>">
-                        <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
+                        <%unless project['title']['narratives'][0]['text'].nil? %><%=project['title']['narratives'][0]['text']%><%end%> <small>[<%= project['iati_identifier']%>]</small>
                         </a>
+                        <%end%>
                     </h3>
-                    <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <%unless project['activity_aggregations']['total_child_budget_value'].nil? %>
+                    <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span><%end%>
+                    <%unless project['activity_status']['name'].nil? %>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <span>Reporting Org: <em><%= project['reporting_organisations'][0]['narratives'][0]['text']%></em></span>
-                    <p class="description"><%= project['description'][0]['narratives'][0]['text']%></p>
+                    <%end%>
+                    <span>Reporting Org: <em><%unless project['reporting_organisations'][0]['narratives'].empty? %><%= project['reporting_organisations'][0]['narratives'][0]['text']%><%end%></em></span>
+                    <p class="description"><%unless project['description'].empty? %><%= project['description'][0]['narratives'][0]['text']%><%end%></p>
                 </div>
                 <% end %>
             </div>
@@ -195,147 +176,14 @@
             </div>
         </div>
         <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
-        <script>
+        <script type='text/javascript'>
             $(document).ready(function() {
-            refreshPagination(<%= project_count %>);
-            var oipaLink = '<%= oipa_api_url %>activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q=<%= query %>&activity_status='+$('#activity_status_states').val();
-            function refreshOipaLink(){
-                oipaLink = '<%= oipa_api_url %>activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q=<%= query %>&activity_status='+$('#activity_status_states').val();
-            }
-            var returnedProjectCount = 0;
-            function refreshPagination(projectCount){
-                $('#light-pagination').pagination({
-                    items: projectCount,
-                    itemsOnPage: 10,
-                    cssStyle: 'compact-theme',
-                    onPageClick: function(pageNumber,event){
-                        pagedOipaLink = oipaLink + '&page='+ pageNumber;
-                        $.getJSON(pagedOipaLink,{
-                            format: "json"
-                        }).done(function(json){
-                            $('#showResults').html("");
-                            var tmpStr = '<div>Now showing projects<span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">'+(1+(10*(pageNumber-1)))+' - '+(10*pageNumber)+'</span> of '+projectCount+'</div>';
-                            $('#showResults').append(tmpStr);
-                            $.each(json.results,function(i,result){
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.activity_aggregations.total_child_budget_value)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisations[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
-                                //var tempString = "zcas";
-                                $('#showResults').append(tempString);
-                            });
-                        })
-                        .fail(function(error){
-                            $('#showResults').text(error.toSource());
-                            console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
-                        });
-                    }
-                });
-            }
-            $('.activity_status').click(function(){
-                var tmpStatusList = $('.activity_status:checked').map(function(){return $(this).val()}).get().join();
-                if(tmpStatusList.length > 0){
-                    $('#activity_status_states').val(tmpStatusList);
-                }
-                else{
-                    $('#activity_status_states').val('1,2,3,4,5');
-                }
-                refreshOipaLink();
-                generateProjectListAjax(oipaLink);
-            });
-            function generateProjectListAjax(oipaLink){
-                $.getJSON(oipaLink,{
-                    format: "json"
-                })
-                .done(function(json){
-                    $('#showResults').html("");
-                    //$('#filter').append(json.count);
-                    returnedProjectCount = json.count;
-                    //$('#numberofResults').html(json.count);
-                    //tmpStr = '<div>Showing<span name="afterFilteringAmount" style="display:inline;"></span> <span id="numberofResults" value="@results.size" style="display:inline;">'+json.count+'</span> out of <%= project_count%> results</div>';
-                    //$('#showResults').append(tmpStr);
-                    refreshPagination(json.count);
-                    //var tmpStr = '<div>Showing<span name="afterFilteringAmount" style="display:inline;"></span> <span id="numberofResults" value="@results.size" style="display:inline;">10</span> out of '+returnedProjectCount+' results</div>';
-                    var tmpStr = '<div>Now showing projects<span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of '+returnedProjectCount+'</div>';
-                    $('#showResults').append(tmpStr);
-                    $.each(json.results,function(i,result){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.activity_aggregations.total_child_budget_value)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisations[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
-                        //var tempString = "zcas";
-                        $('#showResults').append(tempString);
-                    });
-                })
-                .fail(function(error){
-                    //$('#showResults').text(error.toSource());
-                    console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
-                });
-            }
-            attachFilterExpColClickEvent();
-            function attachFilterExpColClickEvent(){
-               $('.proj-filter-exp-collapse-sign').click(function(){
-            
-                 if($(this).text() == '+'){
-                    $(this).text('-');
-                    $(this).parent().find("div[name=countries]").show('slow');
-                    $(this).parent().find("div[name=regions]").show('slow');
-                    $(this).parent().find("ul").show('slow');
-                 }
-                 else{
-                    $(this).text('+');
-                    $(this).parent().find("div[name=countries]").hide('slow');
-                    $(this).parent().find("div[name=regions]").hide('slow');
-                    $(this).parent().find("ul").hide('slow');
-                 }
-               });
-            
-               $('.proj-filter-exp-collapse-text').click(function(){
-            
-                  $(this).parent().find('.proj-filter-exp-collapse-sign').each(function(){
-            
-                     if($(this).text() == '+'){
-                         $(this).text('-');
-                         $(this).parent().find("div[name=countries]").show('slow');
-                         $(this).parent().find("div[name=regions]").show('slow');
-                         $(this).parent().find("ul").show('slow');
-                      }
-                      else{
-                         $(this).text('+');
-                         $(this).parent().find("div[name=countries]").hide('slow');
-                         $(this).parent().find("div[name=regions]").hide('slow');
-                         $(this).parent().find("ul").hide('slow');
-                      }
-                  });
-               });
-            }
-            function addCommas(num) {   
-                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
-            $( document ).ajaxStart(function() {
-                $('.modal').show();
-            });
-            $( document ).ajaxStop(function() {
-                $('.modal').hide();
-            });
-            /*$('#light-pagination').pagination({
-                items: <%= project_count %>,
-                itemsOnPage: 10,
-                cssStyle: 'compact-theme',
-                onPageClick: function(pageNumber,event){
-                    pagedOipaLink = oipaLink + '&page='+ pageNumber;
-                    $.getJSON(pagedOipaLink,{
-                        format: "json"
-                    }).done(function(json){
-                        $('#showResults').html("");
-                        $.each(json.results,function(i,result){
-                            var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.activity_aggregations.total_child_budget_value)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisations[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
-                            //var tempString = "zcas";
-                            $('#showResults').append(tempString);
-                        });
-                    })
-                    .fail(function(error){
-                        $('#showResults').text(error.toSource());
-                        console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
-                    });
-                }
-            });*/
+                window.oipaApiUrl = "<%= oipa_api_url %>";
+                window.project_count = "<%= project_count %>";
+                window.searchQuery = "<%= query %>";
             });
         </script>
+        <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
     </div>
 </div>
 
