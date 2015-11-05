@@ -1,10 +1,153 @@
+/*
+Global Variable Explanation:
+window.searchType can accept the following parameters to identify the type of searching:
+C -> country all projects page
+F -> Free text search. This supports the top right search box and the mid search box located in the index file.
+S -> Sector page search
+R -> Region page search
+*/
+
 $(document).ready(function() {
     refreshPagination(window.project_count);
-    var oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val();
-    function refreshOipaLink(){
-        oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val();
+    var oipaLink = '';
+    switch (window.searchType){
+        case 'C':
+            break;
+        case 'F':
+            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val();
+            break;
+        case 'S':
+            break;
+        case 'R':
+            break;
+    }
+    function refreshOipaLink(searchType){
+        switch (window.searchType){
+            case 'C':
+                break;
+            case 'F':
+                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val();
+                break;
+            case 'S':
+                break;
+            case 'R':
+                break;
+        }
     };
     var returnedProjectCount = 0;
+
+    /*The following click functions are to trigger the filters and orders*/
+    $('#sortProjTitle').on('click',function(e){
+        if($(this).text()=="▼")
+        {
+            $('#sort_results_type').val('title');
+            refreshOipaLink(window.searchType);
+            //refreshPagination(returnedProjectCount);
+            generateProjectListAjax(oipaLink);
+            $(this).text('▲');
+        }
+        else
+        {
+            $('#sort_results_type').val('-title');
+            refreshOipaLink(window.searchType);
+            //refreshPagination(returnedProjectCount);
+            generateProjectListAjax(oipaLink);
+            $(this).text('▼');
+        }
+
+        setDefaultBorder();
+        $(this).css('border', "solid 1px #FFA500");
+        e.preventDefault();
+    });
+
+    $('#sortProjBudg').click(function(e){
+        if($(this).text()=="▼")
+        {
+            $('#sort_results_type').val('total_child_budget_value');
+            refreshOipaLink(window.searchType);
+            //refreshPagination(returnedProjectCount);
+            generateProjectListAjax(oipaLink);
+            $(this).text('▲');
+        }
+        else
+        {
+            $('#sort_results_type').val('-total_child_budget_value');
+            refreshOipaLink(window.searchType);
+            //refreshPagination(returnedProjectCount);
+            generateProjectListAjax(oipaLink);
+            $(this).text('▼');
+        }
+
+        setDefaultBorder();
+        $(this).css('border', "solid 1px #FFA500");
+        e.preventDefault();
+    });
+
+    $('.activity_status').click(function(){
+        var tmpStatusList = $('.activity_status:checked').map(function(){return $(this).val()}).get().join();
+        if(tmpStatusList.length > 0){
+            $('#activity_status_states').val(tmpStatusList);
+        }
+        else{
+            $('#activity_status_states').val('1,2,3,4,5');
+        }
+        refreshOipaLink(window.searchType);
+        generateProjectListAjax(oipaLink);
+    });
+    
+    $("#slider-vertical").slider({
+        orientation: "horizontal",
+        range: true,
+        min: 0,
+        max: window.maxBudget,
+        step : (Math.round(window.maxBudget / 100) * 100)/100,
+        values: [0,window.maxBudget],
+        slide: function( event, ui ) {
+            $( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+        },
+        change: function(event, ui){
+            $('#budget_lower_bound').val(ui.values[0]);
+            $('#budget_higher_bound').val(ui.values[1]);
+            refreshOipaLink(window.searchType);
+            generateProjectListAjax(oipaLink);
+        }
+    });
+    $( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+    function setDefaultBorder(){
+        $(".sort-proj-sectors").each(function(){
+            $(this).css('border', "none");
+        });
+    }
+
+
+    StartDt = new Date (window.StartDate.slice(0,10));
+    EndDt = new Date (window.EndDate.slice(0,10));
+    $("#date-slider-vertical").slider({
+        orientation: "horizontal",
+        range:true,
+        min: Date.parse(StartDt),
+        max: Date.parse(EndDt),
+        step: 86400000,
+        values: [Date.parse(StartDt), Date.parse(EndDt)],
+        slide: function(event, ui){
+            var tempStartDt = new Date(ui.values[0]);
+            var tempEndDt = new Date(ui.values[1]);
+        $('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
+        },
+        change: function(event, ui){
+            var tempStartDt = new Date(ui.values[0]);
+            var tempEndDt = new Date(ui.values[1]);
+            $('#date_lower_bound').val(tempStartDt.customFormat("#YYYY#-#MM#-#DD#"));
+            $('#date_higher_bound').val(tempEndDt.customFormat("#YYYY#-#MM#-#DD#"));
+            refreshOipaLink(window.searchType);
+            generateProjectListAjax(oipaLink);
+        }
+        /*change: function(event, ui){
+        //TO DO
+        }*/
+    });
+    $('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
+    /*refreshPagination function reloads the pagination information to accommodate with the updated api call*/
     function refreshPagination(projectCount){
         $('#light-pagination').pagination({
             items: projectCount,
@@ -43,17 +186,9 @@ $(document).ready(function() {
             }
         });
     };
-    $('.activity_status').click(function(){
-        var tmpStatusList = $('.activity_status:checked').map(function(){return $(this).val()}).get().join();
-        if(tmpStatusList.length > 0){
-            $('#activity_status_states').val(tmpStatusList);
-        }
-        else{
-            $('#activity_status_states').val('1,2,3,4,5');
-        }
-        refreshOipaLink();
-        generateProjectListAjax(oipaLink);
-    });
+
+    /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
+
     function generateProjectListAjax(oipaLink){
         $.getJSON(oipaLink,{
             format: "json"
@@ -87,6 +222,8 @@ $(document).ready(function() {
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         });
     }
+
+    /*This method attaches the +/- sign to the relevant filter expansion label*/
     attachFilterExpColClickEvent();
     function attachFilterExpColClickEvent(){
        $('.proj-filter-exp-collapse-sign').click(function(){
@@ -124,6 +261,8 @@ $(document).ready(function() {
           });
        });
     }
+
+    /*addCommas function is used to properly separate */
     function addCommas(num) {   
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }

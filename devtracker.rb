@@ -362,9 +362,10 @@ get '/search/?' do
 	query = params['query']
 	#oipa_project_list = RestClient.get settings.oipa_api_url + 'activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1'
 	#Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5"
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_child_budget_value"
 	projects_list= JSON.parse(oipa_project_list)
 	projects = projects_list['results']
+	project_budget_higher_bound = projects_list['results'][0]['activity_aggregations']['total_child_budget_value']
 	project_count = projects_list['count']
 	erb :'search/search',
 	:layout => :'layouts/layout',
@@ -373,7 +374,8 @@ get '/search/?' do
 		projects: projects,
 		project_count: project_count,
 		:query => query,
-		countryAllProjectFilters: countryAllProjectFilters
+		countryAllProjectFilters: countryAllProjectFilters,
+		budgetHigherBound: project_budget_higher_bound
 	}
 end
 
