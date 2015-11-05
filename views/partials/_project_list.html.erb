@@ -21,13 +21,13 @@
             itemsOnPage: 10,
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
-                var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=<%= country["code"] %>&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page='+ pageNumber;
+                var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=<%= country["code"] %>&fields=title,description,activity_status,reporting_organisations,iati_identifier,participating_organisations,activity_dates,activity_aggregations&page='+ pageNumber;
                 $.getJSON(oipaLink,{
                     format: "json"
                 }).done(function(json){
                     $('#showResults').html("");
                     $.each(json.results,function(i,result){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.total_child_budgets)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisation[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.activity_aggregations.total_child_budget_value)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisations[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
                         $('#showResults').append(tempString);
                     });
                 })
@@ -63,16 +63,16 @@
                 <span name="afterFilteringAmount" style="display:inline;"></span>
                 <span name="numberofResults" value="@results.size" style="display:inline;"><%=projects.size%></span> results
             </div> -->
-            <% projects.sort{ |a,b| b['total_child_budgets']  <=> a['total_child_budgets']}.each do |project| %>
-                <input type="hidden" name="status" value="<%= project['activity_status']['name'] %>"/>
+            <% projects.each do |project| %>
+                <input type="hidden" name="status" value="<%#= project['activity_status']['name'] %>"/>
                 
-                <input type="hidden" name="budget" value="<%= project['total_child_budgets'] %>"  class="sort-budget"/>
+                <input type="hidden" name="budget" value="<%#= project['activity_aggregations'] %>"  class="sort-budget"/>
                 
-                <input type="hidden" name="title" value="<%= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
+                <input type="hidden" name="title" value="<%#= project['title']['narratives'][0]['text'] %>" class="sort-title"/>
                 
-                <input type="hidden" name="dateStart" value="<%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>"/>
+                <input type="hidden" name="dateStart" value="<%#= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>"/>
                 
-                <input type="hidden" name="dateEnd" value="<%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>"/>
+                <input type="hidden" name="dateEnd" value="<%#= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>"/>
 
                 <input type="hidden" name="sectors" value="<%#=retrieve_high_level_sector_names(project["iatiId"])%>"/>
                 
@@ -103,9 +103,9 @@
                             <%=project['title']['narratives'][0]['text']%> <small>[<%= project['iati_identifier']%>]</small>
                         </a>
                     </h3>
-                    <span class="budget">Budget: <em> <%= Money.new(project['total_child_budgets'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_child_budget_value'].to_f*100,project['activity_aggregations']['total_child_budget_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <span>Reporting Org: <em><%= project['reporting_organisation'][0]['narratives'][0]['text']%></em></span>
+                    <span>Reporting Org: <em><%= project['reporting_organisations'][0]['narratives'][0]['text']%></em></span>
                     <p class="description"><%= project['description'][0]['narratives'][0]['text']%></p>
                  </div>
             <% end %>

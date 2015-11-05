@@ -121,19 +121,19 @@
 <div class="row">
     <div class="six columns">
             <div class="country-info-container">  
-            <span class="country-info">Sector groups as a percentage of country budget</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
-            <aside id="moreinfo2" class="more-info">            
+                <span class="country-info">Sector groups as a percentage of country budget</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
+                <aside id="moreinfo2" class="more-info">            
                     <div class="more-info-content">
                         The highest ranking sectors by project spend, consistent with the Development Assistance Committee's (DAC) classifications.
                     </div>
-            </aside>
-         </div>
-         <div class="row">
-            <div class="twelve columns">
-                <div id="sectorChart"></div>
+                </aside>
             </div>
-         </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <div id="sectorChart"></div>
+                </div>
+            </div>
          
     </div>
     <div class="six columns">
@@ -208,11 +208,12 @@
         });
 
         <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
+            
             var yTicks = [];
             var chart = c3.generate({
                 bindto: '#budget-year-chart',
                 legend: {
-                    show: false
+                    show: true
                 },
                 tooltip: {
                     format: {
@@ -230,7 +231,7 @@
                     x: 'x',
                     columns: [
                         ['x', <%= budgetYearData[0] %>],
-                        ['Financial Year', <%= budgetYearData[1] %>]
+                        ['Project Budget', <%= budgetYearData[1] %>]
                     ],
                     type: 'bar'
                 },
@@ -265,7 +266,7 @@
             }
         <%end%>
     });
-
+    
     /*
 (function(){
 var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
@@ -285,7 +286,8 @@ charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ r
     */
 </script>
 
-
+<%#= budgetYearData[0] %>
+            <%#= budgetYearData[1] %>
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">
