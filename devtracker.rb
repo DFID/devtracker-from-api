@@ -357,7 +357,6 @@ end
 #  Search PAGE
 #####################################################################
 
-<<<<<<< HEAD
 get '/search/?' do
 	countryAllProjectFilters = JSON.parse(File.read('data/countryProjectsFilters.json'))
 	query = params['query']
