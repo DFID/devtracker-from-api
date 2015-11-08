@@ -107,7 +107,7 @@
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>
                     <span>Reporting Org: <em><%unless project['reporting_organisations'][0]['narratives'].empty? %><%= project['reporting_organisations'][0]['narratives'][0]['text']%><%end%></em></span>
-                    <p class="description"><%unless project['description'].empty? %><%= project['description'][0]['narratives'][0]['text']%><%end%></p>
+                    <p class="description"><%unless project['description'][0]['narratives'].empty? %><%= project['description'][0]['narratives'][0]['text']%><%end%></p>
                 </div>
                 <% end %>
             </div>
