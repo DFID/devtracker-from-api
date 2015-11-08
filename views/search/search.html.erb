@@ -146,11 +146,21 @@
                         </span>
                     </div>
                 </div>
-                <div name="sectors" style="display: none">
+                <div name="sectors">
                     <div class="proj-filter-exp-collapse-sign">+</div>
                     <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                         <h3>Sectors</h3>
                     </span>
+                    <ul style="display: none">
+                        <% highLevelSectorList.each do |highLevelSectorName| %>
+                            <li>
+                                <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
+                                    <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[0][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                </label>
+                            </li>
+                        <%end%>
+                    </ul>
+                    <input type="hidden" id="selected_sectors" value=""  />
                 </div>
                 <div name="organizations" style="display: none">
                     <div class="proj-filter-exp-collapse-sign">+</div>
