@@ -10,6 +10,7 @@
                     </ul>
                 </div>
                 <h1>
+                    <%= dfidCountriesResults%>
                     Search Results for: 
                     "<%= query %>"
                 </h1>
@@ -62,12 +63,36 @@
             <div class="modal">
                 <div>Loading Data <br /> Please Wait</div>
             </div>
+            <div>
+                <% if !dfidCountriesResults.empty? %>
+                    <% dfidCountriesResults.each do |results| %>
+                        <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
+                            <p>Did you mean the <em>country <a href="/countries/<%= results["code"] %>"><%= results["name"]%></a></em>?</p>
+                            <p></p>
+                            <h3><em><%= results["name"]%></em></h3>
+                            Budget: <em>
+                                <%unless countries_project_budget.nil? %>
+                                    <%= countries_project_budget%>
+                                    <%#= countries_project_budget["results"][0]["budget"]%>
+                                <%end%>
+                            </em>
+                            <p></p>
+                        </div>
+                    <%end%>
+                <%end%>
+                <% if !dfidRegionsResults.empty? %>
+                    <% dfidRegionsResults.each do |results| %>
+                        <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
+                            <p>Did you mean the <em>region <a href="/regions/<%= results["code"] %>"><%= results["name"]%></a></em>?</p>
+                            <p></p>
+                            <h3><em><%= results["name"]%></em></h3>
+                            Budget: <em>£0.0</em>
+                            <p></p>
+                        </div>
+                    <%end%>
+                <%end%>
+            </div>
             <div id="showResults">
-                <!--<div>
-                    Total
-                    <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <span id="numberofResults" value="@results.size" style="display:inline;"><%#= project_count%></span> projects found
-                </div> -->
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -79,9 +104,14 @@
                 <div class="search-result">
                     <h3>    
                         <%unless project['iati_identifier'].nil? %>
-                        <a href="/projects/<%= project['iati_identifier'] %>">
-                        <%unless project['title']['narratives'][0]['text'].nil? %><%=project['title']['narratives'][0]['text']%><%end%> <small>[<%= project['iati_identifier']%>]</small>
-                        </a>
+                            <a href="/projects/<%= project['iati_identifier'] %>">
+                            <%unless project['title']['narratives'].nil? %>
+                                <%unless project['title']['narratives'][0]['text'].nil? %>
+                                    <%=project['title']['narratives'][0]['text']%>
+                                <%end%>
+                            <%end%>
+                            <small>[<%= project['iati_identifier']%>]</small>
+                            </a>
                         <%end%>
                     </h3>
                     <%unless project['activity_aggregations']['total_child_budget_value'].nil? %>
@@ -89,8 +119,20 @@
                     <%unless project['activity_status']['name'].nil? %>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>
-                    <span>Reporting Org: <em><%unless project['reporting_organisations'][0]['narratives'].empty? %><%= project['reporting_organisations'][0]['narratives'][0]['text']%><%end%></em></span>
-                    <p class="description"><%unless project['description'][0]['narratives'].empty? %><%= project['description'][0]['narratives'][0]['text']%><%end%></p>
+                    <span>Reporting Org: <em>
+                        <%unless project['reporting_organisations'].empty? %>
+                            <%unless project['reporting_organisations'][0]['narratives'].empty? %>
+                                <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                            <%end%>
+                        <%end%>
+                    </em></span>
+                    <p class="description">
+                        <%unless project['description'].empty? %>
+                            <%unless project['description'][0]['narratives'].empty? %>
+                                <%= project['description'][0]['narratives'][0]['text'] %>
+                            <%end%>
+                        <%end%>
+                    </p>
                 </div>
                 <% end %>
             </div>
