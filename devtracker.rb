@@ -20,6 +20,7 @@ require_relative 'helpers/document_helpers.rb'
 require_relative 'helpers/common_helpers.rb'
 require_relative 'helpers/results_helper.rb'
 require_relative 'helpers/JSON_helpers.rb'
+require_relative 'helpers/filters_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -28,6 +29,7 @@ include SectorHelpers
 include ProjectHelpers
 include CommonHelpers
 include ResultsHelper
+include FiltersHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -353,6 +355,33 @@ get '/location/global/?' do
 		}
 end
 
+#####################################################################
+#  Search PAGE
+#####################################################################
+
+get '/search/?' do
+	countryAllProjectFilters = JSON.parse(File.read('data/countryProjectsFilters.json'))
+	query = params['query']
+	#Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_child_budget_value"
+	projects_list= JSON.parse(oipa_project_list)
+	projects = projects_list['results']
+	project_budget_higher_bound = projects_list['results'][0]['activity_aggregations']['total_child_budget_value']
+	project_count = projects_list['count']
+	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&q=#{query}"
+	highLevelSectorList = high_level_sector_list_filter( sectorValuesJSON)
+	erb :'search/search',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		projects: projects,
+		project_count: project_count,
+		:query => query,
+		countryAllProjectFilters: countryAllProjectFilters,
+		budgetHigherBound: project_budget_higher_bound,
+		highLevelSectorList: highLevelSectorList
+	}
+end
 
 #####################################################################
 #  STATIC PAGES
