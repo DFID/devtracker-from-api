@@ -13,6 +13,12 @@ module ProjectHelpers
         project = JSON.parse(oipa)
     end
 
+    def get_h2_project_details(projectId)
+        oipa = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{projectId}&page_size=50&fields=iati_identifier,title"
+        project = JSON.parse(oipa)
+        project = project['results']
+    end
+
     def get_funding_project_count(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&fields=url"
         project = JSON.parse(oipa)
@@ -117,7 +123,7 @@ module ProjectHelpers
 
     end
 
-    def h2Activity_title(h2Activities,h2ActivityId)
+    def get_h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
             h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
             h2Activity['title']['narratives'][0]['text']

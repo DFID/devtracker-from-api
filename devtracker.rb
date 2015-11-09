@@ -30,10 +30,10 @@ include CommonHelpers
 include ResultsHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -226,11 +226,6 @@ get '/projects/:proj_id/transactions/?' do |n|
 	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
-  	#get details of H2 Activities from the API
-  	oipaH2ActivitiesJSON = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{n}&page_size=400"
-    h2ActivitiesJSON=JSON.parse(oipaH2ActivitiesJSON)
-    h2Activities=h2ActivitiesJSON['results']
-
     # get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
 
@@ -244,7 +239,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 			countryOrRegion: countryOrRegion,
  			transactions: transactions,
  			yearWiseBudgets: yearWiseBudgets,
- 			h2Activities: h2Activities, 			
+ 			#h2Activities: h2Activities, 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount 
  		}
