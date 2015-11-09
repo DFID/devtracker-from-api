@@ -113,7 +113,7 @@ get '/countries/:country_code/projects/?' do |n|
 	results = resultsInfo.select {|result| result['code'] == n}
 	#oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&page_size=10&page=1"
     #total_projects = JSON.parse(oipa_total_projects)
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_country=#{n}"
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_country=#{n}"
 	projects= JSON.parse(oipa_project_list)
 	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{n}"
 	highLevelSectorList = high_level_sector_list_filter(sectorValuesJSON)
