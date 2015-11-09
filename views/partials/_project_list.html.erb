@@ -4,39 +4,6 @@
 <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/javascripts/formatDate.js"></script>
 <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
-<script>
-    //$(document).ready(function() {
-    //     function addCommas(num) {   
-    //         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    //     }
-    //     $( document ).ajaxStart(function() {
-    //         $('.modal').show();
-    //     });
-    //     $( document ).ajaxStop(function() {
-    //         $('.modal').hide();
-    //     });
-    //     $('#light-pagination').pagination({
-    //         items: <%= project_count %>,
-    //         itemsOnPage: 10,
-    //         cssStyle: 'compact-theme',
-    //         onPageClick: function(pageNumber,event){
-    //             var oipaLink = 'http://dfid-oipa.zz-clients.net/api/activities?page_size=10&format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=<%= country["code"] %>&fields=title,description,activity_status,reporting_organisations,iati_identifier,participating_organisations,activity_dates,activity_aggregations&page='+ pageNumber;
-    //             $.getJSON(oipaLink,{
-    //                 format: "json"
-    //             }).done(function(json){
-    //                 $('#showResults').html("");
-    //                 $.each(json.results,function(i,result){
-    //                     var tempString = '<div class="search-result"><h3><a href="/projects/'+result.iati_identifier+'">'+result.title.narratives[0].text+' <small>['+ result.iati_identifier +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(result.activity_aggregations.total_child_budget_value)+'</em></span><span>Status: <em>'+result.activity_status.name+'</em></span><span>Reporting Org: <em>'+result.reporting_organisations[0].narratives[0].text+'</em></span><p class="description">'+result.description[0].narratives[0].text+'</p></div>';
-    //                     $('#showResults').append(tempString);
-    //                 });
-    //             })
-    //             .fail(function(json){
-    //                 $('#showResults').text('Results loading failed');
-    //             });
-    //         }
-    //     });
-    // });
-</script>
 <div class="row project-results">
         <div class="nine columns push-three" id="search-results">
             <div class="row">
@@ -58,11 +25,6 @@
                 <div>Loading Data <br /> Please Wait</div>
             </div>
             <div id="showResults">
-                <!--<div>
-                    Total
-                    <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <span id="numberofResults" value="@results.size" style="display:inline;"><%#= project_count%></span> projects found
-                </div> -->
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
