@@ -1,14 +1,16 @@
 (function(global, undefined){
 
      //helpers for the markers
-    function markerOptions() {
+    function markerOptions(id,title) {
         var geojsonMarkerOptionsStuff = {
             radius: 6,
             fillColor: "#a04567",
             color: "#000",
             weight: 1,
             opacity: 1,
-            fillOpacity: 0.8
+            fillOpacity: 0.8,
+            id:id,
+            title:title
         };
         return geojsonMarkerOptionsStuff
     }
@@ -21,9 +23,9 @@
             items.push([
                 "<div class='row'>", 
                     "<div class='five columns location-label'>", 
-                        "<a href='/projects/", locations.id ,"'>", locations.id, "</a>",
+                        "<a href='/projects/", location.id ,"'>", location.id, "</a>",
                     "</div>", 
-                    "<div class='seven columns'>", locations.radius, "</div>",
+                    "<div class='seven columns'>", location.title, "</div>",
                 "</div>"
             ].join(""));
         }
@@ -126,17 +128,18 @@
         });
 
         markers.on('clusterclick', function (a) {
-         alert("clusterclick" +  a.target._zoom + " "  + a.target._maxZoom);
+         //alert("clusterclick" +  a.target._zoom + " "  + a.target._maxZoom);
          var atMax = a.target._zoom == a.target._maxZoom
          if(atMax) {
             var clusterLocations = [];
             for(var i = 0; i < a.layer._markers.length; i++) {
-                clusterLocations.push(a.layer._markers[i].options.data);
-                alert(a.layer._markers[i].options.data);
+                clusterLocations.push(a.layer._markers[i].options);
+                //console.log(a.layer._markers[i].options);
+                //console.log(clusterLocations);
             }
             
             var html = buildClusterPopupHtml(clusterLocations)
-            alert(html);
+            //console.log(html);
             var popup = L.popup()
                          .setLatLng(a.layer._latlng)
                          .setContent(html)
@@ -155,14 +158,14 @@
                 //iterate over each location
                 d.locations.forEach(function (p) {
                     var latlng = L.latLng(p.point.point.longitude,p.point.point.latitude);
-                    var marker = new L.circleMarker(latlng, markerOptions(), {id: iatiIdentifier, title: title});
+                    var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
                     //console.log(p.point.point.longitude,p.point.point.latitude);
                     
                     //create popup text
                     var locationName = p.name[0].narratives[0].text;
-                    //marker.bindPopup("<a href='" + dtUrl + "'>" + title + "(" + iatiIdentifier + ")</a>" + "<br />" + locationName);
+                    marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
                     
-                    marker.bindPopup(buildClusterPopupHtml(p))
+                    //marker.bindPopup(buildClusterPopupHtml(marker.options))
                     
                     //add to the map layer
                     markers.addLayer(marker);
