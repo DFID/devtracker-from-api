@@ -21,7 +21,7 @@ require_relative 'helpers/common_helpers.rb'
 require_relative 'helpers/results_helper.rb'
 require_relative 'helpers/JSON_helpers.rb'
 require_relative 'helpers/filters_helper.rb'
-require_relative 'helpers/search_helper.rb'
+#require_relative 'helpers/search_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -31,7 +31,7 @@ include ProjectHelpers
 include CommonHelpers
 include ResultsHelper
 include FiltersHelper
-include SearchHelper
+#include SearchHelper
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
