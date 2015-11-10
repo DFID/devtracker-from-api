@@ -63,11 +63,6 @@
                 <div>Loading Data <br /> Please Wait</div>
             </div>
             <div id="showResults">
-                <!--<div>
-                    Total
-                    <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <span id="numberofResults" value="@results.size" style="display:inline;"><%#= project_count%></span> projects found
-                </div> -->
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -79,9 +74,14 @@
                 <div class="search-result">
                     <h3>    
                         <%unless project['iati_identifier'].nil? %>
-                        <a href="/projects/<%= project['iati_identifier'] %>">
-                        <%unless project['title']['narratives'][0]['text'].nil? %><%=project['title']['narratives'][0]['text']%><%end%> <small>[<%= project['iati_identifier']%>]</small>
-                        </a>
+                            <a href="/projects/<%= project['iati_identifier'] %>">
+                            <%unless project['title']['narratives'].nil? %>
+                                <%unless project['title']['narratives'][0]['text'].nil? %>
+                                    <%=project['title']['narratives'][0]['text']%>
+                                <%end%>
+                            <%end%>
+                            <small>[<%= project['iati_identifier']%>]</small>
+                            </a>
                         <%end%>
                     </h3>
                     <%unless project['activity_aggregations']['total_child_budget_value'].nil? %>
@@ -89,8 +89,20 @@
                     <%unless project['activity_status']['name'].nil? %>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>
-                    <span>Reporting Org: <em><%unless project['reporting_organisations'][0]['narratives'].empty? %><%= project['reporting_organisations'][0]['narratives'][0]['text']%><%end%></em></span>
-                    <p class="description"><%unless project['description'][0]['narratives'].empty? %><%= project['description'][0]['narratives'][0]['text']%><%end%></p>
+                    <span>Reporting Org: <em>
+                        <%unless project['reporting_organisations'].empty? %>
+                            <%unless project['reporting_organisations'][0]['narratives'].empty? %>
+                                <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                            <%end%>
+                        <%end%>
+                    </em></span>
+                    <p class="description">
+                        <%unless project['description'].empty? %>
+                            <%unless project['description'][0]['narratives'].empty? %>
+                                <%= project['description'][0]['narratives'][0]['text'] %>
+                            <%end%>
+                        <%end%>
+                    </p>
                 </div>
                 <% end %>
             </div>
@@ -138,7 +150,7 @@
                         <% highLevelSectorList.each do |highLevelSectorName| %>
                             <li>
                                 <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
-                                    <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[0][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                    <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
                                 </label>
                             </li>
                         <%end%>
