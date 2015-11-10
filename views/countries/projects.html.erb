@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects, :results_count => results.length } %>
 <%#=projects.size%>
 <%# projects.each do |project| %>
     <%#= project['iati_identifier'] %>
@@ -25,4 +25,4 @@
     <%#=project['reporting_organisation']['organisation']['name']['narratives'][0]['text']%>
     <%#=project['activity_status']['name']%>
 <%# end %>
-<%= erb :'partials/_project_list', :locals => { :projects => projects, :country => country, :project_count => total_projects['count'] } %>
+<%= erb :'partials/_project_list', :locals => { :projects => projects, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :projects => projects, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate} %>
