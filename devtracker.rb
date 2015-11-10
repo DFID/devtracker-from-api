@@ -34,10 +34,10 @@ include FiltersHelper
 include SearchHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
