@@ -179,11 +179,47 @@ $(document).ready(function() {
                     $.each(json.results,function(i,result){
                         var validResults = {};
                         validResults['iati_identifier'] = !isEmpty(result.iati_identifier) ? result.iati_identifier : "";
-                        validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
+                        //Check title
+                        if(!isEmpty(result.title.narratives)){
+                            if(!isEmpty(result.title.narratives[0].text)){
+                                validResults['title'] = result.title.narratives[0].text;
+                            }
+                            else {
+                                validResults['title'] = "";    
+                            }
+                        }
+                        else{
+                            validResults['title'] = "";
+                        }
+                        //validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
                         validResults['total_child_budget_value'] = !isEmpty(result.activity_aggregations.total_child_budget_value) ? result.activity_aggregations.total_child_budget_value : 0;
                         validResults['activity_status'] = !isEmpty(result.activity_status.name) ? result.activity_status.name : "";
-                        validResults['reporting_organisations'] = !isEmpty(result.reporting_organisations[0].narratives[0]) ? result.reporting_organisations[0].narratives[0].text : "";
-                        validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
+                        //Check reporting organization
+                        if(!isEmpty(result.reporting_organisations)){
+                            if(!isEmpty(result.reporting_organisations[0].narratives)){
+                                validResults['reporting_organisations'] = result.reporting_organisations[0].narratives[0].text;
+                            }
+                            else {
+                                validResults['reporting_organisations'] = "";    
+                            }
+                        }
+                        else{
+                            validResults['reporting_organisations'] = "";
+                        }
+                        //validResults['reporting_organisations'] = !isEmpty(result.reporting_organisations[0].narratives[0]) ? result.reporting_organisations[0].narratives[0].text : "";
+                        //check description's existence
+                        if(!isEmpty(result.description)){
+                            if(!isEmpty(result.description[0].narratives)){
+                                validResults['description'] = result.description[0].narratives[0].text;
+                            }
+                            else {
+                                validResults['description'] = "";    
+                            }
+                        }
+                        else{
+                            validResults['description'] = "";
+                        }
+                        //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
                         var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(validResults['total_child_budget_value'])+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         $('#showResults').append(tempString);
                     });
@@ -217,11 +253,47 @@ $(document).ready(function() {
             $.each(json.results,function(i,result){
                 var validResults = {};
                 validResults['iati_identifier'] = !isEmpty(result.iati_identifier) ? result.iati_identifier : "";
-                validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
+                //Check title
+                if(!isEmpty(result.title.narratives)){
+                    if(!isEmpty(result.title.narratives[0].text)){
+                        validResults['title'] = result.title.narratives[0].text;
+                    }
+                    else {
+                        validResults['title'] = "";    
+                    }
+                }
+                else{
+                    validResults['title'] = "";
+                }
+                //validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
                 validResults['total_child_budget_value'] = !isEmpty(result.activity_aggregations.total_child_budget_value) ? result.activity_aggregations.total_child_budget_value : 0;
                 validResults['activity_status'] = !isEmpty(result.activity_status.name) ? result.activity_status.name : "";
-                validResults['reporting_organisations'] = !isEmpty(result.reporting_organisations[0].narratives[0]) ? result.reporting_organisations[0].narratives[0].text : "";
-                validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
+                //Check reporting organization
+                if(!isEmpty(result.reporting_organisations)){
+                    if(!isEmpty(result.reporting_organisations[0].narratives)){
+                        validResults['reporting_organisations'] = result.reporting_organisations[0].narratives[0].text;
+                    }
+                    else {
+                        validResults['reporting_organisations'] = "";    
+                    }
+                }
+                else{
+                    validResults['reporting_organisations'] = "";
+                }
+                //validResults['reporting_organisations'] = !isEmpty(result.reporting_organisations[0].narratives[0]) ? result.reporting_organisations[0].narratives[0].text : "";
+                //check description's existence
+                if(!isEmpty(result.description)){
+                    if(!isEmpty(result.description[0].narratives)){
+                        validResults['description'] = result.description[0].narratives[0].text;
+                    }
+                    else {
+                        validResults['description'] = "";    
+                    }
+                }
+                else{
+                    validResults['description'] = "";
+                }
+                //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(validResults['total_child_budget_value'])+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
