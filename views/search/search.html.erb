@@ -10,7 +10,6 @@
                     </ul>
                 </div>
                 <h1>
-                    <%= dfidCountriesResults%>
                     Search Results for: 
                     "<%= query %>"
                 </h1>
@@ -64,29 +63,24 @@
                 <div>Loading Data <br /> Please Wait</div>
             </div>
             <div>
-                <% if !dfidCountriesResults.empty? %>
-                    <% dfidCountriesResults.each do |results| %>
+                <% if !dfidCountryBudgets.empty? %>
+                    <% dfidCountryBudgets.each do |results| %>
                         <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                            <p>Did you mean the <em>country <a href="/countries/<%= results["code"] %>"><%= results["name"]%></a></em>?</p>
+                            <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
                             <p></p>
-                            <h3><em><%= results["name"]%></em></h3>
-                            Budget: <em>
-                                <%unless countries_project_budget.nil? %>
-                                    <%= countries_project_budget%>
-                                    <%#= countries_project_budget["results"][0]["budget"]%>
-                                <%end%>
-                            </em>
+                            <h3><em><%= results[1][1]%></em></h3>
+                            Budget: <em><%= results[1][0]%></em>
                             <p></p>
                         </div>
                     <%end%>
                 <%end%>
-                <% if !dfidRegionsResults.empty? %>
-                    <% dfidRegionsResults.each do |results| %>
+                <% if !dfidRegionBudgets.empty? %>
+                    <% dfidRegionBudgets.each do |results| %>
                         <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                            <p>Did you mean the <em>region <a href="/regions/<%= results["code"] %>"><%= results["name"]%></a></em>?</p>
+                            <p>Did you mean the <em>region <a href="/regions/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
                             <p></p>
-                            <h3><em><%= results["name"]%></em></h3>
-                            Budget: <em>£0.0</em>
+                            <h3><em><%= results[1][1]%></em></h3>
+                            Budget: <em><%= results[1][0]%></em>
                             <p></p>
                         </div>
                     <%end%>
