@@ -133,7 +133,7 @@
             var location = locations[i];
             //console.log(location.point.point.latitude);
             //var latlng   = new L.LatLng(location.latitude, location.longitude)
-            var latlng   = new L.LatLng(location.point.point.longitude,location.point.point.latitude);
+            var latlng   = new L.LatLng(location.point.pos.longitude,location.point.pos.latitude);
             var marker   = new L.Marker(latlng, { 
                 title: location.name[0].narratives[0].text, 
                 data:  location
