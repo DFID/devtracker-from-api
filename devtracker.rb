@@ -22,6 +22,7 @@ require_relative 'helpers/results_helper.rb'
 require_relative 'helpers/JSON_helpers.rb'
 require_relative 'helpers/filters_helper.rb'
 require_relative 'helpers/search_helper.rb'
+require_relative 'helpers/region_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -32,12 +33,13 @@ include CommonHelpers
 include ResultsHelper
 include FiltersHelper
 include SearchHelper
+include RegionHelpers
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -205,21 +207,24 @@ end
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
+	countryAllProjectFilters = JSON.parse(File.read('data/countryProjectsFilters.json'))
 	region=regionsInfo.select {|region| region['code'] == n}.first
-		oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&format=json&page_size=10&page=1"
-	    total_projects = JSON.parse(oipa_total_projects)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&fields=title,description,activity_status,reporting_organisation,iati_identifier,total_child_budgets,participating_organisations,activity_dates&page_size=10&page=1"
-		projects_list= JSON.parse(oipa_project_list)
-		projects = projects_list['results']
-		
-		erb :'regions/projects', 
-			:layout => :'layouts/layout',
-			:locals => {
-		 		region: region,
-		 		total_projects: total_projects,
-		 		projects: projects
-		 		}
-		 			
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=#{n}"
+	projects= JSON.parse(oipa_project_list)
+	getRegionProjects = get_region_projects(projects,n)
+	erb :'regions/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		region: region,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+	 		actualStartDate: getRegionProjects['actualStartDate'],
+ 			plannedEndDate: getRegionProjects['plannedEndDate']
+		}	 			
 end
 
 #####################################################################
