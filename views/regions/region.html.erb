@@ -63,7 +63,14 @@
                        Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
                     </div>
                 </aside>
-                <span><strong><%= if(total_project_budgets) then Money.new(total_project_budgets['results'][0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end%></strong></span>
+                <span><strong>
+                    <%#= if(total_project_budgets) then Money.new(total_project_budgets['results'][0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end%>
+                    <% unless total_project_budgets['results'].empty? %>
+                        <% unless total_project_budgets['results'][0]['budget'].nil? %>
+                            <%= Money.new(total_project_budgets['results'][0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                        <% end%>
+                    <% end%>
+                </strong></span>
             </li>
             <!--<li class="fact-item">
                 Project budget as % of DFID budget
@@ -153,9 +160,9 @@
 </div>
 
 
- <script src="/javascripts/donut.js"></script>
+<!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
- <script src="/javascripts/bar.js"></script>
+ <script src="/javascripts/bar.js"></script> -->
  <script>
     $(document).ready(function() {
         var stacked = c3.generate({
