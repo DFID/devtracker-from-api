@@ -192,7 +192,7 @@ get '/regions/:region_code/?' do |n|
 	total_project_budgets= JSON.parse_nil(oipa_total_project_budgets)
     oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter"
     year_wise_budgets= JSON.parse_nil(oipa_year_wise_budgets)
-	
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -200,7 +200,8 @@ get '/regions/:region_code/?' do |n|
  			total_projects: total_projects,
  			active_projects: active_projects,
  			total_project_budgets: total_project_budgets,
- 			year_wise_budgets: year_wise_budgets
+ 			year_wise_budgets: year_wise_budgets['results'],
+ 			regionSectorGraphData: regionSectorGraphData
  		}
 end
 
