@@ -20,5 +20,27 @@
     "belowPovertyLine":"",
     "fertilityRate":6.33,
     "gdpGrowthRate":4.23
+  },
+  {
+    "code":"298",
+    "name":"Africa",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0
+  },
+  {
+    "code":"798",
+    "name":"Asia",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0
   }
  ]
