@@ -157,7 +157,7 @@
                 
                 //iterate over each location
                 d.locations.forEach(function (p) {
-                    var latlng = L.latLng(p.point.pos.longitude,p.point.pos.latitude);
+                    var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
                     var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
                     //console.log(p.point.point.longitude,p.point.point.latitude);
                     
