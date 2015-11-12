@@ -20,6 +20,7 @@ $(document).ready(function() {
         case 'S':
             break;
         case 'R':
+            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_region='+window.RegionCode;
             break;
     }
     function refreshOipaLink(searchType){
@@ -33,6 +34,7 @@ $(document).ready(function() {
             case 'S':
                 break;
             case 'R':
+                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_region='+window.RegionCode;
                 break;
         }
     };

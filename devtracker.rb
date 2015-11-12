@@ -22,6 +22,7 @@ require_relative 'helpers/results_helper.rb'
 require_relative 'helpers/JSON_helpers.rb'
 require_relative 'helpers/filters_helper.rb'
 require_relative 'helpers/search_helper.rb'
+require_relative 'helpers/region_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -32,12 +33,13 @@ include CommonHelpers
 include ResultsHelper
 include FiltersHelper
 include SearchHelper
+include RegionHelpers
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -170,6 +172,60 @@ get '/countries/:country_code/results/?' do |n|
 	 		resultsPillar: resultsPillar
 	 		}
 		 			
+end
+
+#####################################################################
+#  REGION PAGES
+#####################################################################
+#TODO: need region information
+regionsInfo = JSON.parse(File.read('data/regions.json'))
+
+# Region summary page
+get '/regions/:region_code/?' do |n|
+    region = regionsInfo.select {|region| region['code'] == n}.first
+    
+    oipa_total_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&format=json"
+    total_projects = JSON.parse(oipa_total_projects)
+    oipa_active_projects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&activity_status=2&format=json"
+    active_projects = JSON.parse(oipa_active_projects)
+	oipa_total_project_budgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=budget&recipient_region=#{n}" 
+	total_project_budgets= JSON.parse_nil(oipa_total_project_budgets)
+    oipa_year_wise_budgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter"
+    year_wise_budgets= JSON.parse_nil(oipa_year_wise_budgets)
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
+	erb :'regions/region', 
+		:layout => :'layouts/layout',
+		:locals => {
+ 			region: region,
+ 			total_projects: total_projects,
+ 			active_projects: active_projects,
+ 			total_project_budgets: total_project_budgets,
+ 			year_wise_budgets: year_wise_budgets['results'],
+ 			regionSectorGraphData: regionSectorGraphData
+ 		}
+end
+
+
+#Region Project List Page
+get '/regions/:region_code/projects/?' do |n|
+	countryAllProjectFilters = JSON.parse(File.read('data/countryProjectsFilters.json'))
+	region=regionsInfo.select {|region| region['code'] == n}.first
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=#{n}"
+	projects= JSON.parse(oipa_project_list)
+	getRegionProjects = get_region_projects(projects,n)
+	erb :'regions/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		region: region,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+	 		actualStartDate: getRegionProjects['actualStartDate'],
+ 			plannedEndDate: getRegionProjects['plannedEndDate']
+		}	 			
 end
 
 #####################################################################
