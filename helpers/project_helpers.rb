@@ -13,6 +13,12 @@ module ProjectHelpers
         project = JSON.parse(oipa)
     end
 
+    def get_h2_project_details(projectId)
+        oipa = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{projectId}&page_size=50&fields=iati_identifier,title"
+        project = JSON.parse(oipa)
+        project = project['results']
+    end
+
     def get_funding_project_count(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&fields=url"
         project = JSON.parse(oipa)
@@ -23,6 +29,39 @@ module ProjectHelpers
         oipa = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&fields=url"
         project = JSON.parse(oipa)
         project = project['count']
+    end
+
+    def get_funding_project_details(projectId)
+        fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&page_size=1000" 
+        fundingProjectsData = JSON.parse(fundingProjectsAPI)
+    end
+
+    def get_funded_project_details(projectId)
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_aggregations,default_currency"
+        fundedProjectsData = JSON.parse(fundedProjectsAPI)
+    end
+
+    def get_transaction_details(projectId)
+        if is_dfid_project(projectId) then
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+        else
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+        end
+
+        transactionsJSON = JSON.parse(oipaTransactionsJSON)
+        transactions = transactionsJSON['results'].select {|transaction| !transaction['transaction_type'].nil? }
+    end
+
+    def get_project_yearwise_budget(projectId)
+        
+        if is_dfid_project(projectId) then
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
+        else
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{projectId}&order_by=year,quarter"
+        end
+
+        yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
+        projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P")
     end
 
     def dfid_complete_country_list
@@ -56,68 +95,9 @@ module ProjectHelpers
         projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
-    def dfid_complete_region_list        
-        regionsList = JSON.parse(File.read('data/dfidRegions.json')).sort_by{ |k| k["region"]}    
-    end
+    
 
-    def dfid_regional_projects_data
-        
-        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
-
-        # aggregates budgets of the dfid regional projects that are active in the current FY
-        oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
-        allCurrentRegions = JSON.parse(oipaAllRegionsJSON)
-        allCurrentRegions = allCurrentRegions['results']
-
-        # Map the input data structure so that it matches the required input for the Regions map
-        allRegionsChartData = allCurrentRegions.map do |elem|
-        {
-            "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
-            "code" => elem["recipient_region"]["code"],
-            "budget" => elem["budget"]                           
-        }
-        end
-               
-        # Find the total budget for all of the Regions
-        totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
-
-        # Format the Budget for use on the region chart
-        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
-
-        # Format the output of the chart data
-        allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
-
-        returnObject = {
-            :regionsData => allRegionsChartDataFormatted,            
-            :totalBudget => totalBudget,  
-            :totalBudgetFormatted => totalBudgetFormatted                              
-        }
-    end
-
-    def dfid_global_projects_data
-        
-        globalProjectsData = JSON.parse(File.read('data/globalProjectsData.json')).sort_by{ |k| k["region"]}
-
-        #Format the output of globalProjectsData
-        globalProjectsDataFormatted = globalProjectsData.to_s.gsub("=>",":")
-
-        #Find the total budget for all of the Regions
-        totalBudget = Float(globalProjectsData.map { |s| s["budget"].to_f }.inject(:+))
-
-        #Format the Budget for use on the region chart
-        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
-
-        returnObject = {
-            :globalData => globalProjectsDataFormatted,
-            :globalDataJSON => globalProjectsData,
-            :totalBudget => totalBudget,  
-            :totalBudgetFormatted => totalBudgetFormatted                              
-         }        
-
-    end
-
-    def h2Activity_title(h2Activities,h2ActivityId)
+    def get_h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
             h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
             h2Activity['title']['narratives'][0]['text']

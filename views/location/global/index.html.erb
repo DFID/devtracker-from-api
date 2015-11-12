@@ -15,7 +15,7 @@
 		        
 	       var regionsData = {
 	          totalSpend : <%= dfid_global_projects_data[:totalBudget] %>,
-	          regionalProjects : <%= dfid_global_projects_data[:globalData] %>
+	          regionalProjects : <%= dfid_global_projects_data[:regionsData] %>
 		    }
 
 	        var labels = {
@@ -50,7 +50,7 @@
 </div>
 <div class="row">
   <div class="twelve columns">
-    <% dfid_global_projects_data[:globalDataJSON].each do |global| %>
+    <% dfid_global_projects_data[:regionsDataJSON].each do |global| %>
       <a href="/global/<%=global['code']%>/projects"><%= global['region'] %> </a> |
     <% end %>
   </div>

@@ -12,6 +12,10 @@
 	    "name" : "Angola"
 	},
 	{
+    	"code":"AC",
+    	"name":"Ascension Island"
+  	},
+	{
 	    "code" : "BD",
 	    "name" : "Bangladesh"
 	},
@@ -351,6 +355,10 @@
 	    "code" : "TH",
 	    "name" : "Thailand"
 	},
+	{
+    	"code":"TA",
+    	"name":"Tristan Da Cunha"
+  	},
 	{
 	    "code" : "TG",
 	    "name" : "Togo"

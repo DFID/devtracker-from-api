@@ -6,21 +6,21 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/location/country">Aid by Location</a></li>
-                    <li><%= country['name'] %></li>
+                    <li><%= country[:name] %></li>
                 </ul>
             </div>
             <h1>
-                <img src="/images/flags/<%= country['code'].downcase%>.png" alt="Country Flag"><%= country['name'] %></small>
+                <img src="/images/flags/<%= country[:code].downcase%>.png" alt="Country Flag"><%= country[:name] %></small>
             </h1>
         </div>
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "results", :country => country, :project_count => total_projects['count'], :results_count => results.length } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "results", :country => country, :project_count => totalProjects['count'], :results_count => results.length } %>
 <div class="row">
     <div class="twelve columns content results-info">
         <h3 class="section-group-title">Results achieved (up to 2014/15 inclusive)</h3>
-            <% resultsPillar[country['code']][0].each do |pillar| %>
+            <% resultsPillar[country[:code]][0].each do |pillar| %>
                 <div class="row">
                     <div class="four columns summary">
                     <h3><%= pillar[0] %></h3>

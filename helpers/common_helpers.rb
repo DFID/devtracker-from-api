@@ -1,6 +1,17 @@
 module CommonHelpers
 
-	
+  def get_current_total_budget(apiLink)
+      currentTotalBudget= JSON.parse(apiLink)
+  end
+
+  def get_current_dfid_total_budget(apiLink)
+      currentDfidTotalBudget= JSON.parse(apiLink)
+  end
+
+  def get_total_project(apiLink)
+      totalProjects = JSON.parse(apiLink)
+  end 
+
   def financial_year_wise_budgets(yearWiseBudgets,type)
 
       finYearWiseBudgets = get_actual_budget_per_fy(yearWiseBudgets)

@@ -6,29 +6,29 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/location/country">Aid by Location</a></li>
-                    <li><%= country['name'] %></li>
+                    <li><%= country[:name] %></li>
                 </ul>
             </div>
             <h1>
-                <img src="/images/flags/<%= country['code'].downcase%>.png" alt="Country Flag"><%= country['name'] %></small>
+                <img src="/images/flags/<%= country[:code].downcase%>.png" alt="Country Flag"><%= country[:name] %></small>
             </h1>
         </div>
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => total_projects['count'], :results_count => results.length, :total_dfid_budget => total_dfid_budget, :operationalBudget => operationalBudget, :countrySectorGraphData => countrySectorGraphData } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects], :results_count => results.length } %>
 
 <div class="row">
     <div class="twelve columns summary">
         <h2 class="visually-hidden">Summary</h2>
-        <div class="description"><%= markdown_to_html(country['description'])%></div>
+        <div class="description"><%= markdown_to_html(country[:description])%></div>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('div.description').expander({
                     slicePoint    : 300,
                     expandSpeed   : 0,
                     collapseSpeed : 0,
-                    expandText    : 'Read more about <%= country["name"] %>' 
+                    expandText    : 'Read more about <%= country[:name] %>' 
                 });
             });
         </script>
@@ -39,7 +39,7 @@
     <div class="six columns">
         <h3>Key Info</h3>
         <ul class="info-list vertical">
-            <% if operationalBudget.length > 0 then %>
+            <% if country[:operationalBudget] > 0 then %>
                 <li class="fact-item">
                 Operational Plan Budget <strong><%= current_financial_year %></strong>
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
@@ -50,56 +50,51 @@
                        This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
                     </div>
                 </aside>
-                <span><strong><%= Money.new(operationalBudget[0]['operationalBudget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
+                <span><strong><%= Money.new(country[:operationalBudget].to_f.round(0)*100, country[:operationalBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
                 </li>
             <% end %>
             <li class="fact-item">
                 Total Project Budget for <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="2">
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
                     <img src="/images/icon-information.png" alt="More information about the total project budget"/>
                 </a>
-                <aside id="moreinfo1" class="more-info">            
+                <aside id="moreinfo2" class="more-info">            
                     <div class="more-info-content">
                        Project budget to date. Some values may not be included if projects are in an active procurement phase, so this figure will change over time.
                     </div>
                 </aside>
-                <span><strong><%= if (total_project_budget['count']>0) then Money.new(total_project_budget['results'][0]['budget'].to_f.round(0)*100, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) else Money.new(0, "GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) end %></strong></span>
+                <span><strong><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
             </li>
             <li class="fact-item">
                 Project budget as % of DFID budget
-<!--                <span><strong><%#= (stats['totalBudget']/(dfid_total_budget.nonzero? || 1) * 100).round(2) || "&nbsp;" %>%</strong></span> -->
-                <% if (total_project_budget['count']>0) then %>
-                <span><strong><%= ((total_project_budget['results'][0]['budget'].round(2) / total_dfid_budget['results'][0]['budget'].round(2))*100).round(2) %>%</strong></span>
-                <% else %>
-                    <span><strong>0%</strong></span>
-                <% end %>
+                <span><strong><%= country[:projectBudgetPercentToDfidBudget] %>%</strong></span>
             </li>
             <li class="fact-item">
                 Active Projects
-                <span><strong><%= active_projects['count'] || "&nbsp;" %></strong></span>
+                <span><strong><%= country[:totalActiveProjects] || "&nbsp;" %></strong></span>
             </li>
-            <% if country['population'] then %>
+            <% if country[:population] then %>
                 <li class="fact-item">
                     Population (source: <a href="http://esa.un.org/wpp/Excel-Data/population.htm" rel="external">UN</a>):
-                    <span><strong><%= format_round_million country['population'].to_f%></strong></span>
+                    <span><strong><%= format_round_million country[:population].to_f%></strong></span>
                 </li>
             <% end %>
-            <% if country['belowPovertyLine'] then %>
+            <% if country[:belowPovertyLine] then %>
                 <li class="fact-item">
                     % living below $1.25 per day (source: <a href="http://data.worldbank.org/indicator/SI.POV.DDAY" rel="external">World Bank</a>):
-                    <span><strong><%= country['belowPovertyLine'].to_f.round(2)%>%</strong></span>
+                    <span><strong><%= country[:belowPovertyLine].to_f.round(2)%>%</strong></span>
                 </li>
             <% end %>
-             <% if country['fertilityRate'] then %>
+             <% if country[:fertilityRate] then %>
                 <li class="fact-item">
                     Fertility rate (source: <a href="http://esa.un.org/wpp/Excel-Data/fertility.htm" rel="external">UN</a>):
-                    <span><strong><%= country['fertilityRate'].to_f.round(2)%></strong></span>
+                    <span><strong><%= country[:fertilityRate].to_f.round(2)%></strong></span>
                 </li>
             <% end %>
-             <% if country['gdpGrowthRate'] then %>
+             <% if country[:gdpGrowthRate] then %>
                 <li class="fact-item">
                     GDP growth rate (source: <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" rel="external">World Bank</a>):
-                    <span><strong><%= country['gdpGrowthRate'].to_f.round(2)%>%</strong></span>
+                    <span><strong><%= country[:gdpGrowthRate].to_f.round(2)%>%</strong></span>
                 </li>
             <% end %>
         </ul>
@@ -108,8 +103,8 @@
     <div class="six columns" role="presentation">
         <div id="countryMap" class="countryMap"></div>
 
-        <input type="hidden" id="countryName" value="<%=country['name'] %>">
-        <input type="hidden" id="countryCode" value="<%=country['code'] %>">
+        <input type="hidden" id="countryName" value="<%=country[:name] %>">
+        <input type="hidden" id="countryCode" value="<%=country[:code] %>">
        
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
@@ -153,7 +148,7 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Download IATI Data for <%= country['name']%>: <a href="http://iati.dfid.gov.uk/iati_files/Country/DFID-<%= country['name'].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country['code']%>.xml" class="api-link button">XML</a></p>
+        <p>Download IATI Data for <%= country[:name]%>: <a href="http://iati.dfid.gov.uk/iati_files/Country/DFID-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country['code']%>.xml" class="api-link button">XML</a></p>
     </div>
 </div>
 
@@ -207,7 +202,7 @@
             }
         });
 
-        <% if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
+        <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
             
             var yTicks = [];
             var chart = c3.generate({
@@ -230,8 +225,8 @@
                 data: {
                     x: 'x',
                     columns: [
-                        ['x', <%= budgetYearData[0] %>],
-                        ['Project Budget', <%= budgetYearData[1] %>]
+                        ['x', <%= countryYearWiseBudgets[0] %>],
+                        ['Project Budget', <%= countryYearWiseBudgets[1] %>]
                     ],
                     type: 'bar'
                 },
@@ -264,30 +259,10 @@
                 yTicks = [];
                 chart.ygrids.add({value: tempString[i]});
             }
-        <%end%>
+        <%#end%>
     });
     
-    /*
-(function(){
-var budgets =<%= ([["Year", "Budget"]]) + (financial_year_wise_budgets(year_wise_budgets,"C"))%>;
-//alert(budgets);
-charts.bar("#budget-year-chart", budgets, ".2s", null, null, ["#D8DCBF"]);
-/*var sectors = "Health"//<%#= (sector_groups country[1]).to_json %>
-charts.donut("#sectorChart", sectors, function(d) {
-return d.total;
-}, function(d){
-return d.name
-}, function(d) {
-return d.percentage;
-});
-charts.donutLegend("#sectorLegend", ".legend-color", 14, sectors, function(d){ return d.name });
-})()
-
-    */
 </script>
-
-<%#= budgetYearData[0] %>
-            <%#= budgetYearData[1] %>
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
 <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">

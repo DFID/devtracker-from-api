@@ -6,8 +6,8 @@
                 <div class="projects-nav">
                     <nav>
                         <ul class="tab-bar">
-                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/regions/<%= region['code'] %>">Summary</a></li>
-                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/regions/<%= region['code'] %>/projects">All Projects (<%=project_count%>)</a></li>
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/regions/<%= region[:code] %>">Summary</a></li>
+                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/regions/<%= region[:code] %>/projects">All Projects (<%=project_count%>)</a></li>
                         </ul>
                     </nav>
                 </div>  
@@ -20,7 +20,7 @@
                     </span>
                     <% end %>
                      <span>
-                        <a href="/fraud?region=<%= format_query_string region['name'] %>" class="button serious" title="Report fraud">Report Fraud</a>
+                        <a href="/fraud?region=<%= format_query_string region[:name] %>" class="button serious" title="Report fraud">Report Fraud</a>
                     </span>
                 </div>  
 

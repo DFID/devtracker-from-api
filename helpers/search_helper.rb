@@ -55,4 +55,9 @@ module SearchHelper
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON)
 		return searchedData
 	end
+
+	def get_static_filter_list()
+		staticFilterList = JSON.parse(File.read('data/countryProjectsFilters.json'))
+	end
+
 end
