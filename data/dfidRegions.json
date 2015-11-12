@@ -1,70 +1,189 @@
 [
   {
     "code":"298",
-    "name":"Africa"    
+    "name":"Africa",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"798",
-    "name":"Asia"    
+    "name":"Asia",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"BL",
-    "name":"Balkan Regional"    
+    "name":"Balkan Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"CP",
-    "name":"Central Africa Regional"    
+    "name":"Central Africa Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"EA",
-    "name":"East Africa"    
+    "name":"East Africa",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"ED",
-    "name":"East Europe Regional"
+    "name":"East Europe Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0
   },
   {
     "code":"EF",
-    "name":"EECAD Regional"    
+    "name":"EECAD Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"89",
-    "name":"Europe"    
+    "name":"Europe",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"FA",
-    "name":"Francophone Africa"    
+    "name":"Francophone Africa",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"IB",
-    "name":"Indian Ocean Asia Regional"    
+    "name":"Indian Ocean Asia Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0
   },
   {
     "code":"LE",
-    "name":"Latin America Regional"    
+    "name":"Latin America Regional",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"589",
-    "name":"Middle East"    
+    "name":"Middle East",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"189",
-    "name":"North of Sahara"    
+    "name":"North of Sahara",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"OT",
-    "name":"Overseas Territories"    
+    "name":"Overseas Territories",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"SQ",
-    "name":"South East Asia"    
+    "name":"South East Asia",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"289",
-    "name":"South of Sahara"    
+    "name":"South of Sahara",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   },
   {
     "code":"380",
-    "name":"West Indies"    
+    "name":"West Indies",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0    
   }
 ]  

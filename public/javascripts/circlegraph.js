@@ -51,7 +51,7 @@ CircleGraph = function (container) {
       (function(){
         var code = p.getData().code;
         $(p.getElement()).click(function(){
-          window.location= "/"+ type +"/" + code + "/projects";
+          window.location= "/"+ type +"/" + code;
         })
       })()
 

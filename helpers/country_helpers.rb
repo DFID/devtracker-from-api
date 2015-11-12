@@ -1,5 +1,6 @@
 module CountryHelpers
 
+  include CommonHelpers
   # def country_project_budgets(yearWiseBudgets)
   #   projectBudgets = []
     
@@ -67,7 +68,6 @@ module CountryHelpers
             :code => country['code'],
             :name => country['name']
             }
-
   end
 
   def get_country_details(countryCode)
@@ -81,13 +81,16 @@ module CountryHelpers
       countryOperationalBudgetInfo = JSON.parse(File.read('data/countries_operational_budgets.json'))
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
       
-      oipaCurrentTotalCountryBudget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}" 
-      currentTotalCountryBudget= JSON.parse_nil(oipaCurrentTotalCountryBudget)
+      currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
+      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #oipaCurrentTotalCountryBudget =  
+      #currentTotalCountryBudget= JSON.parse_nil(oipaCurrentTotalCountryBudget)
       
-      oipaCurrentTotalDFIDBudget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget"
-      currentTotalDFIDBudget = JSON.parse(oipaCurrentTotalDFIDBudget)
+      #oipaCurrentTotalDFIDBudget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget"
+      #currentTotalDFIDBudget = JSON.parse(oipaCurrentTotalDFIDBudget)
 
-      totalProjectsDetails = get_country_total_project(countryCode)
+      #totalProjectsDetails = get_country_total_project(countryCode)
+      totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
 
       if countryOperationalBudget.length > 0 then
@@ -129,10 +132,7 @@ module CountryHelpers
             }
   end
 
-  def get_country_total_project(countryCode)
-      oipaCountryTotalProjects = RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=150"
-      totalProjects = JSON.parse(oipaCountryTotalProjects)
-  end
+  
 
   def get_country_results(countryCode)
       resultsInfo = JSON.parse(File.read('data/results.json'))
@@ -214,10 +214,9 @@ module CountryHelpers
 
   end
 
-  def get_country_yearwise_budget_graph_data(countryCode)
-      oipaYearWiseBudgets = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{countryCode}&order_by=year,quarter"
-      yearWiseBudgets = JSON.parse_nil(oipaYearWiseBudgets)
+  def get_country_region_yearwise_budget_graph_data(apiLink)
 
+      yearWiseBudgets = JSON.parse(apiLink)
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end

@@ -95,66 +95,7 @@ module ProjectHelpers
         projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
-    def dfid_complete_region_list        
-        regionsList = JSON.parse(File.read('data/dfidRegions.json')).sort_by{ |k| k["region"]}    
-    end
-
-    def dfid_regional_projects_data
-        
-        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
-
-        # aggregates budgets of the dfid regional projects that are active in the current FY
-        oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
-        allCurrentRegions = JSON.parse(oipaAllRegionsJSON)
-        allCurrentRegions = allCurrentRegions['results']
-
-        # Map the input data structure so that it matches the required input for the Regions map
-        allRegionsChartData = allCurrentRegions.map do |elem|
-        {
-            "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
-            "code" => elem["recipient_region"]["code"],
-            "budget" => elem["budget"]                           
-        }
-        end
-               
-        # Find the total budget for all of the Regions
-        totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
-
-        # Format the Budget for use on the region chart
-        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
-
-        # Format the output of the chart data
-        allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
-
-        returnObject = {
-            :regionsData => allRegionsChartDataFormatted,            
-            :totalBudget => totalBudget,  
-            :totalBudgetFormatted => totalBudgetFormatted                              
-        }
-    end
-
-    def dfid_global_projects_data
-        
-        globalProjectsData = JSON.parse(File.read('data/globalProjectsData.json')).sort_by{ |k| k["region"]}
-
-        #Format the output of globalProjectsData
-        globalProjectsDataFormatted = globalProjectsData.to_s.gsub("=>",":")
-
-        #Find the total budget for all of the Regions
-        totalBudget = Float(globalProjectsData.map { |s| s["budget"].to_f }.inject(:+))
-
-        #Format the Budget for use on the region chart
-        totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
-
-        returnObject = {
-            :globalData => globalProjectsDataFormatted,
-            :globalDataJSON => globalProjectsData,
-            :totalBudget => totalBudget,  
-            :totalBudgetFormatted => totalBudgetFormatted                              
-         }        
-
-    end
+    
 
     def get_h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
