@@ -5,7 +5,7 @@
             "<div class='location-popup'>",
                 "<div class='row'>", 
                     "<div class='four columns location-label'> Name </div>", 
-                    "<div class='eight columns'>", location.name.narratives[0].text, "</div>",
+                    "<div class='eight columns'>", location.name[0].narratives[0].text, "</div>",
                 "</div>",
                 //"<div class='row'>", 
                 //    "<div class='four columns location-label'> Precision </div>", 
@@ -121,6 +121,7 @@
             }
             
             var html = buildClusterPopupHtml(clusterLocations)
+            alert(html);
             var popup = L.popup()
                          .setLatLng(a.layer._latlng)
                          .setContent(html)
@@ -130,11 +131,11 @@
 
         for(var i = 0; i < locations.length; i++){
             var location = locations[i];
-            //alert(location.point.coordinates[0]);
+            //console.log(location.point.point.latitude);
             //var latlng   = new L.LatLng(location.latitude, location.longitude)
-            var latlng   = new L.LatLng(location.point.coordinates[0],location.point.coordinates[1]);
+            var latlng   = new L.LatLng(location.point.pos.longitude,location.point.pos.latitude);
             var marker   = new L.Marker(latlng, { 
-                title: location.name.narratives[0].text, 
+                title: location.name[0].narratives[0].text, 
                 data:  location
             });
 

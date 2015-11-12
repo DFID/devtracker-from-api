@@ -152,11 +152,16 @@
             $(document).ready(function() {
                 window.oipaApiUrl = "<%= oipa_api_url %>";
                 window.project_count = "<%= total_projects %>";
-                window.searchType = "C";
                 window.maxBudget = <%= budgetHigherBound %>;
                 window.StartDate = '<%= actualStartDate %>';
                 window.EndDate = '<%= plannedEndDate %>';
-                window.CountryCode = '<%= country["code"] %>';
+                <% if defined? country %>
+                    window.searchType = "C";
+                    window.CountryCode = '<%= country["code"] %>';
+                <% else %>
+                    window.searchType = "R";
+                    window.RegionCode = '<%= region["code"] %>';
+                <% end %>
             });
         </script>
         <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
