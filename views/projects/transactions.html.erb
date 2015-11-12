@@ -23,8 +23,8 @@ title: Development Tracker
         </aside>   
         <p style="margin-bottom:2px;">(Current approved budget)</p>
        </div>  
-       <% projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P") %>
-       <% totalProjectBudget=get_sum_budget(projectBudgets).to_f %>
+       <%# projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P") %>
+       <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
          <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
            <%=  Money.new(totalProjectBudget.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
@@ -37,10 +37,10 @@ title: Development Tracker
           <th>Financial Year</th>
           <th>Value</th>
         </tr>
-        <% projectBudgets.each do |projectBudget| %>
+        <% projectYearWiseBudgets.each do |projectYearWiseBudget| %>
           <tr>
-            <td><%= projectBudget['fy'] %></td>
-            <td><span class="<%= projectBudget['value'].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
+            <td><%= projectYearWiseBudget['fy'] %></td>
+            <td><span class="<%= projectYearWiseBudget['value'].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectYearWiseBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
           </tr>
         <% end %>
       </tbody>

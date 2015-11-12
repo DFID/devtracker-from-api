@@ -6,10 +6,10 @@
                 <div class="projects-nav">
                     <nav>
                         <ul class="tab-bar">
-                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/countries/<%= country['code'] %>">Summary</a></li>
-                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/countries/<%= country['code'] %>/projects">All Projects (<%=project_count%>)</a></li>
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>">Summary</a></li>
+                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>/projects">All Projects (<%=project_count%>)</a></li>
                             <%if results_count > 0 %>
-                            <li <%= active=="results" ? "class='active'" : ""%>><a href="/countries/<%= country['code'] %>/results">Results</a></li>
+                            <li <%= active=="results" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>/results">Results</a></li>
                             <% end %>
                         </ul>
                     </nav>
@@ -18,11 +18,11 @@
                  <div class="button-row">
                     <% if project_count > 0 %>
                     <span>
-                        <a href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string country['code'] %>" title="Subscribe to receive updates on <%= country['name'] %> by email" class="button inform">&#9993; Subscribe</a>
+                        <a href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string country[:code] %>" title="Subscribe to receive updates on <%= country[:name] %> by email" class="button inform">&#9993; Subscribe</a>
                     </span>
                     <% end %>
                      <span>
-                        <a href="/fraud?country=<%= format_query_string country['name'] %>" class="button serious" title="Report fraud">Report Fraud</a>
+                        <a href="/fraud?country=<%= format_query_string country[:name] %>" class="button serious" title="Report fraud">Report Fraud</a>
                     </span>
                 </div>  
 

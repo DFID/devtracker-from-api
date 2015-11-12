@@ -31,6 +31,39 @@ module ProjectHelpers
         project = project['count']
     end
 
+    def get_funding_project_details(projectId)
+        fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&page_size=1000" 
+        fundingProjectsData = JSON.parse(fundingProjectsAPI)
+    end
+
+    def get_funded_project_details(projectId)
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_aggregations,default_currency"
+        fundedProjectsData = JSON.parse(fundedProjectsAPI)
+    end
+
+    def get_transaction_details(projectId)
+        if is_dfid_project(projectId) then
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+        else
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+        end
+
+        transactionsJSON = JSON.parse(oipaTransactionsJSON)
+        transactions = transactionsJSON['results'].select {|transaction| !transaction['transaction_type'].nil? }
+    end
+
+    def get_project_yearwise_budget(projectId)
+        
+        if is_dfid_project(projectId) then
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
+        else
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{projectId}&order_by=year,quarter"
+        end
+
+        yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
+        projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P")
+    end
+
     def dfid_complete_country_list
         countriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
     end
