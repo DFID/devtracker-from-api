@@ -35,11 +35,10 @@ module SectorHelpers
 
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
-		#sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=budget&format=json"
   		sectorValues  = JSON.parse(apiUrl)
   		sectorValues  = sectorValues['results'] 
   		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
-        
+
         #Create a data structure to map each DAC 5 sector code to a high level sector code          
         highLevelSectorBudget = sectorValues.map do |elem| 
 	       {  
@@ -55,9 +54,12 @@ module SectorHelpers
 
 	    #Aggregate the budget for each high level sector code (i.e. remove duplicate sector codes from the data structure and aggregate the budgets)
 	   	highLevelSectorBudgetAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
+  	
+  		#remove unallocated sector as we don't want to show that
+  		highLevelSectorBudgetAggregatedNoUnalloc = highLevelSectorBudgetAggregated.reject{|h| h[:name] == "Unallocated"}
 	    
 	    if listType == "top_five_sectors"
-	    	hiLevSecBudAggSorted = highLevelSectorBudgetAggregated.sort_by{ |k| k[:budget].to_f}.reverse
+	    	hiLevSecBudAggSorted = highLevelSectorBudgetAggregatedNoUnalloc.sort_by{ |k| k[:budget].to_f}.reverse
 	    	hiLevSecBudAggSorted.first(5)	    	  
 		else 
 			#Sort the sectors by name
