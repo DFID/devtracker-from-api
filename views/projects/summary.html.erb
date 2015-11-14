@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="twelve columns">
-        <% if(non_dfid_data(project['reporting_organisations'][0]['ref'])) %>
+        <% if(!is_dfid_project(project['iati_identifier'])) %>
         <div id="disclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['reporting_organisations'][0]['narratives'][0]['text'] || "" %>. Please contact them if you have any questions about their data.</p>
         </div>
