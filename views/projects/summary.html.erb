@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="twelve columns">
-        <% if(non_dfid_data(project['reporting_organisations'][0]['ref'])) %>
+        <% if(!is_dfid_project(project['iati_identifier'])) %>
         <div id="disclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <%= project['reporting_organisations'][0]['narratives'][0]['text'] || "" %>. Please contact them if you have any questions about their data.</p>
         </div>
@@ -193,7 +193,7 @@
                 </div>
             </div>
         </div>-->
-        <div id="budget-plan-spend" style="height: 250px; width: 100%;" class="row"></div>
+        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
 
     </div>
 
@@ -244,30 +244,27 @@
             tooltop: {
                 grouped: false
             },
+            padding: {left: 10, right: 10},
             axis: {
                 rotated: true,
                 x: {
-                    show: true
+                    show: false
                 },
                 y: {
-                    label: '%'
+                    label: '%',
+                    min: 0,
+                    max: 100,
+                    padding: {top: 0, bottom: 0}
                 }
             },
             bar: {
                 width: {
-                    ratio: .5
-                }
-            },
-            grid: {
-                y: {
-                    lines: [{
-                        value: 0
-                    }]
+                    ratio: .6
                 }
             },
             tooltip: {
                 format: {
-                    title: function (x) { return '%' }
+                    title: function (x) { return 'Sector %' }
                 }
             }
         });
@@ -282,13 +279,13 @@
                 tooltip: {
                     format: {
                         value: function(value){
-                            return value;
+                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }
                     }
                 },
                 bar: {
                     width: {
-                        ratio: .5
+                        ratio: .7
                     }
                 },
                 data: {
@@ -310,8 +307,11 @@
                     },
                     y: {
                         tick: {
-                            count: 6,
-                            format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                            //count: 6,
+                            format: function(d){ 
+                                yTicks.push(d3.format(".2s")(d)); 
+                                return "£" + d3.format(".2s")(d);} 
+                                /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
                     }
                 },
