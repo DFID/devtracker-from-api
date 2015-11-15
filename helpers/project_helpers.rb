@@ -299,22 +299,6 @@ module ProjectHelpers
         projectCode[0, 5] == "GB-1-"
     end
 
-    def first_day_of_financial_year(date_value)
-        if date_value.month > 3 then
-            Date.new(date_value.year, 4, 1)
-        else
-            Date.new(date_value.year - 1, 4, 1)
-        end
-    end
-
-    def last_day_of_financial_year(date_value)
-        if date_value.month > 3 then
-            Date.new(date_value.year + 1, 3, 31)
-        else
-            Date.new(date_value.year, 3, 31)
-        end
-    end
-
     def choose_better_date(actual, planned)
         # determines project actual start/end date - use actual date, planned date as a fallback
         unless actual.nil? || actual == ''

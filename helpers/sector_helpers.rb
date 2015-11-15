@@ -1,5 +1,6 @@
 module SectorHelpers
 
+	include CommonHelpers
 =begin  		
 		highLevelSectorBudget = sectorValues.map do |elem| 
 	       {  
@@ -22,7 +23,12 @@ module SectorHelpers
 	       } 
 	     end
 =end
-
+	def get_5_dac_sector_data()
+		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+      	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+	end
+	
 	def group_hashes arr, group_fields
 			  arr.group_by {|hash| hash.values_at(*group_fields).join ":" }.values.map do |grouped|
 			    grouped.inject do |merged, n|

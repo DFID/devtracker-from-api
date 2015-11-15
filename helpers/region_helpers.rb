@@ -66,14 +66,20 @@ module RegionHelpers
         regionsList = JSON.parse(File.read('data/dfidRegions.json')).sort_by{ |k| k["region"]}    
     end
 
-    def dfid_regional_projects_data(apiLink)
+    def dfid_regional_projects_data(regionType)
         
-        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
-        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)    
+        firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+        lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
 
+        if (regionType=="region")
+            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget"
+        else
+            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=NS,ZZ"
+        end
+            
         # aggregates budgets of the dfid regional projects that are active in the current FY
         #oipaAllRegionsJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget";
-        allCurrentRegions = JSON.parse(apiLink)
+        allCurrentRegions = JSON.parse(regionsDataJSON)
         allCurrentRegions = allCurrentRegions['results']
 
         # Map the input data structure so that it matches the required input for the Regions map

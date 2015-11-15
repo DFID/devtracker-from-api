@@ -146,18 +146,6 @@
                         </div>
                 </aside>
         </div>
-        <!--<div class="row">
-            <div class="six columns">
-                <div id="sector-breakdown" class="donut"></div>
-            </div>
-            <div class="six columns">
-                <div id="sector-legend">
-                    <ul class="legend-list">
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>-->
         <div class="row">
             <div class="twelve columns">
                 <div id="sectorChart"></div>
@@ -175,24 +163,6 @@
                         </div>
                 </aside>
         </div>
-        <!--<div id="budget-plan-spend-legend">
-            <div class="row">
-                <div class="six columns">
-                    <ul class="legend-list">
-                        <li><span class="theme-6 legend-color"></span>
-                            <div >Budget</div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="six columns">
-                    <ul class="legend-list">
-                        <li><span class="theme-1 legend-color" style='background-color:#2B6367'></span>
-                            <div >Spend</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>-->
         <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
 
     </div>
@@ -310,7 +280,8 @@
                             //count: 6,
                             format: function(d){ 
                                 yTicks.push(d3.format(".2s")(d)); 
-                                return "£" + d3.format(".2s")(d);} 
+                                return "£" + d3.format(".2s")(d);
+                            } 
                                 /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
                     }
