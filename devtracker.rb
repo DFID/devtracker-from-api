@@ -160,8 +160,95 @@ get '/countries/:country_code/results/?' do |n|
 end
 
 #####################################################################
+#  GLOBAL PAGES
+#####################################################################
+# Global all projects page
+get '/global' do
+	countryAllProjectFilters = get_static_filter_list()
+	region = {}
+	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
+	region[:code] = "NS,ZZ"
+	region[:name] = "All"
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=" + region[:code]
+	projects= JSON.parse(oipa_project_list)
+	getRegionProjects = get_region_projects(projects,region[:code])
+	erb :'regions/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		region: region,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+	 		actualStartDate: getRegionProjects['actualStartDate'],
+ 			plannedEndDate: getRegionProjects['plannedEndDate']
+		}
+end
+
+#Region Project List Page
+get '/global/:global_code/projects/?' do |n|
+	countryAllProjectFilters = get_static_filter_list()
+	region = {}
+	if n == 'ZZ'
+		region[:code] = "ZZ"
+		region[:name] = "Multilateral Organisation"
+	elsif n == 'NS'
+		region[:code] = "NS"
+		region[:name] = "Non Specific Country"
+	else
+		region[:code] = ""
+		region[:name] = "ALL"
+	end
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=#{n}"
+	projects= JSON.parse(oipa_project_list)
+	
+	getRegionProjects = get_region_projects(projects,n)
+	
+	erb :'regions/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		region: region,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+	 		actualStartDate: getRegionProjects['actualStartDate'],
+ 			plannedEndDate: getRegionProjects['plannedEndDate']
+		}	 			
+end
+
+#####################################################################
 #  REGION PAGES
 #####################################################################
+# Regions all projects page
+get '/regions' do
+	countryAllProjectFilters = get_static_filter_list()
+	region = {}
+	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
+	region[:code] = ""
+	region[:name] = "All"
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region="
+	projects= JSON.parse(oipa_project_list)
+	getRegionProjects = get_region_projects(projects,region[:code])
+	erb :'regions/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		region: region,
+	 		total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+	 		actualStartDate: getRegionProjects['actualStartDate'],
+ 			plannedEndDate: getRegionProjects['plannedEndDate']
+		}
+end
+
 # Region summary page
 get '/regions/:region_code/?' do |n|
     region = get_region_details(n)	
