@@ -160,7 +160,7 @@
                     window.CountryCode = '<%= country[:code] %>';
                 <% else %>
                     window.searchType = "R";
-                    window.RegionCode = '<%= region["code"] %>';
+                    window.RegionCode = '<%= region[:code] %>';
                 <% end %>
             });
         </script>
