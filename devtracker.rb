@@ -187,7 +187,7 @@ get '/global' do
 		}
 end
 
-#Region Project List Page
+#Global Project List Page
 get '/global/:global_code/projects/?' do |n|
 	countryAllProjectFilters = get_static_filter_list()
 	region = {}
