@@ -115,21 +115,20 @@
 
 <div class="row">
     <div class="six columns">
-            <div class="country-info-container">  
-                <span class="country-info">Sector groups as a percentage of country budget</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
-                <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                        The highest ranking sectors by project spend, consistent with the Development Assistance Committee's (DAC) classifications.
-                    </div>
-                </aside>
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <div id="sectorChart"></div>
+        <div class="country-info-container">  
+            <span class="country-info">Sector groups as a percentage of country budget</span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
+            <aside id="moreinfo2" class="more-info">            
+                <div class="more-info-content">
+                    The highest ranking sectors by project spend, consistent with the Development Assistance Committee's (DAC) classifications.
                 </div>
+            </aside>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <div id="sectorChart"></div>
             </div>
-         
+        </div>
     </div>
     <div class="six columns">
          <div class="country-info-container">  
@@ -141,8 +140,7 @@
                     </div>
             </aside>
          </div>
-        <div id="budget-year-chart" style="height: 250px;" class="standard">
-        </div>
+         <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
     </div>
 </div>
 
@@ -174,30 +172,28 @@
             tooltop: {
                 grouped: false
             },
+            padding: {left: 10, right: 10},
             axis: {
                 rotated: true,
                 x: {
-                    show: true
+                    show: false
                 },
                 y: {
-                    label: '%'
+                    label: '%',
+                    min: 0,
+                    max: 100,
+                    padding: {top: 0, bottom: 0}
                 }
             },
             bar: {
                 width: {
-                    ratio: .5
+                    ratio: .6
                 }
             },
-            grid: {
-                y: {
-                    lines: [{
-                        value: 0
-                    }]
-                }
-            },
+            
             tooltip: {
                 format: {
-                    title: function (x) { return '%' }
+                    title: function (x) { return 'Sector %' }
                 }
             }
         });
@@ -212,8 +208,11 @@
                 },
                 tooltip: {
                     format: {
-                        value: function(value){
+                        /*value: function(value){
                             return value;
+                        }*/
+                        value: function(value){
+                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }
                     }
                 },
@@ -240,8 +239,11 @@
                     },
                     y: {
                         tick: {
-                            count: 6,
-                            format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                            //count: 6,
+                            format: function(d){ 
+                                yTicks.push(d3.format(".2s")(d)); 
+                                return "£" + d3.format(".2s")(d);
+                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
                     }
                 },
@@ -257,7 +259,7 @@
             /* Generating the grid lines */
             for(i=0;i<tempString.length;i++){
                 yTicks = [];
-                chart.ygrids.add({value: tempString[i]});
+                //chart.ygrids.add({value: tempString[i]});
             }
         <%#end%>
     });

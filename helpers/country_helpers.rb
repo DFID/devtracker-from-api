@@ -61,6 +61,27 @@ module CountryHelpers
     end
   end
 
+  def get_top_5_countries()
+
+      firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+      lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+
+      countriesInfo = JSON.parse(File.read('data/countries.json'))
+
+      top5countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&page_size=5"
+      top5countries = JSON.parse(top5countriesJSON)
+
+      top5countriesBudget = top5countries["results"].map do |elem| 
+         {  
+            :code     => elem["recipient_country"]["code"],  
+            :name     => countriesInfo.find do |source|
+                           source["code"].to_s == elem["recipient_country"]["code"]
+                         end["name"],
+            :budget   => elem["budget"]                                                                                    
+         } 
+      end
+  end
+
   def get_country_code_name(countryCode)
       countriesInfo = JSON.parse(File.read('data/countries.json'))
       country = countriesInfo.select {|country| country['code'] == countryCode}.first

@@ -62,15 +62,12 @@ set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now
 get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
-
-	countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&order_by=-budget&page_size=5"
-  	top5countries = JSON.parse(countriesJSON)
-  	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+  	top5countries = get_top_5_countries()
  	erb :index,
  		:layout => :'layouts/layout', 
  		:locals => {
- 			top_5_countries: top5countries['results'], 
- 			what_we_do: high_level_sector_list( sectorValuesJSON, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			top_5_countries: top5countries, 
+ 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end
@@ -418,11 +415,10 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
-	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			high_level_sector_list: high_level_sector_list( sectorValuesJSON, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
 
@@ -466,7 +462,7 @@ get '/location/regional/?' do
 	erb :'location/regional/index', 
 		:layout => :'layouts/layout',
 		:locals => {
-			:dfid_regional_projects_data => dfid_regional_projects_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget")			
+			:dfid_regional_projects_data => dfid_regional_projects_data("region")			
 		}
 end
 
@@ -475,7 +471,7 @@ get '/location/global/?' do
 	erb :'location/global/index', 
 		:layout => :'layouts/layout',
 		:locals => {
-			:dfid_global_projects_data => dfid_regional_projects_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=count,budget&recipient_region=NS,ZZ")
+			:dfid_global_projects_data => dfid_regional_projects_data("global")
 		}
 end
 

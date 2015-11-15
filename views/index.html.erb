@@ -92,8 +92,8 @@ layout: landing
         <ol>
         <% top_5_countries.each do |country| %>
           <li>
-             <a href="/countries/<%= country['recipient_country']['code'] %>" class="truncate" title="<%= country['recipient_country']['name'] %>"> <%= country['recipient_country']['name'] %> </a>
-              <em><span class="visually-hidden">Budget</span><%= format_million_stg country['budget'] %></em>
+             <a href="/countries/<%= country[:code] %>" class="truncate" title="<%= country[:name] %>"> <%= country[:name] %> </a>
+              <em><span class="visually-hidden">Budget</span><%= format_million_stg country[:budget] %></em>
           </li>
         <% end %>
         </ol>
