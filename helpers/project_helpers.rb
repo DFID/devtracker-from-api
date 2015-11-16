@@ -106,7 +106,7 @@ module ProjectHelpers
         end        
     end
 
-    def get_funding_project_Details(projectId)
+    def get_funding_project(projectId)
         fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json" 
         fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
     end
@@ -297,6 +297,14 @@ module ProjectHelpers
 
     def is_dfid_project(projectCode)   
         projectCode[0, 5] == "GB-1-"
+    end
+
+    def is_valid_project(projectCode)
+        if projectCode.length > 4 && projectCode[0, 2] == "GB" then
+            return true
+        else
+            return false
+        end        
     end
 
     def choose_better_date(actual, planned)
