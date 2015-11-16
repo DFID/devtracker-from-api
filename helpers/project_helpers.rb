@@ -123,7 +123,7 @@ module ProjectHelpers
         if is_dfid_project(projectId) then
             implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
         else
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=2&id=#{projectId}&fields=participating_organisations"    
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
         end    
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         data=implementingOrgsDetails['results']
