@@ -1,9 +1,9 @@
 module FiltersHelper
 
 	def high_level_sector_list_filter(apiUrl)
-  		sectorValues  = JSON.parse(apiUrl)
+  		sectorValues  = Oj.load(apiUrl)
   		sectorValues  = sectorValues['results']
-  		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+  		highLevelSector = Oj.load(File.read('data/sectorHierarchies.json'))
 
 	    highLevelSectorHash = {}
 	    sectorValues.each do |result|

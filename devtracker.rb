@@ -9,7 +9,7 @@ require 'benchmark'
 require 'eventmachine'
 require 'em-synchrony'
 require "em-synchrony/em-http"
-#require 'oj'
+require 'oj'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -82,11 +82,18 @@ end
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-    country = get_country_details(n)
-    results = get_country_results(n)
-    countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
-	countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
-	
+	country = ''
+	results = ''
+	countryYearWiseBudgets = ''
+	countrySectorGraphData = ''
+	Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {
+	 		country = get_country_details(n)
+	 		results = get_country_results(n)
+    		countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
+	 	}
+	end
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -102,7 +109,7 @@ get '/countries/:country_code/projects/?' do |n|
 	projectData = ''
 	 Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
-	 end
+	end
 	#projectData = get_country_all_projects_data_para(n)
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
