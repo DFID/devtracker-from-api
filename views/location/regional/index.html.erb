@@ -50,7 +50,7 @@
 </div>
 <div class="row">
   <div class="twelve columns">
-  	<% dfid_complete_region_list.each do |region| %> 
+  	<% dfid_complete_region_list("Regional").each do |region| %> 
       <a href="/regions/<%=region['code']%>"><%= region['name'] %></a> | 
     <% end %>
   </div>

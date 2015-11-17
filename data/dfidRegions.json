@@ -8,7 +8,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"798",
@@ -19,7 +20,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"BL",
@@ -30,7 +32,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"CP",
@@ -41,7 +44,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"EA",
@@ -52,7 +56,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"ED",
@@ -63,7 +68,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0
+    "gdpGrowthRate":0.0,
+    "type":"Regional"
   },
   {
     "code":"EF",
@@ -74,7 +80,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"89",
@@ -85,7 +92,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"FA",
@@ -96,7 +104,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"IB",
@@ -107,7 +116,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0
+    "gdpGrowthRate":0.0,
+    "type":"Regional"
   },
   {
     "code":"LE",
@@ -118,7 +128,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"589",
@@ -129,7 +140,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"189",
@@ -140,7 +152,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"OT",
@@ -151,7 +164,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"SQ",
@@ -162,7 +176,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"289",
@@ -173,7 +188,8 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
   },
   {
     "code":"380",
@@ -184,6 +200,31 @@
     "incomeLevel":"",
     "belowPovertyLine":"",
     "fertilityRate":0.0,
-    "gdpGrowthRate":0.0    
+    "gdpGrowthRate":0.0,
+    "type":"Regional"    
+  },
+  {
+    "code":"ZZ",
+    "name":"Multilateral Organisation",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0,
+    "type":"Global"    
+  },
+  {
+    "code":"NS",
+    "name":"Non Specific Country",
+    "description":"",
+    "population":0,
+    "lifeExpectancy":0,
+    "incomeLevel":"",
+    "belowPovertyLine":"",
+    "fertilityRate":0.0,
+    "gdpGrowthRate":0.0,
+    "type":"Global"    
   }
 ]  

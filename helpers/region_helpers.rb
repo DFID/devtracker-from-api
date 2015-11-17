@@ -62,8 +62,8 @@ module RegionHelpers
             }
   end
 
-  def dfid_complete_region_list        
-        regionsList = JSON.parse(File.read('data/dfidRegions.json')).sort_by{ |k| k["region"]}    
+  def dfid_complete_region_list(regionType)        
+        regionsList = JSON.parse(File.read('data/dfidRegions.json')).select{|r| r["type"]==regionType}.sort_by{ |k| k["name"]}    
     end
 
     def dfid_regional_projects_data(regionType)
@@ -72,7 +72,7 @@ module RegionHelpers
         lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
 
         if (regionType=="region")
-            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget"
+            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region_not_in=NS,ZZ"
         else
             regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=NS,ZZ"
         end

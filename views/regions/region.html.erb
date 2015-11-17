@@ -79,7 +79,7 @@
                     <span><strong><%= region[:fertilityRate].to_f.round(2)%></strong></span>
                 </li>
             <% end %>
-             <% if region[:gdpGrowthRate] then %>
+            <% if region[:gdpGrowthRate] then %>
                 <li class="fact-item">
                     GDP growth rate (source: <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" rel="external">World Bank</a>):
                     <span><strong><%= region[:gdpGrowthRate].to_f.round(2)%>%</strong></span>
