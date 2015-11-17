@@ -57,7 +57,7 @@ module SearchHelper
 	end
 
 	def get_static_filter_list()
-		staticFilterList = JSON.parse(File.read('data/countryProjectsFilters.json'))
+		staticFilterList = Oj.load(File.read('data/countryProjectsFilters.json'))
 	end
 
 end
