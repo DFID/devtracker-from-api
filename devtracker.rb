@@ -5,7 +5,11 @@ require 'active_support'
 require 'kramdown'
 require 'pony'
 require 'money'
-#require 'oj'
+require 'benchmark'
+require 'eventmachine'
+require 'em-synchrony'
+require "em-synchrony/em-http"
+require 'oj'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -78,11 +82,18 @@ end
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-    country = get_country_details(n)
-    results = get_country_results(n)
-    countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
-	countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
-	
+	country = ''
+	results = ''
+	countryYearWiseBudgets = ''
+	countrySectorGraphData = ''
+	Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {
+	 		country = get_country_details(n)
+	 		results = get_country_results(n)
+    		countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
+	 	}
+	end
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -95,46 +106,25 @@ end
 
 #Country Project List Page
 get '/countries/:country_code/projects/?' do |n|
-	countryAllProjectFilters = get_static_filter_list()
-	country = get_country_code_name(n)
-	results = get_country_results(n)
-	
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_country=#{n}"
-	projects= JSON.parse(oipa_project_list)
-
-	sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{n}"
-	highLevelSectorList = high_level_sector_list_filter(sectorValuesJSON)
-	#projects = projects_list['results']
-	project_budget_higher_bound = 0
-	actualStartDate = '0000-00-00T00:00:00' 
-	plannedEndDate = '0000-00-00T00:00:00'
-	unless projects['results'][0].nil?
-		project_budget_higher_bound = projects['results'][0]['activity_aggregations']['total_child_budget_value']
+	projectData = ''
+	 Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
 	end
-	actualStartDate = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&ordering=actual_start_date"
-	actualStartDate = JSON.parse(actualStartDate)
-	unless actualStartDate['results'][0].nil? 
-		actualStartDate = actualStartDate['results'][0]['activity_dates'][1]['iso_date']
-	end
-	plannedEndDate = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&ordering=-planned_end_date"
-	plannedEndDate = JSON.parse(plannedEndDate)
-	unless plannedEndDate['results'][0].nil?
-		plannedEndDate = plannedEndDate['results'][0]['activity_dates'][2]['iso_date']
-	end
+	#projectData = get_country_all_projects_data_para(n)
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-	 		country: country,
-	 		total_projects: projects['count'],
-	 		projects: projects['results'],
-	 		results: results,
-	 		highLevelSectorList: highLevelSectorList,
-	 		budgetHigherBound: project_budget_higher_bound,
-	 		countryAllProjectFilters: countryAllProjectFilters,
-	 		actualStartDate: actualStartDate,
-	 		plannedEndDate: plannedEndDate
-	 		}
+	 		country: projectData['country'],
+	 		total_projects: projectData['projects']['count'],
+	 		projects: projectData['projects']['results'],
+	 		results: projectData['results'],
+	 		highLevelSectorList: projectData['highLevelSectorList'],
+	 		budgetHigherBound: projectData['project_budget_higher_bound'],
+	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+	 		actualStartDate: projectData['actualStartDate'],
+	 		plannedEndDate: projectData['plannedEndDate']
+	 	}
 		 			
 end
 
