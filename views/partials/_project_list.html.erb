@@ -158,6 +158,9 @@
                 <% if defined? country %>
                     window.searchType = "C";
                     window.CountryCode = '<%= country[:code] %>';
+                <% elsif defined? sectorData %>
+                    window.searchType = "S";
+                    window.SectorCode = '<%= sectorData["sectorCode"] %>';
                 <% else %>
                     window.searchType = "R";
                     window.RegionCode = '<%= region[:code] %>';

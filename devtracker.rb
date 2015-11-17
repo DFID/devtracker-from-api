@@ -442,6 +442,36 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
  		}		
 end
 
+# Sector All Projects Page (e.g. Five Digit DAC Sector)
+get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_code?' do
+	# Get the five digit DAC sector project data from the API
+	countryAllProjectFilters = get_static_filter_list()
+	sectorData = {}
+	sectorData['highLevelCode'] = params[:high_level_sector_code]
+	#sector['highLevelName'] = ''
+	sectorData['categoryCode'] = params[:category_code]
+	#sector['categoryName'] = ''
+	sectorData['sectorCode'] = params[:sector_code]
+	sectorData['sectorName'] = 'sector_name_goes_here'
+	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_sector=" + params[:sector_code]
+	projects= JSON.parse(oipa_project_list)
+	getSectorProjects = get_sector_projects(projects,sectorData['sectorCode'])
+
+  	erb :'sector/projects', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code]),
+ 			sectorData: sectorData,
+ 			total_projects: projects['count'],
+	 		projects: projects['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
+	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
+	 		actualStartDate: getSectorProjects['actualStartDate'],
+ 			plannedEndDate: getSectorProjects['plannedEndDate']
+ 		}		
+end
 
 #####################################################################
 #  COUNTRY REGION & GLOBAL PROJECT MAP PAGES
