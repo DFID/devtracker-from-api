@@ -252,6 +252,13 @@ $(document).ready(function() {
             }
             else{
                 var tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
+                /*var tmpStr = "";
+                if(typeof window.searchQuery !== 'undefined'){
+                    tmpStr = '<div class="search-result"><p style="padding-top:.33em">Your search - <em>'+window.searchQuery+'</em> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p><ul style="margin:0 0 2em;margin-left:1.3em"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul></div>';
+                }
+                else{
+                    tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
+                }*/
                 $('#showResults').append(tmpStr);
             }
             $.each(json.results,function(i,result){
