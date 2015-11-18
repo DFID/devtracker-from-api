@@ -109,8 +109,11 @@
 
         <input type="hidden" id="countryName" value="<%= countryOrRegion[:name] %>">
         <input type="hidden" id="countryCode" value="<%= countryOrRegion[:code] %>">
-        <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
-
+        <% if countryOrRegion[:code] == "NS" || countryOrRegion[:code] == "ZZ" %>
+            <input id="projectType" value="global" type="hidden">
+        <%else%>
+            <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
+        <%end%>
        
         <script src="/javascripts/regionBounds.js" type="text/javascript"></script>
         <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>

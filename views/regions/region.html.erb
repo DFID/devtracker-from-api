@@ -93,7 +93,11 @@
 
         <input type="hidden" id="countryName" value="<%=region[:name] %>">
         <input type="hidden" id="countryCode" value="<%=region[:code] %>">
-        <input type="hidden" id="projectType" value="region">
+        <% if region[:code] == "NS" || region[:code] == "ZZ" %>
+            <input id="projectType" value="global" type="hidden">
+        <%else%>
+            <input type="hidden" id="projectType" value="region">
+        <%end%>
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
         </div>
