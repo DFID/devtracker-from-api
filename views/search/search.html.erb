@@ -42,186 +42,195 @@
     <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="/javascripts/formatDate.js"></script>
     <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
-    <div class="row project-results">
-        <div class="nine columns push-three" id="search-results">
-            <div class="row">
-                <div class="five columns">
-                    <b>Sort results by:</b>
-                    &nbsp;
-                    Title
-                    <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
-                    &nbsp;
-                    Budget
-                    <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▲</span>
-                    <input type="hidden" id="sort_results_type" value=""  />
+    <% if project_count != 0 %>
+        <div class="row project-results">
+            <div class="nine columns push-three" id="search-results">
+                <div class="row">
+                    <div class="five columns">
+                        <b>Sort results by:</b>
+                        &nbsp;
+                        Title
+                        <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
+                        &nbsp;
+                        Budget
+                        <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▲</span>
+                        <input type="hidden" id="sort_results_type" value=""  />
+                    </div>
+                    <div class="seven columns">
+                        <div id="light-pagination"></div>
+                    </div>
                 </div>
-                <div class="seven columns">
-                    <div id="light-pagination"></div>
+                <div class="modal">
+                    <div>Loading Data <br /> Please Wait</div>
                 </div>
-            </div>
-            <div class="modal">
-                <div>Loading Data <br /> Please Wait</div>
-            </div>
-            <div>
-                <% if !dfidCountryBudgets.empty? %>
-                    <% dfidCountryBudgets.each do |results| %>
-                        <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                            <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                            <p></p>
-                            <h3><em><%= results[1][1]%></em></h3>
-                            Budget: <em><%= results[1][0]%></em>
-                            <p></p>
-                        </div>
-                    <%end%>
-                <%end%>
-                <% if !dfidRegionBudgets.empty? %>
-                    <% dfidRegionBudgets.each do |results| %>
-                        <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                            <p>Did you mean the <em>region <a href="/regions/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                            <p></p>
-                            <h3><em><%= results[1][1]%></em></h3>
-                            Budget: <em><%= results[1][0]%></em>
-                            <p></p>
-                        </div>
-                    <%end%>
-                <%end%>
-            </div>
-            <div id="showResults">
                 <div>
-                    Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
-                    <% else %>
-                    <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
+                    <% if !dfidCountryBudgets.empty? %>
+                        <% dfidCountryBudgets.each do |results| %>
+                            <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
+                                <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                <p></p>
+                                <h3><em><%= results[1][1]%></em></h3>
+                                Budget: <em><%= results[1][0]%></em>
+                                <p></p>
+                            </div>
+                        <%end%>
+                    <%end%>
+                    <% if !dfidRegionBudgets.empty? %>
+                        <% dfidRegionBudgets.each do |results| %>
+                            <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
+                                <p>Did you mean the <em>region <a href="/regions/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                <p></p>
+                                <h3><em><%= results[1][1]%></em></h3>
+                                Budget: <em><%= results[1][0]%></em>
+                                <p></p>
+                            </div>
+                        <%end%>
                     <%end%>
                 </div>
-                <% projects.each do |project| %>
-                <div class="search-result">
-                    <h3>    
-                        <%unless project['iati_identifier'].nil? %>
-                            <a href="/projects/<%= project['iati_identifier'] %>">
-                            <%unless project['title']['narratives'].nil? %>
-                                <%unless project['title']['narratives'][0]['text'].nil? %>
-                                    <%=project['title']['narratives'][0]['text']%>
+                <div id="showResults">
+                    <div>
+                        Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
+                        <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                        <% else %>
+                        <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
+                        <%end%>
+                    </div>
+                    <% projects.each do |project| %>
+                    <div class="search-result">
+                        <h3>    
+                            <%unless project['iati_identifier'].nil? %>
+                                <a href="/projects/<%= project['iati_identifier'] %>">
+                                <%unless project['title']['narratives'].nil? %>
+                                    <%unless project['title']['narratives'][0]['text'].nil? %>
+                                        <%=project['title']['narratives'][0]['text']%>
+                                    <%end%>
+                                <%end%>
+                                <small>[<%= project['iati_identifier']%>]</small>
+                                </a>
+                            <%end%>
+                        </h3>
+                        <%unless project['activity_aggregations']['total_child_budget_value'].nil? %>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span><%end%>
+                        <%unless project['activity_status']['name'].nil? %>
+                        <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                        <%end%>
+                        <span>Reporting Org: <em>
+                            <%unless project['reporting_organisations'].empty? %>
+                                <%unless project['reporting_organisations'][0]['narratives'].empty? %>
+                                    <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
                                 <%end%>
                             <%end%>
-                            <small>[<%= project['iati_identifier']%>]</small>
-                            </a>
-                        <%end%>
-                    </h3>
-                    <%unless project['activity_aggregations']['total_child_budget_value'].nil? %>
-                    <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span><%end%>
-                    <%unless project['activity_status']['name'].nil? %>
-                    <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <%end%>
-                    <span>Reporting Org: <em>
-                        <%unless project['reporting_organisations'].empty? %>
-                            <%unless project['reporting_organisations'][0]['narratives'].empty? %>
-                                <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                        </em></span>
+                        <p class="description">
+                            <%unless project['description'].empty? %>
+                                <%unless project['description'][0]['narratives'].empty? %>
+                                    <%= project['description'][0]['narratives'][0]['text'] %>
+                                <%end%>
                             <%end%>
-                        <%end%>
-                    </em></span>
-                    <p class="description">
-                        <%unless project['description'].empty? %>
-                            <%unless project['description'][0]['narratives'].empty? %>
-                                <%= project['description'][0]['narratives'][0]['text'] %>
-                            <%end%>
-                        <%end%>
-                    </p>
+                        </p>
+                    </div>
+                    <% end %>
                 </div>
-                <% end %>
             </div>
-        </div>
-        <div class="three columns pull-nine">
-            <div id="filter">
-                <h2 class="visually-hidden">Results Filter</h2>
-                <div name="status">
-                    <div class="proj-filter-exp-collapse-sign">+</div>
-                    <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                        <h3>Status</h3>
-                    </span>
-                    <ul style="display: none">
-                        <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                        <li>
-                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                            <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
-                            </label>
-                        </li>
-                        <% end %>
-                    </ul>
-                    <input type="hidden" id="activity_status_states" value="1,2,3,4,5"  />
-                </div>
-                <div name="locations" style="display: none">
-                    <h3>Locations</h3>
-                    <div style="margin-left:20px;" name="countries">
+            <div class="three columns pull-nine">
+                <div id="filter">
+                    <h2 class="visually-hidden">Results Filter</h2>
+                    <div name="status">
                         <div class="proj-filter-exp-collapse-sign">+</div>
                         <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h4>Countries</h4>
+                            <h3>Status</h3>
                         </span>
-                    </div>
-                    <div style="margin-left:20px;" name="regions">
-                        <div class="proj-filter-exp-collapse-sign">+</div>
-                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h4>Regions</h4>
-                        </span>
-                    </div>
-                </div>
-                <div name="sectors">
-                    <div class="proj-filter-exp-collapse-sign">+</div>
-                    <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                        <h3>Sectors</h3>
-                    </span>
-                    <ul style="display: none">
-                        <% highLevelSectorList.each do |highLevelSectorName| %>
+                        <ul style="display: none">
+                            <% countryAllProjectFilters["activity_status"].each do |statuses| %>
                             <li>
-                                <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
-                                    <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
                                 </label>
                             </li>
-                        <%end%>
-                    </ul>
-                    <input type="hidden" id="selected_sectors" value=""  />
+                            <% end %>
+                        </ul>
+                        <input type="hidden" id="activity_status_states" value="1,2,3,4,5"  />
+                    </div>
+                    <div name="locations" style="display: none">
+                        <h3>Locations</h3>
+                        <div style="margin-left:20px;" name="countries">
+                            <div class="proj-filter-exp-collapse-sign">+</div>
+                            <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                                <h4>Countries</h4>
+                            </span>
+                        </div>
+                        <div style="margin-left:20px;" name="regions">
+                            <div class="proj-filter-exp-collapse-sign">+</div>
+                            <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                                <h4>Regions</h4>
+                            </span>
+                        </div>
+                    </div>
+                    <div name="sectors">
+                        <div class="proj-filter-exp-collapse-sign">+</div>
+                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                            <h3>Sectors</h3>
+                        </span>
+                        <ul style="display: none">
+                            <% highLevelSectorList.each do |highLevelSectorName| %>
+                                <li>
+                                    <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
+                                        <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                    </label>
+                                </li>
+                            <%end%>
+                        </ul>
+                        <input type="hidden" id="selected_sectors" value=""  />
+                    </div>
+                    <div name="organizations" style="display: none">
+                        <div class="proj-filter-exp-collapse-sign">+</div>
+                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                            <h3>Organisations</h3>
+                        </span>
+                    </div>
+                    <div name="documents" style="display: none">
+                        <div class="proj-filter-exp-collapse-sign">+</div>
+                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                            <h3>Document Type</h3>
+                        </span>
+                    </div>
+                    <div name="budget">
+                        <h3>Budget Value</h3>
+                        <input type="hidden" id="budget_lower_bound" value=""  />
+                        <input type="hidden" id="budget_higher_bound" value=""  />
+                    </div>
+                    <span id="amount" style="border: 0; font-weight: bold"></span>
+                    <div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
+                    <div name="date" style="margin-top: 20px">
+                        <h3>Start and end date</h3>
+                        <input type="hidden" id="date_lower_bound" value=""  />
+                        <input type="hidden" id="date_higher_bound" value=""  />
+                    </div>
+                    <span id="date-range" style="border: 0; font-weight: bold"></span>
+                    <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
                 </div>
-                <div name="organizations" style="display: none">
-                    <div class="proj-filter-exp-collapse-sign">+</div>
-                    <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                        <h3>Organisations</h3>
-                    </span>
-                </div>
-                <div name="documents" style="display: none">
-                    <div class="proj-filter-exp-collapse-sign">+</div>
-                    <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                        <h3>Document Type</h3>
-                    </span>
-                </div>
-                <div name="budget">
-                    <h3>Budget Value</h3>
-                    <input type="hidden" id="budget_lower_bound" value=""  />
-                    <input type="hidden" id="budget_higher_bound" value=""  />
-                </div>
-                <span id="amount" style="border: 0; font-weight: bold"></span>
-                <div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
-                <div name="date" style="margin-top: 20px">
-                    <h3>Start and end date</h3>
-                    <input type="hidden" id="date_lower_bound" value=""  />
-                    <input type="hidden" id="date_higher_bound" value=""  />
-                </div>
-                <span id="date-range" style="border: 0; font-weight: bold"></span>
-                <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
+            </div>
+            <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
+            <script type='text/javascript'>
+                $(document).ready(function() {
+                    window.oipaApiUrl = "<%= oipa_api_url %>";
+                    window.project_count = "<%= project_count %>";
+                    window.searchQuery = "<%= query %>";
+                    window.searchType = "F";
+                    window.maxBudget = <%= budgetHigherBound %>;
+                    window.StartDate = '<%= countryAllProjectFilters["budget_date_range"]["start_date"] %>';
+                    window.EndDate = '<%= countryAllProjectFilters["budget_date_range"]["end_date"] %>';
+                });
+            </script>
+            <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
+        </div>
+    <%else%>
+        <div class="row">
+            <div class="twelve columns">
+                <div class="search-result nine columns push-three"><p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p><ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul></div>
+                <div class="three columns pull-nine"></div>
             </div>
         </div>
-        <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
-        <script type='text/javascript'>
-            $(document).ready(function() {
-                window.oipaApiUrl = "<%= oipa_api_url %>";
-                window.project_count = "<%= project_count %>";
-                window.searchQuery = "<%= query %>";
-                window.searchType = "F";
-                window.maxBudget = <%= budgetHigherBound %>;
-                window.StartDate = '<%= countryAllProjectFilters["budget_date_range"]["start_date"] %>';
-                window.EndDate = '<%= countryAllProjectFilters["budget_date_range"]["end_date"] %>';
-            });
-        </script>
-        <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
-    </div>
+    <%end%>
 </div>
 
