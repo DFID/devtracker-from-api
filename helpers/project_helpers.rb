@@ -128,7 +128,7 @@ module ProjectHelpers
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         data=implementingOrgsDetails['results']
 
-        implementingOrg = data.collect{ |activity| activity['participating_organisations'][0]}.uniq.compact
+        implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
         implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
     end
 
