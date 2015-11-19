@@ -1,11 +1,11 @@
 #countryMap img, object, embed { max-width: none; }
-#map.static-background svg { height: 100%; width: 100%;}
+#map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
 #countryMap {
     height : 480px;
 }
 #map {
     width: 100%; 
-    height: 500px;
+    height: 545px;
 }
 
 .static-background {
