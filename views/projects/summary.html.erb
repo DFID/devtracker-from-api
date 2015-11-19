@@ -76,11 +76,11 @@
 
             <div id="implementing-organisations">
                 <ul>
-                    <% implementingOrgs.sort{ |a,b| a['narratives'][0]['text']  <=> b['narratives'][0]['text'] }.each do |implementingOrg| %>
+                    <% implementingOrgs.each {|implementingOrg| %>
                     <li>
-                       <%= implementingOrg['narratives'][0]['text'] %>
+                       <%= implementingOrg %>
                     </li>
-                    <% end %>
+                    <% } %>
                 </ul>
             </div>
         <% end %>

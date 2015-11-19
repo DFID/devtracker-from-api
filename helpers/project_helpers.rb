@@ -72,13 +72,16 @@ module ProjectHelpers
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         
-        oipaCountryProjectValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
-        projectValues = JSON.parse(oipaCountryProjectValuesJSON)
-        projectValues = projectValues['results']
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+        projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
+        projectBudgetValues = projectBudgetValues['results']
+        #oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count&order_by=recipient_country"
+        #projectCountValues = JSON.parse(oipaCountryProjectValuesJSON)
+        #projectCountValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
         # Map the input data structure so that it matches the required input for Tilestream
-        projectValuesMapInput = projectValues.map do |elem|
+        projectValuesMapInput = projectBudgetValues.map do |elem|
         {
             elem["recipient_country"]["code"] => {
                  "country" => countriesList.find do |source|
@@ -126,24 +129,18 @@ module ProjectHelpers
             implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
         end    
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
-        data=implementingOrgsDetails['results']
+        implementingOrg=implementingOrgsDetails['results']
 
-        implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
-        implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
-    end
+        #implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
+        #implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
 
-    def get_implementing_orgs_as_label(projectId)
-        implementingOrgs=get_implementing_orgs(projectId)
-
-        if (implementingOrgs.length>0) then
-            implementingOrgsLabel = []
-            implementingOrgs.map do |c|
-                implementingOrgsLabel << c['type']['name']
+        implementingOrgsList = []
+        implementingOrg.each do |impOrg|
+            impOrg["participating_organisations"].select{|imp| imp["role"]["code"]=="4" }.each do |i|
+                implementingOrgsList << i["narratives"][0]["text"]
             end
-            label = implementingOrgsLabel.sort.join(", ")
-        else
-            label=""
         end
+        implementingOrgsList = implementingOrgsList.uniq.sort
     end
 
     def get_project_sector_graph_data(projectId)
