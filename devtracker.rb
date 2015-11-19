@@ -42,10 +42,10 @@ include InputSanitizer
 include RegionHelpers
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -420,17 +420,15 @@ get '/sector/:high_level_sector_code/projects/?' do
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
 	sectorData['sectorName'] = ""
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_sector=" + sectorData['sectorCode']
-	projects= JSON.parse(oipa_project_list)
-	getSectorProjects = get_sector_projects(projects,sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category"),
  			sectorData: sectorData,
- 			total_projects: projects['count'],
-	 		projects: projects['results'],
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
@@ -461,17 +459,15 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
 	sectorData['sectorName'] = ""
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_sector=" + sectorData['sectorCode']
-	projects= JSON.parse(oipa_project_list)
-	getSectorProjects = get_sector_projects(projects,sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code]),
  			sectorData: sectorData,
- 			total_projects: projects['count'],
-	 		projects: projects['results'],
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
@@ -490,9 +486,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['sectorCode'] = params[:sector_code]
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
 	sectorData['sectorName'] = sectorJsonData["Name"]
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_sector=" + params[:sector_code]
-	projects= JSON.parse(oipa_project_list)
-	getSectorProjects = get_sector_projects(projects,sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
 
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
@@ -500,8 +494,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code]),
  			sectorData: sectorData,
- 			total_projects: projects['count'],
-	 		projects: projects['results'],
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],

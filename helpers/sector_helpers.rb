@@ -149,7 +149,9 @@ module SectorHelpers
     			}	  			
 	 end
 
-	def get_sector_projects(projects,n)
+	def get_sector_projects(n)
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_sector=#{n}"
+		projects= JSON.parse(oipa_project_list)
 		results = {}
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_sector=#{n}"
 		results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
@@ -174,6 +176,7 @@ module SectorHelpers
 				results['plannedEndDate'] = '2050-12-31T00:00:00'
 			end
 		end
+		results['projects'] = projects
 		return results
 	end
 end
