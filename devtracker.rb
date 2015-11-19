@@ -156,16 +156,14 @@ get '/global' do
 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
 	region[:code] = "NS,ZZ"
 	region[:name] = "All"
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=" + region[:code]
-	projects= JSON.parse(oipa_project_list)
-	getRegionProjects = get_region_projects(projects,region[:code])
+	getRegionProjects = get_region_projects(region[:code])
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		region: region,
-	 		total_projects: projects['count'],
-	 		projects: projects['results'],
+	 		total_projects: getRegionProjects['projects']['count'],
+	 		projects: getRegionProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
@@ -188,18 +186,14 @@ get '/global/:global_code/projects/?' do |n|
 		region[:code] = ""
 		region[:name] = "ALL"
 	end
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=#{n}"
-	projects= JSON.parse(oipa_project_list)
-	
-	getRegionProjects = get_region_projects(projects,n)
-	
+	getRegionProjects = get_region_projects(region[:code])
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		region: region,
-	 		total_projects: projects['count'],
-	 		projects: projects['results'],
+	 		total_projects: getRegionProjects['projects']['count'],
+	 		projects: getRegionProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
@@ -218,16 +212,14 @@ get '/regions' do
 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
 	region[:code] = ""
 	region[:name] = "All"
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region="
-	projects= JSON.parse(oipa_project_list)
-	getRegionProjects = get_region_projects(projects,region[:code])
+	getRegionProjects = get_region_projects(region[:code])
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		region: region,
-	 		total_projects: projects['count'],
-	 		projects: projects['results'],
+	 		total_projects: getRegionProjects['projects']['count'],
+	 		projects: getRegionProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
@@ -256,19 +248,14 @@ end
 get '/regions/:region_code/projects/?' do |n|
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
-
-	oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_region=#{n}"
-	projects= JSON.parse(oipa_project_list)
-	
-	getRegionProjects = get_region_projects(projects,n)
-	
+	getRegionProjects = get_region_projects(n)
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		region: region,
-	 		total_projects: projects['count'],
-	 		projects: projects['results'],
+	 		total_projects: getRegionProjects['projects']['count'],
+	 		projects: getRegionProjects['projects']['results'],
 	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
