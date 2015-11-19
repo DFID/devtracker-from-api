@@ -37,6 +37,7 @@
                  <h3 class="section-group-title">Funded Projects</h3>
               <%end%>
                 <% fundedProjects.each do |fundedProject| %>
+                  <%# implementingOrgs=get_implementing_orgs(fundedProject['id']) %>
                   <div class="row">
                       <div class="four columns summary">
                           <h4><%= if fundedProject['reporting_organisations'][0]['narratives'].length==0 then '' else fundedProject['reporting_organisations'][0]['narratives'][0]['text'] end %></h4>
@@ -47,6 +48,7 @@
                              <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
                                <%=fundedProject['description'][0]['narratives'][0]['text'] %>
                                <span><%= Money.new(fundedProject['activity_aggregations']['total_incoming_funds_value'].to_f.round(0)*100,fundedProject['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                               <span><%= get_implementing_orgs_as_label(fundedProject['id'])%></span>
                              </li>
                           </ul> 
                       </div>

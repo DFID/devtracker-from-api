@@ -132,6 +132,20 @@ module ProjectHelpers
         implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
     end
 
+    def get_implementing_orgs_as_label(projectId)
+        implementingOrgs=get_implementing_orgs(projectId)
+
+        if (implementingOrgs.length>0) then
+            implementingOrgsLabel = []
+            implementingOrgs.map do |c|
+                implementingOrgsLabel << c['type']['name']
+            end
+            label = implementingOrgsLabel.sort.join(", ")
+        else
+            label=""
+        end
+    end
+
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
             projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000"
