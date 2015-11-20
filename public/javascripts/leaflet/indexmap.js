@@ -165,11 +165,11 @@
     // creates a tile layer with the tiles hosted in mapbox
 
     L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
-    attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-    subdomains: '0123',
-    minZoom: 2,
-    maxZoom: 4
-}).addTo(map);
+        attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+        subdomains: '0123',
+        minZoom: 2,
+        maxZoom: 4
+    }).addTo(map);
     // L.tileLayer("http://devtracker.dfid.gov.uk/v2/dfid/{z}/{x}/{y}.png", {
     //                         minZoom: 2,
     //                         maxZoom: 4,
