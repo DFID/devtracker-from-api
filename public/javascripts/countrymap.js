@@ -52,6 +52,19 @@
                               maxZoom: 19,
                               attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
                              });
+    
+    var mqTilesAttr = 'Tiles &copy; <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />';
+    var mapQuestOSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png', {
+        options: {
+            subdomains: '1234',
+            type: 'osm',
+            attribution: 'Map data ' + L.TileLayer.OSM_ATTR + ', ' + mqTilesAttr
+        }
+    });
+
+    var cartoDB = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    });
 
 
     if (projectType == "global") {
@@ -59,7 +72,7 @@
         map = new L.Map('countryMap', {
             center: new L.LatLng(7.79,21.28), 
             zoom: 1,
-            layers: [osmHOT]
+            layers: [cartoDB]
         });
 
         //map.addLayer(new L.Google('ROADMAP'));
@@ -69,7 +82,7 @@
         map = new L.Map('countryMap', {
             center: new L.LatLng(countryBounds[countryCode][0], countryBounds[countryCode][1]), 
             zoom: countryBounds[countryCode][2] || 6,
-            layers: [osmHOT]
+            layers: [cartoDB]
         });
         //map.addLayer(new L.Google('ROADMAP'));
 
@@ -82,7 +95,7 @@
 
         map = new L.Map('countryMap',
             {
-                layers: [osmHOT]
+                layers: [cartoDB]
             });
         //map.addLayer(new L.Google('ROADMAP'))
         map.fitBounds(boundary);
