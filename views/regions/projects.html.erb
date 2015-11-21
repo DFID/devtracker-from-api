@@ -6,7 +6,11 @@
             <div class="breadcrumb">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/location/regional/">Aid by Location</a></li>
+                    <% if region[:type] == "Regional" then %>
+                    <li><a href="/location/regional">Aid by Location</a></li>
+                    <% else %>
+                    <li><a href="/location/global">Aid by Location</a></li>
+                    <% end %>
                     <li><%= region[:name] %></li>
                 </ul>
             </div>
