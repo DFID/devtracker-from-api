@@ -49,6 +49,7 @@ module RegionHelpers
             :name => region['name'],
             :description => region['description'],
             :type => region['type'],
+            :url => region['url'],
             :totalProjects => totalProjectsDetails['count'],
             :totalActiveProjects => totalActiveProjects,
             :regionBudget => regionBudget,
