@@ -3,120 +3,154 @@
     "code":"298",
     "name":"Africa",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Africa-regional-298.xml"   
   },
   {
     "code":"798",
     "name":"Asia",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Asia-regional-798.xml"    
+  },
+  {
+    "code":"AB",
+    "name":"Asia Regional Poverty Fund",
+    "description":"",
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Asia-regional-Poverty-Fund-AB.xml"    
   },
   {
     "code":"BL",
     "name":"Balkan Regional",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Balkan-Regional-BL.xml"    
   },
   {
     "code":"CP",
     "name":"Central Africa Regional",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Central-Africa-Regional-CP.xml"   
   },
   {
     "code":"EA",
     "name":"East Africa",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-East-Africa-EA.xml"    
   },
   {
     "code":"ED",
     "name":"East Europe Regional",
     "description":"",
-    "type":"Regional"
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-East-Europe-Regional-ED.xml"
   },
   {
     "code":"EF",
     "name":"EECAD Regional",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-EECAD-Regional-EF.xml"    
   },
   {
     "code":"89",
     "name":"Europe",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Europe-regional-89.xml"    
   },
   {
     "code":"FA",
     "name":"Francophone Africa",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Francophone-Africa-FA.xml"   
   },
   {
     "code":"IB",
     "name":"Indian Ocean Asia Regional",
     "description":"",
-    "type":"Regional"
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Indian-Ocean-Asia-Regional-IB.xml"
   },
   {
     "code":"LE",
     "name":"Latin America Regional",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Latin-America-Regional-LE.xml"    
   },
   {
     "code":"589",
     "name":"Middle East",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Middle-East-regional-589.xml"  
   },
   {
     "code":"189",
     "name":"North of Sahara",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-North-of-Sahara-regional-189.xml"    
   },
   {
     "code":"OT",
     "name":"Overseas Territories",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Overseas-Territories-OT.xml" 
   },
   {
     "code":"SQ",
     "name":"South East Asia",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-South-East-Asia-SQ.xml"   
   },
   {
     "code":"289",
     "name":"South of Sahara",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-South-of-Sahara-regional-289.xml"    
   },
   {
     "code":"380",
     "name":"West Indies",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional" ,
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-West-Indies-regional-380.xml"   
   },
   {
     "code":"ZZ",
     "name":"Multilateral Organisation",
     "description":"",
-    "type":"Global"    
+    "type":"Global",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Multilateral-Organisation-ZZ.xml"   
   },
   {
     "code":"NS",
     "name":"Non Specific Country",
     "description":"",
-    "type":"Global"    
+    "type":"Global",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Non-Specific-Country-NS-1.xml"   
   },
-    {
+  {
     "code":"SF",
     "name":"Sahel",
     "description":"",
-    "type":"Regional"    
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Sahel-SF.xml"  
+  },
+  {
+    "code":"XA",
+    "name":"Southern Africa Development Cooperation Committee",
+    "description":"",
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Non_Iati_Region/DFID-Sthrn-Af-Dev-Coord-Ctte-XA.xml"   
   }
 ]  
