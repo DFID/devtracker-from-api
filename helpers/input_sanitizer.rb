@@ -7,6 +7,12 @@ module InputSanitizer
 		when "a"
 			#Handles the free text search inputs
 			return string.gsub(/[^a-zA-Z0-9\s_\/\-]/,'')
+		when "t"
+			#Handles the telephone number inputs
+			return string.gsub(/[^0-9+\s]/,'')
+		when "p"
+			#Handles the telephone number inputs
+			return string.gsub(/[^A-Z0-9\s\-]/,'')
 		else
 			#anything other than those specified will act similar to the case 'a' by default
 			return string.gsub(/[^a-zA-Z0-9\s_\/\-]/,'')
