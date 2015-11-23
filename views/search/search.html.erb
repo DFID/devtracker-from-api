@@ -227,8 +227,8 @@
                     window.searchQuery = "<%= query %>";
                     window.searchType = "F";
                     window.maxBudget = <%= budgetHigherBound %>;
-                    window.StartDate = '<%= countryAllProjectFilters["budget_date_range"]["start_date"] %>';
-                    window.EndDate = '<%= countryAllProjectFilters["budget_date_range"]["end_date"] %>';
+                    window.StartDate = '<%= actualStartDate %>';
+                    window.EndDate = '<%= plannedEndDate %>';
                 });
             </script>
             <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>

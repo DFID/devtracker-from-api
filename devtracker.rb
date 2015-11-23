@@ -556,7 +556,9 @@ get '/search/?' do
 		budgetHigherBound: results['project_budget_higher_bound'],
 		highLevelSectorList: results['highLevelSectorList'],
 		dfidCountryBudgets: results['dfidCountryBudgets'],
-		dfidRegionBudgets: results['dfidRegionBudgets']
+		dfidRegionBudgets: results['dfidRegionBudgets'],
+		actualStartDate: results['actualStartDate'],
+ 		plannedEndDate: results['plannedEndDate']
 	}
 end
 
