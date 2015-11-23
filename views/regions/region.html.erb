@@ -121,7 +121,7 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Download IATI Data for <%= region[:name]%>: <a href="http://iati.dfid.gov.uk/iati_files/region/DFID-<%= region[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= region['code']%>.xml" class="api-link button">XML</a></p>
+        <p>Download IATI Data for <%= region[:name]%>: <a href="<%= region[:url]%>" class="api-link button">XML</a></p>
     </div>
 </div>
 
