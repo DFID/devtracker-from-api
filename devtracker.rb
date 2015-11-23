@@ -82,6 +82,7 @@ end
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
+	n = sanitize_input(n,"p")
 	country = ''
 	results = ''
 	countryYearWiseBudgets = ''
@@ -106,6 +107,7 @@ end
 
 #Country Project List Page
 get '/countries/:country_code/projects/?' do |n|
+	n = sanitize_input(n,"p")
 	projectData = ''
 	 Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
@@ -130,6 +132,7 @@ end
 
 #Country Results Page
 get '/countries/:country_code/results/?' do |n|		
+	n = sanitize_input(n,"p")
 	country = get_country_code_name(n)
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
@@ -174,6 +177,7 @@ end
 
 #Global Project List Page
 get '/global/:global_code/projects/?' do |n|
+	n = sanitize_input(n,"p")
 	countryAllProjectFilters = get_static_filter_list()
 	region = {}
 	if n == 'ZZ'
@@ -230,6 +234,7 @@ end
 
 # Region summary page
 get '/regions/:region_code/?' do |n|
+	n = sanitize_input(n,"p")
     region = get_region_details(n)	
 	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter")
 	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
@@ -246,6 +251,7 @@ end
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
+	n = sanitize_input(n,"p")
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
 	getRegionProjects = get_region_projects(n)
@@ -270,6 +276,7 @@ end
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
+	n = sanitize_input(n,"p")
 	# get the project data from the API
   	project = get_h1_project_details(n)
 
@@ -302,6 +309,7 @@ end
 
 # Project documents page
 get '/projects/:proj_id/documents/?' do |n|
+	n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
 
@@ -326,6 +334,7 @@ end
 
 #Project transactions page
 get '/projects/:proj_id/transactions/?' do |n|
+	n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
 		
@@ -359,6 +368,7 @@ end
 #Project partners page
 get '/projects/:proj_id/partners/?' do |n|
 	# get the project data from the API
+	n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
@@ -405,7 +415,7 @@ get '/sector/:high_level_sector_code/?' do
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category")
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
  		}		
 end
 
@@ -413,7 +423,7 @@ end
 get '/sector/:high_level_sector_code/projects/?' do
 	countryAllProjectFilters = get_static_filter_list()
 	sectorData = {}
-	sectorData['highLevelCode'] = params[:high_level_sector_code]
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
 	sectorData['sectorCode'] = ""
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
 	sectorJsonData.each do |sdata|
@@ -425,7 +435,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", params[:high_level_sector_code], "category"),
+ 			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
  			sectorData: sectorData,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
@@ -443,7 +453,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code])
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
 
@@ -451,9 +461,9 @@ end
 get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	countryAllProjectFilters = get_static_filter_list()
 	sectorData = {}
-	sectorData['highLevelCode'] = params[:high_level_sector_code]
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
 	sectorData['sectorCode'] = ""
-	sectorData['categoryCode'] = params[:category_code]
+	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
 	sectorJsonData.each do |sdata|
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
@@ -464,7 +474,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code]),
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  			sectorData: sectorData,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
@@ -481,9 +491,9 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	# Get the five digit DAC sector project data from the API
 	countryAllProjectFilters = get_static_filter_list()
 	sectorData = {}
-	sectorData['highLevelCode'] = params[:high_level_sector_code]
-	sectorData['categoryCode'] = params[:category_code]
-	sectorData['sectorCode'] = params[:sector_code]
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
+	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
+	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
 	sectorData['sectorName'] = sectorJsonData["Name"]
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
@@ -492,7 +502,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", params[:high_level_sector_code], params[:category_code]),
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  			sectorData: sectorData,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
@@ -590,7 +600,7 @@ post '/feedback/index' do
 	:from => "devtracker-feedback@dfid.gov.uk",
     :to => "devtracker-feedback@dfid.gov.uk",
     :subject => "DevTracker Feedback",
-    :body => "<p>" + params[:email] + "</p><p>" + params[:name] + "</p><p>" + params[:description] + "</p>",
+    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
     :via => :smtp,
     :via_options => {
      :address              => '127.0.0.1',
@@ -605,11 +615,17 @@ get '/fraud/?' do
 end  
 
 post '/fraud/index' do
+	country = sanitize_input(params[:country],"a")
+	project = sanitize_input(params[:project],"a")
+	description = sanitize_input(params[:description],"a")
+	name = sanitize_input(params[:name],"a")
+	email = sanitize_input(params[:email],"e")
+	telno = sanitize_input(params[:telno],"t")
  Pony.mail({
 	:from => "devtracker-feedback@dfid.gov.uk",
     :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => params[:country] + " " + params[:project],
-    :body => "<p>" + params[:country] + "</p>" + "<p>" + params[:project] + "</p>" + "<p>" + params[:description] + "</p>" + "<p>" + params[:name] + "</p>" + "<p>" + params[:email] + "</p>" + "<p>" + params[:telno] + "</p>",
+    :subject => country + " " + project,
+    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
     :via => :smtp,
     :via_options => {
      :address              => '127.0.0.1',
