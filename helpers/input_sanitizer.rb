@@ -11,7 +11,7 @@ module InputSanitizer
 			#Handles the telephone number inputs
 			return string.gsub(/[^0-9+\s]/,'')
 		when "p"
-			#Handles the telephone number inputs
+			#Handles the country codes, region codes and project IDs
 			return string.gsub(/[^A-Z0-9\s\-]/,'')
 		else
 			#anything other than those specified will act similar to the case 'a' by default
