@@ -44,11 +44,11 @@ module SearchHelper
 			end
 		end
 		#Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_child_budget_value"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value"
 		projects_list= JSON.parse(oipa_project_list)
 		searchedData['projects'] = projects_list['results']
 		unless projects_list['count'] == 0
-			searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_aggregations']['total_child_budget_value']
+			searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_aggregations']['total_plus_child_budget_value']
 		end
 		searchedData['project_count'] = projects_list['count']
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=sector&aggregations=count&q=#{query}"
