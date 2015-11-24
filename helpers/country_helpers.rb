@@ -316,7 +316,7 @@ module CountryHelpers
       concurrency = 4
       urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
       returnedAPIData = EM::Synchrony::Iterator.new(urls, concurrency).map do |url, iter|
-          http = EventMachine::HttpRequest.new(url).aget
+          http = EventMachine::HttpRequest.new(url, :connect_timeout => 50).aget
           http.callback { iter.return(http) }
           http.errback { iter.return(http) }
       end
