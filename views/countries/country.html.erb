@@ -81,7 +81,7 @@
             <% end %>
             <% if country[:belowPovertyLine] then %>
                 <li class="fact-item">
-                    % living below $1.25 per day (source: <a href="http://data.worldbank.org/indicator/SI.POV.DDAY" rel="external">World Bank</a>):
+                    % living below $1.90 per day (source: <a href="http://data.worldbank.org/indicator/SI.POV.DDAY" rel="external">World Bank</a>):
                     <span><strong><%= country[:belowPovertyLine].to_f.round(2)%>%</strong></span>
                 </li>
             <% end %>
@@ -272,7 +272,6 @@
     var mapType = "country";
     var locations = <%#=locations.to_json%>
 </script>
-<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
 <script src="/javascripts/leaflet/leaflet.js"></script>
 <script src="/javascripts/leaflet/leaflet-googlemaps.js"></script>
