@@ -28,10 +28,10 @@ Returns a Hash 'searchedData' with the following keys:
 
 - highLevelSectorList (Hash)			-	This returns the sectors list data for the left hand side sectors filter
 
-- actualStartDate (ISO TimeStamp)		-	This returns the actual start date for the returned project list which is needed to set the 
+- actualStartDate (ISO Date)			-	This returns the actual start date for the returned project list which is needed to set the 
 											starting bound of the left hand side date range slider filter.
 
-- plannedEndDate (ISO TimeStamp)		-	This returns the planned end date for the returned project list which is needed to set the 
+- plannedEndDate (ISO Date)				-	This returns the planned end date for the returned project list which is needed to set the 
 											ending bound of the left hand side date range slider filter.
 =end
 
