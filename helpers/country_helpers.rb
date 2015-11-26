@@ -284,7 +284,7 @@ module CountryHelpers
     allProjectsData['countryAllProjectFilters'] = get_static_filter_list()
     allProjectsData['country'] = get_country_code_name(countryCode)
     allProjectsData['results'] = get_country_results(countryCode)
-    oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_country=#{countryCode}"
+    oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
@@ -293,7 +293,7 @@ module CountryHelpers
     allProjectsData['actualStartDate'] = '0000-00-00T00:00:00' 
     allProjectsData['plannedEndDate'] = '0000-00-00T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_aggregations']['total_child_budget_value']
+      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_aggregations']['total_plus_child_budget_value']
     end
     allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"
     allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
@@ -310,13 +310,13 @@ module CountryHelpers
 
   def get_country_all_projects_data_para(countryCode)
     allProjectsData = {}
-    apiLinks = [{"title"=>"oipa_project_list", "link"=>"activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_child_budget_value&related_activity_recipient_country=#{countryCode}"},{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"},{"title"=>"actualStartDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"},{"title"=>"plannedEndDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"}]
+    apiLinks = [{"title"=>"oipa_project_list", "link"=>"activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"},{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"},{"title"=>"actualStartDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"},{"title"=>"plannedEndDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"}]
     returnedAPIData = ""
     EM.synchrony do
       concurrency = 4
       urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
       returnedAPIData = EM::Synchrony::Iterator.new(urls, concurrency).map do |url, iter|
-          http = EventMachine::HttpRequest.new(url).aget
+          http = EventMachine::HttpRequest.new(url, :connect_timeout => 50).aget
           http.callback { iter.return(http) }
           http.errback { iter.return(http) }
       end
@@ -331,7 +331,7 @@ module CountryHelpers
     allProjectsData['actualStartDate'] = '0000-00-00T00:00:00' 
     allProjectsData['plannedEndDate'] = '0000-00-00T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_aggregations']['total_child_budget_value']
+      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_aggregations']['total_plus_child_budget_value']
     end
     allProjectsData['actualStartDate'] = Oj.load(returnedAPIData[2].response)
     unless allProjectsData['actualStartDate']['results'][0].nil? 
