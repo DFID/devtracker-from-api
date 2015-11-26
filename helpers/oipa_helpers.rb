@@ -8,7 +8,7 @@ module OipaHelpers
   end
 
   def activityUrlOipa(projectCode,format)
-   "http://dfid-oipa.zz-clients.net/api/activities/" + projectCode + "?format=" + format
+   settings.oipa_api_url + "activities/" + projectCode + "?format=" + format
   end
 
 end
