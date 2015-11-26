@@ -443,7 +443,9 @@ get '/sector/:high_level_sector_code/projects/?' do
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate']
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions']
  		}	
 end
 
@@ -482,7 +484,9 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate']
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions']
  		}	
 end
 
@@ -510,7 +514,9 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate']
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions']
  		}		
 end
 
