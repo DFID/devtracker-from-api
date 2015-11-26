@@ -104,28 +104,30 @@ Returns a Hash 'searchedData' with the following keys:
 		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations
 		# The following api call returns the projects list based on the search query. The result is returned with data sorted
 		# by budget value so that we can get the budget higher bound from a single api call.
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&q=#{query}&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value"
 		projects_list= JSON.parse(oipa_project_list)
 		searchedData['projects'] = projects_list['results'] # Storing the returned project list
 		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
 		unless projects_list['count'] == 0
-			searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_aggregations']['total_plus_child_budget_value']
+			unless projects_list['results'][0]['activity_aggregations']['total_plus_child_budget_value'].nil?
+				searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_aggregations']['total_plus_child_budget_value']
+			end
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
 		# This returns the relevant sector list to populate the left hand side sectors filter.
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=sector&aggregations=count&q=#{query}"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&q=#{query}"
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
 		# Initiating the actual start date and the planned end date.
 		searchedData['actualStartDate'] = '0000-00-00T00:00:00'
 		searchedData['plannedEndDate'] = '0000-00-00T00:00:00'
 		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
-		searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&q=#{query}&ordering=actual_start_date"
+		searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date"
 			searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
 		unless searchedData['actualStartDate']['results'][0].nil? 
 			searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
 		end
 		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
-		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&q=#{query}&ordering=-planned_end_date"
+		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date"
 		searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
 		unless searchedData['plannedEndDate']['results'][0].nil?
 			if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?

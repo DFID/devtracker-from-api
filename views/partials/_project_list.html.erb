@@ -88,21 +88,43 @@
                     </ul>
                     <input type="hidden" id="activity_status_states" value="1,2,3,4,5"  />
                 </div>
-                <div name="locations" style="display: none">
-                    <h3>Locations</h3>
-                    <div style="margin-left:20px;" name="countries">
-                        <div class="proj-filter-exp-collapse-sign">+</div>
-                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h4>Countries</h4>
-                        </span>
+                <% if defined? sectorData %>
+                    <div name="locations" style="">
+                        <h3>Locations</h3>
+                        <div style="margin-left:20px;" name="countries">
+                            <div class="proj-filter-exp-collapse-sign">+</div>
+                            <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                                <h4>Countries</h4>
+                            </span>
+                            <ul style="display: none">
+                                <% locationCountryFilters['results'].each do |countryFilters| %>
+                                <li>
+                                    <label for="location_country_<%= countryFilters['recipient_country']['code'] %>" title=" <%= countryFilters['recipient_country']['name'] %>">
+                                    <input id="location_country_<%= countryFilters['recipient_country']['code'] %>" type="checkbox" value="<%= countryFilters['recipient_country']['code'] %>" class="location_country" name="locationCountry"><%= countryFilters['recipient_country']['name'] %>
+                                    </label>
+                                </li>
+                                <% end %>
+                            </ul>
+                            <input type="hidden" id="locationCountryFilterStates" value=""  />
+                        </div>
+                        <div style="margin-left:20px;" name="regions">
+                            <div class="proj-filter-exp-collapse-sign">+</div>
+                            <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                                <h4>Regions</h4>
+                            </span>
+                            <ul style="display: none">
+                                <% locationRegionFilters['results'].each do |regionFilters| %>
+                                <li>
+                                    <label for="location_region_<%= regionFilters['recipient_region']['code'] %>" title=" <%= regionFilters['recipient_region']['name'] %>">
+                                    <input id="location_region_<%= regionFilters['recipient_region']['code'] %>" type="checkbox" value="<%= regionFilters['recipient_region']['code'] %>" class="location_region" name="locationRegion"><%= regionFilters['recipient_region']['name'] %>
+                                    </label>
+                                </li>
+                                <% end %>
+                            </ul>
+                            <input type="hidden" id="locationRegionFilterStates" value=""  />
+                        </div>
                     </div>
-                    <div style="margin-left:20px;" name="regions">
-                        <div class="proj-filter-exp-collapse-sign">+</div>
-                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h4>Regions</h4>
-                        </span>
-                    </div>
-                </div>
+                <%end%>
                 <div name="sectors">
                     <div class="proj-filter-exp-collapse-sign">+</div>
                     <span class="proj-filter-exp-collapse-text" style="cursor:pointer">

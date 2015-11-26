@@ -15,10 +15,10 @@ $(document).ready(function() {
             oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_country='+window.CountryCode;
             break;
         case 'F':
-            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val();
+            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val();
             break;
         case 'S':
-            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode;
+            oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val();
             break;
         case 'R':
             oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_region='+window.RegionCode;
@@ -30,10 +30,10 @@ $(document).ready(function() {
                 oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_country='+window.CountryCode;
                 break;
             case 'F':
-                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&reporting_organisation=GB-1&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val();
+                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val();
                 break;
             case 'S':
-                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode;
+                oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val();
                 break;
             case 'R':
                 oipaLink = window.oipaApiUrl + 'activities?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-1&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations,description&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_plus_child_budget_value_gte='+$('#budget_lower_bound').val()+'&total_plus_child_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_region='+window.RegionCode;
@@ -104,6 +104,22 @@ $(document).ready(function() {
     $('.sector').click(function(){
         var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
         $('#selected_sectors').val(tmpSectorList);
+        refreshOipaLink(window.searchType);
+        generateProjectListAjax(oipaLink);
+    });
+
+    //The following updates the result based on selected location country filter
+    $('.location_country').click(function(){
+        var tmpCountryList = $('.location_country:checked').map(function(){return $(this).val()}).get().join();
+        $('#locationCountryFilterStates').val(tmpCountryList);
+        refreshOipaLink(window.searchType);
+        generateProjectListAjax(oipaLink);
+    });
+
+    //The following updates the result based on selected location region filter
+    $('.location_region').click(function(){
+        var tmpRegionList = $('.location_region:checked').map(function(){return $(this).val()}).get().join();
+        $('#locationRegionFilterStates').val(tmpRegionList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
     });
