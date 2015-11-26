@@ -104,8 +104,8 @@ $(document).ready(function() {
     $('.sector').click(function(){
         var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
         $('#selected_sectors').val(tmpSectorList);
-        //refreshOipaLink(window.searchType);
-        //generateProjectListAjax(oipaLink);
+        refreshOipaLink(window.searchType);
+        generateProjectListAjax(oipaLink);
     });
 
     $("#slider-vertical").slider({
