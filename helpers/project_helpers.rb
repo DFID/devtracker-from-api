@@ -43,9 +43,9 @@ module ProjectHelpers
 
     def get_transaction_details(projectId)
         if is_dfid_project(projectId) then
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation_name,provider_activity,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation_name,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
         end
 
         transactionsJSON = JSON.parse(oipaTransactionsJSON)
@@ -137,7 +137,9 @@ module ProjectHelpers
         implementingOrgsList = []
         implementingOrg.each do |impOrg|
             impOrg["participating_organisations"].select{|imp| imp["role"]["code"]=="4" }.each do |i|
-                implementingOrgsList << i["narratives"][0]["text"]
+                if i["narratives"].length > 0 then 
+                    implementingOrgsList << i["narratives"][0]["text"]
+                end        
             end
         end
         implementingOrgsList = implementingOrgsList.uniq.sort
