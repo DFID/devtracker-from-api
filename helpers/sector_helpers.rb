@@ -155,6 +155,9 @@ module SectorHelpers
 		results = {}
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_sector=#{n}"
 		results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
+		#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_aggregations&activity_status=1,2,3,4,5&ordering=-total_plus_child_budget_value&related_activity_sector=#{n}")
+		results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}")
+		results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}")
 		results['project_budget_higher_bound'] = 0
 		results['actualStartDate'] = '0000-00-00T00:00:00' 
 		results['plannedEndDate'] = '0000-00-00T00:00:00'
