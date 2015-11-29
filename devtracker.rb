@@ -649,7 +649,7 @@ end
 #####################################################################
 
 # RSS by country
-get '/rss/countries/:country_code/?' do |n|
+get '/rss/country/:country_code/?' do |n|
 	#remove any trailing .rss and sanitize
 	n.slice!(".rss")
 	n = sanitize_input(n,"p")
