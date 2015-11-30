@@ -10,7 +10,6 @@ require 'eventmachine'
 require 'em-synchrony'
 require "em-synchrony/em-http"
 require 'oj'
-#require 'recaptcha'
 require 'net/http'
 
 #helpers path
@@ -30,7 +29,7 @@ require_relative 'helpers/filters_helper.rb'
 require_relative 'helpers/search_helper.rb'
 require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
-#require_relative 'helpers/recaptcha_helper.rb'
+require_relative 'helpers/recaptcha_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -43,15 +42,13 @@ include FiltersHelper
 include SearchHelper
 include InputSanitizer
 include RegionHelpers
-#include RecaptchaHelper
-#include Recaptcha::ClientHelper
-#include Recaptcha::Verify
+include RecaptchaHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -610,27 +607,8 @@ get '/feedback/?' do
 end 
 
 post '/feedback/index' do
-	puts  "testing"
-	puts  params[:captchaResponse]
-	verify_hash = {
-          "secret"    => '6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',
-          "remoteip"  => request.ip,
-          "response"  => params[:captchaResponse]
-        }
-    query = URI.encode_www_form(verify_hash)
-	res = Net::HTTP.post_form(URI.parse('http://www.google.com/recaptcha/api/verify'),query)
-	    #{
-	     # 'secret' => '6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',
-	      #'remoteip'   => request.ip,
-	      #'response'   => params[:captchaResponse]
-	    #}
-  	#)
-  	res.set_content_type('application/x-www-form-urlencoded')
-  	success, error_key = res.body.lines.map(&:chomp)
-  	puts "printing the parsed uri"
-  	puts res.body
-  	#success = 'true'
-	if success == 'true'
+  	status = verify_google_recptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+	if status == true
 		Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
 		    :to => "devtracker-feedback@dfid.gov.uk",
@@ -644,23 +622,9 @@ post '/feedback/index' do
 		})
 		redirect '/'
 	else
-		puts success
-		puts "Faile...d"
-		puts  params[:captchaResponse]
+		puts "Failed to send email."
 		redirect '/'
 	end
- # Pony.mail({
-	# :from => "devtracker-feedback@dfid.gov.uk",
- #    :to => "devtracker-feedback@dfid.gov.uk",
- #    :subject => "DevTracker Feedback",
- #    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
- #    :via => :smtp,
- #    :via_options => {
- #     :address              => '127.0.0.1',
- #     :port                 => '25'
- #     }
- #    })
- #    redirect '/' 
 end
 
 get '/fraud/?' do
@@ -668,24 +632,30 @@ get '/fraud/?' do
 end  
 
 post '/fraud/index' do
-	country = sanitize_input(params[:country],"a")
-	project = sanitize_input(params[:project],"a")
-	description = sanitize_input(params[:description],"a")
-	name = sanitize_input(params[:name],"a")
-	email = sanitize_input(params[:email],"e")
-	telno = sanitize_input(params[:telno],"t")
- Pony.mail({
-	:from => "devtracker-feedback@dfid.gov.uk",
-    :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => country + " " + project,
-    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
-    :via => :smtp,
-    :via_options => {
-     :address              => '127.0.0.1',
-     :port                 => '25'
-     }
-    })
-    redirect '/' 
+	status = verify_google_recptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+	if status == true
+		country = sanitize_input(params[:country],"a")
+		project = sanitize_input(params[:project],"a")
+		description = sanitize_input(params[:description],"a")
+		name = sanitize_input(params[:name],"a")
+		email = sanitize_input(params[:email],"e")
+		telno = sanitize_input(params[:telno],"t")
+	 	Pony.mail({
+			:from => "devtracker-feedback@dfid.gov.uk",
+		    :to => "devtracker-feedback@dfid.gov.uk",
+		    :subject => country + " " + project,
+		    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    :via => :smtp,
+		    :via_options => {
+		    	:address              => '127.0.0.1',
+		    	:port                 => '25'
+	     	}
+	    })
+	    redirect '/'
+	else
+		puts "Failed to send email."
+		redirect '/'
+	end
 end
 
 # 404 Error!
