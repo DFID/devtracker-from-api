@@ -10,7 +10,6 @@ require 'eventmachine'
 require 'em-synchrony'
 require "em-synchrony/em-http"
 require 'oj'
-require 'net/http'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -607,7 +606,7 @@ get '/feedback/?' do
 end 
 
 post '/feedback/index' do
-  	status = verify_google_recptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+  	status = verify_google_recaptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
 	if status == true
 		Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
@@ -632,7 +631,7 @@ get '/fraud/?' do
 end  
 
 post '/fraud/index' do
-	status = verify_google_recptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+	status = verify_google_recaptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
 	if status == true
 		country = sanitize_input(params[:country],"a")
 		project = sanitize_input(params[:project],"a")

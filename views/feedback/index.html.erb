@@ -65,7 +65,7 @@ title: Development Tracker
                   </div>
                   <div class="row">
                     <div class="eight columns offset-by-four">
-                      <div id="capt2"></div>
+                      <div id="captchaContainer"></div>
                       <input id="captchaResponse" name="captchaResponse" type="hidden" value="dummyresponse"></input>
                     </div>
                   </div>
@@ -83,7 +83,7 @@ title: Development Tracker
   <script type="text/javascript"> 
     $('#feedback-form').on('submit', function(){
       var errors = [];
-      $('#captchaResponse').val(grecaptcha.getResponse(widgetId1));
+      $('#captchaResponse').val(grecaptcha.getResponse(form1));
       if ($("#name").val() == "")        errors.push("  - Please provide your name");
       if ($("#email").val() == "")       errors.push("  - Please provide your email address");
       if ($("#description").val() == "") errors.push("  - Please provide some feedback");

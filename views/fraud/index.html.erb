@@ -82,8 +82,8 @@
                   </div>
                   <div class="row">
                     <div class="eight columns offset-by-four">
-                      <div id="capt2"></div>
-                      <input id="captchaResponse" name="captchaResponse" type="hidden" value="dummyresponse"></input>
+                      <div id="captchaContainer"></div>
+                      <input id="captchaResponse" name="captchaResponse" type="hidden" value=""></input>
                     </div>
                   </div>
                   <div class="row">
@@ -113,7 +113,7 @@
 
     $('#fraud-report').on('submit', function(){
       var errors = []
-      $('#captchaResponse').val(grecaptcha.getResponse(widgetId1));
+      $('#captchaResponse').val(grecaptcha.getResponse(form1));
       if($('#country').val() == "" && $('#project').val() == "") {
         errors.push("  - You must provide a country or project name!")
       }
