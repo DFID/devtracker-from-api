@@ -82,6 +82,12 @@
                   </div>
                   <div class="row">
                     <div class="eight columns offset-by-four">
+                      <div id="captchaContainer" style="margin-bottom: 10px"></div>
+                      <input id="captchaResponse" name="captchaResponse" type="hidden" value=""></input>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="eight columns offset-by-four">
                         <input type="submit" value="Send fraud report" class="button"/>
                     </div>
                   </div>
@@ -107,11 +113,11 @@
 
     $('#fraud-report').on('submit', function(){
       var errors = []
-
+      $('#captchaResponse').val(grecaptcha.getResponse(form1));
       if($('#country').val() == "" && $('#project').val() == "") {
         errors.push("  - You must provide a country or project name!")
       }
-
+      if(!isValidEmailAddress($("#email").val())) errors.push("  - Invalid email address provided");
       var description = $("#description").val();
       if (description == "" || description.length > MAX_LENGTH) {
         errors.push("  - You must provide a description that is less than or equal to 500 characters");
