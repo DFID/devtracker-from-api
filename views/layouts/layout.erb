@@ -82,7 +82,22 @@
         var tempGetUrl = window.location;
         window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
       });
-    </script> 
+
+
+
+
+    var widgetId1;
+      var onloadCallback = function() {
+        widgetId1 = grecaptcha.render('capt2', {
+          'sitekey' : '6LfZ_BETAAAAAEg0yGu8KC0Y4nOliA9Y_rgVt0RT',
+          'theme' : 'light'
+        });
+      };
+    </script>
+<!--    <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
   </head>
   <body>
     <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
