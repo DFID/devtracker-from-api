@@ -61,6 +61,8 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 
+set :google_recaptcha_publicKey, '6LfZ_BETAAAAAEg0yGu8KC0Y4nOliA9Y_rgVt0RT'
+set :google_recaptcha_privateKey, '6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ'
 
 #####################################################################
 #  HOME PAGE
@@ -603,11 +605,14 @@ get '/faq/?' do
 end 
 
 get '/feedback/?' do
-	erb :'feedback/index', :layout => :'layouts/layout'
+	erb :'feedback/index', :layout => :'layouts/layout_forms',
+	:locals => {
+		googlePublicKey: settings.google_recaptcha_publicKey
+	}
 end 
 
 post '/feedback/index' do
-  	status = verify_google_recaptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,params[:captchaResponse])
 	if status == true
 		Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
@@ -628,11 +633,14 @@ post '/feedback/index' do
 end
 
 get '/fraud/?' do
-	erb :'fraud/index', :layout => :'layouts/layout'
+	erb :'fraud/index', :layout => :'layouts/layout_forms',
+	:locals => {
+		googlePublicKey: settings.google_recaptcha_publicKey
+	}
 end  
 
 post '/fraud/index' do
-	status = verify_google_recaptcha('6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ',params[:captchaResponse])
+	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,params[:captchaResponse])
 	if status == true
 		country = sanitize_input(params[:country],"a")
 		project = sanitize_input(params[:project],"a")
