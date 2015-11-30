@@ -612,7 +612,7 @@ get '/feedback/?' do
 end 
 
 post '/feedback/index' do
-  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,params[:captchaResponse])
+  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
 	if status == true
 		Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
@@ -640,7 +640,7 @@ get '/fraud/?' do
 end  
 
 post '/fraud/index' do
-	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,params[:captchaResponse])
+	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
 	if status == true
 		country = sanitize_input(params[:country],"a")
 		project = sanitize_input(params[:project],"a")
