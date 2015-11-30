@@ -10,6 +10,7 @@ require 'eventmachine'
 require 'em-synchrony'
 require "em-synchrony/em-http"
 require 'oj'
+require 'rss'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -656,6 +657,51 @@ post '/fraud/index' do
 		redirect '/'
 	end
 end
+
+#####################################################################
+#  RSS FEED
+#####################################################################
+
+# RSS by country
+get '/rss/country/:country_code/?' do |n|
+	#remove any trailing .rss and sanitize
+	n.slice!(".rss")
+	n = sanitize_input(n,"p")
+	
+	#get country name from country code
+	countryName = get_country_code_name(n)
+
+  	rss = RSS::Maker.make("atom") do |maker|
+
+	    projects = ''
+		projects = get_country_all_projects_rss(n)
+
+	    maker.channel.author = "Department for International Development"
+	    maker.channel.updated = Time.now.to_s
+	    maker.channel.about = "A breakdown of all the projects that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
+	    maker.channel.title = "DFID projects feed for #{countryName[:name]}"
+	    maker.channel.link = "http://devtracker.dfid.gov.uk/countries/#{n}/projects/"
+
+	    projects.each do |project|
+	      maker.items.new_item do |item|
+	        lastUpdatedDateTime = Time.strptime(project['last_updated_datetime'], '%y-%m-%d')
+	        item.link = "http://devtracker.dfid.gov.uk/projects/#{project['iati-identifier']}/"
+	        item.title = project['title']['narratives'][0]['text']
+	        item.description = project['description'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTime.to_s + "]"
+	        item.updated = lastUpdatedDateTime
+	      end
+	    end
+  	end
+
+  	content_type 'text/xml'
+  	erb :'rss/index', :layout => false, :locals => {:rss => rss}
+
+end 
+
+
+#####################################################################
+#  ERROR PAGES
+#####################################################################
 
 # 404 Error!
 not_found do
