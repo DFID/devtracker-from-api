@@ -63,6 +63,12 @@ title: Development Tracker
                       <textarea id="description" name="description" class="eight" rows="10"></textarea>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="eight columns offset-by-four">
+                      <div id="captchaContainer" style="margin-bottom: 10px"></div>
+                      <input id="captchaResponse" name="captchaResponse" type="hidden" value="dummyresponse"></input>
+                    </div>
+                  </div>
                    <div class="row">
                     <div class="eight columns offset-by-four">
                         <input type="submit" value="Send feedback" class="button"/>
@@ -74,16 +80,14 @@ title: Development Tracker
       </div>
     </div>
 
-
-  <script type="text/javascript"> 
-
+  <script type="text/javascript">
     $('#feedback-form').on('submit', function(){
-      var errors = []
-
+      var errors = [];
+      $('#captchaResponse').val(grecaptcha.getResponse(form1));
       if ($("#name").val() == "")        errors.push("  - Please provide your name");
       if ($("#email").val() == "")       errors.push("  - Please provide your email address");
       if ($("#description").val() == "") errors.push("  - Please provide some feedback");
-
+      if(!isValidEmailAddress($("#email").val())) errors.push("  - Invalid email address provided");
       if (errors.length > 0) {
         errors.unshift("Please ensure the following criteria is met before submitting your form:")
         alert(errors.join("\n"));
