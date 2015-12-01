@@ -61,8 +61,8 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 
-set :google_recaptcha_publicKey, '6LfZ_BETAAAAAEg0yGu8KC0Y4nOliA9Y_rgVt0RT'
-set :google_recaptcha_privateKey, '6LfZ_BETAAAAAOc1NDbTmOZmsaxdRqbqDUem5KQZ'
+set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
+set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
 #####################################################################
 #  HOME PAGE
