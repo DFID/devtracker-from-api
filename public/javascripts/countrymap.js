@@ -134,7 +134,6 @@
             }
             
             var html = buildClusterPopupHtml(clusterLocations)
-            alert(html);
             var popup = L.popup()
                          .setLatLng(a.layer._latlng)
                          .setContent(html)
