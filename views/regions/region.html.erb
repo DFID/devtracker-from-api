@@ -183,7 +183,7 @@
             tooltip: {
                 format: {
                     value: function(value){
-                        return value;
+                        return "£" + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 }
             },
