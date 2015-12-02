@@ -26,8 +26,8 @@ title: Development Tracker
        <%# projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P") %>
        <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
-         <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-           <%=  Money.new(totalProjectBudget.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+         <div class="<%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+           <%=  Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100, if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
          </div>
        </div>        
     </div>
@@ -55,7 +55,7 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% incomingFunds=transactions.select {|group| group['transaction_type']['code'] == "1" } %>
     <%if !incomingFunds.nil? && incomingFunds.length > 0 %>
-    <% totalIncomingFund=get_sum_transaction(incomingFunds).to_f %>
+    <%# totalIncomingFund=get_sum_transaction(incomingFunds).to_f %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Incoming Funds</span>
@@ -71,7 +71,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalIncomingFund.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalIncomingFund.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['activity_plus_child_aggregation']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['incoming_funds_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -106,7 +106,7 @@ title: Development Tracker
     <% commitments=transactions.select {|group| group['transaction_type']['code'] == '2' } %>
     <%if !commitments.nil? && commitments.length > 0 %>
     <% h2Activities = get_h2_project_details(project['id'])%>
-    <% totalCommitments=get_sum_transaction(commitments).to_f %>
+    <%# totalCommitments=get_sum_transaction(commitments).to_f %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Commitment</span>
@@ -122,8 +122,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalCommitments.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-              <%= Money.new(totalCommitments.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['activity_plus_child_aggregation']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['commitment_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -156,7 +155,7 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% disbursements=transactions.select {|group| group['transaction_type']['code'] == '3' } %>
     <%if !disbursements.nil? && disbursements.length > 0 %>
-    <% totalDisbursements=get_sum_transaction(disbursements).to_f %>
+    <%# totalDisbursements=get_sum_transaction(disbursements).to_f %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Disbursement</span>
@@ -172,7 +171,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalDisbursements.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalDisbursements.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -208,7 +207,7 @@ title: Development Tracker
   <div class="twelve columns transactions">
     <% expenditures=transactions.select {|group| group['transaction_type']['code'] == '4' } %>
     <%if !expenditures.nil? && expenditures.length > 0 %>
-    <% totalExpenditures=get_sum_transaction(expenditures).to_f %>
+    <%#totalExpenditures=get_sum_transaction(expenditures).to_f %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Expenditure</span>
@@ -224,7 +223,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= totalExpenditures.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(totalExpenditures.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
