@@ -37,7 +37,7 @@ module ProjectHelpers
     end
 
     def get_funded_project_details(projectId)
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_aggregations,default_currency"
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_plus_child_aggregation,default_currency"
         fundedProjectsData = JSON.parse(fundedProjectsAPI)
     end
 
@@ -61,7 +61,7 @@ module ProjectHelpers
         end
 
         yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
-        projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P")
+        projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'].select {|project| !project['budget'].nil? },"P")
     end
 
     def dfid_complete_country_list
@@ -75,9 +75,9 @@ module ProjectHelpers
         oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
-        #oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count&order_by=recipient_country"
-        #projectCountValues = JSON.parse(oipaCountryProjectValuesJSON)
-        #projectCountValues = projectValues['results']
+        oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count&reporting_organisation=GB-1"
+        projectValues = JSON.parse(oipaCountryProjectCountJSON)
+        projectCountValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
         # Map the input data structure so that it matches the required input for Tilestream
@@ -88,7 +88,9 @@ module ProjectHelpers
                                   source["code"].to_s == elem["recipient_country"]["code"]
                               end["name"],  
                  "id" => elem["recipient_country"]["code"],
-                 "projects" => elem["count"],
+                 "projects" => projectCountValues.find do |project|
+                                  project["recipient_country"]["code"].to_s == elem["recipient_country"]["code"]
+                              end["count"],
                  "budget" => elem["budget"],
                  "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
                 }
@@ -225,11 +227,11 @@ module ProjectHelpers
         end
 
         actualBudget = JSON.parse(actualBudgetJSON)
-        actualBudget = actualBudget['results']
+        actualBudget = actualBudget['results'].select {|project| !project['budget'].nil? }
         disbursement = JSON.parse(disbursementJSON)    
-        disbursement = disbursement['results']
+        disbursement = disbursement['results'].select {|project| !project['budget'].nil? }
         expenditure = JSON.parse(expenditureJSON)    
-        expenditure = expenditure['results']
+        expenditure = expenditure['results'].select {|project| !project['budget'].nil? }
 
         actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
         disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
@@ -318,6 +320,18 @@ module ProjectHelpers
         else
             return false
         end        
+    end
+
+    def choose_better_currency(dis_curr,exp_curr,default_curr)
+
+        if dis_curr.nil? && exp_curr.nil? then
+            return default_curr
+        elsif dis_curr.nil? then
+            return exp_curr
+        else
+            return dis_curr
+        end         
+                
     end
 
     def choose_better_date(actual, planned)

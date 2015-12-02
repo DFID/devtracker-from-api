@@ -232,7 +232,7 @@ module CountryHelpers
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
-      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['quarter'].nil?}
+      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end
