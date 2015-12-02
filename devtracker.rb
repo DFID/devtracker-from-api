@@ -43,10 +43,10 @@ include InputSanitizer
 include RegionHelpers
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
 # Server Machine: set global settings
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -285,7 +285,7 @@ get '/projects/:proj_id/?' do |n|
   	countryOrRegion = get_country_or_region(n)
 
   	#get total project budget and spend Data
-  	projectBudget = get_project_budget(n)
+  	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_data(n)
@@ -303,7 +303,7 @@ get '/projects/:proj_id/?' do |n|
  			countryOrRegion: countryOrRegion,	 					 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
- 			projectBudget: projectBudget,
+ 			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData
  		}
 end

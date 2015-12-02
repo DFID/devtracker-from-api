@@ -176,13 +176,9 @@
 
     <script type="text/javascript">
         (function(){
-            //var sectors = <%#= project['sectors'] %>;
-            //charts.donut("#sector-breakdown", sectors, function(d) { return d.budget; }, function(d){ return d.sector }, function(d){ return d.formatted });
-            //charts.donutLegend("#sector-legend", ".legend-color", 14, sectors, function(d){ return d.sector });
-
             var funding = [ {label: "", text: "", value: 0},
-                            {label: "Spend to date", text: "<%= Money.new(projectBudget[:spendBudget].to_f.round(0)*100 , project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= projectBudget[:spendBudget].to_f.round(0) %>},
-                            {label: "Project budget", text: "<%= Money.new(projectBudget[:actualBudget].to_f.round(0)*100 , project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= projectBudget[:actualBudget].to_f.round(0) %>}]
+                            {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0))*100 , choose_better_currency(project['activity_plus_child_aggregation']['disbursement_currency'],project['activity_plus_child_aggregation']['expenditure_currency'],project['default_currency']['code'])).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) %>},
+                            {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) %>}]
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
@@ -252,7 +248,7 @@
                 tooltip: {
                     format: {
                         value: function(value){
-                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            return "£" + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }
                     }
                 },
