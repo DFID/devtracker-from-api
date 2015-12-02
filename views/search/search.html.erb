@@ -112,12 +112,12 @@
                         <%
                         #to handle different budget aggregations for DFID and non-DFID projects
                         if is_dfid_project(project['iati_identifier']) then
-                            unless project['activity_aggregations']['total_plus_child_budget_value'].nil? %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_plus_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                            unless project['activity_plus_child_aggregation']['budget_value'].nil? %>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%end
                         else
-                            unless project['activity_aggregations']['total_budget_value'].nil? %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_aggregations']['total_plus_child_budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                            unless project['activity_plus_child_aggregation']['budget_value'].nil? %>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                             <%end
                         end%>
                         <%unless project['activity_status']['name'].nil? %>
