@@ -348,7 +348,7 @@ module CountryHelpers
   end
 
   def get_country_all_projects_rss(countryCode)
-    rssJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,description,iati_identifier&page_size=500"
+    rssJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,description,iati_identifier&page_size=500"
     rssData = JSON.parse(rssJSON)
     rssResults = rssData['results']
   end
