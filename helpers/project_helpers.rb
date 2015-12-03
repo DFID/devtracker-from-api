@@ -229,9 +229,9 @@ module ProjectHelpers
         actualBudget = JSON.parse(actualBudgetJSON)
         actualBudget = actualBudget['results'].select {|project| !project['budget'].nil? }
         disbursement = JSON.parse(disbursementJSON)    
-        disbursement = disbursement['results'].select {|project| !project['budget'].nil? }
+        disbursement = disbursement['results'].select {|project| !project['disbursement'].nil? }
         expenditure = JSON.parse(expenditureJSON)    
-        expenditure = expenditure['results'].select {|project| !project['budget'].nil? }
+        expenditure = expenditure['results'].select {|project| !project['expenditure'].nil? }
 
         actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
         disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
