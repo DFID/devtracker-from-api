@@ -118,7 +118,7 @@ $(document).ready(function() {
         // create the geopoints if any are defined
         if(map) {
             //alert("start processing datapoints");
-            var url = window.baseUrl + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500";
+            var url = window.baseUrl + "activities/?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500";
 
             $.getJSON(url, function (iati) {
 
