@@ -66,13 +66,16 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
     });
 
+    var mapBox = L.tileLayer('https://api.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGV2dHJhY2tlciIsImEiOiJjaWhzdnplbzUwMDJ3dzRrcGVyN2licGFpIn0.a3sZ1t6v-N1nxFCDIiGblQ', {
+        attribution: '&copy; <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
 
     if (projectType == "global") {
 
         map = new L.Map('countryMap', {
             center: new L.LatLng(7.79,21.28), 
             zoom: 1,
-            layers: [cartoDB]
+            layers: [mapBox]
         });
 
         //map.addLayer(new L.Google('ROADMAP'));
@@ -82,7 +85,7 @@
         map = new L.Map('countryMap', {
             center: new L.LatLng(countryBounds[countryCode][0], countryBounds[countryCode][1]), 
             zoom: countryBounds[countryCode][2] || 6,
-            layers: [cartoDB]
+            layers: [mapBox]
         });
         //map.addLayer(new L.Google('ROADMAP'));
 
@@ -95,7 +98,7 @@
 
         map = new L.Map('countryMap',
             {
-                layers: [cartoDB]
+                layers: [mapBox]
             });
         //map.addLayer(new L.Google('ROADMAP'))
         map.fitBounds(boundary);
