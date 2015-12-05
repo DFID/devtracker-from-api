@@ -13,6 +13,9 @@ module InputSanitizer
 		when "p"
 			#Handles the country codes, region codes and project IDs
 			return string.gsub(/[^a-zA-Z0-9\-\s_]/,'')
+		when "id"
+			#Removes slashes from project IDs
+			return string.gsub(/\//,'-')
 		else
 			#anything other than those specified will act similar to the case 'a' by default
 			return string.gsub(/[^a-zA-Z0-9\s_\/\-]/,'')
