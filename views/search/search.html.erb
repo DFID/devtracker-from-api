@@ -96,7 +96,7 @@
                         <%end%>
                     </div>
                     <% projects.each do |project| %>
-                    <div class="search-result" style="display: none">
+                    <div class="search-result">
                         <h3>    
                             <%unless project['iati_identifier'].nil? %>
                                 <a href="/projects/<%= project['iati_identifier'] %>">
@@ -105,7 +105,7 @@
                                         <%=project['title']['narratives'][0]['text']%>
                                     <%end%>
                                 <%end%>
-                                <small class="<%= project['iati_identifier']%>">[<%= project['iati_identifier']%>]</small>
+                                <small>[<%= project['iati_identifier']%>]</small>
                                 </a>
                             <%end%>
                         </h3>
