@@ -15,3 +15,6 @@
 
 /coverage
 .DS_Store
+
+#Ignore only the .env file as it contains sensitive data
+.env

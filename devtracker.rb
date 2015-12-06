@@ -1,3 +1,8 @@
+#dotenv is used to load the sensitive environment variables for devtracker. 
+#Please check the 'example.env' file for further instructions on setting devtracker depedent variables.
+require 'dotenv'
+Dotenv.load
+
 require 'sinatra'
 require 'json'
 require 'rest-client'
