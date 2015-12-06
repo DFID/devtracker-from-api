@@ -47,7 +47,7 @@ include RecaptchaHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 
-# Server Machine: set global settings
+# Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -73,7 +73,7 @@ get '/' do  #homepage
 	top5results = JSON.parse(File.read('data/top5results.json'))
   	top5countries = get_top_5_countries()
  	erb :index,
- 		:layout => :'layouts/layout', 
+ 		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
  			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
@@ -610,6 +610,10 @@ get '/feedback/?' do
 	:locals => {
 		googlePublicKey: settings.google_recaptcha_publicKey
 	}
+end 
+
+get '/whats-new/?' do
+	erb :'about/whats-new', :layout => :'layouts/layout'
 end 
 
 post '/feedback/index' do

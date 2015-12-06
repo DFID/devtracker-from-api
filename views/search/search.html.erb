@@ -99,7 +99,7 @@
                     <div class="search-result">
                         <h3>    
                             <%unless project['iati_identifier'].nil? %>
-                                <a href="/projects/<%= project['iati_identifier'] %>">
+                                <a href="/projects/<%= sanitize_input(project['iati_identifier'],"id") %>">
                                 <%unless project['title']['narratives'].nil? %>
                                     <%unless project['title']['narratives'][0]['text'].nil? %>
                                         <%=project['title']['narratives'][0]['text']%>
@@ -210,13 +210,13 @@
                     </div>
                     <span id="amount" style="border: 0; font-weight: bold"></span>
                     <div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
-                    <div name="date" style="margin-top: 20px">
+                    <div name="date" style="margin-top: 20px; display: none">
                         <h3>Start and end date</h3>
                         <input type="hidden" id="date_lower_bound" value=""  />
                         <input type="hidden" id="date_higher_bound" value=""  />
                     </div>
-                    <span id="date-range" style="border: 0; font-weight: bold"></span>
-                    <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
+                    <span id="date-range" style="border: 0; font-weight: bold; display: none"></span>
+                    <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px; display: none"></div>
                 </div>
             </div>
             <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>

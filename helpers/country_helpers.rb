@@ -291,21 +291,21 @@ module CountryHelpers
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
     #projects = projects_list['results']
     allProjectsData['project_budget_higher_bound'] = 0
-    allProjectsData['actualStartDate'] = '0000-00-00T00:00:00' 
-    allProjectsData['plannedEndDate'] = '0000-00-00T00:00:00'
+    allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
+    allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
     end
-    allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"
-    allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
-    unless allProjectsData['actualStartDate']['results'][0].nil? 
-      allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-    end
-    allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"
-    allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
-    unless allProjectsData['plannedEndDate']['results'][0].nil?
-      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-    end
+    ###allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"
+    ###allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
+    ###unless allProjectsData['actualStartDate']['results'][0].nil? 
+      ###allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+    ###end
+    ###allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"
+    ###allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
+    ###unless allProjectsData['plannedEndDate']['results'][0].nil?
+      ###allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+    ###end
     return allProjectsData
   end
 
@@ -331,24 +331,24 @@ module CountryHelpers
 
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(returnedAPIData[1].response)
     allProjectsData['project_budget_higher_bound'] = 0
-    allProjectsData['actualStartDate'] = '0000-00-00T00:00:00' 
-    allProjectsData['plannedEndDate'] = '0000-00-00T00:00:00'
+    allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
+    allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
     end
-    allProjectsData['actualStartDate'] = Oj.load(returnedAPIData[2].response)
-    unless allProjectsData['actualStartDate']['results'][0].nil? 
-      allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-    end
-    allProjectsData['plannedEndDate'] = Oj.load(returnedAPIData[3].response)
-    unless allProjectsData['plannedEndDate']['results'][0].nil?
-      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-    end
+    ###allProjectsData['actualStartDate'] = Oj.load(returnedAPIData[2].response)
+    ###unless allProjectsData['actualStartDate']['results'][0].nil? 
+      ###allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+    ###end
+    ###allProjectsData['plannedEndDate'] = Oj.load(returnedAPIData[3].response)
+    ###unless allProjectsData['plannedEndDate']['results'][0].nil?
+      ###allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+    ###end
     return allProjectsData
   end
 
   def get_country_all_projects_rss(countryCode)
-    rssJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,description,iati_identifier&page_size=500"
+    rssJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,description,iati_identifier&page_size=500"
     rssData = JSON.parse(rssJSON)
     rssResults = rssData['results']
   end
