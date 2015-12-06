@@ -311,7 +311,7 @@ module CountryHelpers
 
   def get_country_all_projects_data_para(countryCode)
     allProjectsData = {}
-    apiLinks = [{"title"=>"oipa_project_list", "link"=>"activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"},{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"},{"title"=>"actualStartDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"},{"title"=>"plannedEndDate", "link"=>"activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"}]
+    apiLinks = [{"title"=>"oipa_project_list", "link"=>"activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"},{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"},{"title"=>"actualStartDate", "link"=>"activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"},{"title"=>"plannedEndDate", "link"=>"activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"}]
     returnedAPIData = ""
     EM.synchrony do
       concurrency = 4
@@ -323,7 +323,6 @@ module CountryHelpers
       end
       EventMachine.stop
     end
-    puts returnedAPIData[1].response
     allProjectsData['countryAllProjectFilters'] = get_static_filter_list()
     allProjectsData['country'] = get_country_code_name(countryCode)
     allProjectsData['results'] = get_country_results(countryCode)

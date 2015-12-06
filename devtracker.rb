@@ -110,10 +110,10 @@ end
 get '/countries/:country_code/projects/?' do |n|
 	n = sanitize_input(n,"p")
 	projectData = ''
-	projectData = get_country_all_projects_data(n)
-#	 Benchmark.bm(7) do |x|
-#	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
-#	end
+	#projectData = get_country_all_projects_data(n)
+	 Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
+	end
 	#projectData = get_country_all_projects_data_para(n)
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
