@@ -1,3 +1,8 @@
+#dotenv is used to load the sensitive environment variables for devtracker. 
+#Please check the 'example.env' file for further instructions on setting devtracker depedent variables.
+require 'dotenv'
+Dotenv.load
+
 require 'sinatra'
 require 'json'
 require 'rest-client'
@@ -29,6 +34,7 @@ require_relative 'helpers/filters_helper.rb'
 require_relative 'helpers/search_helper.rb'
 require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
+require_relative 'helpers/recaptcha_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -41,6 +47,7 @@ include FiltersHelper
 include SearchHelper
 include InputSanitizer
 include RegionHelpers
+include RecaptchaHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
@@ -59,6 +66,8 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 
+set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
+set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
 #####################################################################
 #  HOME PAGE
@@ -602,7 +611,10 @@ get '/faq/?' do
 end 
 
 get '/feedback/?' do
-	erb :'feedback/index', :layout => :'layouts/layout'
+	erb :'feedback/index', :layout => :'layouts/layout_forms',
+	:locals => {
+		googlePublicKey: settings.google_recaptcha_publicKey
+	}
 end 
 
 get '/whats-new/?' do
@@ -610,43 +622,58 @@ get '/whats-new/?' do
 end 
 
 post '/feedback/index' do
- Pony.mail({
-	:from => "devtracker-feedback@dfid.gov.uk",
-    :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => "DevTracker Feedback",
-    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
-    :via => :smtp,
-    :via_options => {
-     :address              => '127.0.0.1',
-     :port                 => '25'
-     }
-    })
-    redirect '/' 
+  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
+	if status == true
+		Pony.mail({
+			:from => "devtracker-feedback@dfid.gov.uk",
+		    :to => "devtracker-feedback@dfid.gov.uk",
+		    :subject => "DevTracker Feedback",
+		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
+		    :via => :smtp,
+		    :via_options => {
+		    	:address              => '127.0.0.1',
+		     	:port                 => '25'
+		    }
+		})
+		redirect '/'
+	else
+		puts "Failed to send email."
+		redirect '/'
+	end
 end
 
 get '/fraud/?' do
-	erb :'fraud/index', :layout => :'layouts/layout'
+	erb :'fraud/index', :layout => :'layouts/layout_forms',
+	:locals => {
+		googlePublicKey: settings.google_recaptcha_publicKey
+	}
 end  
 
 post '/fraud/index' do
-	country = sanitize_input(params[:country],"a")
-	project = sanitize_input(params[:project],"a")
-	description = sanitize_input(params[:description],"a")
-	name = sanitize_input(params[:name],"a")
-	email = sanitize_input(params[:email],"e")
-	telno = sanitize_input(params[:telno],"t")
- Pony.mail({
-	:from => "devtracker-feedback@dfid.gov.uk",
-    :to => "devtracker-feedback@dfid.gov.uk",
-    :subject => country + " " + project,
-    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
-    :via => :smtp,
-    :via_options => {
-     :address              => '127.0.0.1',
-     :port                 => '25'
-     }
-    })
-    redirect '/' 
+	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
+	if status == true
+		country = sanitize_input(params[:country],"a")
+		project = sanitize_input(params[:project],"a")
+		description = sanitize_input(params[:description],"a")
+		name = sanitize_input(params[:name],"a")
+		email = sanitize_input(params[:email],"e")
+		telno = sanitize_input(params[:telno],"t")
+	 	Pony.mail({
+			:from => "devtracker-feedback@dfid.gov.uk",
+		    :to => "devtracker-feedback@dfid.gov.uk",
+		    :subject => country + " " + project,
+		    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    :via => :smtp,
+		    :via_options => {
+		    	:address              => '127.0.0.1',
+		    	:port                 => '25'
+	     	}
+	    })
+	    redirect '/'
+	else
+		puts "Failed to send email."
+		redirect '/'
+	end
 end
 
 #####################################################################
