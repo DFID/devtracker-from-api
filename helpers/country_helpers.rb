@@ -328,16 +328,16 @@ module CountryHelpers
     EventMachine.run do
       returnedAPIData[0] = EventMachine::HttpRequest.new(urls[0]).aget
       returnedAPIData[0].callback do
-        puts returnedAPIData[0].response
+        puts "Api call 1 is successful!"
         returnedAPIData[1]  = EventMachine::HttpRequest.new(urls[1]).aget
         returnedAPIData[1].callback do
-          puts returnedAPIData[1].response
+          puts "Api call 2 is successful!"
           returnedAPIData[2] = EventMachine::HttpRequest.new(urls[2], :connect_timeout => 120, :inactivity_timeout => 120).aget
           returnedAPIData[2].callback do
-            puts returnedAPIData[2].response
+            puts "Api call 3 is successful!"
             returnedAPIData[3] = EventMachine::HttpRequest.new(urls[3], :connect_timeout => 120, :inactivity_timeout => 120).aget
             returnedAPIData[3].callback do
-              puts returnedAPIData[3].response
+              puts "Api call 4 is successful!"
               EventMachine.stop
             end
           end

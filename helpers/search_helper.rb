@@ -192,36 +192,22 @@ Returns a Hash 'searchedData' with the following keys:
 		EventMachine.run do
 		  returnedAPIData[0] = EventMachine::HttpRequest.new(urls[0]).aget
 		  returnedAPIData[0].callback do
-		    puts returnedAPIData[0].response
+		    puts "Api call 1 is successful!"
 		    returnedAPIData[1]  = EventMachine::HttpRequest.new(urls[1]).aget
 		    returnedAPIData[1].callback do
-		    	puts returnedAPIData[1].response
+		    	puts "Api call 2 is successful!"
 		    	returnedAPIData[2] = EventMachine::HttpRequest.new(urls[2], :connect_timeout => 120, :inactivity_timeout => 120).aget
 		    	returnedAPIData[2].callback do
-		    		puts returnedAPIData[2].response
+		    		puts "Api call 3 is successful!"
 		    		returnedAPIData[3] = EventMachine::HttpRequest.new(urls[3], :connect_timeout => 120, :inactivity_timeout => 120).aget
 		    		returnedAPIData[3].callback do
-		    			puts returnedAPIData[3].response
+		    			puts "Api call 4 is successful!"
 		    			EventMachine.stop
 		    		end
 		    	end
 		    end
 		  end
 		end
-		puts 'Api 1'
-		puts urls[0]
-		puts ''
-		puts returnedAPIData[0].response
-		puts 'Api 2'
-		puts urls[1]
-		puts ''
-		puts returnedAPIData[1].response
-		puts 'Api 3'
-		puts urls[2]
-		puts ''
-		#puts returnedAPIData[2].response
-		puts 'Api 4'
-		puts urls[3]
 		#puts returnedAPIData[3].response
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
 		#oipa_total_project_budget = RestClient.get settings.oipa_api_url + 
