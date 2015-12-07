@@ -701,11 +701,12 @@ get '/rss/country/:country_code/?' do |n|
 
 	    projects.each do |project|
 	      maker.items.new_item do |item|
-	        lastUpdatedDateTime = Time.strptime(project['last_updated_datetime'], '%y-%m-%d')
-	        item.link = "http://devtracker.dfid.gov.uk/projects/#{project['iati-identifier']}/"
+	        #convert lastUpdatedDatetime to UTC
+	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
+	        item.link = "http://devtracker.dfid.gov.uk/projects/" + project['iati_identifier'] + "/"
 	        item.title = project['title']['narratives'][0]['text']
-	        item.description = project['description'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTime.to_s + "]"
-	        item.updated = lastUpdatedDateTime
+	        item.description = project['description'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
+	        item.updated = lastUpdatedDateTimeUtc
 	      end
 	    end
   	end
