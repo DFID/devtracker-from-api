@@ -562,7 +562,10 @@ get '/search/?' do
 
 	countryAllProjectFilters = get_static_filter_list()
 	query = sanitize_input(params['query'],"a")
-	results = generate_searched_data(query);
+	results = ''
+	Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {results = generate_searched_data_para(query)}
+	end
 	erb :'search/search',
 	:layout => :'layouts/layout',
 	:locals => {

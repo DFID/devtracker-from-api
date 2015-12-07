@@ -141,6 +141,156 @@ Returns a Hash 'searchedData' with the following keys:
 		return searchedData
 	end
 
+	#Same function as the previous one but this one just makes concurrent api calls where possible.
+	def generate_searched_data_para(query)
+		#Initiating a blank hash that will eventually store all the necessary data for populating the search result page
+		searchedData = {}
+		dfidCountriesInfo = JSON.parse(File.read('data/dfidCountries.json')) # Stores all the DFID relevant country codes and names by parsing the relevant json file
+		dfidRegionsInfo = JSON.parse(File.read('data/dfidRegions.json')) # Stores all the DFID relevant region codes and names by parsing the relevant json file
+		dfidCountriesResults = '' # Initiated an empty variable that will later store only the search query specific DFID country data
+		dfidRegionsResults = '' # Initiated an empty variable that will later store only the search query specific DFID country data
+		# Filtering and storing only the search query specific DFID country data if there's any
+		dfidCountriesResults = dfidCountriesInfo.select {|result| result['name'].downcase.include? query.downcase} # To avoid multi case letters, a downcase option is used.
+		# Filtering and storing only the search query specific DFID region data if there's any
+		dfidRegionsResults = dfidRegionsInfo.select {|result| result['name'].downcase.include? query.downcase}	# To avoid multi case letters, a downcase option is used.
+		# An empty string which will later store relevant country codes in 'BD,GB,NG' format. This will be needed to be
+		# passed as input to an api call which will then return only these specific country related total budgets. These budgets will
+		# be needed to be shown for the 'Did you mean' part.
+		recipient_countries = ''
+		# An empty string which will later store relevant region codes in 'LE,289,298' format. This will be needed to be
+		# passed as input to an api call which will then return only these specific region related total budgets. These budgets will
+		# be needed to be shown for the 'Did you mean' part.
+		recipient_regions = ''
+		# Initiating two empty hashes which will be used to store the search query specific country and region information (code, name and budget).
+		searchedData['dfidCountryBudgets'] = {}
+		searchedData['dfidRegionBudgets'] = {}
+		# Initiating the project budget higher bound. This will remain 0 if no budget is found or is empty.
+		searchedData['project_budget_higher_bound'] = 0
+		# The following loop goes through the previously search specific country data hash and does the following.
+		dfidCountriesResults.each do |results|
+			recipient_countries.concat(results["code"] + ',');	# This is storing the country codes using ',' in a single string.
+			searchedData['dfidCountryBudgets'][results["code"]] = {} # Created empty hash and the country code is used as the key
+			searchedData['dfidCountryBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the country specific budget value.
+			searchedData['dfidCountryBudgets'][results["code"]][1] = results["name"] # Storing the country name
+		end
+		# The following loop goes through the previously search specific country data hash and does the following.
+		dfidRegionsResults.each do |results|
+			recipient_regions.concat(results["code"] + ','); # This is storing the region codes using ',' in a single string.
+			searchedData['dfidRegionBudgets'][results["code"]] = {} # Created empty hash and the region code is used as the key
+			searchedData['dfidRegionBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the region specific budget value.
+			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
+		end
+
+	    returnedAPIData = Array.new
+		apiLinks = [
+			{"title"=>"oipa_total_project_budget", "link"=>"activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country=#{recipient_countries}"},
+			{"title"=>"oipa_selected_regions_budget", "link"=>"activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=budget&recipient_region=#{recipient_regions}"},
+			{"title"=>"oipa_project_list", "link"=>"activities/?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value"},
+			{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}"}
+		]
+		urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
+		EventMachine.run do
+		  returnedAPIData[0] = EventMachine::HttpRequest.new(urls[0]).aget
+		  returnedAPIData[0].callback do
+		    puts returnedAPIData[0].response
+		    returnedAPIData[1]  = EventMachine::HttpRequest.new(urls[1]).aget
+		    returnedAPIData[1].callback do
+		    	puts returnedAPIData[1].response
+		    	returnedAPIData[2] = EventMachine::HttpRequest.new(urls[2], :connect_timeout => 120, :inactivity_timeout => 120).aget
+		    	returnedAPIData[2].callback do
+		    		puts returnedAPIData[2].response
+		    		returnedAPIData[3] = EventMachine::HttpRequest.new(urls[3], :connect_timeout => 120, :inactivity_timeout => 120).aget
+		    		returnedAPIData[3].callback do
+		    			puts returnedAPIData[3].response
+		    			EventMachine.stop
+		    		end
+		    	end
+		    end
+		  end
+		end
+		puts 'Api 1'
+		puts urls[0]
+		puts ''
+		puts returnedAPIData[0].response
+		puts 'Api 2'
+		puts urls[1]
+		puts ''
+		puts returnedAPIData[1].response
+		puts 'Api 3'
+		puts urls[2]
+		puts ''
+		#puts returnedAPIData[2].response
+		puts 'Api 4'
+		puts urls[3]
+		#puts returnedAPIData[3].response
+		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
+		#oipa_total_project_budget = RestClient.get settings.oipa_api_url + 
+		countries_project_budget = JSON.parse_nil(returnedAPIData[0].response) # Parsed the returned json data and storing it as a hash
+		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
+		# parse and store budget data for the 'Did you mean' country data. 
+		unless searchedData['dfidCountryBudgets'].empty?
+			# Goes through each country specific budget data and checks if there's a budget value for it. If there's one, then converts the budget value
+			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the country specific budget value
+			countries_project_budget['results'].each do |budgets|
+				unless budgets['recipient_country']['code'].nil?
+					searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+				end
+			end
+		end
+		# This json call is pulling the total budget list based on the 'recipient_regions' string previously created
+		#oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + 
+		regions_project_budget = JSON.parse_nil(returnedAPIData[1].response) # Parsed the returned json data and storing it as a hash
+		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
+		# parse and store budget data for the 'Did you mean' region data.
+		unless searchedData['dfidRegionBudgets'].empty?
+			# Goes through each region specific budget data and checks if there's a budget value for it. If there's one, then converts the budget value
+			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the region specific budget value.
+			regions_project_budget['results'].each do |budgets|
+				unless budgets['recipient_region']['code'].nil?
+					searchedData['dfidRegionBudgets'][budgets['recipient_region']['code']][0] = Money.new(budgets['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+				end
+			end
+		end
+		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation
+		# The following api call returns the projects list based on the search query. The result is returned with data sorted
+		# by budget value so that we can get the budget higher bound from a single api call.
+		#oipa_project_list = RestClient.get settings.oipa_api_url + 
+		projects_list= Oj.load(returnedAPIData[2].response)
+		searchedData['projects'] = projects_list['results'] # Storing the returned project list
+		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
+		unless projects_list['count'] == 0
+			unless projects_list['results'][0]['activity_plus_child_aggregation']['budget_value'].nil?
+				searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_plus_child_aggregation']['budget_value']
+			end
+		end
+		searchedData['project_count'] = projects_list['count'] # Stored the project count here
+		# This returns the relevant sector list to populate the left hand side sectors filter.
+		#sectorValuesJSON = RestClient.get settings.oipa_api_url + 
+		searchedData['highLevelSectorList'] = high_level_sector_list_filter(returnedAPIData[3].response) # Returns the high level sector data with name and codes
+		# Initiating the actual start date and the planned end date.
+		searchedData['actualStartDate'] = '1990-01-01T00:00:00'
+		searchedData['plannedEndDate'] = '2000-01-01T00:00:00'
+		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
+		###searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date"
+			###searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
+		###unless searchedData['actualStartDate']['results'][0].nil? 
+			###searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+		###end
+		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
+		###searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date"
+		###searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
+		###unless searchedData['plannedEndDate']['results'][0].nil?
+			###if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?
+				###searchedData['plannedEndDate'] = searchedData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+			###else
+				#This is an issue. For now it's a temporary remedy used to avoid a ruby error but, this needs to be fixed once zz helps out with the api call to return the actual/planned end date.
+				###searchedData['plannedEndDate'] = '2050-12-31T00:00:00'
+			###end
+		###end
+
+		return searchedData
+	end
+
 	def get_static_filter_list()
 		staticFilterList = Oj.load(File.read('data/countryProjectsFilters.json'))
 	end

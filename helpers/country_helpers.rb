@@ -312,17 +312,39 @@ module CountryHelpers
   def get_country_all_projects_data_para(countryCode)
     allProjectsData = {}
     apiLinks = [{"title"=>"oipa_project_list", "link"=>"activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"},{"title"=>"sectorValuesJSON", "link"=>"activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_country=#{countryCode}"},{"title"=>"actualStartDate", "link"=>"activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"},{"title"=>"plannedEndDate", "link"=>"activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"}]
-    returnedAPIData = ""
-    EM.synchrony do
-      concurrency = 4
-      urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
-      returnedAPIData = EM::Synchrony::Iterator.new(urls, concurrency).map do |url, iter|
-          http = EventMachine::HttpRequest.new(url, :connect_timeout => 50).aget
-          http.callback { iter.return(http) }
-          http.errback { iter.return(http) }
+    urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
+    #returnedAPIData = ""
+    #EM.synchrony do
+      #concurrency = 4
+      #urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"]]
+      #returnedAPIData = EM::Synchrony::Iterator.new(urls, concurrency).map do |url, iter|
+        #  http = EventMachine::HttpRequest.new(url, :connect_timeout => 50).aget
+       #   http.callback { iter.return(http) }
+      #    http.errback { iter.return(http) }
+     # end
+     # EventMachine.stop
+    #end
+    returnedAPIData = Array.new    
+    EventMachine.run do
+      returnedAPIData[0] = EventMachine::HttpRequest.new(urls[0]).aget
+      returnedAPIData[0].callback do
+        puts returnedAPIData[0].response
+        returnedAPIData[1]  = EventMachine::HttpRequest.new(urls[1]).aget
+        returnedAPIData[1].callback do
+          puts returnedAPIData[1].response
+          returnedAPIData[2] = EventMachine::HttpRequest.new(urls[2], :connect_timeout => 120, :inactivity_timeout => 120).aget
+          returnedAPIData[2].callback do
+            puts returnedAPIData[2].response
+            returnedAPIData[3] = EventMachine::HttpRequest.new(urls[3], :connect_timeout => 120, :inactivity_timeout => 120).aget
+            returnedAPIData[3].callback do
+              puts returnedAPIData[3].response
+              EventMachine.stop
+            end
+          end
+        end
       end
-      EventMachine.stop
     end
+
     allProjectsData['countryAllProjectFilters'] = get_static_filter_list()
     allProjectsData['country'] = get_country_code_name(countryCode)
     allProjectsData['results'] = get_country_results(countryCode)
