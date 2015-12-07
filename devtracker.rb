@@ -1,7 +1,6 @@
-#dotenv is used to load the sensitive environment variables for devtracker. 
-#Please check the 'example.env' file for further instructions on setting devtracker depedent variables.
+#dotenv is used to load the sensitive environment variables for devtracker.
 require 'dotenv'
-Dotenv.load
+Dotenv.load('/etc/platform.conf')
 
 require 'sinatra'
 require 'json'
