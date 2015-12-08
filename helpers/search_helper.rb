@@ -104,7 +104,7 @@ Returns a Hash 'searchedData' with the following keys:
 		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation
 		# The following api call returns the projects list based on the search query. The result is returned with data sorted
 		# by budget value so that we can get the budget higher bound from a single api call.
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB"
 		projects_list= JSON.parse(oipa_project_list)
 		searchedData['projects'] = projects_list['results'] # Storing the returned project list
 		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
@@ -115,7 +115,7 @@ Returns a Hash 'searchedData' with the following keys:
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
 		# This returns the relevant sector list to populate the left hand side sectors filter.
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&q=#{query}"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB"
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
 		# Initiating the actual start date and the planned end date.
 		searchedData['actualStartDate'] = '1990-01-01T00:00:00'
