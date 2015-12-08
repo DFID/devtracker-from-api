@@ -164,12 +164,17 @@
     // map.addLayer(new L.Google('ROADMAP'))
     // creates a tile layer with the tiles hosted in mapbox
 
-    L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
-        attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-        subdomains: '0123',
+    L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
         minZoom: 2,
         maxZoom: 4
     }).addTo(map);
+    //L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
+    //    attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+    //    subdomains: '0123',
+    //    minZoom: 2,
+    //    maxZoom: 4
+    //}).addTo(map);
     // L.tileLayer("http://devtracker.dfid.gov.uk/v2/dfid/{z}/{x}/{y}.png", {
     //                         minZoom: 2,
     //                         maxZoom: 4,
