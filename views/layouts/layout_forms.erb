@@ -81,6 +81,13 @@
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
         var tempGetUrl = window.location;
         window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        $('#search').submit(function(){
+          $('.modal_free_text_search').show();
+            setTimeout(patience,10000);
+        });
+        var patience = function(){
+          $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait</div>');
+        };
       });
     var form1;
       var onloadCallback = function() {
@@ -116,6 +123,12 @@
     <div class="page-wrapper">
                <%= yield %>
                <div id="toTop"></div>
+               <div class="modal">
+                    <div>Loading Data <br /> Please Wait</div>
+                </div>
+                <div class="modal_free_text_search">
+                    <div>Searching...</div>
+                </div>
     </div><!-- end page-wrapper -->  
     
     <footer id="footer" role="contentinfo">

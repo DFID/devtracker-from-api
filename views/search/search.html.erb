@@ -19,7 +19,7 @@
     <div class="row">
         <div class="twelve columns">
             <div id="search-bar">
-                <form method="GET" action="/search">
+                <form id="mid-search-form" method="GET" action="/search">
                     <div class="row">
                         <div class="three columns">
                             <label for="query">
@@ -60,9 +60,9 @@
                         <div id="light-pagination"></div>
                     </div>
                 </div>
-                <div class="modal">
+                <!--<div class="modal">
                     <div>Loading Data <br /> Please Wait</div>
-                </div>
+                </div> -->
                 <div>
                     <% if !dfidCountryBudgets.empty? %>
                         <% dfidCountryBudgets.each do |results| %>
@@ -230,6 +230,13 @@
                     window.maxBudget = <%= budgetHigherBound %>;
                     window.StartDate = '<%= actualStartDate %>';
                     window.EndDate = '<%= plannedEndDate %>';
+                    $('#mid-search-form').submit(function(){
+                        $('.modal_free_text_search').show();
+                        setTimeout(patience,10000);
+                    });
+                    var patience = function(){
+                        $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait</div>');
+                    };
                 });
             </script>
             <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>

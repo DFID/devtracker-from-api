@@ -58,7 +58,14 @@
 
          $(document).on('click', function(e){
             $(".more-info").hide(); 
-          });           
+          });
+          $('#mid-search-form').submit(function(){
+            $('.modal_free_text_search').show();
+            setTimeout(patience,10000);
+          });
+          var patience = function(){
+            $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait</div>');
+          };
       });
   </script> 
 
@@ -83,6 +90,9 @@
         </div>
       </div>
       <%= yield %>
+      <div class="modal_free_text_search">
+                    <div>Searching...</div>
+                </div>
     </div><!-- end page-wrapper -->  
 
     <footer id="footer" role="contentinfo">
