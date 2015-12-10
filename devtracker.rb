@@ -50,6 +50,7 @@ include RecaptchaHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+#set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -67,6 +68,9 @@ set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
+
+set :raise_errors, false
+set :show_exceptions, false
 
 #####################################################################
 #  HOME PAGE
@@ -726,3 +730,18 @@ not_found do
   status 404
   erb :'404', :layout => :'layouts/layout'
 end
+
+error 404 do
+  status 404
+  erb :'404', :layout => :'layouts/layout'
+end
+
+error 500 do
+  status 500
+  erb :'500', :layout => :'layouts/layout'
+end
+
+#error do
+#    redirect to('/')
+#end
+
