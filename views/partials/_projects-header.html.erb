@@ -37,11 +37,12 @@
                             <li <%= active=="summary" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>">Summary</a></li>
                             <li <%= active=="documents" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
                             <li <%= active=="transactions" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/transactions">Transactions</a></li>
-                            <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
+                            <% if r4dDocsCount > 0 then %>
+                                <li <%= active=="research" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/research">Research (<%= r4dDocsCount %>)</a></li>
+                            <% end %>
+                           <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                 <li <%= active=="partners" ? "class='active'" : ""%>><a href="/projects/<%=project['iati_identifier']%>/partners">Partners</a></li>
                             <% end %>
-
-                            <!-- TODO: bring back in r4dDocs element -->
                         </ul>
                     </nav>
                 </div>          

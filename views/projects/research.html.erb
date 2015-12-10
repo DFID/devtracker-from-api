@@ -1,14 +1,8 @@
----
-published: "true"
-title: Development Tracker
-
----
-
-<%= partial "partials/projects-header", :locals => { :project => project, :active => "r4dDocs", :has_funded_projects => has_funded_projects} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :r4dDocsCount => r4dDocsCount, :active => "research"} %>
 
 <div class="row">
     <div class="twelve columns summary">    
-        <% r4dDocs = r4DApiDocFetch(project['iatiId']) || '' %>
+        <% #r4dDocs = r4DApiDocFetch(project['iatiId']) || '' %>
         <%if !r4dDocs.nil? && r4dDocs.length > 0 %>
           <p>This project has supported the following research projects and/or publications</p>
           <% r4dDocs.each do |s| %>

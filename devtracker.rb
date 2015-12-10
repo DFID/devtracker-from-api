@@ -308,6 +308,14 @@ get '/projects/:proj_id/?' do |n|
 
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
+
+	# get the R4D docs count from the R4D API
+	begin
+		r4dDocs = r4DApiDocFetch(n) || ''
+		r4dDocsCount = r4dDocs.count
+	rescue
+		r4dDocsCount = 0
+	end
 	
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -317,7 +325,8 @@ get '/projects/:proj_id/?' do |n|
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
- 			projectSectorGraphData: projectSectorGraphData
+ 			projectSectorGraphData: projectSectorGraphData,
+ 			r4dDocsCount: r4dDocsCount
  		}
 end
 
@@ -335,6 +344,14 @@ get '/projects/:proj_id/documents/?' do |n|
 
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
+
+	# get the R4D docs count from the R4D API
+	begin
+		r4dDocs = r4DApiDocFetch(n) || ''
+		r4dDocsCount = r4dDocs.count
+	rescue
+		r4dDocsCount = 0
+	end
   	
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
@@ -342,7 +359,8 @@ get '/projects/:proj_id/documents/?' do |n|
  			project: project,
  			countryOrRegion: countryOrRegion,
  			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount 
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			r4dDocsCount: r4dDocsCount
  		}
 end
 
@@ -366,6 +384,14 @@ get '/projects/:proj_id/transactions/?' do |n|
 
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
+
+	# get the R4D docs count from the R4D API
+	begin
+		r4dDocs = r4DApiDocFetch(n) || ''
+		r4dDocsCount = r4dDocs.count
+	rescue
+		r4dDocsCount = 0
+	end
 	
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
@@ -375,7 +401,8 @@ get '/projects/:proj_id/transactions/?' do |n|
  			transactions: transactions,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount 
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			r4dDocsCount: r4dDocsCount 
  		}
 end
 
@@ -395,6 +422,14 @@ get '/projects/:proj_id/partners/?' do |n|
 	# get the funded projects from the API
 	fundedProjectsData = get_funded_project_details(n)
 
+	# get the R4D docs count from the R4D API
+	begin
+		r4dDocs = r4DApiDocFetch(n) || ''
+		r4dDocsCount = r4dDocs.count
+	rescue
+		r4dDocsCount = 0
+	end
+
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -403,7 +438,46 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundedProjects: fundedProjectsData['results'],
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']
+ 			fundingProjectsCount: fundingProjectsData['count'],
+ 			r4dDocsCount: r4dDocsCount 
+ 		}
+end
+
+#Project research page
+get '/projects/:proj_id/research/?' do |n|
+	n = sanitize_input(n,"p")
+	# get the project data from the API
+  	project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	#get total project budget and spend Data
+  	#projectBudget = get_project_budget(n)
+
+  	#get project sectorwise graph  data
+  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	
+	# get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
+
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
+
+	# get the R4D docs count from the R4D API
+	r4dDocs = r4DApiDocFetch(n) || ''
+	r4dDocsCount = r4dDocs.count
+	
+	erb :'projects/research', 
+		:layout => :'layouts/layout',
+		 :locals => {
+ 			project: project,
+ 			countryOrRegion: countryOrRegion,	 					 			
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			projectSectorGraphData: projectSectorGraphData,
+ 			r4dDocsCount: r4dDocsCount,
+ 			r4dDocs: r4dDocs
  		}
 end
 
