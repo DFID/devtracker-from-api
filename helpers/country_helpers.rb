@@ -157,9 +157,16 @@ module CountryHelpers
 
   def get_country_or_region(projectId)
       #get the data
-      countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+
+      if(is_dfid_project(projectId)) then
+        countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+      else
+        countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json"  
+      end
+
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
       data = countryOrRegionData['results']
+      puts data
 
       #iterate through the array
       countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
