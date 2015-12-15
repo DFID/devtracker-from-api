@@ -125,7 +125,7 @@ $(document).ready(function() {
             var url = window.baseUrl + "activities/?format=json&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500";
 
             $.getJSON(url, function (iati) {
-
+            $('.modal_map_markers').show();
             //set up markerCluster
             var markers = new L.MarkerClusterGroup({ 
                 spiderfyOnMaxZoom: true, 
@@ -191,6 +191,7 @@ $(document).ready(function() {
                 });
 
                 map.addLayer(markers);
+                $('.modal_map_markers').hide();
             });
         }
 
