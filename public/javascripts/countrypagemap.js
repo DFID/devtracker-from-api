@@ -191,6 +191,7 @@ $(document).ready(function() {
                 });
 
                 map.addLayer(markers);
+            }).done(function(){
                 $('.modal_map_markers').hide();
             });
         }

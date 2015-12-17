@@ -228,6 +228,7 @@ ul.legend-list li div span{
 
 .button-row span {
   margin:0.5em 0em;
+  float: right;
 }
 
 .button.inform {
@@ -467,13 +468,14 @@ g.c3-axis-y > g:last-child {
 }
 
 .modal div {
-  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 50% transparent;
+  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
   display: block;
-  font-size: 24px;
-  height: 136px;
+  font-size: 3.0vw;
+  /*height: 136px;*/
+  min-height: 185px;
   margin: 200px auto;
   text-align: center;
-  width: 225px;
+  width: auto;
 }
 
 #scrollUp {
@@ -540,13 +542,14 @@ g.c3-axis-y > g:last-child {
 }
 
 .modal_free_text_search div {
-  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 50% transparent;
+  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
   display: block;
-  font-size: 24px;
-  height: auto;
+  /*font-size: 24px;*/
+  font-size: 3.0vw;
+  min-height: 185px;
   margin: 200px auto;
   text-align: center;
-  width: 400px;
+  width: auto;
 }
 
 .projects-nav nav {
@@ -587,12 +590,12 @@ g.c3-axis-y > g:last-child {
 }
 
 .modal_map_markers {
-    display:    none;
+    /*display:    none;*/
     position:   relative;
     z-index:    1000;
     top:        0;
     left:       0;
-    height:     100%;
+    height:     auto;
     width:      100%;
     background: rgba( 255, 255, 255, .8 );
 }
@@ -600,9 +603,9 @@ g.c3-axis-y > g:last-child {
 .modal_map_markers div {
   background: url("/images/ajax-loader.gif") no-repeat scroll 50% 50% transparent;
   display: block;
-  font-size: 24px;
+  font-size: 2.5vw;
   height: auto;
   margin: 200px auto;
   text-align: center;
-  width: 400px;
+  width: auto;
 }
