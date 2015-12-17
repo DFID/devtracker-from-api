@@ -49,11 +49,11 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
+set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -114,7 +114,9 @@ get '/countries/:country_code/?' do |n|
  			country: country,
  			countryYearWiseBudgets: countryYearWiseBudgets,
  			countrySectorGraphData: countrySectorGraphData,
- 			results: results
+ 			results: results,
+ 			title_sub: 'Country',
+ 			title_query: n
  		}
 end
 
@@ -139,7 +141,9 @@ get '/countries/:country_code/projects/?' do |n|
 	 		budgetHigherBound: projectData['project_budget_higher_bound'],
 	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
 	 		actualStartDate: projectData['actualStartDate'],
-	 		plannedEndDate: projectData['plannedEndDate']
+	 		plannedEndDate: projectData['plannedEndDate'],
+	 		title_sub: 'Country',
+ 			title_query: n
 	 	}
 		 			
 end
@@ -158,7 +162,9 @@ get '/countries/:country_code/results/?' do |n|
 	 		country: country,
 	 		totalProjects: totalProjects,
 	 		results: results,
-	 		resultsPillar: resultsPillar
+	 		resultsPillar: resultsPillar,
+	 		title_sub: 'Country',
+ 			title_query: n
 	 		}
 		 			
 end
