@@ -102,18 +102,18 @@ get '/countries/:country_code/?' do |n|
 	countrySectorGraphData = ''
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
-	 		country = get_country_details(n)
+	 		country = get_country_details_para(n)
 	 		results = get_country_results(n)
-    		countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
+    		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
+			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 	 	}
 	end
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
  			country: country,
- 			countryYearWiseBudgets: countryYearWiseBudgets,
- 			countrySectorGraphData: countrySectorGraphData,
+ 			#countryYearWiseBudgets: countryYearWiseBudgets,
+ 			#countrySectorGraphData: countrySectorGraphData,
  			results: results
  		}
 end

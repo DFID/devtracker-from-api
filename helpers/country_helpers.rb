@@ -101,11 +101,13 @@ module CountryHelpers
       
       countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
-      
+
       currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
       currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
 
       totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250")
+      countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{countryCode}&order_by=year,quarter")
+      countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{countryCode}")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
 
       if countryOperationalBudget.length > 0 then
@@ -143,10 +145,113 @@ module CountryHelpers
             :operationalBudgetCurrency => operationalBudgetCurrency,
             :countryBudget => countryBudget,
             :countryBudgetCurrency => "GBP",
-            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget
+            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget,
+            :countryYearWiseBudgets => countryYearWiseBudgets,
+            :countrySectorGraphData => countrySectorGraphData
+
             }
   end
 
+  def get_country_details_para(countryCode)
+
+      firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+      lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+      
+      countriesInfo = Oj.load(File.read('data/countries.json'))
+      country = countriesInfo.select {|country| country['code'] == countryCode}.first
+      
+      countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
+      countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
+
+
+
+      apiLinks = [
+        {"title"=>"currentTotalCountryBudget", "link"=>"activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}"},
+        {"title"=>"currentTotalDFIDBudget", "link"=>"activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget"},
+        {"title"=>"totalProjectsDetails", "link"=>"activities/?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250"},
+        {"title"=>"countryYearWiseBudgets", "link"=>"activities/aggregations/?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{countryCode}&order_by=year,quarter"},
+        {"title"=>"countrySectorGraphData", "link"=>"activities/aggregations/?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{countryCode}"}
+      ]
+      urls = [settings.oipa_api_url + apiLinks[0]["link"], settings.oipa_api_url + apiLinks[1]["link"], settings.oipa_api_url + apiLinks[2]["link"], settings.oipa_api_url + apiLinks[3]["link"], settings.oipa_api_url + apiLinks[4]["link"]]
+
+      returnedAPIData = Array.new    
+      EventMachine.run do
+        returnedAPIData[0] = EventMachine::HttpRequest.new(urls[0]).aget
+        returnedAPIData[0].callback do
+          puts "Api call 1 is successful!"
+          returnedAPIData[1]  = EventMachine::HttpRequest.new(urls[1]).aget
+          returnedAPIData[1].callback do
+            puts "Api call 2 is successful!"
+            returnedAPIData[2] = EventMachine::HttpRequest.new(urls[2], :connect_timeout => 120, :inactivity_timeout => 120).aget
+            returnedAPIData[2].callback do
+              puts "Api call 3 is successful!"
+              returnedAPIData[3] = EventMachine::HttpRequest.new(urls[3], :connect_timeout => 120, :inactivity_timeout => 120).aget
+              returnedAPIData[3].callback do
+                puts "Api call 4 is successful!"
+                returnedAPIData[4] = EventMachine::HttpRequest.new(urls[4], :connect_timeout => 120, :inactivity_timeout => 120).aget
+                returnedAPIData[4].callback do
+                  puts "Api call 5 is successful!"
+                  EventMachine.stop
+                end
+              end
+            end
+          end
+        end
+      end
+
+      #currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
+      currentTotalCountryBudget= get_current_total_budget(returnedAPIData[0].response)
+      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      currentTotalDFIDBudget= get_current_dfid_total_budget(returnedAPIData[1].response)
+      #totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250")
+      totalProjectsDetails = get_total_project(returnedAPIData[2].response)
+      #countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{countryCode}&order_by=year,quarter")
+      countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(returnedAPIData[3].response)
+      #countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{countryCode}")
+      countrySectorGraphData = get_country_sector_graph_data(returnedAPIData[4].response)
+      totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
+
+      if countryOperationalBudget.length > 0 then
+          operationalBudget = countryOperationalBudget[0]['operationalBudget']
+          operationalBudgetCurrency = countryOperationalBudget[0]['currency']
+      else
+          operationalBudget = 0 
+          operationalBudgetCurrency = "GBP"
+      end
+
+      if currentTotalCountryBudget['count'] > 0 then
+          countryBudget = currentTotalCountryBudget['results'][0]['budget']
+      else
+          countryBudget = 0
+      end
+
+      totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      
+      projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
+
+    
+      returnObject = {
+            :code => country['code'],
+            :name => country['name'],
+            :description => country['description'],
+            :population => country['population'],
+            :lifeExpectancy => country['lifeExpectancy'],
+            :incomeLevel => country['incomeLevel'],
+            :belowPovertyLine => country['belowPovertyLine'],
+            :fertilityRate => country['fertilityRate'],
+            :gdpGrowthRate => country['gdpGrowthRate'],
+            :totalProjects => totalProjectsDetails['count'],
+            :totalActiveProjects => totalActiveProjects,
+            :operationalBudget => operationalBudget,
+            :operationalBudgetCurrency => operationalBudgetCurrency,
+            :countryBudget => countryBudget,
+            :countryBudgetCurrency => "GBP",
+            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget,
+            :countryYearWiseBudgets => countryYearWiseBudgets,
+            :countrySectorGraphData => countrySectorGraphData
+
+            }
+  end
   
 
   def get_country_results(countryCode)

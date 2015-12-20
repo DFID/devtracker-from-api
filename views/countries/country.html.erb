@@ -161,12 +161,12 @@
             bindto: '#sectorChart',
             data: {
                 columns: [
-                    <%= countrySectorGraphData[0] %>
+                    <%= country[:countrySectorGraphData][0] %>
                 ],
                 type: 'bar',
                 labels: false,
                 groups: [
-                    <%= countrySectorGraphData[1] %>
+                    <%= country[:countrySectorGraphData][1] %>
                 ]
             },
             tooltop: {
@@ -224,8 +224,8 @@
                 data: {
                     x: 'x',
                     columns: [
-                        ['x', <%= countryYearWiseBudgets[0] %>],
-                        ['Project Budget', <%= countryYearWiseBudgets[1] %>]
+                        ['x', <%= country[:countryYearWiseBudgets][0] %>],
+                        ['Project Budget', <%= country[:countryYearWiseBudgets][1] %>]
                     ],
                     type: 'bar'
                 },
