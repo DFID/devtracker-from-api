@@ -609,3 +609,21 @@ g.c3-axis-y > g:last-child {
   text-align: center;
   width: auto;
 }
+
+#global-header #search {
+  display: none;
+}
+
+.modal_free_text_search div div{
+  background: none repeat scroll 0% 0% transparent; 
+  width: auto; 
+  height: auto; 
+  padding-top: 33px;
+}
+
+.modal div div{
+  background: none repeat scroll 0% 0% transparent; 
+  width: 300px; 
+  height: auto; 
+  padding-top: 33px;
+}

@@ -236,15 +236,15 @@
                     setTimeout(patience_second_level,20000);
                     });
                     var patience = function(){
-                        $('.modal_free_text_search div').html('<div style="background: none repeat scroll 0% 0% transparent; width: auto; height: auto; padding-top: 33px;">Still Searching... <br /> Please Wait<br /><br /><br /><br /><br /></div>');
+                        $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait<br /><br /><br /><br /><br /></div>');
                     };
                     var patience_second_level = function(){
-                        $('.modal_free_text_search div').html('<div style="background: none repeat scroll 0% 0% transparent; width: auto; height: auto; padding-top: 33px;">The search is taking longer than expected.<br> Would you like to <span><a href="#" class="cancel_form_submission">cancel</a></span> the search or wait?<br/><br/><br/><br/><br/><br/><br/></div>');
+                        $('.modal_free_text_search div').html('<div>The search is taking longer than expected.<br> Would you like to <span><a href="#" class="cancel_form_submission">cancel</a></span> the search or wait?<br/><br/><br/><br/><br/><br/><br/></div>');
                     };
                     $('.modal_free_text_search').click(function(){
                         window.stop();
                         $(this).hide();
-                        $('.modal_free_text_search div').html('<div style="background: none repeat scroll 0% 0% transparent; width: auto; height: auto; padding-top: 33px;">Searching...<br /><br /><br /><br /></div>');
+                        $('.modal_free_text_search div').html('<div>Searching...<br /><br /><br /><br /></div>');
                     });
                 });
             </script>
