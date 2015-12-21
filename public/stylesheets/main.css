@@ -612,10 +612,6 @@ g.c3-axis-y > g:last-child {
   width: auto;
 }
 
-#global-header #search {
-  display: none;
-}
-
 .modal_free_text_search div div{
   background: none repeat scroll 0% 0% transparent; 
   width: auto; 
