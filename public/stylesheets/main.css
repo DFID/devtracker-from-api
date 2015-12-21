@@ -58,6 +58,7 @@ span.category {
   display: inline-block;
   padding: 2px 4px;
   font-size: 11.844px;
+  font-size: 0.8vw;
   font-weight: bold;
   line-height: 14px;
   color: #ffffff;
@@ -75,6 +76,7 @@ span.language {
   display: inline-block;
   padding: 2px 4px;
   font-size: 11.844px;
+  font-size: 0.8vw;
   font-weight: bold;
   line-height: 14px;
   color: #ffffff;
@@ -115,6 +117,7 @@ span.language {
 
 .location-button {
   font-size: 1.6em;
+  font-size: 1.55vw;
   margin-top: 30px;
 }
 
@@ -193,6 +196,7 @@ span.language {
     text-align: left;
     vertical-align:top;
     font-size:1.5em;
+    font-size: 1.55vw;
     margin: 0px 2px 2px 2px;
     border: none;
     float:left;
@@ -200,7 +204,8 @@ span.language {
 }
 
 a.documentTitleLink{
-  font-size: 1.5em
+  font-size: 1.5em;
+  font-size: 1.55vw;
 }
 
 ul.legend-list, ul.legend-list li{
@@ -208,7 +213,8 @@ ul.legend-list, ul.legend-list li{
 }
 
 ul.legend-list li div span{
-  font-size:small; 
+  font-size:small;
+  font-size: 1.5vw; 
   font-weight:bold; 
   position:relative;
 }
@@ -244,6 +250,7 @@ ul.legend-list li div span{
 .envelope {
   display:inline;
   font-size:bigger;
+  font-size: 2.5vw;
 }
 
 /* CSS to control the information boxes */
@@ -280,6 +287,7 @@ ul.legend-list li div span{
 .more-info-title
 {
   font-size: 27px;
+  font-size: 2.7vw;
   font-weight: bold;  
 }
 
@@ -316,6 +324,7 @@ ul.legend-list li div span{
 
 .top-five-title{
   font-size: 23px;
+  font-size: 2.3vw;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-style: normal;
@@ -331,6 +340,7 @@ ul.legend-list li div span{
 .project-country-title{
   /*float:left;*/
   font-size: 1.25em;
+  font-size: 1.25vw;
   margin-bottom: 20px;
 }
 
@@ -348,6 +358,7 @@ ul.legend-list li div span{
 
 .country-info{
   font-size: 27px;
+  font-size: 2.15vw;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: 700;
   font-style: normal;
@@ -380,6 +391,7 @@ ul.legend-list li div span{
 
 .trans-type-title{
   font-size: 27px;
+  font-size: 2.7vw;
   font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -392,6 +404,7 @@ ul.legend-list li div span{
 
 .trans-type-value{
   font-size: 27px;
+  font-size: 2.7vw;
   font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -441,6 +454,7 @@ g.c3-axis-y > g:last-child {
 
 #budget-year-chart {
   font-size: 12px;
+  font-size: 1.0vw;
 }
 
 
@@ -470,7 +484,8 @@ g.c3-axis-y > g:last-child {
 .modal div {
   background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
   display: block;
-  font-size: 3.0vw;
+  font-size: 24px;
+  font-size: 2.4vw;
   /*height: 136px;*/
   min-height: 185px;
   margin: 200px auto;
@@ -494,6 +509,7 @@ g.c3-axis-y > g:last-child {
 
 #sectorChart {
   font-size: 12px;
+  font-size: 1.0vw;
   height: 250px;
 }
 
@@ -509,10 +525,12 @@ g.c3-axis-y > g:last-child {
 .popup h3,
 .popup h4 {
   font-size: 1.1em;
+  font-size: 1.1vw;
 }
 
 .popup h1 {
   font-size: 1.3em;
+  font-size: 1.3vw;
   font-weight: 700;
   line-height: 33px;
   padding-right: 20px;
@@ -526,6 +544,7 @@ g.c3-axis-y > g:last-child {
 
 .popup .row .stat p {
   font-size: 1.2em;
+  font-size: 1.2vw;
   font-weight: 700;
 }
 
@@ -544,8 +563,8 @@ g.c3-axis-y > g:last-child {
 .modal_free_text_search div {
   background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
   display: block;
-  /*font-size: 24px;*/
-  font-size: 3.0vw;
+  font-size: 24px;
+  font-size: 2.4vw;
   min-height: 185px;
   margin: 200px auto;
   text-align: center;
@@ -587,6 +606,7 @@ g.c3-axis-y > g:last-child {
     /*color: #616161;*/
     /*padding: 10px 0; */
     font-size: 1em;
+    font-size: 1.19vw;
 }
 
 .modal_map_markers {
@@ -603,6 +623,7 @@ g.c3-axis-y > g:last-child {
 .modal_map_markers div {
   background: url("/images/ajax-loader.gif") no-repeat scroll 50% 50% transparent;
   display: block;
+  font-size: 24px;
   font-size: 2.5vw;
   height: auto;
   margin: 200px auto;
@@ -626,4 +647,14 @@ g.c3-axis-y > g:last-child {
   width: 300px; 
   height: auto; 
   padding-top: 33px;
+}
+
+
+@media screen and (max-width: 480px) {
+    .top-five-title {
+      font-size: 4.5vw;
+    }
+    .top-5s ol li {
+      font-size: 3.2vw; 
+    }
 }
