@@ -220,84 +220,89 @@ module ProjectHelpers
 
     def project_budget_per_fy(projectId)
 
-        if is_dfid_project(projectId) then
-            actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
-            disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
-            expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
-        else
-            actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
-            disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
-            expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
-        end
+        begin #to mask errors in the return of the aggregation for some partner projects.
+            if is_dfid_project(projectId) then
+                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
+            else
+                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
+            end
 
-        actualBudget = JSON.parse(actualBudgetJSON)
-        actualBudget = actualBudget['results'].select {|project| !project['budget'].nil? }
-        disbursement = JSON.parse(disbursementJSON)    
-        disbursement = disbursement['results'].select {|project| !project['disbursement'].nil? }
-        expenditure = JSON.parse(expenditureJSON)    
-        expenditure = expenditure['results'].select {|project| !project['expenditure'].nil? }
+            actualBudget = JSON.parse(actualBudgetJSON)
+            actualBudget = actualBudget['results'].select {|project| !project['budget'].nil? }
+            disbursement = JSON.parse(disbursementJSON)    
+            disbursement = disbursement['results'].select {|project| !project['disbursement'].nil? }
+            expenditure = JSON.parse(expenditureJSON)    
+            expenditure = expenditure['results'].select {|project| !project['expenditure'].nil? }
 
-        actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
-        disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
-        expenditurePerFy = get_spend_budget_per_fy(expenditure,"expenditure")
+            actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
+            disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
+            expenditurePerFy = get_spend_budget_per_fy(expenditure,"expenditure")
 
-        spendBudgetPerFy = (disbursementPerFy + expenditurePerFy).group_by { |item|
-            item['fy']
-        }.map { |fy, bs|
-            {
-                "fy"    => fy,
-                "type"  => "spend",
-                "value" => bs.inject(0) { |v, item| v + item["value"] },
-            }   
-        }
+            spendBudgetPerFy = (disbursementPerFy + expenditurePerFy).group_by { |item|
+                item['fy']
+            }.map { |fy, bs|
+                {
+                    "fy"    => fy,
+                    "type"  => "spend",
+                    "value" => bs.inject(0) { |v, item| v + item["value"] },
+                }   
+            }
 
-        # merge the series and sort by financial year
-        series = (spendBudgetPerFy + actualBudgetPerFy).group_by { |item|
-            item['fy']
-        }.map { |fy, items|
-            # So we coerce this into a partially projected list of pairs
-            [
-                fy,
-                (items.find { |b| b['type'] == 'budget' } || {'value' => 0})['value'],
-                (items.find { |b| b['type'] == 'spend' } || {'value' => 0})['value']
-            ]
-        }.sort_by { |item| item.first }
+            # merge the series and sort by financial year
+            series = (spendBudgetPerFy + actualBudgetPerFy).group_by { |item|
+                item['fy']
+            }.map { |fy, items|
+                # So we coerce this into a partially projected list of pairs
+                [
+                    fy,
+                    (items.find { |b| b['type'] == 'budget' } || {'value' => 0})['value'],
+                    (items.find { |b| b['type'] == 'spend' } || {'value' => 0})['value']
+                ]
+            }.sort_by { |item| item.first }
 
-        currentFinancialYear = financial_year
+            currentFinancialYear = financial_year
 
-        range = if series.size < 7 then
-                    series
-                # if the last item in the list is less than or equal to 
-                # the current financial year get the last 6
-                elsif series.last.first <= currentFinancialYear
-                    series.last(6)
-                # other wise show current FY - 3 years and cuurent FY + 3 years
-                else
-                    index_of_now = series.index { |i| i[0] == currentFinancialYear }
-
-                    if index_of_now.nil? then
+            range = if series.size < 7 then
+                        series
+                    # if the last item in the list is less than or equal to 
+                    # the current financial year get the last 6
+                    elsif series.last.first <= currentFinancialYear
                         series.last(6)
+                    # other wise show current FY - 3 years and cuurent FY + 3 years
                     else
-                        series[[index_of_now-3,0].max..index_of_now+2]
+                        index_of_now = series.index { |i| i[0] == currentFinancialYear }
+
+                        if index_of_now.nil? then
+                            series.last(6)
+                        else
+                            series[[index_of_now-3,0].max..index_of_now+2]
+                        end
                     end
-                end
 
-        tempFYear = ""
-        tempBudgetAmount = ""
-        tempSpendAmount = ""
-        returnGraphData = []
-        # finally convert the range into a label format
-        range.each { |item| 
-          #item[0] = financial_year_formatter(item[0])
-          tempFYear  = tempFYear + "'" + financial_year_formatter(item[0]) + "'" + ","
-          tempBudgetAmount = tempBudgetAmount + "'" + item[1].to_s + "'" + ","
-          tempSpendAmount = tempSpendAmount + "'" + item[2].to_s + "'" + ","
-        }
-        returnGraphData[0] = tempFYear
-        returnGraphData[1] = tempBudgetAmount
-        returnGraphData[2] = tempSpendAmount
+            tempFYear = ""
+            tempBudgetAmount = ""
+            tempSpendAmount = ""
+            returnGraphData = []
+            # finally convert the range into a label format
+            range.each { |item| 
+              #item[0] = financial_year_formatter(item[0])
+              tempFYear  = tempFYear + "'" + financial_year_formatter(item[0]) + "'" + ","
+              tempBudgetAmount = tempBudgetAmount + "'" + item[1].to_s + "'" + ","
+              tempSpendAmount = tempSpendAmount + "'" + item[2].to_s + "'" + ","
+            }
+            returnGraphData[0] = tempFYear
+            returnGraphData[1] = tempBudgetAmount
+            returnGraphData[2] = tempSpendAmount
 
-        return returnGraphData        
+            return returnGraphData  
+
+        rescue
+            #returns empty. Need to test for nil.
+        end      
         #return series    
     end
 

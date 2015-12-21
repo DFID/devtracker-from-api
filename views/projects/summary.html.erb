@@ -248,6 +248,8 @@
             }
         });
         <% budgetYearData = project_budget_per_fy(project['id']) %>
+
+        <% if !budgetYearData.nil? then %>
             
             var yTicks = [];
             var chart = c3.generate({
@@ -309,6 +311,12 @@
                 yTicks = [];
                 //chart.ygrids.add({value: tempString[i]});
             }
+
+            <% else %>
+
+            $('#budget-plan-spend').html("Data not found");
+
+            <% end %>
         
     });
  </script>
