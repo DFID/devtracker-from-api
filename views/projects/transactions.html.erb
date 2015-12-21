@@ -37,12 +37,14 @@ title: Development Tracker
           <th>Financial Year</th>
           <th>Value</th>
         </tr>
-        <% projectYearWiseBudgets.each do |projectYearWiseBudget| %>
+        <% if !projectYearWiseBudgets.nil? then 
+              projectYearWiseBudgets.each do |projectYearWiseBudget| %>
           <tr>
             <td><%= projectYearWiseBudget['fy'] %></td>
             <td><span class="<%= projectYearWiseBudget['value'].round(0) < 0 ? 'negative' : ''%>"><%= Money.new(projectYearWiseBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span></td>
           </tr>
-        <% end %>
+        <%    end
+           end %>
       </tbody>
     </table>
   </div>

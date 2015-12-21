@@ -53,7 +53,6 @@ module ProjectHelpers
     end
 
     def get_project_yearwise_budget(projectId)
-        
         if is_dfid_project(projectId) then
             oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
         else
