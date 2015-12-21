@@ -54,7 +54,11 @@
                     </div>
                 </aside>
                 <span><strong>
-                    <%= Money.new(region[:regionBudget].to_f.round(0)*100, region[:regionBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                    <%begin%>
+                        <%= Money.new(region[:regionBudget].to_f.round(0)*100, region[:regionBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                    <%rescue%>
+                        No data available.
+                    <%end%>
                 </strong></span>
             </li>
             <li class="fact-item">
