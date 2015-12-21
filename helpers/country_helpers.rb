@@ -294,7 +294,11 @@ module CountryHelpers
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
+      begin
+        allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
+      rescue
+        allProjectsData['project_budget_higher_bound'] = 0
+      end
     end
     ###allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"
     ###allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
@@ -334,7 +338,11 @@ module CountryHelpers
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
+      begin
+        allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['budget_value']
+      rescue
+        allProjectsData['project_budget_higher_bound'] = 0
+      end
     end
     ###allProjectsData['actualStartDate'] = Oj.load(returnedAPIData[2].response)
     ###unless allProjectsData['actualStartDate']['results'][0].nil? 

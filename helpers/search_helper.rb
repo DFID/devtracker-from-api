@@ -109,9 +109,11 @@ Returns a Hash 'searchedData' with the following keys:
 		searchedData['projects'] = projects_list['results'] # Storing the returned project list
 		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
 		unless projects_list['count'] == 0
-			unless projects_list['results'][0]['activity_plus_child_aggregation']['budget_value'].nil?
-				searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_plus_child_aggregation']['budget_value']
-			end
+				begin
+					searchedData['project_budget_higher_bound'] = projects_list['results'][0]['activity_plus_child_aggregation']['budget_value']
+				rescue
+					searchedData['project_budget_higher_bound'] = 0
+				end
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
 		# This returns the relevant sector list to populate the left hand side sectors filter.
