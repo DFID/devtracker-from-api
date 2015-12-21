@@ -146,8 +146,8 @@
 
 @media screen and (max-width: 667px) {
   /* hide the search at the top till we sort it out */
-  #global-header #search, .map, #countryMap, #countryMapDisclaimer {
-    /*display: none;*/ }
+  #global-header #search, .map /*, #countryMap, #countryMapDisclaimer*/ {
+    display: none; }
 
   .tab-bar li a {
     overflow: hidden;
@@ -168,6 +168,7 @@
   #search-bar label h3 {
     display: block !important;
     margin: 0 0 10px; } }
+    
 @media screen and (max-width: 600px) {
   #search-bar input.button {
     display: block;
