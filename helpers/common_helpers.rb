@@ -166,4 +166,9 @@ module CommonHelpers
       end
   end
 
+  def page_title_setter(pre_info,mid_info,post_info)
+    settings.devtracker_title_pre = pre_info
+    settings.devtracker_title_mid = mid_info
+    settings.devtracker_title_post = post_info
+  end
 end
