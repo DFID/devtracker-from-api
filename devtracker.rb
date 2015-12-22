@@ -431,9 +431,6 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
-	settings.devtracker_title_pre = 'Sector'
-  	settings.devtracker_title_mid = 'Page'
-  	settings.devtracker_title_post = ''
   	page_title_setter('Sector','Page','')
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
