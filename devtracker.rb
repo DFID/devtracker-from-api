@@ -72,9 +72,6 @@ set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 set :raise_errors, false
 set :show_exceptions, false
 
-set :devtracker_title_pre, ""
-set :devtracker_title_mid, ""
-set :devtracker_title_post, ""
 set :devtracker_page_title, ''
 #####################################################################
 #  HOME PAGE
