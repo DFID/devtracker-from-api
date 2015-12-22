@@ -3,7 +3,7 @@
         <div class="tab-bar-container">
             <div class="row">
 
-                <div class="projects-nav">
+                <div class="projects-nav six columns">
                     <nav>
                         <ul class="tab-bar">
                             <li <%= active=="summary" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>">Summary</a></li>
@@ -15,7 +15,7 @@
                     </nav>
                 </div>  
 
-                 <div class="button-row">
+                 <div class="button-row six columns">
                     <% if project_count > 0 %>
                     <span>
                         <a href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string country[:code] %>" title="Subscribe to receive updates on <%= country[:name] %> by email" class="button inform">&#9993; Subscribe</a>
