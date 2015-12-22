@@ -776,9 +776,6 @@ end
 
 error 500 do
   status 500
-  settings.devtracker_title_pre = "Error 500"
-  settings.devtracker_title_mid = 'Page'
-  settings.devtracker_title_post = ''
   page_title_setter("Error 500",'Page','')
   erb :'500', :layout => :'layouts/layout'
 end
