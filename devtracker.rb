@@ -72,11 +72,15 @@ set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 set :raise_errors, false
 set :show_exceptions, false
 
+<<<<<<< HEAD
 ERROR_LIST = [
   EOFError,
   NoMethodError
 ]
 
+=======
+set :devtracker_page_title, ''
+>>>>>>> master
 #####################################################################
 #  HOME PAGE
 #####################################################################
@@ -85,6 +89,7 @@ get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
   	top5countries = get_top_5_countries()
+  	settings.devtracker_page_title = ''
  	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
@@ -113,6 +118,7 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 	 	}
 	end
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -132,6 +138,7 @@ get '/countries/:country_code/projects/?' do |n|
 #	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
 #	end
 	#projectData = get_country_all_projects_data_para(n)
+  	settings.devtracker_page_title = 'Country ' + projectData['country'][:name] + ' Projects Page'
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -156,7 +163,7 @@ get '/countries/:country_code/results/?' do |n|
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
     totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities?reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&fields=activity_status&page_size=250")
-	
+  	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
 	erb :'countries/results', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -179,6 +186,7 @@ get '/global' do
 	region[:code] = "NS,ZZ"
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
+  	settings.devtracker_page_title = 'Global All Projects Page'
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -210,6 +218,7 @@ get '/global/:global_code/projects/?' do |n|
 		region[:name] = "ALL"
 	end
 	getRegionProjects = get_region_projects(region[:code])
+	settings.devtracker_page_title = 'Global '+region[:name]+' Projects Page'
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -236,6 +245,7 @@ get '/regions' do
 	region[:code] = ""
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
+  	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -257,7 +267,7 @@ get '/regions/:region_code/?' do |n|
     region = get_region_details(n)	
 	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter")
 	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
-	
+  	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -274,6 +284,7 @@ get '/regions/:region_code/projects/?' do |n|
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
 	getRegionProjects = get_region_projects(n)
+  	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -314,6 +325,7 @@ get '/projects/:proj_id/?' do |n|
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
 	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -341,6 +353,7 @@ get '/projects/:proj_id/documents/?' do |n|
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
   	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -372,6 +385,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
 	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -400,6 +414,7 @@ get '/projects/:proj_id/partners/?' do |n|
 	# get the funded projects from the API
 	fundedProjectsData = get_funded_project_details(n)
 
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -421,6 +436,7 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
+  	settings.devtracker_page_title = 'Sector Page'
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -431,6 +447,7 @@ end
 # Category Page (e.g. Three Digit DAC Sector) 
 get '/sector/:high_level_sector_code/?' do
 	# Get the three digit DAC sector data from the API
+  	settings.devtracker_page_title = 'Sector '+sanitize_input(params[:high_level_sector_code],"p")+' Page'
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -450,6 +467,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 	end
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -471,6 +489,7 @@ end
 # Sector Page (e.g. Five Digit DAC Sector) 
 get '/sector/:high_level_sector_code/categories/:category_code/?' do
 	# Get the three digit DAC sector data from the API
+  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Page'
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -491,6 +510,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	end
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -521,6 +541,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['sectorName'] = sectorJsonData["Name"]
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
 
+  	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -545,6 +566,7 @@ end
 
 #Aid By Location Page
 get '/location/country/?' do
+  	settings.devtracker_page_title = 'Aid by Location Page'
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -555,6 +577,7 @@ end
 
 # Aid by Region Page
 get '/location/regional/?' do 
+  	settings.devtracker_page_title = 'Aid by Region Page'
 	erb :'location/regional/index', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -562,8 +585,9 @@ get '/location/regional/?' do
 		}
 end
 
-# Aid by Region Page
-get '/location/global/?' do 
+# Aid by Global Page
+get '/location/global/?' do
+  	settings.devtracker_page_title = 'Aid by Global Page'
 	erb :'location/global/index', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -580,6 +604,7 @@ get '/search/?' do
 	countryAllProjectFilters = get_static_filter_list()
 	query = sanitize_input(params['query'],"a")
 	results = generate_searched_data(query);
+  	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
 	:locals => {
@@ -602,23 +627,28 @@ end
 #####################################################################
 
 
-get '/department' do 
+get '/department' do
+  	settings.devtracker_page_title = 'Aid by Department Page'
 	erb :'department/department', :layout => :'layouts/layout'
 end
 
 get '/about/?' do
+  	settings.devtracker_page_title = 'About DevTracker Page'
 	erb :'about/about', :layout => :'layouts/layout'
 end
 
 get '/cookies/?' do
+  	settings.devtracker_page_title = 'Cookies Page'
 	erb :'cookies/index', :layout => :'layouts/layout'
 end  
 
 get '/faq/?' do
+  	settings.devtracker_page_title = 'FAQ: What does this mean?'
 	erb :'faq/faq', :layout => :'layouts/layout'
 end 
 
 get '/feedback/?' do
+  	settings.devtracker_page_title = 'Feedback Page'
 	erb :'feedback/index', :layout => :'layouts/layout_forms',
 	:locals => {
 		googlePublicKey: settings.google_recaptcha_publicKey
@@ -626,6 +656,7 @@ get '/feedback/?' do
 end 
 
 get '/whats-new/?' do
+  	settings.devtracker_page_title = "What's New Page"
 	erb :'about/whats-new', :layout => :'layouts/layout'
 end 
 
@@ -651,6 +682,7 @@ post '/feedback/index' do
 end
 
 get '/fraud/?' do
+  	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
 	erb :'fraud/index', :layout => :'layouts/layout_forms',
 	:locals => {
 		googlePublicKey: settings.google_recaptcha_publicKey
@@ -721,6 +753,7 @@ get '/rss/country/:country_code/?' do |n|
   	end
 
   	content_type 'text/xml'
+  	settings.devtracker_page_title = "RSS Feed for " + countryName[:name] + " Page"
   	erb :'rss/index', :layout => false, :locals => {:rss => rss}
 
 end 
@@ -733,16 +766,19 @@ end
 # 404 Error!
 not_found do
   status 404
+  settings.devtracker_page_title = "Error 404(Page not found!)"
   erb :'404', :layout => :'layouts/layout'
 end
 
 error 404 do
   status 404
+  settings.devtracker_page_title = "Error 404(Page not found!)"
   erb :'404', :layout => :'layouts/layout'
 end
 
 error 500 do
   status 500
+  settings.devtracker_page_title = "Error 500 Page"
   erb :'500', :layout => :'layouts/layout'
 end
 
