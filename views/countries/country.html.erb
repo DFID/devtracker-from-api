@@ -101,7 +101,11 @@
     </div>
 
     <div class="six columns" role="presentation">
-        <div id="countryMap" class="countryMap"></div>
+        <div id="countryMap" class="countryMap">
+            <div class="modal_map_markers">
+               <div>Loading Map Markers <br /> Please Wait</div>
+            </div>
+        </div>
 
         <input type="hidden" id="countryName" value="<%=country[:name] %>">
         <input type="hidden" id="countryCode" value="<%=country[:code] %>">

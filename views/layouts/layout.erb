@@ -7,7 +7,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>Development Tracker</title>
+    <title>DevTracker <%= settings.devtracker_page_title %></title>
 
   
     <!--[if IE 8]>
@@ -81,6 +81,7 @@
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
         var tempGetUrl = window.location;
         window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        //window.baseUrl = 'http://dfid-oipa.zz-clients.net/api/';
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
@@ -126,10 +127,10 @@
                <%= yield %>
                <div id="toTop"></div>
                <div class="modal">
-                    <div>Loading Data <br /> Please Wait</div>
+                    <div><div>Loading Data <br> Please Wait</div></div>
                 </div>
                 <div class="modal_free_text_search">
-                    <div>Searching...<br /><br /><br /><br /></div>
+                    <div><div>Searching...<br /><br /><br /><br /></div></div>
                 </div>
     </div><!-- end page-wrapper -->  
     
