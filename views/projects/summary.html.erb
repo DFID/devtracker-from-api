@@ -175,10 +175,20 @@
     <script type="text/javascript" src="/javascripts/bar.js"></script>
 
     <script type="text/javascript">
-        (function(){
+        $(document).ready(function(){
             var funding = [ {label: "", text: "", value: 0},
-                            {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0))*100 , choose_better_currency(project['activity_plus_child_aggregation']['disbursement_currency'],project['activity_plus_child_aggregation']['expenditure_currency'],project['default_currency']['code'])).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) %>},
-                            {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) %>}]
+                            {label: "Spend to date", text: "No data available", value: 0},
+                            {label: "Project budget", text: "No data available", value: 0}]
+            <% begin %>
+                <% project['activity_plus_child_aggregation']['disbursement_value'] %>
+                funding = [ {label: "", text: "", value: 0},
+                                {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0))*100 , choose_better_currency(project['activity_plus_child_aggregation']['disbursement_currency'],project['activity_plus_child_aggregation']['expenditure_currency'],project['default_currency']['code'])).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) %>},
+                                {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) %>}]
+            <% rescue %>
+                funding = [ {label: "", text: "", value: 0},
+                                {label: "Spend to date", text: "No data available", value: 0},
+                                {label: "Project budget", text: "No data available", value: 0}]
+            <% end %>
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
@@ -194,7 +204,7 @@
 
             //var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
             //charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
-        })()
+        });
     </script>
     <script>
     $(document).ready(function() {

@@ -105,7 +105,11 @@ module ProjectHelpers
     def get_h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
             h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
+            begin
             h2Activity['title']['narratives'][0]['text']
+            rescue
+                h2Activity = 'No data available'
+            end
         else
             ""
         end        

@@ -72,7 +72,15 @@ set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 set :raise_errors, false
 set :show_exceptions, false
 
+<<<<<<< HEAD
+ERROR_LIST = [
+  EOFError,
+  NoMethodError
+]
+
+=======
 set :devtracker_page_title, ''
+>>>>>>> master
 #####################################################################
 #  HOME PAGE
 #####################################################################
