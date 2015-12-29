@@ -153,9 +153,9 @@ module ProjectHelpers
 
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
-            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000"
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
         else
-            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=sector&aggregations=budget&order_by=-budget&page_count=1000"  
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
         end
         projectSectorGraph = JSON.parse(projectSectorGraphJSON)
         
