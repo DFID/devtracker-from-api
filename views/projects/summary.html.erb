@@ -115,7 +115,7 @@
             <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
         <%end%>
        
-        <script src="/javascripts/regionBounds.js" type="text/javascript"></script>
+        <script src="/javascripts/regionBounds.min.js" type="text/javascript"></script>
         <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
 <!--        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
         <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
@@ -128,7 +128,7 @@
             var mapType = "project";
             var locations = <%=project['locations'].to_json%>
         </script> 
-        <script src="/javascripts/countrymap.js" type="text/javascript"></script>
+        <script src="/javascripts/countrymap.min.js" type="text/javascript"></script>
 
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
@@ -170,9 +170,9 @@
 
     </div>
 
-    <script type="text/javascript" src="/javascripts/donut.js"></script>
-    <script type="text/javascript" src="/javascripts/progress.js"></script>
-    <script type="text/javascript" src="/javascripts/bar.js"></script>
+    <script type="text/javascript" src="/javascripts/donut.min.js"></script>
+    <script type="text/javascript" src="/javascripts/progress.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bar.min.js"></script>
 
     <script type="text/javascript">
         (function(){
