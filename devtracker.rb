@@ -179,7 +179,7 @@ get '/global' do
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
   	settings.devtracker_page_title = 'Global All Projects Page'
-	erb :'regions/projects', 
+	erb :'regions/projects-home', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
@@ -238,7 +238,7 @@ get '/regions' do
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
-	erb :'regions/projects', 
+	erb :'regions/projects-home', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
