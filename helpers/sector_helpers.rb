@@ -26,7 +26,7 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
 	end
 	
 	def group_hashes arr, group_fields
@@ -86,7 +86,7 @@ module SectorHelpers
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
 
 
-		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations/?reporting_organisation=GB-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
   		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -150,26 +150,26 @@ module SectorHelpers
 	 end
 
 	def get_sector_projects(n)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}"
 		projects= JSON.parse(oipa_project_list)
 		results = {}
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_sector=#{n}"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_sector=#{n}"
 		results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
-		#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}")
-		results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}")
-		results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}")
+		#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}")
+		results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}")
+		results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=GB-1&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}")
 		results['project_budget_higher_bound'] = 0
 		results['actualStartDate'] = '1990-01-01T00:00:00' 
 		results['plannedEndDate'] = '2000-01-01T00:00:00'
 		unless projects['results'][0].nil?
 			results['project_budget_higher_bound'] = projects['results'][0]['activity_plus_child_aggregation']['budget_value']
 		end
-			###results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date"
+			###results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date"
 			###results['actualStartDate'] = JSON.parse(results['actualStartDate'])
 		###unless results['actualStartDate']['results'][0].nil? 
 			###results['actualStartDate'] = results['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
 		###end
-		###results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date"
+		###results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date"
 		###results['plannedEndDate'] = JSON.parse(results['plannedEndDate'])
 		###unless results['plannedEndDate']['results'][0].nil?
 			###if !results['plannedEndDate']['results'][0]['activity_dates'][2].nil?

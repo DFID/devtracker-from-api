@@ -74,7 +74,7 @@ Returns a Hash 'searchedData' with the following keys:
 			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
-		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country="+recipient_countries
+		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_country&aggregations=budget&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' country data. 
@@ -88,7 +88,7 @@ Returns a Hash 'searchedData' with the following keys:
 			end
 		end
 		# This json call is pulling the total budget list based on the 'recipient_regions' string previously created
-		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=budget&recipient_region="+recipient_regions
+		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&group_by=recipient_region&aggregations=budget&recipient_region="+recipient_regions
 		regions_project_budget = JSON.parse_nil(oipa_selected_regions_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' region data.
@@ -104,7 +104,7 @@ Returns a Hash 'searchedData' with the following keys:
 		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation
 		# The following api call returns the projects list based on the search query. The result is returned with data sorted
 		# by budget value so that we can get the budget higher bound from a single api call.
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB"
 		projects_list= JSON.parse(oipa_project_list)
 		searchedData['projects'] = projects_list['results'] # Storing the returned project list
 		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
@@ -115,19 +115,19 @@ Returns a Hash 'searchedData' with the following keys:
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
 		# This returns the relevant sector list to populate the left hand side sectors filter.
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB"
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
 		# Initiating the actual start date and the planned end date.
 		searchedData['actualStartDate'] = '1990-01-01T00:00:00'
 		searchedData['plannedEndDate'] = '2000-01-01T00:00:00'
 		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
-		###searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date"
+		###searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date"
 			###searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
 		###unless searchedData['actualStartDate']['results'][0].nil? 
 			###searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
 		###end
 		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
-		###searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date"
+		###searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date"
 		###searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
 		###unless searchedData['plannedEndDate']['results'][0].nil?
 			###if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?
