@@ -153,7 +153,7 @@
                 marker_title = location.name[0].narratives[0].text;
             }
             catch(e){
-                marker_title = 'Global Region';   
+                marker_title = ProjectTitle;   
             }
             try {
                 latlng = new L.LatLng(location.point.pos.latitude,location.point.pos.longitude);
