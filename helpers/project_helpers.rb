@@ -164,8 +164,8 @@ module ProjectHelpers
             c3ReadyStackBarData[1] = '['
             projectSector.each do |sector|
                 sectorGroupPercentage = (100*sector['budget'].to_f/totalBudgets.to_f).round(2)
-                c3ReadyStackBarData[0].concat("['"+sector['sector']['name']+"',"+sectorGroupPercentage.to_s+"],")
-                c3ReadyStackBarData[1].concat("'"+sector['sector']['name']+"',")
+                c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
+                c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
             end
             c3ReadyStackBarData[1].concat(']')
             return c3ReadyStackBarData
