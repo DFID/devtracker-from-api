@@ -1,11 +1,11 @@
 (function(global, undefined){
 
-    function buildMarkerPopupHtml(location) {
+    function buildMarkerPopupHtml(location_title) {
         return [
             "<div class='location-popup'>",
                 "<div class='row'>", 
                     "<div class='four columns location-label'> Name </div>", 
-                    "<div class='eight columns'>", location.name[0].narratives[0].text, "</div>",
+                    "<div class='eight columns'>", location_title, "</div>",
                 "</div>",
                 //"<div class='row'>", 
                 //    "<div class='four columns location-label'> Precision </div>", 
@@ -148,23 +148,49 @@
             var location = locations[i];
             //console.log(location.point.point.latitude);
             //var latlng   = new L.LatLng(location.latitude, location.longitude)
-            var latlng   = new L.LatLng(location.point.pos.latitude,location.point.pos.longitude);
-            var marker   = new L.Marker(latlng, { 
+            var latlng, marker_title;
+            try {
+                marker_title = location.name[0].narratives[0].text;
+            }
+            catch(e){
+                marker_title = ProjectTitle;   
+            }
+            try {
+                latlng = new L.LatLng(location.point.pos.latitude,location.point.pos.longitude);
+                var marker = new L.Marker(latlng, { 
+                    title: marker_title, 
+                    //data:  location
+                });
+                switch(mapType) {
+                    case "country": 
+                        marker.bindPopup(buildClusterPopupHtml([location]))
+                        break;
+                    case "project": 
+                        marker.bindPopup(buildMarkerPopupHtml(marker_title))
+                        break;
+                }
+                markers.addLayer(marker);
+            }
+            catch(e){
+                latlng = new L.LatLng(0,0);   
+            }
+            //var latlng   = new L.LatLng(location.point.pos.latitude,location.point.pos.longitude);
+            /*var marker   = new L.Marker(latlng, { 
                 title: location.name[0].narratives[0].text, 
                 data:  location
-            });
+            });*/
 
             // mapType is a global variable that is used to
-            switch(mapType) {
+            /*switch(mapType) {
                 case "country": 
                     marker.bindPopup(buildClusterPopupHtml([location]))
                     break;
                 case "project": 
                     marker.bindPopup(buildMarkerPopupHtml(location))
                     break;
-            }
+            }*/
             
-            markers.addLayer(marker);
+            //markers.addLayer(marker);
         }
 
         map.addLayer(markers);
