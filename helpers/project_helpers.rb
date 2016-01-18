@@ -9,43 +9,43 @@ module ProjectHelpers
     include CommonHelpers
 
     def get_h1_project_details(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json"
+        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
     end
 
     def get_h2_project_details(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities?format=json&related_activity_id=#{projectId}&page_size=50&fields=iati_identifier,title"
+        oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&related_activity_id=#{projectId}&page_size=50&fields=iati_identifier,title"
         project = JSON.parse(oipa)
         project = project['results']
     end
 
     def get_funding_project_count(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&fields=url"
+        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url"
         project = JSON.parse(oipa)
         project = project['count']
     end
 
     def get_funded_project_count(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&fields=url"
+        oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&fields=url"
         project = JSON.parse(oipa)
         project = project['count']
     end
 
     def get_funding_project_details(projectId)
-        fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions?format=json&transaction_type=1&page_size=1000" 
+        fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" 
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
     end
 
     def get_funded_project_details(projectId)
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_plus_child_aggregation,default_currency&ordering=title"
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_plus_child_aggregation,default_currency&ordering=title"
         fundedProjectsData = JSON.parse(fundedProjectsAPI)
     end
 
     def get_transaction_details(projectId)
         if is_dfid_project(projectId) then
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
         end
 
         transactionsJSON = JSON.parse(oipaTransactionsJSON)
@@ -55,9 +55,9 @@ module ProjectHelpers
     def get_project_yearwise_budget(projectId)
         
         if is_dfid_project(projectId) then
-            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
         else
-            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{projectId}&order_by=year,quarter"
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{projectId}&order_by=year,quarter"
         end
 
         yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
@@ -72,7 +72,7 @@ module ProjectHelpers
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         
-        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
         oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=GB-1&group_by=recipient_country&aggregations=count&reporting_organisation=GB-1"
@@ -112,7 +112,7 @@ module ProjectHelpers
     end
 
     def get_funding_project(projectId)
-        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json" 
+        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json" 
         fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
     end
 
@@ -126,9 +126,9 @@ module ProjectHelpers
 
     def get_implementing_orgs(projectId)
         if is_dfid_project(projectId) then
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
         else
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
         end    
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         implementingOrg=implementingOrgsDetails['results']
@@ -149,9 +149,9 @@ module ProjectHelpers
 
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
-            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
         else
-            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
+            projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=sector&aggregations=sector_percentage_weighted_budget&order_by=-budget&page_count=1000"
         end
         projectSectorGraph = JSON.parse(projectSectorGraphJSON)
         
@@ -178,9 +178,9 @@ module ProjectHelpers
 
     def get_project_budget(projectId)
         if is_dfid_project(projectId) then
-            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
+            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
         else
-            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
+            projectBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=related_activity&aggregations=expenditure,disbursement,budget"
         end
 
         projectBudget=JSON.parse(projectBudgetJSON)
@@ -218,13 +218,13 @@ module ProjectHelpers
 
         begin #to mask errors in the return of the aggregation for some partner projects.
             if is_dfid_project(projectId) then
-                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
-                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
-                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
+                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
             else
-                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
-                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
-                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
+                actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
             end
 
             actualBudget = JSON.parse(actualBudgetJSON)
