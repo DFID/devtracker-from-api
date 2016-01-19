@@ -126,7 +126,8 @@
         <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
         <script type="text/javascript">
             var mapType = "project";
-            var locations = <%=project['locations'].to_json%>
+            var locations = <%=project['locations'].to_json%>;
+            var ProjectTitle = "<%= project['title']['narratives'][0]['text'] %>";
         </script> 
         <script src="/javascripts/countrymap.min.js" type="text/javascript"></script>
 

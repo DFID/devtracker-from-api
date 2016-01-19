@@ -39,7 +39,7 @@ def getR4DDocsCountNotShowing(output_count)
 end
 
 def get_document_category(projectId)
-	oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}?format=json"
+	oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
   	project = JSON.parse(oipa)
   	documents=project['document_links']
 
