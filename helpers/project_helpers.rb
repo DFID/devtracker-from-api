@@ -105,7 +105,7 @@ module ProjectHelpers
     def get_h2Activity_title(h2Activities,h2ActivityId)
         if h2Activities.length>0 then
             h2Activity = h2Activities.select {|activity| activity['iati_identifier'] == h2ActivityId}.first
-            h2Activity['title']['narratives'][0]['text']
+            h2Activity.blank? ? ('') : (h2Activity['title']['narratives'][0]['text'])
         else
             ""
         end        
