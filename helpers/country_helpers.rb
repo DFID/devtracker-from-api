@@ -157,7 +157,12 @@ module CountryHelpers
 
   def get_country_or_region(projectId)
       #get the data
-      countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+      if is_dfid_project(projectId) then
+         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json"
+      else
+         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json"
+      end   
+      
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
       data = countryOrRegionData['results']
 
@@ -203,7 +208,8 @@ module CountryHelpers
       #generate the text label for the country or region
       globalLabel = []
       countries.map do |c|
-        globalLabel << c['country']['name']
+        country = get_country_code_name(c['country']['code'])
+        globalLabel << country[:name]
       end
       regions.map do |r|
         globalLabel << r['region']['name']
