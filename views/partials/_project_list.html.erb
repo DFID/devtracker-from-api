@@ -14,7 +14,7 @@
                     <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
                     &nbsp;
                     Budget
-                    <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▲</span>
+                    <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▼</span>
                     <input type="hidden" id="sort_results_type" value=""  />
                 </div>
                 <div class="seven columns">
@@ -47,7 +47,12 @@
                         <%end%>
                     </h3>
                     <%unless project['activity_plus_child_aggregation']['budget_value'].nil? %>
-                    <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span><%end%>
+                        <%if project['activity_plus_child_aggregation']['budget_value'].to_i != 0 %>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <%else%>
+                            <span class="budget">Budget: <em>Not Provided</em></span>
+                        <%end%>
+                    <%end%>
                     <%unless project['activity_status']['name'].nil? %>
                     <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>

@@ -243,7 +243,7 @@ $(document).ready(function() {
                             validResults['description'] = "";
                         }
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(validResults['total_plus_child_budget_value'])+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         $('#showResults').append(tempString);
                     });
                 })
@@ -326,7 +326,7 @@ $(document).ready(function() {
                     validResults['description'] = "";
                 }
                 //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> £'+addCommas(validResults['total_plus_child_budget_value'])+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
             // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
@@ -378,8 +378,19 @@ $(document).ready(function() {
     }
 
     /*addCommas function is used to properly separate */
-    function addCommas(num) {   
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    function addCommas(num,type) {
+        switch (type){
+            case 'B':
+                if (parseInt(num) != 0) {
+                    return '£' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                else{
+                    return 'Not Provided';
+                }
+                break;
+            default:
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     }
     $( document ).ajaxStart(function() {
         $('.modal').show();
