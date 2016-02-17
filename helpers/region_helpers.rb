@@ -47,7 +47,7 @@ module RegionHelpers
       returnObject = {
             :code => region['code'],
             :name => region['name'],
-            :description => region['description'],
+            :description => region['descriptions'],
             :type => region['type'],
             :url => region['url'],
             :totalProjects => totalProjectsDetails['count'],
@@ -106,7 +106,7 @@ module RegionHelpers
 
     #Here variable n  = related_activity_recipient_region
   def get_region_projects(n)
-      oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=description,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_region=#{n}"
+      oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-1&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_region=#{n}"
       projects= JSON.parse(oipa_project_list)
       results = {}
       sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-1&related_activity_recipient_region=#{n}"
@@ -115,7 +115,7 @@ module RegionHelpers
       results['actualStartDate'] = '1990-01-01T00:00:00' 
       results['plannedEndDate'] = '2000-01-01T00:00:00'
       unless projects['results'][0].nil?
-        results['project_budget_higher_bound'] = projects['results'][0]['activity_plus_child_aggregation']['budget_value']
+        results['project_budget_higher_bound'] = projects['results'][0]['aggregations']['activity_children']['budget_value']
       end
       ###results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-1&hierarchy=1&related_activity_recipient_region=#{n}&ordering=actual_start_date"
       ###results['actualStartDate'] = JSON.parse(results['actualStartDate'])
