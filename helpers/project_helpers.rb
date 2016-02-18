@@ -37,15 +37,15 @@ module ProjectHelpers
     end
 
     def get_funded_project_details(projectId)
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisations,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,description,reporting_organisations,activity_plus_child_aggregation,default_currency&ordering=title"
         fundedProjectsData = JSON.parse(fundedProjectsAPI)
     end
 
     def get_transaction_details(projectId)
         if is_dfid_project(projectId) then
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity=#{projectId}&page_size=400&fields=activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
         end
 
         transactionsJSON = JSON.parse(oipaTransactionsJSON)
