@@ -1,3 +1,3 @@
 //= require jquery
 //= require jquery.expander
-//= require jquery.showmore
+//= require jquery.showmore.min
