@@ -14,7 +14,7 @@
 
 <div class="row">
     <div class="twelve columns summary">
-        <p class="project-description"><%= project['descriptions'].length>0 ? project['descriptions'][0]['narratives'][0]['text'] : "" %></p>
+        <p class="project-description"><%= project['description'].length>0 ? project['description'][0]['narratives'][0]['text'] : "" %></p>
     </div>
 
 </div>
@@ -178,8 +178,8 @@
     <script type="text/javascript">
         (function(){
             var funding = [ {label: "", text: "", value: 0},
-                            {label: "Spend to date", text: "<%= Money.new((project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) + project['aggregations']['activity_children']['expenditure_value'].to_f.round(0))*100 , choose_better_currency(project['aggregations']['activity_children']['disbursement_currency'],project['aggregations']['activity_children']['expenditure_currency'],project['default_currency']['code'])).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) + project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) %>},
-                            {label: "Project budget", text: "<%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f.round(0)*100 , if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) %>}]
+                            {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0))*100 , choose_better_currency(project['activity_plus_child_aggregation']['disbursement_currency'],project['activity_plus_child_aggregation']['expenditure_currency'],project['default_currency']['code'])).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) %>},
+                            {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) %>}]
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
