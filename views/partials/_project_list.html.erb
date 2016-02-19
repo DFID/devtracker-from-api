@@ -46,9 +46,9 @@
                             </a>
                         <%end%>
                     </h3>
-                    <%unless project['activity_plus_child_aggregation']['budget_value'].nil? %>
-                        <%if project['activity_plus_child_aggregation']['budget_value'].to_i != 0 %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <%unless project['aggregations']['activity_children']['budget_value'].nil? %>
+                        <%if project['aggregations']['activity_children']['budget_value'].to_i != 0 %>
+                        <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%else%>
                             <span class="budget">Budget: <em>Not Provided</em></span>
                         <%end%>
@@ -64,9 +64,9 @@
                         <%end%>
                     </em></span>
                     <p class="description">
-                        <%unless project['description'].empty? %>
-                            <%unless project['description'][0]['narratives'].empty? %>
-                                <%= project['description'][0]['narratives'][0]['text'] %>
+                        <%unless project['descriptions'].empty? %>
+                            <%unless project['descriptions'][0]['narratives'].empty? %>
+                                <%= project['descriptions'][0]['narratives'][0]['text'] %>
                             <%end%>
                         <%end%>
                     </p>

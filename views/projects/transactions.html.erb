@@ -26,8 +26,8 @@ title: Development Tracker
        <%# projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P") %>
        <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
-         <div class="<%= project['activity_plus_child_aggregation']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-           <%=  Money.new(project['activity_plus_child_aggregation']['budget_value'].to_f.round(0)*100, if project['activity_plus_child_aggregation']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+         <div class="<%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+           <%=  Money.new(project['aggregations']['activity_children']['budget_value'].to_f.round(0)*100, if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
          </div>
        </div>        
     </div>
@@ -71,7 +71,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['activity_plus_child_aggregation']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['incoming_funds_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100, project['aggregations']['activity_children']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -122,7 +122,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['activity_plus_child_aggregation']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['commitment_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['aggregations']['activity_children']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['commitment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -171,7 +171,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['disbursement_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['disbursement_value'].to_f.round(0)*100, project['aggregations']['activity_children']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
@@ -223,7 +223,7 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['activity_plus_child_aggregation']['expenditure_value'].to_f.round(0)*100, project['activity_plus_child_aggregation']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+             <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
            </div>        
       </div> 
