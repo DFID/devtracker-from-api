@@ -27,7 +27,7 @@
                          </td>
                       <% end %>    
                       <td scope="col">
-                        <%= iati_mime_type document['format']['code'] %>
+                        <%= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
                       </td>
                       <td scope="col">
                         <% document['categories'].each do |category| %>
