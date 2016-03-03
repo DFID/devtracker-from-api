@@ -21,8 +21,15 @@
     "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Europe-regional-89.xml"    
   },
   {
+    "code":"589",
+    "name":"Middle East",
+    "description":"",
+    "type":"Regional",
+    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Middle-East-regional-589.xml"    
+  },
+  {
     "code":"389",
-    "name":"North & Central America",
+    "name":"North and Central America",
     "description":"",
     "type":"Regional",
     "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-North-&-Central-America-regional-389.xml"    

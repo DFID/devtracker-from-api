@@ -109,7 +109,7 @@
 
         <input type="hidden" id="countryName" value="<%= countryOrRegion[:name] %>">
         <input type="hidden" id="countryCode" value="<%= countryOrRegion[:code] %>">
-        <% if countryOrRegion[:code] == "NS" || countryOrRegion[:code] == "ZZ" %>
+        <% if countryOrRegion[:code] == "NS" || countryOrRegion[:code] == "ZZ" || countryOrRegion[:code] == "998" %>
             <input id="projectType" value="global" type="hidden">
         <%else%>
             <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
