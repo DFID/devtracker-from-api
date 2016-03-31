@@ -302,16 +302,16 @@ module CountryHelpers
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
     end
-    ###allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date"
-    ###allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
-    ###unless allProjectsData['actualStartDate']['results'][0].nil? 
-      ###allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-    ###end
-    ###allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"
-    ###allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
-    ###unless allProjectsData['plannedEndDate']['results'][0].nil?
-      ###allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-    ###end
+    allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date&start_date_gte=1900-01-02"
+    allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
+    unless allProjectsData['actualStartDate']['results'][0].nil? 
+      allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+    end
+    allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date"
+    allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
+    unless allProjectsData['plannedEndDate']['results'][0].nil?
+      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+    end
     return allProjectsData
   end
 

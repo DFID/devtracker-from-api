@@ -164,21 +164,21 @@ module SectorHelpers
 		unless projects['results'][0].nil?
 			results['project_budget_higher_bound'] = projects['results'][0]['aggregations']['activity_children']['budget_value']
 		end
-			###results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date"
-			###results['actualStartDate'] = JSON.parse(results['actualStartDate'])
-		###unless results['actualStartDate']['results'][0].nil? 
-			###results['actualStartDate'] = results['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-		###end
-		###results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date"
-		###results['plannedEndDate'] = JSON.parse(results['plannedEndDate'])
-		###unless results['plannedEndDate']['results'][0].nil?
-			###if !results['plannedEndDate']['results'][0]['activity_dates'][2].nil?
-				###results['plannedEndDate'] = results['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-			###else
+			results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date&start_date_gte=1900-01-02"
+			results['actualStartDate'] = JSON.parse(results['actualStartDate'])
+		unless results['actualStartDate']['results'][0].nil? 
+			results['actualStartDate'] = results['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+		end
+		results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date"
+		results['plannedEndDate'] = JSON.parse(results['plannedEndDate'])
+		unless results['plannedEndDate']['results'][0].nil?
+			if !results['plannedEndDate']['results'][0]['activity_dates'][2].nil?
+				results['plannedEndDate'] = results['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+			else
 				#This is an issue. For now it's a temporary remedy used to avoid a ruby error but, this needs to be fixed once zz helps out with the api call to return the actual/planned end date.
-				###results['plannedEndDate'] = '2050-12-31T00:00:00'
-			###end
-		###end
+				results['plannedEndDate'] = '2050-12-31T00:00:00'
+			end
+		end
 		results['projects'] = projects
 		return results
 	end
