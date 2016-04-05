@@ -145,7 +145,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		budgetHigherBound: projectData['project_budget_higher_bound'],
 	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
 	 		actualStartDate: projectData['actualStartDate'],
-	 		plannedEndDate: projectData['plannedEndDate']
+	 		plannedEndDate: projectData['plannedEndDate'],
+	 		documentTypes: projectData['document_types']
 	 	}
 		 			
 end
@@ -192,7 +193,8 @@ get '/global' do
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate']
+ 			plannedEndDate: getRegionProjects['plannedEndDate'],
+ 			documentTypes: getRegionProjects['document_types']
 		}
 end
 
@@ -224,7 +226,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate']
+ 			plannedEndDate: getRegionProjects['plannedEndDate'],
+ 			documentTypes: getRegionProjects['document_types']
 		}	 			
 end
 
@@ -251,7 +254,8 @@ get '/regions' do
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate']
+ 			plannedEndDate: getRegionProjects['plannedEndDate'],
+ 			documentTypes: getRegionProjects['document_types']
 		}
 end
 
@@ -290,7 +294,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate']
+ 			plannedEndDate: getRegionProjects['plannedEndDate'],
+ 			documentTypes: getRegionProjects['document_types']
 		}	 			
 end
 
@@ -476,7 +481,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions']
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types']
  		}	
 end
 
@@ -519,7 +525,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions']
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types']
  		}	
 end
 
@@ -550,7 +557,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions']
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types']
  		}		
 end
 
@@ -612,7 +620,8 @@ get '/search/?' do
 		dfidCountryBudgets: results['dfidCountryBudgets'],
 		dfidRegionBudgets: results['dfidRegionBudgets'],
 		actualStartDate: results['actualStartDate'],
- 		plannedEndDate: results['plannedEndDate']
+ 		plannedEndDate: results['plannedEndDate'],
+ 		documentTypes: results['document_types']
 	}
 end
 

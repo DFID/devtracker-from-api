@@ -152,11 +152,21 @@
                         <h3>Organisations</h3>
                     </span>
                 </div>
-                <div name="documents" style="display: none">
+                <div name="documents" style="">
                     <div class="proj-filter-exp-collapse-sign">+</div>
                     <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                         <h3>Document Type</h3>
                     </span>
+                    <ul style="display: none">
+                        <% documentTypes.each do |documentTypes| %>
+                        <li>
+                            <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
+                            <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
+                            </label>
+                        </li>
+                        <% end %>
+                    </ul>
+                    <input type="hidden" id="selected_document_type" value=""  />
                 </div>
                 <div name="budget">
                     <h3>Budget Value</h3>
