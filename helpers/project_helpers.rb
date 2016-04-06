@@ -73,31 +73,52 @@ module ProjectHelpers
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         
         oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+        puts "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
-        oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=count&reporting_organisation=GB-GOV-1"
+        oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=count&reporting_organisation=GB-GOV-1&activity_status=2"
         projectValues = JSON.parse(oipaCountryProjectCountJSON)
         projectCountValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
-        # Map the input data structure so that it matches the required input for Tilestream
-        projectValuesMapInput = projectBudgetValues.map do |elem|
-        {
-            elem["recipient_country"]["code"] => {
-                 "country" => countriesList.find do |source|
-                                  source["code"].to_s == elem["recipient_country"]["code"]
-                              end["name"],  
-                 "id" => elem["recipient_country"]["code"],
-                 "projects" => projectCountValues.find do |project|
-                                  project["recipient_country"]["code"].to_s == elem["recipient_country"]["code"]
-                              end["count"],
-                 "budget" => elem["budget"],
-                 "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
-                }
-        }
+        projectDataHash = {}
+        projectCountValues.each do |project|
+            tempBudget = projectBudgetValues.find do |projectBudget|
+                projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
+            end
+            tempCountry = countriesList.find do |source|
+                source["code"].to_s == project["recipient_country"]["code"]
+            end
+            projectDataHash[project["recipient_country"]["code"]] = {}
+            projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
+            projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
+            projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
+            projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
+            projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
+            puts project["recipient_country"]["name"]
         end
+
+        # Map the input data structure so that it matches the required input for Tilestream
+
+        # projectValuesMapInput = projectBudgetValues.map do |elem|
+        # {
+        #     elem["recipient_country"]["code"] => {
+        #          "country" => countriesList.find do |source|
+        #                           source["code"].to_s == elem["recipient_country"]["code"]
+        #                       end["name"],  
+        #          "id" => elem["recipient_country"]["code"],
+        #          "projects" => projectCountValues.find do |project|
+        #                            project["recipient_country"]["code"].to_s == elem["recipient_country"]["code"]
+        #                        end["count"],
+        #           "budget" => elem["budget"],
+        #          "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
+        #         }
+        # }
+        # end
         # Edit the returned hash object so that the data is in the correct format (e.g. remove enclosing [])
-        projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
+        #puts projectValuesMapInput
+        #projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
+        projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 
     
