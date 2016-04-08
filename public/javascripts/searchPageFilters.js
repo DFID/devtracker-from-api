@@ -202,7 +202,8 @@ $(document).ready(function() {
                     $.each(json.results,function(i,result){
                         var validResults = {};
                         validResults['iati_identifier'] = !isEmpty(result.iati_identifier) ? result.iati_identifier : "";
-                        //Check title
+                        validResults['id'] = !isEmpty(result.id) ? result.id : "";
+                       //Check title
                         if(!isEmpty(result.title.narratives)){
                             if(!isEmpty(result.title.narratives[0].text)){
                                 validResults['title'] = result.title.narratives[0].text;
@@ -243,7 +244,7 @@ $(document).ready(function() {
                             validResults['description'] = "";
                         }
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         $('#showResults').append(tempString);
                     });
                 })
