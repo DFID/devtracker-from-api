@@ -53,7 +53,7 @@
         "       </div>" +
         "       <div class='six columns'>" +
         "           <div class='stat'>" +
-        "              <h3>Number of projects</h3>" +
+        "              <h3>Number of Active Project(s)</h3>" +
         "          </div>" +
         "       </div>"  +
         "   </div>" +

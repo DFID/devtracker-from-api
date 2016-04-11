@@ -312,6 +312,9 @@ module CountryHelpers
     unless allProjectsData['plannedEndDate']['results'][0].nil?
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
     end
+    oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_country=#{countryCode}"
+    document_type_list = JSON.parse(oipa_document_type_list)
+    allProjectsData['document_types'] = document_type_list['results']
     return allProjectsData
   end
 
