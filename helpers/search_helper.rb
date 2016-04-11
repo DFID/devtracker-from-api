@@ -137,7 +137,10 @@ Returns a Hash 'searchedData' with the following keys:
 				###searchedData['plannedEndDate'] = '2050-12-31T00:00:00'
 			###end
 		###end
-
+		#This code is created for generating the left hand side document type filter list
+		oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&q=#{query}"
+		document_type_list = JSON.parse(oipa_document_type_list)
+		searchedData['document_types'] = document_type_list['results']
 		return searchedData
 	end
 
