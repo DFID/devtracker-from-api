@@ -122,21 +122,34 @@ Returns a Hash 'searchedData' with the following keys:
 		searchedData['plannedEndDate'] = '2000-01-01T00:00:00'
 		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
 		searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date&start_date_gte=1900-01-02"
-			searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
-		unless searchedData['actualStartDate']['results'][0].nil? 
-			searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+		searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
+		tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+		if (tempStartDate.nil?)
+			tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
 		end
+    	searchedData['actualStartDate'] = tempStartDate
+    	searchedData['actualStartDate'] = searchedData['actualStartDate']['iso_date']
+		#unless searchedData['actualStartDate']['results'][0].nil? 
+		#	searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
+		#end
 		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
-		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date"
+		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
 		searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
-		unless searchedData['plannedEndDate']['results'][0].nil?
-			if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?
-				searchedData['plannedEndDate'] = searchedData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-			else
-				#This is an issue. For now it's a temporary remedy used to avoid a ruby error but, this needs to be fixed once zz helps out with the api call to return the actual/planned end date.
-				searchedData['plannedEndDate'] = '2050-12-31T00:00:00'
-			end
+		#puts searchedData['plannedEndDate']
+		tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
+		if (tempEndDate.nil?)
+			tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '4'}.first
 		end
+    	searchedData['plannedEndDate'] = tempEndDate
+    	searchedData['plannedEndDate'] = searchedData['plannedEndDate']['iso_date']
+		#unless searchedData['plannedEndDate']['results'][0].nil?
+		#	if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?
+		#		searchedData['plannedEndDate'] = searchedData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
+		#	else
+				#This is an issue. For now it's a temporary remedy used to avoid a ruby error but, this needs to be fixed once zz helps out with the api call to return the actual/planned end date.
+		#		searchedData['plannedEndDate'] = '2050-12-31T00:00:00'
+		#	end
+		#end
 		#This code is created for generating the left hand side document type filter list
 		oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&q=#{query}"
 		document_type_list = JSON.parse(oipa_document_type_list)

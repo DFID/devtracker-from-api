@@ -174,6 +174,7 @@ $(document).ready(function() {
         $('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
         },
         change: function(event, ui){
+            $('#date-slider-disclaimer').show();
             var tempStartDt = new Date(ui.values[0]);
             var tempEndDt = new Date(ui.values[1]);
             $('#date_lower_bound').val(tempStartDt.customFormat("#YYYY#-#MM#-#DD#"));
