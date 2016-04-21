@@ -152,19 +152,19 @@
                         <h3>Organisations</h3>
                     </span>
                 </div>
-                <div name="documents" style="">
+                <div name="documents" style="display: none">
                     <div class="proj-filter-exp-collapse-sign">+</div>
                     <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                         <h3>Document Type</h3>
                     </span>
                     <ul style="display: none">
-                        <% documentTypes.each do |documentTypes| %>
+                        <%# documentTypes.each do |documentTypes| %>
                         <li>
-                            <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
-                            <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
+                            <label for="document_type_<%#= documentTypes["document_link_category"]["code"] %>" title=" <%#= documentTypes["document_link_category"]["name"] %>">
+                            <input id="document_type_<%#= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%#= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%#= documentTypes["document_link_category"]["name"] %>
                             </label>
                         </li>
-                        <% end %>
+                        <%# end %>
                     </ul>
                     <input type="hidden" id="selected_document_type" value=""  />
                 </div>
@@ -175,13 +175,13 @@
                 </div>
                 <span id="amount" style="border: 0; font-weight: bold"></span>
                 <div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>
-                <div name="date" style="margin-top: 20px;">
+                <div name="date" style="margin-top: 20px; display: none">
                     <h3>Start and end date</h3>
                     <input type="hidden" id="date_lower_bound" value=""  />
                     <input type="hidden" id="date_higher_bound" value=""  />
                 </div>
-                <span id="date-range" style="border: 0; font-weight: bold;"></span>
-                <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div>
+                <span id="date-range" style="border: 0; font-weight: bold; display: none"></span>
+                <div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px; display: none"></div>
                 <div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>
             </div>
         </div>
