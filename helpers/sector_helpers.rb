@@ -161,9 +161,9 @@ module SectorHelpers
 		results['project_budget_higher_bound'] = 0
 		results['actualStartDate'] = '1990-01-01T00:00:00' 
 		results['plannedEndDate'] = '2000-01-01T00:00:00'
-		# unless projects['results'][0].nil?
-		# 	results['project_budget_higher_bound'] = projects['results'][0]['aggregations']['activity_children']['budget_value']
-		# end
+		 unless projects['results'][0].nil?
+		 	results['project_budget_higher_bound'] = projects['results'][0]['aggregations']['activity_children']['budget_value']
+		 end
 		# results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date&start_date_gte=1900-01-02"
 		# results['actualStartDate'] = JSON.parse(results['actualStartDate'])
 		# tempStartDate = results['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
