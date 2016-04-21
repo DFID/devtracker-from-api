@@ -1,8 +1,9 @@
 
 <link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
-
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.multiselect.css" />
 <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/javascripts/formatDate.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.multiselect.min.js"></script>
 <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
 <div class="row project-results">
         <div class="nine columns push-three" id="search-results">
@@ -168,6 +169,23 @@
                     </ul>
                     <input type="hidden" id="selected_document_type" value=""  />
                 </div>
+                <!-- Implementing org filter -->
+                <div name="implementingOrgs" style="">
+                    <div class="proj-filter-exp-collapse-sign">+</div>
+                    <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                        <h3>Implementing Orgs</h3>
+                    </span>
+                    <ul style="display: none">
+                        <% implementingOrgTypes.each do |implementingOrgTypes| %>
+                        <li>
+                            <label for="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" title=" <%= implementingOrgTypes["name"] %>">
+                            <input id="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" type="checkbox" value="<%= implementingOrgTypes["ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["name"] %>
+                            </label>
+                        </li>
+                        <% end %>
+                    </ul>
+                    <input type="hidden" id="selected_implementingOrg_type" value=""  />
+                </div>
                 <div name="budget">
                     <h3>Budget Value</h3>
                     <input type="hidden" id="budget_lower_bound" value=""  />
@@ -188,8 +206,8 @@
         <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
         <script type='text/javascript'>
             $(document).ready(function() {
-                //window.oipaApiUrl = "<%#= oipa_api_url %>";
-                window.oipaApiUrl = window.baseUrl;
+                window.oipaApiUrl = "<%= oipa_api_url %>";
+                //window.oipaApiUrl = window.baseUrl;
                 window.project_count = "<%= total_projects %>";
                 window.maxBudget = <%= budgetHigherBound %>;
                 window.StartDate = '<%= actualStartDate %>';

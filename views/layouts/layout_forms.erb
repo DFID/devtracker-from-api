@@ -81,8 +81,8 @@
         });
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
         var tempGetUrl = window.location;
-        window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
-        //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
+        //window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);

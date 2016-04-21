@@ -145,6 +145,18 @@ module RegionHelpers
       oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_region=#{n}"
       document_type_list = JSON.parse(oipa_document_type_list)
       results['document_types'] = document_type_list['results']
+
+      #Implementing org type filters
+      participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+      oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_region=#{n}&hierarchy=1"
+      implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
+      results['implementingOrg_types'] = implementingOrg_type_list['results']
+      results['implementingOrg_types'].each do |implementingOrgs|
+        if implementingOrgs['name'].length < 1
+           tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+           implementingOrgs['name'] = tempImplmentingOrgData['Name']
+        end
+      end
       return results
   end
 

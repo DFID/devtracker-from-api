@@ -52,10 +52,10 @@ include RecaptchaHelper
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'http://staging-dfid.oipa.nl/api/'
+set :oipa_api_url, 'http://staging-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -146,7 +146,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
-	 		documentTypes: projectData['document_types']
+	 		documentTypes: projectData['document_types'],
+	 		implementingOrgTypes: projectData['implementingOrg_types']
 	 	}
 		 			
 end
@@ -194,7 +195,8 @@ get '/global' do
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}
 end
 
@@ -227,7 +229,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -255,7 +258,8 @@ get '/regions' do
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}
 end
 
@@ -295,7 +299,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -482,7 +487,8 @@ get '/sector/:high_level_sector_code/projects/?' do
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
 end
 
@@ -526,7 +532,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
 end
 
@@ -558,7 +565,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}		
 end
 
@@ -621,7 +629,8 @@ get '/search/?' do
 		dfidRegionBudgets: results['dfidRegionBudgets'],
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
- 		documentTypes: results['document_types']
+ 		documentTypes: results['document_types'],
+ 		implementingOrgTypes: results['implementingOrg_types']
 	}
 end
 

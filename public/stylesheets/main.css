@@ -625,3 +625,7 @@ g.c3-axis-y > g:last-child {
   height: auto; 
   padding-top: 33px;
 }
+
+#test-select_ms {
+  width: 188px;
+}
