@@ -117,47 +117,6 @@ $(document).ready(function() {
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
     });
-    function testSelect(){
-        var tmpImplementingOrgTypeList = $('#test-select :selected').map(function(){return $(this).val()}).get().join();
-        $('#selected_implementingOrg_type').val(tmpImplementingOrgTypeList);
-    }
-    $("#test-select").multiselect({
-        click: function(event, ui){
-            if(ui.checked){
-                $('#test-select option[value=' + ui.value+']').prop("selected", true);
-            }
-            else {
-                $('#test-select option[value=' + ui.value+']').prop("selected", false);
-            }
-            testSelect();
-            //$('#test-select option[value=' + ui.value+']').attr("selected","selected");
-            // var tmpImplementingOrgTypeList = $('#test-select :selected').map(function(){return $(this).val()}).get().join();
-            // $('#selected_implementingOrg_type').val(tmpImplementingOrgTypeList);
-            refreshOipaLink(window.searchType);
-            generateProjectListAjax(oipaLink);
-        },
-        checkAll: function(){
-            $('#test-select option').prop('selected', true);
-            var tmpImplementingOrgTypeList = $('#test-select :selected').map(function(){return $(this).val()}).get().join();
-            $('#selected_implementingOrg_type').val(tmpImplementingOrgTypeList);
-            refreshOipaLink(window.searchType);
-            generateProjectListAjax(oipaLink);
-        },
-        uncheckAll: function(){
-            $('#test-select option').prop('selected', false);
-            var tmpImplementingOrgTypeList = $('#test-select :selected').map(function(){return $(this).val()}).get().join();
-            $('#selected_implementingOrg_type').val(tmpImplementingOrgTypeList);
-            refreshOipaLink(window.searchType);
-            generateProjectListAjax(oipaLink);
-        }
-    });
-
-    // $('#test-select').select(function(){
-    //     var tmpDocumentTypeList = $('#test-select:selected').map(function(){return $(this).val()}).get().join();
-    //     $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
-    //     refreshOipaLink(window.searchType);
-    //     generateProjectListAjax(oipaLink); 
-    // });
 
     $('.sector').click(function(){
         var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
