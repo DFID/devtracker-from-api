@@ -188,15 +188,24 @@ span.language {
 }
 
 .proj-filter-exp-collapse-sign{
-    width:20px;
-    height:20px;;
+    width:22px;
+    height:22px;;
     text-align: left;
     vertical-align:top;
     font-size:1.5em;
     margin: 0px 2px 2px 2px;
     border: none;
-    float:left;
+    float:right;
     cursor:pointer;
+    color: #f4f4f4;
+}
+
+.proj-filter-exp-collapse-sign-down {
+  background-image: url(/images/down-arrow.png);
+}
+
+.proj-filter-exp-collapse-sign-up {
+  background-image: url(/images/up-arrow.png);
 }
 
 a.documentTitleLink{
@@ -625,3 +634,30 @@ g.c3-axis-y > g:last-child {
   height: auto; 
   padding-top: 33px;
 }
+
+.mContent {
+  display: none; 
+  margin-bottom: 15px; 
+  overflow-x: hidden; 
+  overflow-y: scroll; 
+  min-height: 10px;
+  max-height: 200px;
+  width: 100%;
+}
+
+.mContent ul li {
+  border-bottom: 1px solid #DEDEDE;
+}
+
+#filter h3,
+#filter h4 {
+  margin-bottom: 1px;
+}
+
+#filter h4 {
+  margin-top: 1px;
+}
+
+ .filter-header {
+  margin-bottom: 10px;
+ }

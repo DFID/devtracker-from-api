@@ -119,7 +119,7 @@ Returns a Hash 'searchedData' with the following keys:
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
 		# Initiating the actual start date and the planned end date.
 		searchedData['actualStartDate'] = '1990-01-01T00:00:00'
-		searchedData['plannedEndDate'] = '2000-01-01T00:00:00'
+		searchedData['plannedEndDate'] = '2100-01-01T00:00:00'
 		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
 		searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date&start_date_gte=1900-01-02"
 		searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
@@ -135,13 +135,17 @@ Returns a Hash 'searchedData' with the following keys:
 		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
 		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
 		searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
-		#puts searchedData['plannedEndDate']
-		tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
-		if (tempEndDate.nil?)
-			tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '4'}.first
-		end
-    	searchedData['plannedEndDate'] = tempEndDate
-    	searchedData['plannedEndDate'] = searchedData['plannedEndDate']['iso_date']
+		puts "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
+		if(searchedData['plannedEndDate']['count'] > 0)
+			tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
+			if (tempEndDate.nil?)
+				tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '4'}.first
+			end
+	    	searchedData['plannedEndDate'] = tempEndDate
+	    	searchedData['plannedEndDate'] = searchedData['plannedEndDate']['iso_date']
+	    else
+	    	searchedData['plannedEndDate'] = '2100-01-01T00:00:00'
+	    end
 		#unless searchedData['plannedEndDate']['results'][0].nil?
 		#	if !searchedData['plannedEndDate']['results'][0]['activity_dates'][2].nil?
 		#		searchedData['plannedEndDate'] = searchedData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
