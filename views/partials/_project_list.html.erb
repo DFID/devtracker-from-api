@@ -105,7 +105,7 @@
                             </span>
                             <div class="mContent">
                                 <ul style="display: none;margin: 5px;">
-                                    <% locationCountryFilters['results'].each do |countryFilters| %>
+                                    <% locationCountryFilters.each do |countryFilters| %>
                                     <li>
                                         <label for="location_country_<%= countryFilters['recipient_country']['code'] %>" title=" <%= countryFilters['recipient_country']['name'] %>">
                                         <input id="location_country_<%= countryFilters['recipient_country']['code'] %>" type="checkbox" value="<%= countryFilters['recipient_country']['code'] %>" class="location_country" name="locationCountry"><%= countryFilters['recipient_country']['name'] %>
@@ -123,7 +123,7 @@
                             </span>
                             <div class="mContent">
                                 <ul style="display: none;margin: 5px;">
-                                    <% locationRegionFilters['results'].each do |regionFilters| %>
+                                    <% locationRegionFilters.each do |regionFilters| %>
                                     <li>
                                         <label for="location_region_<%= regionFilters['recipient_region']['code'] %>" title=" <%= regionFilters['recipient_region']['name'] %>">
                                         <input id="location_region_<%= regionFilters['recipient_region']['code'] %>" type="checkbox" value="<%= regionFilters['recipient_region']['code'] %>" class="location_region" name="locationRegion"><%= regionFilters['recipient_region']['name'] %>
