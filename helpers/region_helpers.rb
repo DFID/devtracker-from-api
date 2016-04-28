@@ -153,8 +153,13 @@ module RegionHelpers
       results['implementingOrg_types'] = implementingOrg_type_list['results']
       results['implementingOrg_types'].each do |implementingOrgs|
         if implementingOrgs['name'].length < 1
-           tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
-           implementingOrgs['name'] = tempImplmentingOrgData['Name']
+          tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+          if tempImplmentingOrgData.nil?
+            implementingOrgs['name'] = 'na'
+            implementingOrgs['ref'] = 'na'
+          else
+            implementingOrgs['name'] = tempImplmentingOrgData['Name']
+          end
         end
       end
       return results
