@@ -117,6 +117,9 @@ Returns a Hash 'searchedData' with the following keys:
 		# This returns the relevant sector list to populate the left hand side sectors filter.
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB"
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
+		puts searchedData['highLevelSectorList']
+		searchedData['highLevelSectorList'] = searchedData['highLevelSectorList'].sort_by {|key| key}
+
 		# Initiating the actual start date and the planned end date.
 		searchedData['actualStartDate'] = '1990-01-01T00:00:00'
 		searchedData['plannedEndDate'] = '2100-01-01T00:00:00'
@@ -158,6 +161,7 @@ Returns a Hash 'searchedData' with the following keys:
 		oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&q=#{query}"
 		document_type_list = JSON.parse(oipa_document_type_list)
 		searchedData['document_types'] = document_type_list['results']
+		searchedData['document_types'] = searchedData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
 
 		#Implementing org type filters
 		participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
@@ -175,6 +179,7 @@ Returns a Hash 'searchedData' with the following keys:
 		   		end
 			end
 		end
+		searchedData['implementingOrg_types'] = searchedData['implementingOrg_types'].sort_by {|key| key["name"]}
 		return searchedData
 	end
 

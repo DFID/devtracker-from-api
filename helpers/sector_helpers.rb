@@ -210,6 +210,13 @@ module SectorHelpers
 		   		end
 			end
 		end
+		results['LocationCountries'] = results['LocationCountries']['results']
+		results['LocationCountries'] = results['LocationCountries'].sort_by {|key| key["recipient_country"]["name"]}
+		results['LocationRegions'] = results['LocationRegions']['results']
+		results['LocationRegions'] = results['LocationRegions'].sort_by {|key| key["recipient_region"]["name"]}
+		results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
+    	results['document_types'] = results['document_types'].sort_by {|key| key["document_link_category"]["name"]}
+    	results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["name"]}
 		return results
 	end
 end
