@@ -146,7 +146,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
-	 		documentTypes: projectData['document_types']
+	 		documentTypes: projectData['document_types'],
+	 		implementingOrgTypes: projectData['implementingOrg_types']
 	 	}
 		 			
 end
@@ -178,7 +179,8 @@ get '/global' do
 	countryAllProjectFilters = get_static_filter_list()
 	region = {}
 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-	region[:code] = "NS,ZZ"
+	#region[:code] = "NS,ZZ"
+	region[:code] = "998"
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
   	settings.devtracker_page_title = 'Global All Projects Page'
@@ -194,7 +196,8 @@ get '/global' do
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}
 end
 
@@ -227,7 +230,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -255,7 +259,8 @@ get '/regions' do
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}
 end
 
@@ -295,7 +300,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types']
+ 			documentTypes: getRegionProjects['document_types'],
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -482,7 +488,8 @@ get '/sector/:high_level_sector_code/projects/?' do
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
 end
 
@@ -526,7 +533,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
 end
 
@@ -558,7 +566,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			locationCountryFilters: getSectorProjects['LocationCountries'],
  			locationRegionFilters: getSectorProjects['LocationRegions'],
- 			documentTypes: getSectorProjects['document_types']
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}		
 end
 
@@ -621,7 +630,8 @@ get '/search/?' do
 		dfidRegionBudgets: results['dfidRegionBudgets'],
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
- 		documentTypes: results['document_types']
+ 		documentTypes: results['document_types'],
+ 		implementingOrgTypes: results['implementingOrg_types']
 	}
 end
 
