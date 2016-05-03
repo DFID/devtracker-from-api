@@ -126,12 +126,16 @@ Returns a Hash 'searchedData' with the following keys:
 		# Pulling json data with an order by on actual start date to get the starting bound for the LHS date range slider. 
 		searchedData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=actual_start_date&start_date_gte=1900-01-02"
 		searchedData['actualStartDate'] = JSON.parse(searchedData['actualStartDate'])
-		tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
-		if (tempStartDate.nil?)
-			tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
-		end
-    	searchedData['actualStartDate'] = tempStartDate
-    	searchedData['actualStartDate'] = searchedData['actualStartDate']['iso_date']
+		if(searchedData['actualStartDate']['count'] > 0)
+			tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+			if (tempStartDate.nil?)
+				tempStartDate = searchedData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+			end
+	    	searchedData['actualStartDate'] = tempStartDate
+	    	searchedData['actualStartDate'] = searchedData['actualStartDate']['iso_date']
+	    else
+	    	searchedData['actualStartDate'] = '1990-01-01T00:00:00'
+	    end
 		#unless searchedData['actualStartDate']['results'][0].nil? 
 		#	searchedData['actualStartDate'] = searchedData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
 		#end
