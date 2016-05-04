@@ -117,7 +117,7 @@ Returns a Hash 'searchedData' with the following keys:
 		# This returns the relevant sector list to populate the left hand side sectors filter.
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB"
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
-		puts searchedData['highLevelSectorList']
+		#puts searchedData['highLevelSectorList']
 		searchedData['highLevelSectorList'] = searchedData['highLevelSectorList'].sort_by {|key| key}
 
 		# Initiating the actual start date and the planned end date.
@@ -142,7 +142,7 @@ Returns a Hash 'searchedData' with the following keys:
 		# Pulling json data with an order by on planned end date (DSC) to get the ending bound for the LHS date range slider. 
 		searchedData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
 		searchedData['plannedEndDate'] = JSON.parse(searchedData['plannedEndDate'])
-		puts "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
+		#puts "activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{query}&ordering=-planned_end_date&end_date_isnull=False"
 		if(searchedData['plannedEndDate']['count'] > 0)
 			tempEndDate = searchedData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
 			if (tempEndDate.nil?)
@@ -183,7 +183,7 @@ Returns a Hash 'searchedData' with the following keys:
 		   		end
 			end
 		end
-		searchedData['implementingOrg_types'] = searchedData['implementingOrg_types'].sort_by {|key| key["name"]}
+		searchedData['implementingOrg_types'] = searchedData['implementingOrg_types'].sort_by {|key| key["name"]}.uniq{|key| key["ref"]}
 		return searchedData
 	end
 
