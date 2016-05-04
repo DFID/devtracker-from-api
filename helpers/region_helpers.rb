@@ -164,7 +164,7 @@ module RegionHelpers
       end
       results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
       results['document_types'] = results['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-      results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["name"]}
+      results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["name"]}.uniq{|key| key["ref"]}
       return results
   end
 
