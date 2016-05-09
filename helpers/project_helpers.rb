@@ -11,6 +11,28 @@ module ProjectHelpers
     def get_h1_project_details(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
+        project['document_links'] = get_h1_project_document_details(projectId,project)
+        project
+    end
+
+    def get_h1_project_document_details(projectId,projectJson)
+        project_documents = projectJson['document_links']
+        static_projects = JSON.parse(File.read('data/document_exclusion_list.json'))
+        #puts static_projects
+        projectIdRaw = projectId.split('-')
+        static_projects = static_projects.select{ |p| p['project'] == projectIdRaw[projectIdRaw.length-1].to_i }
+        i = 0
+        if static_projects.length > 0
+            project_documents.delete_if do |pd|
+                static_projects.each do |sp|
+                    if (pd['url'].include? sp['qid'].to_s)
+                        true
+                        break
+                    end
+                end
+            end
+        end
+        project_documents
     end
 
     def get_h2_project_details(projectId)

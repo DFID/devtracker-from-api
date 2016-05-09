@@ -17,26 +17,26 @@
             </thead>
             <tbody>
                 <% project['document_links'].each do |document| %>
-                  <tr class="result-list-row">
-                      <th scope="row"><a href="<%=document['url']%>"><%= document['title'][0]['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
-                      <% if document['title'][0]['narratives'][0]['language']['code'] != "en" then%>
-                         <td scope="col">
-                            <span class="language">
-                              <%= document['title'][0]['narratives'][0]['language']['name'] %>
-                            </span>
-                         </td>
-                      <% end %>    
-                      <td scope="col">
-                        <%= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
-                      </td>
-                      <td scope="col">
-                        <% document['categories'].each do |category| %>
-                          <span class="category">
-                            <%= category['name']%>
-                          </span>
+                    <tr class="result-list-row">
+                        <th scope="row"><a href="<%=document['url']%>"><%= document['title'][0]['narratives'][0]['text'].gsub(/\.[^.]*$/, '') %></a></th>
+                        <% if document['title'][0]['narratives'][0]['language']['code'] != "en" then%>
+                           <td scope="col">
+                              <span class="language">
+                                <%= document['title'][0]['narratives'][0]['language']['name'] %>
+                              </span>
+                           </td>
                         <% end %>
-                      </td>
-                  </tr>
+                        <td scope="col">
+                          <%= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
+                        </td>
+                        <td scope="col">
+                          <% document['categories'].each do |category| %>
+                            <span class="category">
+                              <%= category['name']%>
+                            </span>
+                          <% end %>
+                        </td>
+                    </tr>
                 <% end %>
             </tbody>
         </table>       
