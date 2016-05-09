@@ -18,17 +18,21 @@ module ProjectHelpers
     def get_h1_project_document_details(projectId,projectJson)
         project_documents = projectJson['document_links']
         static_projects = JSON.parse(File.read('data/document_exclusion_list.json'))
-        #puts static_projects
-        projectIdRaw = projectId.split('-')
-        static_projects = static_projects.select{ |p| p['project'] == projectIdRaw[projectIdRaw.length-1].to_i }
-        i = 0
+        static_projects = static_projects.select{ |p| p['project'] == projectId }
+        puts static_projects
         if static_projects.length > 0
             project_documents.delete_if do |pd|
+                flag = 0
                 static_projects.each do |sp|
                     if (pd['url'].include? sp['qid'].to_s)
-                        true
+                        flag = 1
                         break
                     end
+                end
+                if flag == 1
+                    true
+                else
+                    false
                 end
             end
         end
