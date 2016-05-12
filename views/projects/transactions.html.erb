@@ -71,8 +71,11 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100, project['aggregations']['activity_children']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
-             </div>
+              <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+                <div class="<%= project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100, project['aggregations']['activity_children']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                </div>
+              <%end%>
            </div>        
       </div> 
       <table class="transactions-table" style="width:100%">
@@ -122,8 +125,11 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['aggregations']['activity_children']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['commitment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+                <div class="<%= project['aggregations']['activity_children']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['commitment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
+             <%end%>
            </div>        
       </div> 
       <table class="transactions-table" style="width:100%">
@@ -171,8 +177,11 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['disbursement_value'].to_f.round(0)*100, project['aggregations']['activity_children']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+              <div class="<%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['disbursement_value'].to_f.round(0)*100, project['aggregations']['activity_children']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
+             <%end%>
            </div>        
       </div> 
       <table class="transactions-table" style="width:100%">
@@ -223,8 +232,11 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-             <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
-             </div>
+            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+               <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                </div>
+              <%end%>
            </div>        
       </div> 
       <table class="transactions-table" style="width:100%">
