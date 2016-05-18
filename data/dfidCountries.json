@@ -85,7 +85,7 @@
 	},
 	{
 	    "code" : "TL",
-	    "name" : "Timor-Leste"
+	    "name" : "East Timor"
 	},
 	{
 	    "code" : "EC",
@@ -109,7 +109,7 @@
 	},
 	{
 	    "code" : "GM",
-	    "name" : "Gambia, The"
+	    "name" : "The Gambia"
 	},
 	{
 	    "code" : "GE",
@@ -357,7 +357,7 @@
 	},
 	{
     	"code":"TA",
-    	"name":"Tristan Da Cunha"
+    	"name":"Tristan da Cunha"
   	},
 	{
 	    "code" : "TG",
