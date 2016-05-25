@@ -25,6 +25,7 @@
                 <div><div>Loading Data <br> Please Wait</div></div>
             </div>
             <div id="showResults">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -85,11 +86,19 @@
                     <div class="mContent">
                         <ul style="display: none; margin: 5px">
                             <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                            <li>
-                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
-                                </label>
-                            </li>
+                                <%if statuses["code"] == '2' %>
+                                    <li>
+                                        <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                        <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                        </label>
+                                    </li>
+                                <%else%>
+                                    <li>
+                                        <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                        <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
+                                        </label>
+                                    </li>
+                                <%end%>
                             <% end %>
                         </ul>
                     </div>

@@ -147,7 +147,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types']
+	 		implementingOrgTypes: projectData['implementingOrg_types'],
+	 		projectCount: projectData['projects']['count']
 	 	}
 		 			
 end
@@ -197,7 +198,8 @@ get '/global' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			projectCount: getRegionProjects['projects']['count']
 		}
 end
 
@@ -231,7 +233,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			projectCount: getRegionProjects['projects']['count']
 		}	 			
 end
 
@@ -301,7 +304,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			projectCount: getRegionProjects['projects']['count']
 		}	 			
 end
 

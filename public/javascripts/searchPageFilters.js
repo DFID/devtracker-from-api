@@ -205,7 +205,7 @@ $(document).ready(function() {
                 $.getJSON(pagedOipaLink,{
                     format: "json"
                 }).done(function(json){
-                    $('#showResults').html("");
+                    $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
                     if (!isEmpty(json.next)){
                         var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">'+(1+(10*(pageNumber-1)))+' - '+(10*pageNumber)+'</span> of '+projectCount+'</div>';
                         $('#showResults').append(tmpStr);
@@ -280,7 +280,7 @@ $(document).ready(function() {
             format: "json"
         })
         .done(function(json){
-            $('#showResults').html("");
+            $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
             returnedProjectCount = json.count;
             refreshPagination(json.count);
             if (!isEmpty(json.next)){
