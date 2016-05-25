@@ -118,7 +118,20 @@
                         else
                             unless project['aggregations']['activity_children']['budget_value'].nil? %>
                                 <%if project['aggregations']['activity_children']['budget_value'].to_i != 0%>
-                                    <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                                    <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100, 
+                                    if project['aggregations']['activity_children']['budget_currency'].nil?  
+                                        if project['aggregations']['activity_children']['incoming_funds_currency'].nil?
+                                            if project['aggregations']['activity_children']['expenditure_currency'].nil?
+                                                'GBP'
+                                            else
+                                                project['aggregations']['activity_children']['expenditure_currency']
+                                            end
+                                        else
+                                            project['aggregations']['activity_children']['incoming_funds_currency']
+                                        end
+                                    else project['aggregations']['activity_children']['budget_currency'] 
+                                    end
+                                        ).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                                 <%else%>
                                     <span class="budget">Budget: <em>Not Provided</em></span>
                                 <%end%>
@@ -279,10 +292,12 @@
                 </div>
             </div>
             <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
+            <script src="/javascripts/accounting.min.js" type="text/javascript"></script>
             <script type='text/javascript'>
                 $(document).ready(function() {
-                    //window.oipaApiUrl = "<%#= oipa_api_url %>";
-                    window.oipaApiUrl = window.baseUrl;
+                    window.vv = accounting.formatMoney(5318008,{symbol: 'UGX'});
+                    window.oipaApiUrl = "<%= oipa_api_url %>";
+                    //window.oipaApiUrl = window.baseUrl;
                     window.project_count = "<%= project_count %>";
                     window.searchQuery = "<%= query %>";
                     window.searchType = "F";
@@ -307,6 +322,9 @@
                     });
                 });
             </script>
+            <script type="text/javascript">
+            </script>
+            <script src="/javascripts/commonCurrencies.js" type="text/javascript"></script>
             <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
         </div>
     <%else%>

@@ -15,6 +15,7 @@ require 'em-synchrony'
 require "em-synchrony/em-http"
 require 'oj'
 require 'rss'
+require "sinatra/json"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -50,12 +51,12 @@ include RecaptchaHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'http://dfid-oipa.zz-clients.net/api/'
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'http://staging-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -633,6 +634,20 @@ get '/search/?' do
  		documentTypes: results['document_types'],
  		implementingOrgTypes: results['implementingOrg_types']
 	}
+end
+
+
+#####################################################################
+#  CURRENCY HANDLER
+#####################################################################
+
+
+get '/currency/?' do
+  	settings.devtracker_page_title = 'Currency API'
+  	amount = sanitize_input(params['amount'],"a")
+  	currency = sanitize_input(params['currency'],"a")
+  	returnCurrency = Money.new(amount.to_f*100,currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	json :output => returnCurrency
 end
 
 #####################################################################
