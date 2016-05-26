@@ -54,7 +54,6 @@ $(document).ready(function() {
             refreshOipaLink(window.searchType);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
             $(this).text('▲');
         }
         else
@@ -63,7 +62,6 @@ $(document).ready(function() {
             refreshOipaLink(window.searchType);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
             $(this).text('▼');
         }
 
@@ -79,7 +77,6 @@ $(document).ready(function() {
             refreshOipaLink(window.searchType);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
             $(this).text('▲');
         }
         else
@@ -88,7 +85,6 @@ $(document).ready(function() {
             refreshOipaLink(window.searchType);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
             $(this).text('▼');
         }
 
@@ -107,7 +103,6 @@ $(document).ready(function() {
         }
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
     
     $('.document_type').click(function(){
@@ -115,7 +110,6 @@ $(document).ready(function() {
         $('#selected_document_type').val(tmpDocumentTypeList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
 
     $('.implementingOrg_type').click(function(){
@@ -123,7 +117,6 @@ $(document).ready(function() {
         $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
 
     $('.sector').click(function(){
@@ -131,7 +124,6 @@ $(document).ready(function() {
         $('#selected_sectors').val(tmpSectorList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
 
     //The following updates the result based on selected location country filter
@@ -140,7 +132,6 @@ $(document).ready(function() {
         $('#locationCountryFilterStates').val(tmpCountryList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
 
     //The following updates the result based on selected location region filter
@@ -149,7 +140,6 @@ $(document).ready(function() {
         $('#locationRegionFilterStates').val(tmpRegionList);
         refreshOipaLink(window.searchType);
         generateProjectListAjax(oipaLink);
-        //generateBudgetValues();
     });
 
     $("#slider-vertical").slider({
@@ -167,7 +157,6 @@ $(document).ready(function() {
             $('#budget_higher_bound').val(ui.values[1]);
             refreshOipaLink(window.searchType);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
         }
     });
     $( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
@@ -200,7 +189,6 @@ $(document).ready(function() {
             $('#date_higher_bound').val(tempEndDt.customFormat("#YYYY#-#MM#-#DD#"));
             refreshOipaLink(window.searchType);
             generateProjectListAjax(oipaLink);
-            //generateBudgetValues();
         }
         /*change: function(event, ui){
         //TO DO
@@ -293,7 +281,6 @@ $(document).ready(function() {
 
     function generateBudgetValues(){
         $('.tpcbcv').each(function(){
-            //$.getJSON(currencyLink,{amount: $(this).children('.total_plus_child_budget_currency_value_amount').text(), currency: $(this).children('.total_plus_child_budget_currency_value_cur').text()}).done(function(json){$(this).parent().before("asasxasxsxs")}).fail(function(error){console.log("AJAX error in request: " + JSON.stringify(error, null, 2));});
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
             var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
             var temp_response = '';
