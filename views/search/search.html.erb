@@ -305,8 +305,8 @@
             <script type='text/javascript'>
                 $(document).ready(function() {
                     window.vv = accounting.formatMoney(5318008,{symbol: 'UGX'});
-                    window.oipaApiUrl = "<%= oipa_api_url %>";
-                    //window.oipaApiUrl = window.baseUrl;
+                    //window.oipaApiUrl = "<%#= oipa_api_url %>";
+                    window.oipaApiUrl = window.baseUrl;
                     window.project_count = "<%= project_count %>";
                     window.searchQuery = "<%= query %>";
                     window.searchType = "F";
