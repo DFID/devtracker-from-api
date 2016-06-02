@@ -391,4 +391,16 @@ module CountryHelpers
     rssResults = rssData['results']
   end
   
+  def total_country_budget_location
+    firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
+    totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
+    totalAmount = 0.0
+    totalCountryBudgetLocation['results'].each do |countryBudgets|
+      totalAmount = totalAmount + countryBudgets['budget'].to_f
+    end
+    totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
+    totalAmount
+  end
 end
