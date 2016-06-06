@@ -662,7 +662,6 @@ g.c3-axis-y > g:last-child {
   margin-bottom: 10px;
  }
 
-
  .info {
     background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;
     border-radius: 5px;
@@ -670,7 +669,12 @@ g.c3-axis-y > g:last-child {
     font: 14px/16px Arial,Helvetica,sans-serif;
     padding: 6px 8px;
 }
+
 .info h6 {
     color: #777;
     margin: 0 0 5px;
 }
+
+ .tpcbcv {
+  display: none;
+ }

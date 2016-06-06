@@ -15,6 +15,7 @@ require 'em-synchrony'
 require "em-synchrony/em-http"
 require 'oj'
 require 'rss'
+require "sinatra/json"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -634,6 +635,20 @@ get '/search/?' do
  		documentTypes: results['document_types'],
  		implementingOrgTypes: results['implementingOrg_types']
 	}
+end
+
+
+#####################################################################
+#  CURRENCY HANDLER
+#####################################################################
+
+
+get '/currency/?' do
+  	settings.devtracker_page_title = 'Currency API'
+  	amount = sanitize_input(params['amount'],"a")
+  	currency = sanitize_input(params['currency'],"a")
+  	returnCurrency = Money.new(amount.to_f*100,currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	json :output => returnCurrency
 end
 
 #####################################################################

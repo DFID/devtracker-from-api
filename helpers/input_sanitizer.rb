@@ -6,7 +6,7 @@ module InputSanitizer
 			return string.gsub(/[^a-z0-9\s+_.@-]/,'')
 		when "a"
 			#Handles the free text search inputs
-			return string.gsub(/[^a-zA-Z0-9\s_\/\-]/,'')
+			return string.gsub(/[^a-zA-Z0-9.\s_\/\-]/,'')
 		when "t"
 			#Handles the telephone number inputs
 			return string.gsub(/[^0-9+\s]/,'')
