@@ -583,7 +583,8 @@ get '/location/country/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			:dfid_country_map_data => 	dfid_country_map_data,
-			:dfid_complete_country_list => 	dfid_complete_country_list
+			:dfid_complete_country_list => 	dfid_complete_country_list,
+			:dfid_total_country_budget => total_country_budget_location
 		}
 end
 
