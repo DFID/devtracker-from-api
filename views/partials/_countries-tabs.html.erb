@@ -7,7 +7,7 @@
                     <nav>
                         <ul class="tab-bar">
                             <li <%= active=="summary" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>">Summary</a></li>
-                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>/projects">All Projects (<%=project_count%>)</a></li>
+                            <li <%= active=="projects" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>/projects">Active Projects (<%=project_count%>)</a></li>
                             <%if results_count > 0 %>
                             <li <%= active=="results" ? "class='active'" : ""%>><a href="/countries/<%= country[:code] %>/results">Results</a></li>
                             <% end %>
