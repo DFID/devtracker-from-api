@@ -13,6 +13,7 @@ $(document).ready(function() {
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
+    var currencyLink = '/currency';
     switch (window.searchType){
         case 'C':
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-GOV-1&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&activity_plus_child_aggregation_budget_value_gte='+$('#budget_lower_bound').val()+'&activity_plus_child_aggregation_budget_value_lte='+$('#budget_higher_bound').val()+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -232,6 +233,9 @@ $(document).ready(function() {
                         }
                         //validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
                         validResults['total_plus_child_budget_value'] = !isEmpty(result.aggregations.activity_children.budget_value) ? result.aggregations.activity_children.budget_value : 0;
+                        validResults['total_plus_child_budget_currency'] = !isEmpty(result.aggregations.activity_children.budget_currency) ? result.aggregations.activity_children.budget_currency : !isEmpty(result.aggregations.activity_children.incoming_funds_currency)? result.aggregations.activity_children.incoming_funds_currency: !isEmpty(result.aggregations.activity_children.expenditure_currency)? result.aggregations.activity_children.expenditure_currency: !isEmpty(result.aggregations.activity_children.disbursement_currency)? result.aggregations.activity_children.disbursement_currency: !isEmpty(result.aggregations.activity_children.commitment_currency)? result.aggregations.activity_children.commitment_currency: "GBP";
+                        validResults['total_plus_child_budget_currency_value'] = '';
+                        //$.getJSON(currencyLink,{amount: validResults['total_plus_child_budget_value'], currency: validResults['total_plus_child_budget_currency']}).done(function(json){validResults['total_plus_child_budget_currency_value'] = json.output});
                         validResults['activity_status'] = !isEmpty(result.activity_status.name) ? result.activity_status.name : "";
                         //Check reporting organization
                         if(!isEmpty(result.reporting_organisations)){
@@ -259,9 +263,11 @@ $(document).ready(function() {
                             validResults['description'] = "";
                         }
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         $('#showResults').append(tempString);
                     });
+                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
@@ -273,11 +279,30 @@ $(document).ready(function() {
         // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     };
 
+    function generateBudgetValues(){
+        $('.tpcbcv').each(function(){
+            var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
+            var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
+            var temp_response = '';
+            $.ajax({
+                method: "GET",
+                async: false,
+                url: "/currency",
+                data: {amount: temp_amount, currency: temp_currency},
+            }).done(function(msg){
+                console.log("saved: " + msg.output);
+                temp_response = msg.output;
+            });
+            $(this).before(temp_response);
+        });
+    }
+
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
         $.getJSON(oipaLink,{
-            format: "json"
+            format: "json",
+            async: false,
         })
         .done(function(json){
             $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
@@ -316,6 +341,9 @@ $(document).ready(function() {
                 }
                 //validResults['title'] = !isEmpty(result.title.narratives[0]) ? result.title.narratives[0].text : "";
                 validResults['total_plus_child_budget_value'] = !isEmpty(result.aggregations.activity_children.budget_value) ? result.aggregations.activity_children.budget_value : 0;
+                validResults['total_plus_child_budget_currency'] = !isEmpty(result.aggregations.activity_children.budget_currency) ? result.aggregations.activity_children.budget_currency : !isEmpty(result.aggregations.activity_children.incoming_funds_currency)? result.aggregations.activity_children.incoming_funds_currency: !isEmpty(result.aggregations.activity_children.expenditure_currency)? result.aggregations.activity_children.expenditure_currency: !isEmpty(result.aggregations.activity_children.disbursement_currency)? result.aggregations.activity_children.disbursement_currency: !isEmpty(result.aggregations.activity_children.commitment_currency)? result.aggregations.activity_children.commitment_currency: "GBP";
+                validResults['total_plus_child_budget_currency_value'] = '';
+                //$.getJSON(currencyLink,{amount: validResults['total_plus_child_budget_value'], currency: validResults['total_plus_child_budget_currency']}).done(function(json){validResults['total_plus_child_budget_currency_value'] = json.output});
                 validResults['activity_status'] = !isEmpty(result.activity_status.name) ? result.activity_status.name : "";
                 //Check reporting organization
                 if(!isEmpty(result.reporting_organisations)){
@@ -343,11 +371,14 @@ $(document).ready(function() {
                     validResults['description'] = "";
                 }
                 //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+validResults['total_plus_child_budget_currency_value']+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
             // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
             // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
+            generateBudgetValues();
         })
         .fail(function(error){
             //$('#showResults').text(error.toSource());

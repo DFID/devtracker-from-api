@@ -170,6 +170,22 @@
         minZoom: 2,
         maxZoom: 4
     }).addTo(map);
+
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h6>Total DFID Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
+    };
+
+    info.addTo(map);
+
     //L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
     //    attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
     //    subdomains: '0123',

@@ -119,7 +119,20 @@
                         else
                             unless project['aggregations']['activity_children']['budget_value'].nil? %>
                                 <%if project['aggregations']['activity_children']['budget_value'].to_i != 0%>
-                                    <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                                    <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100, 
+                                    if project['aggregations']['activity_children']['budget_currency'].nil?  
+                                        if project['aggregations']['activity_children']['incoming_funds_currency'].nil?
+                                            if project['aggregations']['activity_children']['expenditure_currency'].nil?
+                                                'GBP'
+                                            else
+                                                project['aggregations']['activity_children']['expenditure_currency']
+                                            end
+                                        else
+                                            project['aggregations']['activity_children']['incoming_funds_currency']
+                                        end
+                                    else project['aggregations']['activity_children']['budget_currency'] 
+                                    end
+                                        ).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                                 <%else%>
                                     <span class="budget">Budget: <em>Not Provided</em></span>
                                 <%end%>
