@@ -2,10 +2,6 @@
 	"activity_status":
 	[
 		{
-			"code":"1",
-			"name":"Pipeline/identification"
-		},
-		{
 			"code":"2",
 			"name":"Implementation"
 		},
@@ -16,10 +12,6 @@
 		{
 			"code":"4",
 			"name":"Post-completion"
-		},
-		{
-			"code":"5",
-			"name":"Cancelled"
 		}
 	],
 	"sectors":
