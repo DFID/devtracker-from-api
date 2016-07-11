@@ -362,7 +362,7 @@ module ProjectHelpers
     end
 
     def is_dfid_project(projectCode)   
-        projectCode[0, 5] == "GB-1-"
+        projectCode[0, 5] == "GB-1-" || projectCode[0, 9] == "GB-GOV-1-"
     end
 
     def is_valid_project(projectCode)
