@@ -142,6 +142,8 @@ $(document).ready(function() {
         generateProjectListAjax(oipaLink);
     });
 
+    //<input style="color: black; width: 40%; font-size: 0.8em;" value="£0"> - <input value="£417,999,994" style="color: black; width: 40%; font-size: 0.8em;">
+
     $("#slider-vertical").slider({
         orientation: "horizontal",
         range: true,
@@ -150,7 +152,10 @@ $(document).ready(function() {
         step : (Math.round(window.maxBudget / 100) * 100)/100,
         values: [0,window.maxBudget],
         slide: function( event, ui ) {
-            $( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+            //$( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+            //$( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas(ui.values[0])+'"> - <input id="budget_slider_end" value="£'+addCommas(ui.values[1])+'" style="color: black; width: 40%; font-size: 0.8em;">');
+            $('#budget_slider_start').val(addCommas('£'+ui.values[0]));
+            $('#budget_slider_end').val(addCommas('£'+ui.values[1]));
         },
         change: function(event, ui){
             $('#budget_lower_bound').val(ui.values[0]);
@@ -159,7 +164,21 @@ $(document).ready(function() {
             generateProjectListAjax(oipaLink);
         }
     });
-    $( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+    //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+    $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 40%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px; width: 13%; height: 25px;">Go</button>');
+    $('#budget_higher_bound').val($( "#slider-vertical" ).slider( "values", 1 ));
+    $('#budget_slider_update').click(function(){
+        $('#budget_lower_bound').val($('#budget_slider_start').val().trim().replace(/[^0-9]/g,""));
+        console.log($('#budget_slider_start').val().trim().replace(/[^0-9]/g,""));
+        $('#budget_higher_bound').val($('#budget_slider_end').val().trim().replace(/[^0-9]/g,""));
+        //$("#slider-vertical").slider('values',0,$('#budget_lower_bound').val());
+        //$("#slider-vertical").slider('values',1,$('#budget_higher_bound').val());
+        $("#slider-vertical").slider('values',0,100000);
+        $("#slider-vertical").slider('values',1,500000);
+        refreshOipaLink(window.searchType);
+        generateProjectListAjax(oipaLink);
+    });
+
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
             $(this).css('border', "none");
