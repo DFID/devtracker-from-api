@@ -824,7 +824,7 @@ end
 
 #Medical Research Council - (This link does not work at the moment)
 get '/medical-research-council' do
-	ogdCode = 'RC000346'
+	ogdCode = 'GB-COH-RC000346'
 	projectData = get_ogd_all_projects_data(ogdCode)
   	settings.devtracker_page_title = 'Medical Research Council'
 	erb :'other-govt-departments/other_govt_departments',
