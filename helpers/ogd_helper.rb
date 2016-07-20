@@ -32,16 +32,12 @@ Returns a Hash 'ogdData' with the following keys:
 	def get_ogd_all_projects_data(ogdCode)
     allProjectsData = {}
     allProjectsData['countryAllProjectFilters'] = get_static_filter_list()
-    #allProjectsData['country'] = get_country_code_name(ogdCode)
-    #allProjectsData['results'] = get_country_results(ogdCode)
-    #oipa_project_list_count = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"
-    #allProjectsData['projectsCount']= JSON.parse(oipa_project_list_count)
 
     oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=#{ogdCode}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value"
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{ogdCode}&activity_status=2"
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
-    #projects = projects_list['results']
+
     allProjectsData['project_budget_higher_bound'] = 0
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
@@ -60,20 +56,9 @@ Returns a Hash 'ogdData' with the following keys:
     else
     	allProjectsData['actualStartDate'] = '1990-01-01T00:00:00'
     end
-    # tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
-    # if (tempStartDate.nil?)
-    #   tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
-    # end
-    # allProjectsData['actualStartDate'] = tempStartDate
-    # allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['iso_date']
 
-    #unless allProjectsData['actualStartDate']['results'][0].nil? 
-    #  allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-    #end
     allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{ogdCode}&hierarchy=1&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
     allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
-    #allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
-    #allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
     if(allProjectsData['plannedEndDate']['count'] > 0)
 		tempEndDate = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
 		if (tempEndDate.nil?)
@@ -85,9 +70,6 @@ Returns a Hash 'ogdData' with the following keys:
     	allProjectsData['plannedEndDate'] = '2100-01-01T00:00:00'
     end
 
-    #unless allProjectsData['plannedEndDate']['results'][0].nil?
-    #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-    #end
     oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{ogdCode}&activity_status=2"
     document_type_list = JSON.parse(oipa_document_type_list)
     allProjectsData['document_types'] = document_type_list['results']
