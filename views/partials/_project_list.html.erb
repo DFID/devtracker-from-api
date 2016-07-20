@@ -256,6 +256,9 @@
                 <% elsif defined? sectorData %>
                     window.searchType = "S";
                     window.SectorCode = '<%= sectorData["sectorCode"] %>';
+                <% elsif defined? ogd_code %>
+                    window.searchType = "O";
+                    window.ogd_code = '<%= ogd_code %>';
                 <% else %>
                     window.searchType = "R";
                     window.RegionCode = '<%= region[:code] %>';
