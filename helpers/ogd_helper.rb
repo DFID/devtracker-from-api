@@ -14,17 +14,11 @@ ogdCode - The reporting org id whose related activities will be returned
 Outputs:
 Returns a Hash 'ogdData' with the following keys:
 
-- dfidCountryBudgets (Hash)				-	This is a hash with an array inside. This hash stores country codes as keys which matched with the search query string. 
-											The country code in return holds an array of country name and country budget if it exists.
-
-- dfidRegionBudgets (Hash)				-	This is a hash with an array inside. This hash stores region codes as keys which matched with the search query string. 
-											The region code in return holds an array of region name and regional budget if it exists.
-
 - project_budget_higher_bound (String)	-	This is the value that helps set the maximum budget value needed for the left hand side budget slider filter.
 
-- projects (Hash)						-	This is a hash storing the projects list data relevant to the search query
+- projects (Hash)						-	This is a hash storing the projects list data relevant to the reporting organisation
 
-- project_count (String)				-	This is the number of projects returned based on the search query
+- project_count (String)				-	This is the number of projects returned based on the reporting organisation
 
 - highLevelSectorList (Hash)			-	This returns the sectors list data for the left hand side sectors filter
 
