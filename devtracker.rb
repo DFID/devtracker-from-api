@@ -724,7 +724,7 @@ end
 
 #Department of Energy and Climate Change
 get '/department-of-energy-and-climate-change' do
-	ogdCode = 'GB-4'
+	ogdCode = 'GB-GOV-4'
 	projectData = get_ogd_all_projects_data(ogdCode)
   	settings.devtracker_page_title = 'Department of Energy and Climate Change Projects Page'
 	erb :'other-govt-departments/other_govt_departments',
