@@ -397,11 +397,20 @@ module CountryHelpers
   def total_country_budget_location
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
+    puts firstDayOfFinYear
+    puts lastDayOfFinYear
+    #oipa 2.2
+    #totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
+    #oipa 3.1
+    #order by is not working in the following api call.
+    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "/budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
     totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
     totalAmount = 0.0
     totalCountryBudgetLocation['results'].each do |countryBudgets|
-      totalAmount = totalAmount + countryBudgets['budget'].to_f
+      #oipa 2.2
+      #totalAmount = totalAmount + countryBudgets['budget'].to_f
+      #oipa 3.1
+      totalAmount = totalAmount + countryBudgets['value'].to_f
     end
     totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
     totalAmount
