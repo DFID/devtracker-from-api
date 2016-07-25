@@ -74,7 +74,7 @@ Returns a Hash 'searchedData' with the following keys:
 			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
-		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_country&aggregations=budget&recipient_country="+recipient_countries
+		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' country data. 
@@ -88,7 +88,7 @@ Returns a Hash 'searchedData' with the following keys:
 			end
 		end
 		# This json call is pulling the total budget list based on the 'recipient_regions' string previously created
-		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_region&aggregations=budget&recipient_region="+recipient_regions
+		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_region&aggregations=value&recipient_region="+recipient_regions
 		regions_project_budget = JSON.parse_nil(oipa_selected_regions_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' region data.

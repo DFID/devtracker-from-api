@@ -26,7 +26,7 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
 	end
 	
 	def group_hashes arr, group_fields
@@ -54,7 +54,7 @@ module SectorHelpers
 			   :name 		 => highLevelSector.find do |source|
                          			source["Code (L3)"].to_s == elem["sector"]["code"]
                       			end[sectorDescription], #"High Level Sector Description"
-               :budget       => elem["budget"]      			                         			           			                          
+               :budget       => elem["value"]      			                         			           			                          
 	       } 
 	     end
 
@@ -86,7 +86,7 @@ module SectorHelpers
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
 
 
-		sectorValuesJSON = RestClient.get apiUrl + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=sector_percentage_weighted_budget&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
   		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -103,7 +103,7 @@ module SectorHelpers
       		   :parentCode   => sectorHierarchy.find do |source|
                          			source["Code (L3)"].to_s == elem["sector"]["code"]
                       			end[parentCodeType],                      			
-               :budget       => elem["budget"]      			                         			           			                          
+               :budget       => elem["value"]      			                         			           			                          
 	       } 
 	     end
 
