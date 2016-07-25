@@ -97,8 +97,10 @@ module ProjectHelpers
     def dfid_country_map_data
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        
-        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+        #OIPA V2.2
+        #oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
+        #OIPA V3.1
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
         oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=count&reporting_organisation=GB-GOV-1&activity_status=2"
@@ -118,7 +120,10 @@ module ProjectHelpers
             projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
             projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
             projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
-            projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
+            #OIPA V2.2
+            #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
+            #OIPA V3.1
+            projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
             projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
             puts project["recipient_country"]["name"]
         end

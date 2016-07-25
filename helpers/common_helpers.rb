@@ -58,14 +58,36 @@ module CommonHelpers
       end
   end
 
+  #oipa v2.2
+  # def get_actual_budget_per_fy(yearWiseBudgets)      
+  #     yearWiseBudgets.to_a.group_by { |b| 
+  #         # we want to group them by the first day of 
+  #         # the financial year. This allows for calculations
+  #         fy =  if  b["quarter"]==1 then
+  #                   b["year"]-1
+  #               else
+  #                   b["year"]
+  #               end
+  #         #first_day_of_financial_year(date)
+  #       }.map { |fy, bs| 
+  #           # then we sum up all the values for that financial year
+  #           {
+  #               "fy"    => fy,
+  #               "type"  => "budget",
+  #               "value" => bs.inject(0) { |v, b| v + b["value"] },
+  #           }
+  #       }
+  # end
+
+  #oipa v3.1
   def get_actual_budget_per_fy(yearWiseBudgets)      
       yearWiseBudgets.to_a.group_by { |b| 
           # we want to group them by the first day of 
           # the financial year. This allows for calculations
-          fy =  if  b["quarter"]==1 then
-                    b["year"]-1
+          fy =  if  b["budget_period_start_quarter"]==1 then
+                    b["budget_period_start_year"]-1
                 else
-                    b["year"]
+                    b["budget_period_start_year"]
                 end
           #first_day_of_financial_year(date)
         }.map { |fy, bs| 
@@ -73,7 +95,7 @@ module CommonHelpers
             {
                 "fy"    => fy,
                 "type"  => "budget",
-                "value" => bs.inject(0) { |v, b| v + b["budget"] },
+                "value" => bs.inject(0) { |v, b| v + b["value"] },
             }
         }
   end

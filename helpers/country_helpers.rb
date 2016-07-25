@@ -102,8 +102,12 @@ module CountryHelpers
       countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
       
-      currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #oipa v2.2
+      #currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
+      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #oipa v3.1
+      currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}")
+      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value")
 
       totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
@@ -117,12 +121,12 @@ module CountryHelpers
       end
 
       if currentTotalCountryBudget['count'] > 0 then
-          countryBudget = currentTotalCountryBudget['results'][0]['budget']
+          countryBudget = currentTotalCountryBudget['results'][0]['value']
       else
           countryBudget = 0
       end
 
-      totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       
       projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
 
@@ -238,7 +242,7 @@ module CountryHelpers
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
-      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
+      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['value'].nil?}
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end
@@ -402,8 +406,7 @@ module CountryHelpers
     #oipa 2.2
     #totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
     #oipa 3.1
-    #order by is not working in the following api call.
-    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "/budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "/budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value"
     totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
     totalAmount = 0.0
     totalCountryBudgetLocation['results'].each do |countryBudgets|
