@@ -54,6 +54,9 @@ module SectorHelpers
 			   :name 		 => highLevelSector.find do |source|
                          			source["Code (L3)"].to_s == elem["sector"]["code"]
                       			end[sectorDescription], #"High Level Sector Description"
+               #oipa v2.2
+               #:budget       => elem["budget"]
+               #oipa v3.1
                :budget       => elem["value"]      			                         			           			                          
 	       } 
 	     end
