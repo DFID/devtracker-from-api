@@ -203,13 +203,13 @@ module SectorHelpers
 		implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
 		results['implementingOrg_types'] = implementingOrg_type_list['results']
 		results['implementingOrg_types'].each do |implementingOrgs|
-			if implementingOrgs['name'].length < 1
-				tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+			if implementingOrgs['participating_organisation'].length < 1
+				tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
 		   		if tempImplmentingOrgData.nil?
-		   			implementingOrgs['name'] = 'na'
-		   			implementingOrgs['ref'] = 'na'
+		   			implementingOrgs['participating_organisation'] = 'na'
+		   			implementingOrgs['participating_organisation_ref'] = 'na'
 		   		else
-		   			implementingOrgs['name'] = tempImplmentingOrgData['Name']
+		   			implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
 		   		end
 			end
 		end
@@ -219,7 +219,7 @@ module SectorHelpers
 		results['LocationRegions'] = results['LocationRegions'].sort_by {|key| key["recipient_region"]["name"]}
 		results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
     	results['document_types'] = results['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-    	results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["name"]}.uniq{|key| key["ref"]}
+    	results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq{|key| key["participating_organisation_ref"]}
 		return results
 	end
 end

@@ -347,19 +347,19 @@ module CountryHelpers
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
-      if implementingOrgs['name'].length < 1
-        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+      if implementingOrgs['participating_organisation'].length < 1
+        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
         if tempImplmentingOrgData.nil?
-          implementingOrgs['ref'] = 'na'
-          implementingOrgs['name'] = 'na'
+          implementingOrgs['participating_organisation_ref'] = 'na'
+          implementingOrgs['participating_organisation'] = 'na'
         else
-          implementingOrgs['name'] = tempImplmentingOrgData['Name']
+          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
         end
       end
     end
     allProjectsData['highLevelSectorList'] = allProjectsData['highLevelSectorList'].sort_by {|key| key}
     allProjectsData['document_types'] = allProjectsData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["name"]}.uniq {|key| key["ref"]}
+    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["name"]}.uniq {|key| key["participating_organisation_ref"]}
     return allProjectsData
   end
 
