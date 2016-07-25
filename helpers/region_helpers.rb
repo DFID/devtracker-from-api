@@ -35,15 +35,24 @@ module RegionHelpers
       totalActiveProjects = totalProjectsDetails['results'].length
       
       if currentTotalRegionBudget['count'] > 0 then
+          #oipa v2.2
+          #if currentTotalRegionBudget['results'][0]['budget'].nil? then
+          #oipa v3.1
           if currentTotalRegionBudget['results'][0]['value'].nil? then
               regionBudget = 0
           else
+              #oipa v2.2
+              #regionBudget = currentTotalRegionBudget['results'][0]['budget']
+              #oipa v3.1
               regionBudget = currentTotalRegionBudget['results'][0]['value']
           end    
       else
           regionBudget = 0
       end
 
+      #oipa v2.2
+      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v3.1
       totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       
       projectBudgetPercentToDfidBudget = ((regionBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
@@ -94,7 +103,10 @@ module RegionHelpers
         {
             "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
             "code" => elem["recipient_region"]["code"],
-            "budget" => elem["value"]                           
+            #oipa v2.2
+            ###"budget" => elem["budget"]
+            #oipa v3.1
+            "budget" => elem["value"]               
         }
         end
                

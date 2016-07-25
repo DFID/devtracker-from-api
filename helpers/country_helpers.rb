@@ -121,11 +121,17 @@ module CountryHelpers
       end
 
       if currentTotalCountryBudget['count'] > 0 then
+          #oipa v2.2
+          #countryBudget = currentTotalCountryBudget['results'][0]['budget']
+          #oipa v3.1
           countryBudget = currentTotalCountryBudget['results'][0]['value']
       else
           countryBudget = 0
       end
 
+      #oipa v2.2
+      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v3.1
       totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       
       projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
@@ -242,6 +248,9 @@ module CountryHelpers
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
+      #oipa v2.2
+      #yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
+      #oipa v3.1
       yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['value'].nil?}
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
