@@ -327,6 +327,7 @@ end
 # Project summary page
 get '/projects/:proj_id/?' do |n|
 	n = sanitize_input(n,"p")
+
 	# get the project data from the API
   	project = get_h1_project_details(n)
 
@@ -337,6 +338,7 @@ get '/projects/:proj_id/?' do |n|
   	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
+  	
   	projectSectorGraphData = get_project_sector_graph_data(n)
   	
 	# get the funding projects Count from the API

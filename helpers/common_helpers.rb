@@ -104,10 +104,10 @@ module CommonHelpers
       yearWiseBudgets.to_a.group_by { |b| 
           # we want to group them by the first day of 
           # the financial year. This allows for calculations
-          fy =  if  b["quarter"]==1 then
-                    b["year"]-1
+          fy =  if  b["transaction_date_quarter"]==1 then
+                    b["transaction_date_year"]-1
                 else
-                    b["year"]
+                    b["transaction_date_year"]
                 end
           #first_day_of_financial_year(date)
         }.map { |fy, bs| 

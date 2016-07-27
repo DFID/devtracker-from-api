@@ -167,6 +167,7 @@ $(document).ready(function() {
 
 
             //iterate through every activity
+            console.log(iati);
                 iati.results.forEach(function (d) {
                     var iatiIdentifier = d.iati_identifier;
                     var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
@@ -178,7 +179,8 @@ $(document).ready(function() {
                         var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
                         var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
                         //console.log(p.point.point.longitude,p.point.point.latitude);
-                        
+                        var tempSS = latlng + ':' + iatiIdentifier + ' : ' + title + ' : '+ dtUrl + ' : '+ locationName;
+                        console.log(tempSS);
                         //create popup text
                         var locationName = p.name[0].narratives[0].text;
                         marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
