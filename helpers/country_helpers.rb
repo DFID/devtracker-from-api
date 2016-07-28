@@ -359,7 +359,7 @@ module CountryHelpers
     end
     allProjectsData['highLevelSectorList'] = allProjectsData['highLevelSectorList'].sort_by {|key| key}
     allProjectsData['document_types'] = allProjectsData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["participating_organisation_ref"]}.uniq {|key| key["participating_organisation_ref"]}
+    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
     return allProjectsData
   end
 
