@@ -116,7 +116,7 @@ get '/countries/:country_code/?' do |n|
 			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 			#oipa v3.1
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&related_activity_recipient_country=#{n}")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
