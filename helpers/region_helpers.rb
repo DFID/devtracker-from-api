@@ -22,24 +22,38 @@ module RegionHelpers
       regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
       region = regionInfo.select {|region| region['code'] == regionCode}.first
       
-      currentTotalRegionBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=budget&recipient_region=#{regionCode}")
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #OIAPA v2.2
+      #currentTotalRegionBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=budget&recipient_region=#{regionCode}")
+      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+
+      #oipa v3.1
+      currentTotalRegionBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=value&recipient_region=#{regionCode}")
+      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value")
 
       totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_region=#{regionCode}&format=json&fields=activity_status&page_size=2500&activity_status=2")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
       totalActiveProjects = totalProjectsDetails['results'].length
       
       if currentTotalRegionBudget['count'] > 0 then
-          if currentTotalRegionBudget['results'][0]['budget'].nil? then
+          #oipa v2.2
+          #if currentTotalRegionBudget['results'][0]['budget'].nil? then
+          #oipa v3.1
+          if currentTotalRegionBudget['results'][0]['value'].nil? then
               regionBudget = 0
           else
-              regionBudget = currentTotalRegionBudget['results'][0]['budget']
+              #oipa v2.2
+              #regionBudget = currentTotalRegionBudget['results'][0]['budget']
+              #oipa v3.1
+              regionBudget = currentTotalRegionBudget['results'][0]['value']
           end    
       else
           regionBudget = 0
       end
 
-      totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v2.2
+      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v3.1
+      totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       
       projectBudgetPercentToDfidBudget = ((regionBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
 
@@ -68,9 +82,15 @@ module RegionHelpers
         lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
         puts "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=298,798,89,589,389,189,679,289,380"
         if (regionType=="region")
-            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=298,798,89,589,389,189,679,289,380"
+            #oipa v2.2
+            #regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=298,798,89,589,389,189,679,289,380"
+            #oipa v3.1
+            regionsDataJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380"
         else
-            regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=998"
+            #oipa v2.2
+            #regionsDataJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,budget&recipient_region=998"
+            #oipa v3.1
+            regionsDataJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998"
         end
 
         # aggregates budgets of the dfid regional projects that are active in the current FY
@@ -83,7 +103,10 @@ module RegionHelpers
         {
             "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
             "code" => elem["recipient_region"]["code"],
-            "budget" => elem["budget"]                           
+            #oipa v2.2
+            ###"budget" => elem["budget"]
+            #oipa v3.1
+            "budget" => elem["value"]               
         }
         end
                
@@ -157,19 +180,19 @@ module RegionHelpers
       implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
       results['implementingOrg_types'] = implementingOrg_type_list['results']
       results['implementingOrg_types'].each do |implementingOrgs|
-        if implementingOrgs['name'].length < 1
-          tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+        if implementingOrgs['participating_organisation'].length < 1
+          tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
           if tempImplmentingOrgData.nil?
-            implementingOrgs['name'] = 'na'
-            implementingOrgs['ref'] = 'na'
+            implementingOrgs['participating_organisation'] = 'na'
+            implementingOrgs['participating_organisation_ref'] = 'na'
           else
-            implementingOrgs['name'] = tempImplmentingOrgData['Name']
+            implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
           end
         end
       end
       results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
       results['document_types'] = results['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-      results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["name"]}.uniq{|key| key["ref"]}
+      results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq{|key| key["participating_organisation_ref"]}
       return results
   end
 

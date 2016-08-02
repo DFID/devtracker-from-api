@@ -74,7 +74,7 @@ Returns a Hash 'searchedData' with the following keys:
 			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
-		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_country&aggregations=budget&recipient_country="+recipient_countries
+		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' country data. 
@@ -83,12 +83,12 @@ Returns a Hash 'searchedData' with the following keys:
 			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the country specific budget value
 			countries_project_budget['results'].each do |budgets|
 				unless budgets['recipient_country']['code'].nil?
-					searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
 				end
 			end
 		end
 		# This json call is pulling the total budget list based on the 'recipient_regions' string previously created
-		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_region&aggregations=budget&recipient_region="+recipient_regions
+		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status=2&group_by=recipient_region&aggregations=value&recipient_region="+recipient_regions
 		regions_project_budget = JSON.parse_nil(oipa_selected_regions_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' region data.
@@ -97,7 +97,7 @@ Returns a Hash 'searchedData' with the following keys:
 			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the region specific budget value.
 			regions_project_budget['results'].each do |budgets|
 				unless budgets['recipient_region']['code'].nil?
-					searchedData['dfidRegionBudgets'][budgets['recipient_region']['code']][0] = Money.new(budgets['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					searchedData['dfidRegionBudgets'][budgets['recipient_region']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
 				end
 			end
 		end
@@ -173,17 +173,17 @@ Returns a Hash 'searchedData' with the following keys:
 		implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
 		searchedData['implementingOrg_types'] = implementingOrg_type_list['results']
 		searchedData['implementingOrg_types'].each do |implementingOrgs|
-			if implementingOrgs['name'].length < 1
-				tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+			if implementingOrgs['participating_organisation'].length < 1
+				tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
 		   		if tempImplmentingOrgData.nil?
-		   			implementingOrgs['ref'] = 'na'
-		   			implementingOrgs['name'] = 'na'
+		   			implementingOrgs['participating_organisation_ref'] = 'na'
+		   			implementingOrgs['participating_organisation'] = 'na'
 		   		else
-		   			implementingOrgs['name'] = tempImplmentingOrgData['Name']
+		   			implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
 		   		end
 			end
 		end
-		searchedData['implementingOrg_types'] = searchedData['implementingOrg_types'].sort_by {|key| key["name"]}.uniq{|key| key["ref"]}
+		searchedData['implementingOrg_types'] = searchedData['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq{|key| key["participating_organisation_ref"]}
 		return searchedData
 	end
 

@@ -264,10 +264,10 @@
                             <div class="mContent">
                                 <ul style="display: none; margin: 5px">
                                     <% implementingOrgTypes.each do |implementingOrgTypes| %>
-                                        <%if implementingOrgTypes["ref"] != 'na' %>
+                                        <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
                                             <li>
-                                                <label for="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" title=" <%= implementingOrgTypes["name"] %>">
-                                                    <input id="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" type="checkbox" value="<%= implementingOrgTypes["ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["name"] %>
+                                                <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
+                                                    <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
                                                 </label>
                                             </li>
                                         <%end%>

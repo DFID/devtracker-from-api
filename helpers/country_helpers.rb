@@ -68,7 +68,7 @@ module CountryHelpers
 
       countriesInfo = JSON.parse(File.read('data/countries.json'))
 
-      top5countriesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&page_size=5&format=json"
+      top5countriesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=5&format=json"
       top5countries = JSON.parse(top5countriesJSON)
 
       top5countriesBudget = top5countries["results"].map do |elem| 
@@ -77,7 +77,7 @@ module CountryHelpers
             :name     => countriesInfo.find do |source|
                            source["code"].to_s == elem["recipient_country"]["code"]
                          end["name"],
-            :budget   => elem["budget"]                                                                                    
+            :budget   => elem["value"]                                                                                    
          } 
       end
   end
@@ -102,8 +102,12 @@ module CountryHelpers
       countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
       
-      currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #oipa v2.2
+      #currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
+      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
+      #oipa v3.1
+      currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}")
+      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value")
 
       totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
@@ -117,12 +121,18 @@ module CountryHelpers
       end
 
       if currentTotalCountryBudget['count'] > 0 then
-          countryBudget = currentTotalCountryBudget['results'][0]['budget']
+          #oipa v2.2
+          #countryBudget = currentTotalCountryBudget['results'][0]['budget']
+          #oipa v3.1
+          countryBudget = currentTotalCountryBudget['results'][0]['value']
       else
           countryBudget = 0
       end
 
-      totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v2.2
+      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
+      #oipa v3.1
+      totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       
       projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
 
@@ -238,7 +248,10 @@ module CountryHelpers
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
-      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
+      #oipa v2.2
+      #yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
+      #oipa v3.1
+      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['value'].nil?}
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end
@@ -334,19 +347,19 @@ module CountryHelpers
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
-      if implementingOrgs['name'].length < 1
-        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['ref'].to_s}.first
+      if implementingOrgs['participating_organisation'].length < 1
+        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
         if tempImplmentingOrgData.nil?
-          implementingOrgs['ref'] = 'na'
-          implementingOrgs['name'] = 'na'
+          implementingOrgs['participating_organisation_ref'] = 'na'
+          implementingOrgs['participating_organisation'] = 'na'
         else
-          implementingOrgs['name'] = tempImplmentingOrgData['Name']
+          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
         end
       end
     end
     allProjectsData['highLevelSectorList'] = allProjectsData['highLevelSectorList'].sort_by {|key| key}
     allProjectsData['document_types'] = allProjectsData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
-    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["name"]}.uniq {|key| key["ref"]}
+    allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
     return allProjectsData
   end
 
@@ -397,11 +410,19 @@ module CountryHelpers
   def total_country_budget_location
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
+    puts firstDayOfFinYear
+    puts lastDayOfFinYear
+    #oipa 2.2
+    #totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
+    #oipa 3.1
+    totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "/budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value"
     totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
     totalAmount = 0.0
     totalCountryBudgetLocation['results'].each do |countryBudgets|
-      totalAmount = totalAmount + countryBudgets['budget'].to_f
+      #oipa 2.2
+      #totalAmount = totalAmount + countryBudgets['budget'].to_f
+      #oipa 3.1
+      totalAmount = totalAmount + countryBudgets['value'].to_f
     end
     totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
     totalAmount
