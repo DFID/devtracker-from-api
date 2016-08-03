@@ -205,10 +205,10 @@
                         <div class="mContent">
                             <ul style="display: none; margin: 5px;">
                                 <% implementingOrgTypes.each do |implementingOrgTypes| %>
-                                    <%if implementingOrgTypes["ref"] != 'na' %>
+                                    <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
                                         <li>
-                                            <label for="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" title=" <%= implementingOrgTypes["name"] %>">
-                                            <input id="implementingOrg_type_<%= implementingOrgTypes["ref"] %>" type="checkbox" value="<%= implementingOrgTypes["ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["name"] %>
+                                            <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
+                                            <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
                                             </label>
                                         </li>
                                     <%end%>
@@ -256,6 +256,9 @@
                 <% elsif defined? sectorData %>
                     window.searchType = "S";
                     window.SectorCode = '<%= sectorData["sectorCode"] %>';
+                <% elsif defined? ogd_code %>
+                    window.searchType = "O";
+                    window.ogd_code = '<%= ogd_code %>';
                 <% else %>
                     window.searchType = "R";
                     window.RegionCode = '<%= region[:code] %>';

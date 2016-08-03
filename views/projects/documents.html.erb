@@ -30,9 +30,9 @@
                   <%begin%>
                     <%
                     t_url = document['url']
-                    t_url_txt = document['title'][0]['narratives'][0]['text'].gsub(/\.[^.]*$/, '')
-                    t_code = document['title'][0]['narratives'][0]['language']['code']
-                    t_title = document['title'][0]['narratives'][0]['language']['name']
+                    t_url_txt = document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '')
+                    t_code = document['title']['narratives'][0]['language']['code']
+                    t_title = document['title']['narratives'][0]['language']['name']
                     %>
                     <tr class="result-list-row">
                         <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
