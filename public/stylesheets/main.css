@@ -678,3 +678,7 @@ g.c3-axis-y > g:last-child {
  .tpcbcv {
   display: none;
  }
+
+ #ui-datepicker-div {
+  z-index: 2 !important;
+ }

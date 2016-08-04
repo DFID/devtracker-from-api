@@ -15,8 +15,8 @@ $(document).ready(function() {
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
-    var budgetLowerBound = $('#budget_lower_bound').val() > 0 ? $('#budget_lower_bound').val() : '';
-    var budgetHigherBound = $('#budget_higher_bound').val() > 0 ? $('#budget_higher_bound').val() : '';
+    var budgetLowerBound = parseInt($('#budget_lower_bound').val()) > 0 ? $('#budget_lower_bound').val() : '';
+    var budgetHigherBound = parseInt($('#budget_higher_bound').val()) > 0 ? $('#budget_higher_bound').val() : '';
     var currencyLink = '/currency';
     switch (window.searchType){
         case 'C':
@@ -35,9 +35,11 @@ $(document).ready(function() {
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
     }
-    function refreshOipaLink(searchType){
-        var budgetLowerBound = $('#budget_lower_bound').val() > 0 ? $('#budget_lower_bound').val() : '';
-        var budgetHigherBound = $('#budget_higher_bound').val() > 0 ? $('#budget_higher_bound').val() : '';
+    function refreshOipaLink(searchType,trigger){
+        if (trigger == 0){
+            budgetLowerBound = $('#budget_lower_bound').val() > 0 ? $('#budget_lower_bound').val() : '';
+            budgetHigherBound = $('#budget_higher_bound').val() > 0 ? $('#budget_higher_bound').val() : '';
+        }
         switch (window.searchType){
             case 'C':
                 oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation=GB-GOV-1&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('#sort_results_type').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -63,7 +65,7 @@ $(document).ready(function() {
         if($(this).text()=="▼")
         {
             $('#sort_results_type').val('title');
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
             $(this).text('▲');
@@ -71,7 +73,7 @@ $(document).ready(function() {
         else
         {
             $('#sort_results_type').val('-title');
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
             $(this).text('▼');
@@ -86,7 +88,7 @@ $(document).ready(function() {
         if($(this).text()=="▼")
         {
             $('#sort_results_type').val('activity_plus_child_budget_value');
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
             $(this).text('▲');
@@ -94,7 +96,7 @@ $(document).ready(function() {
         else
         {
             $('#sort_results_type').val('-activity_plus_child_budget_value');
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             //refreshPagination(returnedProjectCount);
             generateProjectListAjax(oipaLink);
             $(this).text('▼');
@@ -113,28 +115,28 @@ $(document).ready(function() {
         else{
             $('#activity_status_states').val('1,2,3,4,5');
         }
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
     
     $('.document_type').click(function(){
         var tmpDocumentTypeList = $('.document_type:checked').map(function(){return $(this).val()}).get().join();
         $('#selected_document_type').val(tmpDocumentTypeList);
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
 
     $('.implementingOrg_type').click(function(){
         var tmpDocumentTypeList = $('.implementingOrg_type:checked').map(function(){return $(this).val()}).get().join();
         $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
 
     $('.sector').click(function(){
         var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
         $('#selected_sectors').val(tmpSectorList);
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
 
@@ -142,7 +144,7 @@ $(document).ready(function() {
     $('.location_country').click(function(){
         var tmpCountryList = $('.location_country:checked').map(function(){return $(this).val()}).get().join();
         $('#locationCountryFilterStates').val(tmpCountryList);
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
 
@@ -150,9 +152,11 @@ $(document).ready(function() {
     $('.location_region').click(function(){
         var tmpRegionList = $('.location_region:checked').map(function(){return $(this).val()}).get().join();
         $('#locationRegionFilterStates').val(tmpRegionList);
-        refreshOipaLink(window.searchType);
+        refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
     });
+
+    //<input style="color: black; width: 40%; font-size: 0.8em;" value="£0"> - <input value="£417,999,994" style="color: black; width: 40%; font-size: 0.8em;">
 
     $("#slider-vertical").slider({
         orientation: "horizontal",
@@ -162,16 +166,34 @@ $(document).ready(function() {
         step : (Math.round(window.maxBudget / 100) * 100)/100,
         values: [0,window.maxBudget],
         slide: function( event, ui ) {
-            $( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+            //$( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+            //$( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas(ui.values[0])+'"> - <input id="budget_slider_end" value="£'+addCommas(ui.values[1])+'" style="color: black; width: 40%; font-size: 0.8em;">');
+            $('#budget_slider_start').val(addCommas('£'+ui.values[0]));
+            $('#budget_slider_end').val(addCommas('£'+ui.values[1]));
         },
         change: function(event, ui){
             $('#budget_lower_bound').val(ui.values[0]);
             $('#budget_higher_bound').val(ui.values[1]);
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             generateProjectListAjax(oipaLink);
         }
     });
-    $( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+    //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+    $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 40%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px; width: 13%; height: 25px;">Go</button>');
+    $('#date-range').html('<input id="date_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 40%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px; width: 13%; height: 25px;">Go</button>');
+    
+    $('#budget_higher_bound').val($( "#slider-vertical" ).slider( "values", 1 ));
+    
+    $('#budget_slider_update').click(function(){
+        $('#budget_lower_bound').val($('#budget_slider_start').val().trim().replace(/[^0-9]/g,""));
+        $('#budget_higher_bound').val($('#budget_slider_end').val().trim().replace(/[^0-9]/g,""));
+        budgetHigherBound = $('#budget_higher_bound').val();
+        budgetLowerBound = $('#budget_lower_bound').val();
+        refreshOipaLink(window.searchType,1);
+        console.log('link: '+oipaLink);
+        generateProjectListAjax(oipaLink);
+    });
+
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
             $(this).css('border', "none");
@@ -191,7 +213,9 @@ $(document).ready(function() {
         slide: function(event, ui){
             var tempStartDt = new Date(ui.values[0]);
             var tempEndDt = new Date(ui.values[1]);
-        $('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
+        //$('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
+        $('#date_slider_start').val(tempStartDt.customFormat("#DD# #MMM# #YYYY#"));
+        $('#date_slider_end').val(tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
         },
         change: function(event, ui){
             $('#date-slider-disclaimer').show();
@@ -199,14 +223,36 @@ $(document).ready(function() {
             var tempEndDt = new Date(ui.values[1]);
             $('#date_lower_bound').val(tempStartDt.customFormat("#YYYY#-#MM#-#DD#"));
             $('#date_higher_bound').val(tempEndDt.customFormat("#YYYY#-#MM#-#DD#"));
-            refreshOipaLink(window.searchType);
+            refreshOipaLink(window.searchType,0);
             generateProjectListAjax(oipaLink);
         }
         /*change: function(event, ui){
         //TO DO
         }*/
     });
-    $('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
+    //$('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
+    $('#date_slider_start').datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+    $('#date_slider_end').datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+    //$('#date_slider_start').datepicker("option","dateFormat","yy-mm-dd");
+    $('#date_slider_start').datepicker("option","dateFormat","dd M yy");
+    $('#date_slider_end').datepicker("option","dateFormat","dd M yy");
+    $('#date_slider_start').val(StartDt.customFormat("#DD# #MMM# #YYYY#"));
+    $('#date_slider_end').val(EndDt.customFormat("#DD# #MMM# #YYYY#"));
+    $('#date_slider_update').click(function(){
+        $('#date-slider-disclaimer').show();
+        var tempStartDate = new Date($('#date_slider_start').val());
+        var tempEndDate = new Date($('#date_slider_end').val());
+        $('#date_lower_bound').val(tempStartDate.customFormat("#YYYY#-#MM#-#DD#"));
+        $('#date_higher_bound').val(tempEndDate.customFormat("#YYYY#-#MM#-#DD#"));
+        refreshOipaLink(window.searchType,0);
+        generateProjectListAjax(oipaLink);
+    });
     /*refreshPagination function reloads the pagination information to accommodate with the updated api call*/
     function refreshPagination(projectCount){
         $('#light-pagination').pagination({
@@ -302,7 +348,7 @@ $(document).ready(function() {
                 url: "/currency",
                 data: {amount: temp_amount, currency: temp_currency},
             }).done(function(msg){
-                console.log("saved: " + msg.output);
+                //console.log("saved: " + msg.output);
                 temp_response = msg.output;
             });
             $(this).before(temp_response);
