@@ -179,8 +179,8 @@ $(document).ready(function() {
         }
     });
     //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
-    $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 40%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px; width: 13%; height: 25px;">Go</button>');
-    $('#date-range').html('<input id="date_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 40%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px; width: 13%; height: 25px;">Go</button>');
+    $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 35%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
+    $('#date-range').html('<input id="date_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 35%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
     
     $('#budget_higher_bound').val($( "#slider-vertical" ).slider( "values", 1 ));
     
