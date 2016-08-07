@@ -62,7 +62,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% incomingFunds=transactions.select {|group| group['transaction_type']['code'] == "1" } %>
+    <%# incomingFunds=transactions.select {|group| group['transaction_type']['code'] == "1" } %>
     <%if !incomingFunds.nil? && incomingFunds.length > 0 %>
     <%# totalIncomingFund=get_sum_transaction(incomingFunds).to_f %>
      <div class="section-group-title trans-header-container">
@@ -80,8 +80,8 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-              <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+              <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if incomingFunds.uniq{|m| m['currency']['code']}.count == 1%>
                 <div class="<%= project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100, project['aggregations']['activity_children']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                 </div>
               <%end%>
@@ -95,7 +95,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
+          <% incomingFunds.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
             <tr>
               <td><%= if !incomingFund['description'].nil? then incomingFund['description']['narratives'][0]['text'] else "" end %></td>
               <td width="30%"><%= if incomingFund['provider_organisation'].nil? then '' else incomingFund['provider_organisation']['narratives'][0]['text'] + 
@@ -115,13 +115,14 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% commitments=transactions.select {|group| group['transaction_type']['code'] == '2' } %>
+    <%# commitments=transactions.select {|group| group['transaction_type']['code'] == '2' } %>
     <%if !commitments.nil? && commitments.length > 0 %>
     <% h2Activities = get_h2_project_details(project['id'])%>
     <%# totalCommitments=get_sum_transaction(commitments).to_f %>
+    <%#= totalCommitments%>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
-            <span class="trans-type-title">Commitment</span>
+            <span class="trans-type-title">Commitment</span><%#= commitments.length%>
             <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
@@ -134,8 +135,8 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if commitments.uniq{|m| m['currency']['code']}.count == 1%>
                 <div class="<%= project['aggregations']['activity_children']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['commitment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
              <%end%>
@@ -149,7 +150,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |commitment| %>
+          <% commitments.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |commitment| %>
             <tr>
               <td><%= get_h2Activity_title(h2Activities,commitment['activity']['id']) %></td>
               <td width="15%"><%= is_dfid_project(commitment['activity']['id']) ? commitment['activity']['id'] : ''  %></td>
@@ -168,7 +169,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% disbursements=transactions.select {|group| group['transaction_type']['code'] == '3' } %>
+    <%# disbursements=transactions.select {|group| group['transaction_type']['code'] == '3' } %>
     <%if !disbursements.nil? && disbursements.length > 0 %>
     <%# totalDisbursements=get_sum_transaction(disbursements).to_f %>
      <div class="section-group-title trans-header-container">
@@ -186,8 +187,8 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if disbursements.uniq{|m| m['currency']['code']}.count == 1%>
               <div class="<%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['disbursement_value'].to_f.round(0)*100, project['aggregations']['activity_children']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
              </div>
              <%end%>
@@ -202,7 +203,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |disbursement| %>
+          <% disbursements.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |disbursement| %>
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= if !disbursement['description'].nil? then disbursement['description']['narratives'][0]['text'] else "" end %></td>
@@ -223,7 +224,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div class="twelve columns transactions">
-    <% expenditures=transactions.select {|group| group['transaction_type']['code'] == '4' } %>
+    <%# expenditures=transactions.select {|group| group['transaction_type']['code'] == '4' } %>
     <%if !expenditures.nil? && expenditures.length > 0 %>
     <%#totalExpenditures=get_sum_transaction(expenditures).to_f %>
      <div class="section-group-title trans-header-container">
@@ -241,8 +242,8 @@ title: Development Tracker
            </div>  
 
            <div class="trans-header-right">
-            <%mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if mixedCurrencyExists.uniq{|m| m['currency']['code']}.count == 1%>
+            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
+              <% if expenditures.uniq{|m| m['currency']['code']}.count == 1%>
                <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                 </div>
               <%end%>
@@ -257,7 +258,7 @@ title: Development Tracker
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
           </tr>
-          <% transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |expenditure| %>
+          <% expenditures.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |expenditure| %>
           <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
             <tr>
               <td><%= if !expenditure['description'].nil? then expenditure['description']['narratives'][0]['text'] else "" end %></td>
