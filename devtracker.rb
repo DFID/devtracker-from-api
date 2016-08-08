@@ -393,7 +393,16 @@ get '/projects/:proj_id/transactions/?' do |n|
 	project = get_h1_project_details(n)
 		
 	# get the transactions from the API
-  	transactions = get_transaction_details(n)
+  	incomingFunds = get_transaction_details(n,"1")
+
+  	# get the incomingFund transactions from the API
+  	commitments = get_transaction_details(n,"2")
+
+  	# get the disbursement transactions from the API
+  	disbursements = get_transaction_details(n,"3")
+
+  	# get the expenditure transactions from the API
+  	expenditures = get_transaction_details(n,"4")
 
   	# get yearly budget for H1 Activity from the API
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
@@ -413,7 +422,10 @@ get '/projects/:proj_id/transactions/?' do |n|
 		:locals => {
 			project: project,
 			countryOrRegion: countryOrRegion,
- 			transactions: transactions,
+ 			incomingFunds: incomingFunds,
+ 			commitments: commitments,
+ 			disbursements: disbursements,
+ 			expenditures: expenditures,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount 
