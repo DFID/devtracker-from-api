@@ -228,10 +228,22 @@ module ProjectHelpers
             totalBudgets = projectSector.reduce(0) {|memo, t| memo + t['value'].to_f} 
             c3ReadyStackBarData[0] = ''
             c3ReadyStackBarData[1] = '['
+            topFiveCounter = 0
+            totalOtherBudget = 0
             projectSector.each do |sector|
-                sectorGroupPercentage = (100*sector['value'].to_f/totalBudgets.to_f).round(2)
-                c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
-                c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
+                if topFiveCounter < 5
+                    sectorGroupPercentage = (100*sector['value'].to_f/totalBudgets.to_f).round(2)
+                    c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
+                    c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
+                else
+                    totalOtherBudget = totalOtherBudget + sector['value'].to_f
+                end
+                topFiveCounter = topFiveCounter + 1
+            end
+            if topFiveCounter > 4
+                sectorGroupPercentage = (100*totalOtherBudget.to_f/totalBudgets.to_f).round(2)
+                c3ReadyStackBarData[0].concat('["Other Sectors",'+sectorGroupPercentage.to_s+"],")
+                c3ReadyStackBarData[1].concat('"Other Sectors",')
             end
             c3ReadyStackBarData[1].concat(']')
             return c3ReadyStackBarData
