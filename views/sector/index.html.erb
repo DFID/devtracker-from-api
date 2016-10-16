@@ -34,7 +34,7 @@
                 <span id="sortSectBudgPer" class="sort-proj-sectors">▲</span>
             </div>
 
-            <ul class="sector-list">
+            <ul class="sector-list" id='aid-by-sector-list'>
                 <% (high_level_sector_list[:sectorsData] || []).each do |sector| %>
                     <li>
                        <a href="/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%> </a>
