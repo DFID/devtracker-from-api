@@ -23,7 +23,7 @@
         <div class="row">
             <div class="four columns summary">
                 <p><%= sector_list[:sectorHierarchyPath][:categoryDescription]%></p>
-                <a class="button" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects" style="width:100%;">View All <%= sector_list[:sectorHierarchyPath][:categoryDescription]%> Projects</a>
+                <a id='view-all-relevant-sector-projects' class="button" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects" style="width:100%;">View All <%= sector_list[:sectorHierarchyPath][:categoryDescription]%> Projects</a>
             </div>
             <div class="eight columns">
                 <ul class="sector-list">

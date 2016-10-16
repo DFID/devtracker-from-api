@@ -39,7 +39,7 @@
 
 <div class="row">
   <div class="twelve columns">
-  	<a class="button location-button" href="/regions" style="width:100%;">View All Regional Projects</a>
+  	<a id="view-all-regional-projects" class="button location-button" href="/regions" style="width:100%;">View All Regional Projects</a>
   </div>
 </div>
 
@@ -49,7 +49,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="twelve columns">
+  <div id="region-list" class="twelve columns">
   	<% dfid_complete_region_list("Regional").each do |region| %> 
       <a href="/regions/<%=region['code']%>"><%= region['name'] %></a> | 
     <% end %>

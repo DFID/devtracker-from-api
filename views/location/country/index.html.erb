@@ -47,7 +47,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="twelve columns">
+  <div id="country-list" class="twelve columns">
     <% dfid_complete_country_list.each do |country| %>
       <a href="/countries/<%=country["code"]%>"><%= country["name"] %></a> | 
     <% end %>    
