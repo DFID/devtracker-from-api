@@ -51,3 +51,21 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="twelve columns">
+        <% if(!is_dfid_project(project['iati_identifier'])) %>
+        <div id="disclaimer" class="disclaimer grey">
+            <div style="margin-top: 0px; padding: 0.3em 0.0em 0em;" class="ui-state-highlight ui-corner-all">
+                <p style="margin-bottom: 0px; line-height: 1; font-size: 1em"><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project['reporting_organisations'][0]['narratives'][0]['text'] || "" %></strong>. 
+
+                <% if (!project['contact_info'][0].nil?) %>
+                    Please contact them (<%=project['contact_info'][0]['email'] %>) if you have any questions about their data.</p>
+                <% else %>
+                    Please contact them if you have any questions about their data.</p>
+                <% end %>
+            </div>
+        </div>
+        <% end %>
+    </div>
+</div>
