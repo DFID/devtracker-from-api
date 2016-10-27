@@ -27,7 +27,7 @@
                             </label>
                         </div>
                         <div class="six columns">
-                            <input type="text" value="" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
+                            <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
                         </div>
                         <div class="three columns">
                             <input type="submit" class="button" value="Search">
@@ -334,7 +334,16 @@
     <%else%>
         <div class="row">
             <div class="twelve columns">
-                <div class="search-result nine columns push-three"><p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p><ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul></div>
+                <div class="search-result nine columns push-three">
+                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p>
+                    <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
+                        <li>Make sure all words are spelled correctly.</li>
+                        <li>Try different keywords.</li>
+                        <li>Try more general keywords.</li>
+                        <li>Try fewer keywords.</li>
+                    </ul>
+                    <p>Search results only show currently active projects. To see projects at other stages, first carry out a more general search and then use the status filters on the search results page.</p>
+                </div>
                 <div class="three columns pull-nine"></div>
             </div>
         </div>
