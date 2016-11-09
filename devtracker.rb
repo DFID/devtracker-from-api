@@ -102,7 +102,7 @@ end
 
 # Country summary page
 get '/countries/:country_code/?' do |n|
-	n = sanitize_input(n,"p")
+	n = sanitize_input(n,"p").upcase
 	country = ''
 	results = ''
 	countryYearWiseBudgets = ''
@@ -132,7 +132,7 @@ end
 
 #Country Project List Page
 get '/countries/:country_code/projects/?' do |n|
-	n = sanitize_input(n,"p")
+	n = sanitize_input(n,"p").upcase
 	projectData = ''
 	projectData = get_country_all_projects_data(n)
 #	 Benchmark.bm(7) do |x|
@@ -162,7 +162,7 @@ end
 
 #Country Results Page
 get '/countries/:country_code/results/?' do |n|		
-	n = sanitize_input(n,"p")
+	n = sanitize_input(n,"p").upcase
 	country = get_country_code_name(n)
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
