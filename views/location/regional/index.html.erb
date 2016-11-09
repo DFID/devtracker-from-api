@@ -45,13 +45,17 @@
 
 <div class="row">
   <div class="twelve columns">
-    <h2 class="section-group-title">All Regions</h3>
+    <h2 class="section-group-title">Regions with Active Projects</h3>
   </div>
 </div>
 <div class="row">
   <div id="region-list" class="twelve columns">
-  	<% dfid_complete_region_list("Regional").each do |region| %> 
-      <a href="/regions/<%=region['code']%>"><%= region['name'] %></a> | 
-    <% end %>
+  	<%# dfid_complete_region_list("Regional").each do |region| %> 
+      <!--<a href="/regions/<%#=region['code']%>"><%#= region['name'] %></a> | -->
+    <%# end %>
+    <% dfid_regional_projects_data[:regionsDataJSON].each do |region|%>
+    	<a href="/regions/<%=region['code']%>"><%=region['region']%></a> |
+    <%end%>
+
   </div>
 </div>
