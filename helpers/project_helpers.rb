@@ -106,12 +106,19 @@ module ProjectHelpers
     end
 
     def dfid_complete_country_list
-        countriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
+        #countriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
+        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
+        countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
+        countriesList = countriesList['results']
     end
 
     def dfid_country_map_data
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+        puts current_first_day_of_financial_year
+        puts current_last_day_of_financial_year
         #OIPA V2.2
         #oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         #OIPA V3.1

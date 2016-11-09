@@ -42,14 +42,13 @@
 
 <div class="row">
   <div class="twelve columns">
-    <h2 class="section-group-title">All Countries (including historical)</h2>
-    <p>This list includes countries where DFID no longer works.</p>
+    <h2 class="section-group-title">Countries with Active Projects</h2>
   </div>
 </div>
 <div class="row">
   <div id="country-list" class="twelve columns">
     <% dfid_complete_country_list.each do |country| %>
-      <a href="/countries/<%=country["code"]%>"><%= country["name"] %></a> | 
+      <a href="/countries/<%=country["recipient_country"]["code"]%>"><%= country["recipient_country"]["name"] %></a> | 
     <% end %>    
   </div>
 </div> 
