@@ -106,12 +106,19 @@ module ProjectHelpers
     end
 
     def dfid_complete_country_list
-        #countriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
+        staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
         countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         countriesList = countriesList['results']
+        countriesList.each do |country|
+            tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["recipient_country"]["code"]}
+             if tempCountryDetails.length>0
+                 country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
+             end
+        end
+        countriesList
     end
 
     def dfid_country_map_data
