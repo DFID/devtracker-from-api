@@ -65,11 +65,11 @@
                 <div class="projects-nav six columns">
                     <nav>
                         <ul class="tab-bar">
-                            <li <%= active=="summary" ? "class='active'" : ""%>><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
-                            <li <%= active=="documents" ? "class='active'" : ""%>><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
-                            <li <%= active=="transactions" ? "class='active'" : ""%>><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
+                            <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                            <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
                             <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
-                                <li <%= active=="partners" ? "class='active'" : ""%>><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
+                                <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
                             <% end %>
 
                             <!-- TODO: bring back in r4dDocs element -->
@@ -79,7 +79,7 @@
                 <div class="button-row six columns">
                     <span>
                         <% projectTitle = project['title']['narratives'][0]['text'] + " [" + project['iati_identifier'] + "]"%>
-                        <a href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
+                        <a id='Report-Fraud' href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
                     </span>
                 </div>    
             </div>
