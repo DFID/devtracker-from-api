@@ -28,7 +28,7 @@
                  <a id='view-all-relevant-sector-projects' class="button" href="/sector/<%=category_list[:sectorHierarchyPath][:highLevelSectorCode]%>/projects" style="width:100%;">View All <%= category_list[:sectorHierarchyPath][:highLevelSectorDescription]%> Projects</a> 
             </div>
             <div class="eight columns">
-               <ul class="sector-list">
+               <ul class="sector-list" id='aid-by-sector-list'>
                     <% (category_list[:sectorData]).each do |category| %>
                         <li>
                             <a href="/sector/<%=category[:parentCode]%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
