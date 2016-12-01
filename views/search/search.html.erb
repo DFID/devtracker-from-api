@@ -303,8 +303,8 @@
             <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
             <script type='text/javascript'>
                 $(document).ready(function() {
-                    //window.oipaApiUrl = "<%#= oipa_api_url %>";
-                    window.oipaApiUrl = window.baseUrl;
+                    window.oipaApiUrl = "<%= oipa_api_url %>";
+                    //window.oipaApiUrl = window.baseUrl;
                     window.project_count = "<%= project_count %>";
                     window.searchQuery = "<%= query %>";
                     window.searchType = "F";
