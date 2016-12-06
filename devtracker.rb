@@ -671,7 +671,7 @@ end
 
 #Foreign and Commonwealth Office
 get '/foreign-and-commonwealth-office' do
-	ogdCode = 'GB-3'
+	ogdCode = 'GB-3,GB-GOV-3'
 	projectData = get_ogd_all_projects_data(ogdCode)
   	settings.devtracker_page_title = 'Foreign and Commonwealth Office Projects Page'
 	erb :'other-govt-departments/other_govt_departments',
