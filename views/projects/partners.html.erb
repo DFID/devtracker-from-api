@@ -46,7 +46,7 @@
                           <ul>
                              <%# TODO - deal with the situation where we have multiple languages %>
                              <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
-                               <%=fundedProject['descriptions'][0]['narratives'][0]['text'] %>
+                               <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
                                <span><%= Money.new(fundedProject['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
                                <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
                              </li>
