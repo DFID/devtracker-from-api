@@ -50,6 +50,26 @@
                   <%rescue%>
                   <%end%>
                 <% end %>
+                <!-- This part is to handle documents with application/mail formats -->
+                <% project['local_document_links'].each do |document| %>
+                <tr class="result-list-row">
+                        <th scope="row"><a href="<%= document['url']%>"><%= document['title']%></a></th>
+                        
+                        <td scope="col">
+                          <%= iati_mime_type document['format']%>
+                        </td>
+                        <td scope="col">
+                          <% tempCategories = document['category'].split(",") %>
+                          <% tempDocCategories = JSON.parse(File.read('data/doc_category_list.json')) %>
+                          <%tempCategories.each do |category|%>
+                          <% matchedCategory = tempDocCategories.select{|c| c['code'] == category} %>
+                            <span class="category">
+                              <%= matchedCategory[0]["text"]%>
+                            </span>
+                          <% end %>
+                        </td>
+                    </tr>
+                  <%end%>
             </tbody>
         </table>       
         
