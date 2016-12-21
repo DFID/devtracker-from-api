@@ -84,7 +84,7 @@
         //window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
         //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
         //window.baseUrl = '<%#= oipa_api_url %>';
-        <% if oipa_api_url.include? "localhost" %>
+        <% if oipa_api_url.include? "127.0.0.1" %>
           var tempGetUrl = window.location;
           window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
         <% else %>
