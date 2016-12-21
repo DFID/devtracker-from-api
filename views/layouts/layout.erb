@@ -84,7 +84,14 @@
         //var tempGetUrl = window.location;
         //window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
         //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
-        window.baseUrl = '<%= oipa_api_url %>';
+        //window.baseUrl = '<%#= oipa_api_url %>';
+
+        <% if oipa_api_url.include? "localhost" %>
+          var tempGetUrl = window.location;
+          window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        <% else %>
+          window.baseUrl = '<%= oipa_api_url %>';
+        <%end%>
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
