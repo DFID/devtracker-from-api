@@ -12,7 +12,7 @@ module ProjectHelpers
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
-        project['local_document_links'] = get_document_links_local(projectId)
+        #project['local_document_links'] = get_document_links_local(projectId)
         project
     end
 
