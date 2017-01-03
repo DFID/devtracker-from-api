@@ -15,7 +15,7 @@ module InputSanitizer
 			return string.gsub(/[^a-zA-Z0-9\-\s_]/,'')
 		when "id"
 			#Converts slashes to dashes and removes spaces from project IDs
-			return string.gsub(/[\/']/,'-').gsub(/[\s]/,'')
+			return string.gsub(/[\/']/,'-').gsub(/[\s]/,'').gsub(/[&]/,'-')
 		else
 			#anything other than those specified will act similar to the case 'a' by default
 			return string.gsub(/[^a-zA-Z0-9\s_\/\-]/,'')
