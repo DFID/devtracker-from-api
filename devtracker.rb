@@ -869,6 +869,31 @@ get '/medical-research-council' do
 	}
 end
 
+#Medical Research Council - (This link does not work at the moment)
+get '/cdc-group-plc' do
+	ogdCode = 'GB-COH-03877777'
+	projectData = get_ogd_all_projects_data(ogdCode)
+  	settings.devtracker_page_title = 'CDC Group Plc'
+	erb :'other-govt-departments/other_govt_departments',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		ogd_title: settings.devtracker_page_title,
+		ogd: ogdCode,
+ 		total_projects: projectData['projects']['count'],
+ 		projects: projectData['projects']['results'],
+ 		results: projectData['results'],
+ 		highLevelSectorList: projectData['highLevelSectorList'],
+ 		budgetHigherBound: projectData['project_budget_higher_bound'],
+ 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+ 		actualStartDate: projectData['actualStartDate'],
+ 		plannedEndDate: projectData['plannedEndDate'],
+ 		documentTypes: projectData['document_types'],
+ 		implementingOrgTypes: projectData['implementingOrg_types'],
+ 		projectCount: projectData['projects']['count']
+	}
+end
+
 #####################################################################
 #  CURRENCY HANDLER
 #####################################################################
