@@ -51,25 +51,25 @@
                   <%end%>
                 <% end %>
                 <!-- This part is to handle documents with application/mail formats -->
-                <% project['local_document_links'].each do |document| %>
-                <tr class="result-list-row">
-                        <th scope="row"><a href="<%= document['url']%>"><%= document['title']%></a></th>
+                <%# project['local_document_links'].each do |document| %>
+               <!-- <tr class="result-list-row">
+                        <th scope="row"><a href="<%#= document['url']%>"><%#= document['title']%></a></th>
                         
                         <td scope="col">
-                          <%= iati_mime_type document['format']%>
+                          <%#= iati_mime_type document['format']%>
                         </td>
                         <td scope="col">
-                          <% tempCategories = document['category'].split(",") %>
-                          <% tempDocCategories = JSON.parse(File.read('data/doc_category_list.json')) %>
-                          <%tempCategories.each do |category|%>
-                          <% matchedCategory = tempDocCategories.select{|c| c['code'] == category} %>
+                          <%# tempCategories = document['category'].split(",") %>
+                          <%# tempDocCategories = JSON.parse(File.read('data/doc_category_list.json')) %>
+                          <%#tempCategories.each do |category|%>
+                          <%# matchedCategory = tempDocCategories.select{|c| c['code'] == category} %>
                             <span class="category">
-                              <%= matchedCategory[0]["text"]%>
+                              <%#= matchedCategory[0]["text"]%>
                             </span>
-                          <% end %>
+                          <%# end %>
                         </td>
-                    </tr>
-                  <%end%>
+                    </tr> -->
+                  <%#end%>
             </tbody>
         </table>       
         
