@@ -47,6 +47,14 @@
     </script> -->
    <script> 
     $(document).ready(function() {
+      $('#IncludeClosedProjects').change(function(){
+          if(this.checked){
+            $('#includeClosed').val('1');
+          }
+          else{
+            $('#includeClosed').val('0'); 
+          }
+        });
          $(".more-info-link").click(function(e){
             e.stopPropagation();
             $("#moreinfo"+$(this).attr('target')).toggle();

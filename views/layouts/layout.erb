@@ -52,6 +52,15 @@
     </script> -->
     <script> 
       $(document).ready(function() {
+        $('#IncludeClosedProjects').change(function(){
+          if(this.checked){
+            $('#includeClosed').val('1');
+          }
+          else{
+            $('#includeClosed').val('0'); 
+          }
+        });
+
         $(".more-info-link").click(function(e){
           e.stopPropagation();
           $("#moreinfo"+$(this).attr('target')).toggle();
@@ -82,8 +91,8 @@
         });
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
         var tempGetUrl = window.location;
-        //window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
-        window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
+        window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
@@ -113,6 +122,7 @@
           <form id="search" class="site-search" action="/search" method="GET" role="search">
             <label for="site-search-text" class="visually-hidden">Search</label>
             <input type="search" name="query" id="site-search-text" title="Search"><input class="button" type="submit" value="Search">
+            <input name="includeClosed" type="hidden" value="0">
           </form>
         </div>
       </div>

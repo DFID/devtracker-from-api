@@ -1,9 +1,9 @@
----
+<!--
 published: "true"
 title: Development Tracker
 layout: landing
 
----
+-->
 
 <div class="row">
     <div class="ten columns">
@@ -23,11 +23,19 @@ layout: landing
                             <h3 style="line-height:2em;">Search Projects</h3>
                         </label>
                     </div>
-                    <div class="six columns">
-                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
-                    </div>
-                    <div class="three columns">
-                        <input type="submit" value="Search" class="button">
+                    <div class="nine columns">
+                        <div class="row">
+                            <div class="six columns">
+                                <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
+                            </div>
+                            <div class="two columns">
+                                <input type="submit" value="Search" class="button">
+                            </div>
+                            <div class="four columns" style="text-align: left">
+                                <input id="IncludeClosedProjects" style="margin-top: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Closed Projects</label>
+                                <input id="includeClosed" name="includeClosed" type="hidden" value="0">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
