@@ -52,13 +52,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'http://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -404,6 +404,12 @@ get '/projects/:proj_id/transactions/?' do |n|
   	# get the expenditure transactions from the API
   	expenditures = get_transaction_details(n,"4")
 
+  	# get the Interest Repayment transactions from the API
+  	interestRepayment = get_transaction_details(n,"5")
+
+  	# get the Purchase of Equity transactions from the API
+  	purchaseEquity = get_transaction_details(n,"8")
+
   	# get yearly budget for H1 Activity from the API
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 	
@@ -426,6 +432,8 @@ get '/projects/:proj_id/transactions/?' do |n|
  			commitments: commitments,
  			disbursements: disbursements,
  			expenditures: expenditures,
+ 			interestRepayments: interestRepayment,
+ 			purchaseEquitys: purchaseEquity,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount 
