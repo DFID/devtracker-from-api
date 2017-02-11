@@ -936,3 +936,7 @@ a[rel="external"]::after, .external-link::after {
 
 .hide-interactive-map {
   display: none; }
+
+.meta {
+  display:none;
+}
