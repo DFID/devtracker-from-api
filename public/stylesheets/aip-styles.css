@@ -45,14 +45,23 @@
 #global-header h2 {
   font-size: 1.7em;
   font-weight: normal;
-  border-left: 3px solid #fff;
-  padding: 3px 0 3px 13px;
+  /*border-left: 3px solid #fff;*/
+  padding: 8px 0 3px 7px;
   display: inline-block;
-  margin: 7px 0; }
+  margin: 5px 0; }
 
 #global-header h2 a {
   color: #fff;
-  margin: 0; }
+  margin: 0; 
+    padding-left: 45px;
+    float: left;
+    overflow: visible;
+    line-height: 1;
+    text-rendering: optimizeLegibility;
+    background: url(https://assets.publishing.service.gov.uk/static/images/gov.uk_logotype_crown-ea874a79e09423d63420aff44f016fd0b92dc6dec0cc2668d63b150c8669875e.png) no-repeat;
+    background-size: 36px 32px;
+    background-position: 0 -2px;
+}
 
 #global-header form#search {
   float: right;
