@@ -84,28 +84,28 @@
             <% if country[:population] then %><% if country[:population] != "" then %>
                 <li class="fact-item">
                     Population (<%if country[:population_year] then %><%if country[:population_year] != "" then %><%= country[:population_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SI.POP.TTL" rel="external">World Bank</a>):
+                    source <a href="http://data.worldbank.org/indicator/SP.POP.TOTL?locations=<%=country[:code] %>" rel="external">World Bank</a>):
                     <span><strong><%= format_round_million country[:population].to_f%></strong></span>
                 </li>
             <% end %><% end %>
             <% if country[:belowPovertyLine] then %><% if country[:belowPovertyLine] != "" then %>
                 <li class="fact-item">
                     % living below $1.90 per day (<%if country[:belowPovertyLine_year] then %><%if country[:belowPovertyLine_year] != "" then %><%= country[:belowPovertyLine_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY" rel="external">World Bank</a>):
+                    source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY?locations=<%=country[:code] %>" rel="external">World Bank</a>):
                     <span><strong><%= country[:belowPovertyLine].to_f.round(2)%>%</strong></span>
                 </li>
             <% end %><% end %>
              <% if country[:fertilityRate] then %><% if country[:fertilityRate] != "" then %>
                 <li class="fact-item">
                     Fertility rate (<% if country[:fertilityRate_year] then %><% if country[:fertilityRate_year] != "" then %><%= country[:fertilityRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SP.DYN.TFRT.IN" rel="external">World Bank</a>):
+                    source <a href="http://data.worldbank.org/indicator/SP.DYN.TFRT.IN?locations=<%=country[:code] %>" rel="external">World Bank</a>):
                     <span><strong><%= country[:fertilityRate].to_f.round(2)%></strong></span>
                 </li>
             <% end %><% end %>
              <% if country[:gdpGrowthRate] then %><% if country[:gdpGrowthRate] != "" then %>
                 <li class="fact-item">
                     GDP growth rate (<%if country[:gdpGrowthRate_year] then %><% if country[:gdpGrowthRate_year] != "" then %><%=country[:gdpGrowthRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" rel="external">World Bank</a>):
+                    source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=<%=country[:code] %>" rel="external">World Bank</a>):
                     <span><strong><%= country[:gdpGrowthRate].to_f.round(2)%>%</strong></span>
                 </li>
             <% end %><% end %>
