@@ -126,6 +126,7 @@ module ProjectHelpers
                  country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
              end
         end
+        countriesList = countriesList.sort_by{|k| k["recipient_country"]["name"]}
         countriesList
     end
 
