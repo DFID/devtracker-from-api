@@ -54,7 +54,7 @@ include OGDHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'http://staging-dfid.oipa.nl/api/'
+#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
@@ -641,10 +641,18 @@ end
 #####################################################################
 
 get '/search/?' do
-
 	countryAllProjectFilters = get_static_filter_list()
 	query = sanitize_input(params['query'],"a")
-	results = generate_searched_data(query);
+	includeClosed = sanitize_input(params['includeClosed'],"a")
+	activityStatusList = ''
+	if(includeClosed == "1") then 
+		activityStatusList = '2,3,4'
+	else
+		includeClosed = 0
+		activityStatusList = '2'
+	end
+	puts activityStatusList
+	results = generate_searched_data(query,activityStatusList);
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
@@ -661,7 +669,8 @@ get '/search/?' do
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
  		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types']
+ 		implementingOrgTypes: results['implementingOrg_types'],
+ 		includeClosed: includeClosed
 	}
 end
 

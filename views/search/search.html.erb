@@ -26,11 +26,28 @@
                                 <h3>Search Projects</h3>
                             </label>
                         </div>
-                        <div class="six columns">
-                            <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
-                        </div>
-                        <div class="three columns">
-                            <input type="submit" class="button" value="Search">
+                        <div class="nine columns">
+                            <div class="row">
+                                <div class="eight columns">
+                                    <div class="row">
+                                        <div class="twelve columns">
+                                            <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
+                                        </div>
+                                        <div class="twelve columns" style="text-align: left">
+                                            <%if includeClosed == "1" then %>
+                                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox" checked><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                                <input id="includeClosed" name="includeClosed" type="hidden" value="1">
+                                            <%else%>
+                                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                                <input id="includeClosed" name="includeClosed" type="hidden" value="0">
+                                            <%end%>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four columns">
+                                    <input type="submit" class="button" value="Search">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <br>
@@ -88,7 +105,7 @@
                     <%end%>
                 </div>
                 <div id="showResults">
-                    <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
+                    <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters or select the checkbox to search for completed projects.</p></div>
                     <div>
                         Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                         <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -169,24 +186,38 @@
                         </span>
                         <div class="mContent">
                             <ul style="display: none; margin: 5px">
-                                <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                                    <%if statuses["code"] == '2' %>
-                                        <li>
-                                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                            <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
-                                            </label>
-                                        </li>
-                                    <%else%>
-                                        <li>
-                                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                            <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
-                                            </label>
-                                        </li>
-                                    <%end%>
-                                <% end %>
+                                <%if includeClosed == '1' %>
+                                    <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                                            <li>
+                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                                </label>
+                                            </li>
+                                    <% end %>
+                                <%else%>
+                                    <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                                        <%if statuses["code"] == '2' %>
+                                            <li>
+                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                                </label>
+                                            </li>
+                                        <%else%>
+                                            <li>
+                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
+                                                </label>
+                                            </li>
+                                        <%end%>
+                                    <% end %>
+                                <%end%>
                             </ul>
                         </div>
-                        <input type="hidden" id="activity_status_states" value="2"  />
+                        <%if includeClosed == '1' %>
+                            <input type="hidden" id="activity_status_states" value="2,3,4"  />
+                        <%else%>
+                            <input type="hidden" id="activity_status_states" value="2"  />
+                        <%end%>
                     </div>
                     <div name="locations" style="display: none">
                         <h3>Locations</h3>
@@ -342,7 +373,7 @@
                         <li>Try more general keywords.</li>
                         <li>Try fewer keywords.</li>
                     </ul>
-                    <p>Search results only show currently active projects. To see projects at other stages, first carry out a more general search and then use the status filters on the search results page.</p>
+                    <p>Search results only show currently active projects. To see projects that have been closed, select the "Include Completed Projects" checkbox and click the Search button.</p>
                 </div>
                 <div class="three columns pull-nine"></div>
             </div>
