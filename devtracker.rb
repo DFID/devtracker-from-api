@@ -327,7 +327,7 @@ end
 # Project summary page
 get '/projects/:proj_id/?' do |n|
 	n = sanitize_input(n,"p")
-
+	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
 

@@ -8,6 +8,15 @@ module ProjectHelpers
     include CodeLists
     include CommonHelpers
 
+    def check_if_project_exists(projectId)
+        begin
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        rescue => e
+            halt 404, "Activity not found"
+        end
+        return true
+    end
+
     def get_h1_project_details(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
