@@ -686,3 +686,19 @@ g.c3-axis-y > g:last-child {
 .meta {
   display:none;
 }
+
+.dc-chart g.row text {
+  fill: black !important;
+}
+
+#top5Countries.dc-chart .axis { display: none; }
+
+#top5Sectors.dc-chart .axis { display: none; }
+
+#top-5-sectors.columns {
+  border-right: none;
+}
+
+#top-5-countries.columns {
+  border-left:1px solid #dee0e2;
+}
