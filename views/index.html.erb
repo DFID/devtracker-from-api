@@ -7,7 +7,7 @@ layout: landing
 
 <div class="row">
     <div class="ten columns">
-        <h3 style="font-size: 1.8em; line-height: 2.5em;">Development Tracker: Follow how the UK invests in developing countries</h3>
+        <h3 style="font-size: 1.8em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
         <p class="meta">The Development Tracker uses open data on international development published by the UK Government and partners to show where the UK is investing in developing countries. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p>
     </div>
     <div class="two columns" style="text-align:right;">
@@ -16,7 +16,7 @@ layout: landing
 </div>
 <div class="row">
     <div class="twelve columns">
-        <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">The Department for International Development (DFID) leads the UK’s work to end extreme poverty. We are tackling the global challenges of our time including poverty and disease, mass migration, insecurity and conflict. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too.</div>
+        <div style="text-align: left;margin-top: 10px;margin-bottom: 10px;font-size: 1.25em">The Department for International Development (DFID) leads the UK’s work to end extreme poverty. We are tackling the global challenges of our time including poverty and disease, mass migration, insecurity and conflict. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too.</div>
         <div style="margin-top: 0px" id="search-bar">
             <form id="mid-search-form" action="/search" method="GET">
                 <div class="row">
@@ -233,19 +233,29 @@ $(document).ready(function() {
     //var grouping = dimentions.group();
     var grouping = dimentions.group().reduceSum(function(d) {return d.budget;});
     chart2
-    .width(360)
+    .width(320)
     .height(420)
     .x(d3.scale.ordinal())
     .elasticX(true)
     .dimension(dimentions)
     .group(grouping)
-    .title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
+    //.title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
+    .title(function(d){return "Budget: £" + d3.format(".2s")(d.value.toString())})
     .ordering(function(t){return t.budget;})
     .cap(10)
     .ordinalColors(['#D8DCBF'])
     .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
+
+    chart2.on('renderlet', function(chart) {
+        chart.selectAll("text").on("click", function (d) {
+            var result = $.grep(top5Countries,function(e){return e.name == d.key});
+            window.location.href = "http://localhost:4567/countries/"+ result[0].code  + "/";
+        });
+    });
+
     chart2.render();
 
+    //console.log(top5Countries);
 
     var chart3 = dc.rowChart("#top5Sectors");
     var info2 = crossfilter(top5Sectors);
@@ -260,11 +270,20 @@ $(document).ready(function() {
     .elasticX(true)
     .dimension(dimentions2)
     .group(grouping2)
-    .title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
+    .title(function(d){return "Budget: £" + d3.format(".2s")(d.value.toString())})
+    //.title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
     .ordering(function(t){return t.budget;})
     .cap(10)
     .ordinalColors(['#D8DCBF'])
     .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
+
+    chart3.on('renderlet', function(chart) {
+        chart.selectAll("text").on("click", function (d) {
+            var result = $.grep(top5Sectors,function(e){return e.name == d.key});
+            window.location.href = "http://localhost:4567/sector/"+ result[0].code  + "/";
+        });
+    });
+
     chart3.render();
 
 
