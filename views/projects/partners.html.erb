@@ -19,7 +19,16 @@
                     </div>
                     <div class="eight columns">
                         <ul>
-                            <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%><span><%= Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%></span></li>
+                            <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
+                                <span>
+                                   <%# If the default currency value is undefined do not show a value for the project%>
+                                   <%=begin
+                                       Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                                    rescue
+                                             
+                                    end %>
+                                </span>    
+                            </li>
                         </ul> 
                     </div>
                   </div>
@@ -47,7 +56,14 @@
                              <%# TODO - deal with the situation where we have multiple languages %>
                              <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
                                <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
-                               <span><%= Money.new(fundedProject['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                               <span>
+                                   <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
+                                   <%=begin       
+                                            Money.new(fundedProject['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                      rescue
+                                             
+                                      end %>    
+                                 </span>
                                <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
                              </li>
                           </ul> 

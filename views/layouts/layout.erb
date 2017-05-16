@@ -8,6 +8,7 @@
 
   <head>
     <meta charset="utf-8">
+    <meta name="description" content="The Development Tracker uses open data on international development published in the International Aid Transparency Intiative (IATI) open data standard by the UK Government and partners to show where the UK is investing in developing countries." />
     <title>DevTracker <%= settings.devtracker_page_title %></title>
 
   
@@ -52,6 +53,15 @@
     </script> -->
     <script> 
       $(document).ready(function() {
+        $('#IncludeClosedProjects').change(function(){
+          if(this.checked){
+            $('#includeClosed').val('1');
+          }
+          else{
+            $('#includeClosed').val('0'); 
+          }
+        });
+
         $(".more-info-link").click(function(e){
           e.stopPropagation();
           $("#moreinfo"+$(this).attr('target')).toggle();
@@ -83,7 +93,7 @@
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
         var tempGetUrl = window.location;
         window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
-        //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
+        //window.baseUrl = 'https://staging-dfid.oipa.nl/api/';
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
@@ -113,6 +123,7 @@
           <form id="search" class="site-search" action="/search" method="GET" role="search">
             <label for="site-search-text" class="visually-hidden">Search</label>
             <input type="search" name="query" id="site-search-text" title="Search"><input class="button" type="submit" value="Search">
+            <input name="includeClosed" type="hidden" value="0">
           </form>
         </div>
       </div>
@@ -120,11 +131,11 @@
 
     <div class="page-wrapper">
       <div class="row">
-        <div class="twelve columns" id="whatsnew-banner">
+        <!--<div class="twelve columns" id="whatsnew-banner">
           <p>
             <span>We have updated the Development Tracker. <a href="/whats-new">Find out more</a> and give us your <a href="/feedback">feedback</a> to help improve it.</span>
           </p>
-        </div>
+        </div>-->
       </div>
                <%= yield %>
                <div id="toTop"></div>

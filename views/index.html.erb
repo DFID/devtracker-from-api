@@ -8,6 +8,7 @@ layout: landing
 <div class="row">
     <div class="ten columns">
         <h3 style="font-size: 2em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
+        <p class="meta">The Development Tracker uses open data on international development published by the UK Government and partners to show where the UK is investing in developing countries. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p>
     </div>
     <div class="two columns" style="text-align:right;">
         <img style="margin-top:20px;" src="/images/ukaid_logo.png" alt="UK aid from the British people">
@@ -23,11 +24,23 @@ layout: landing
                             <h3 style="line-height:2em;">Search Projects</h3>
                         </label>
                     </div>
-                    <div class="six columns">
-                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
-                    </div>
-                    <div class="three columns">
-                        <input type="submit" value="Search" class="button">
+                    <div class="nine columns">
+                        <div class="row">
+                            <div class="eight columns">
+                                <div class="row">
+                                    <div class="twelve columns">
+                                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
+                                    </div>
+                                    <div class="twelve columns" style="text-align: left; display: none">
+                                        <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                        <input id="includeClosed" name="includeClosed" type="hidden" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="four columns">
+                                <input type="submit" value="Search" class="button">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

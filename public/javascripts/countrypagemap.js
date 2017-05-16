@@ -122,7 +122,7 @@ $(document).ready(function() {
         // create the geopoints if any are defined
         if(map) {
             //alert("start processing datapoints");
-            var url = window.baseUrl + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500";
+            var url = window.baseUrl + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
 
             $.getJSON(url, function (iati) {
             $('.modal_map_markers').show();

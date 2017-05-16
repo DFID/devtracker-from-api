@@ -682,3 +682,7 @@ g.c3-axis-y > g:last-child {
  #ui-datepicker-div {
   z-index: 2 !important;
  }
+
+.meta {
+  display:none;
+}
