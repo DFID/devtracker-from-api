@@ -431,4 +431,16 @@ module CountryHelpers
     totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
     totalAmount
   end
+
+  def pick_top_six_results(countryCode)
+    filteredResults = get_country_results(countryCode);
+    top6ResultsTitles = JSON.parse(File.read('data/top6ResultsTitles.json'))
+    tempHash = []
+    filteredResults.each do |result|
+      if(top6ResultsTitles.detect{|title| title["results_indicators"]==result["results_indicators"]})
+        tempHash.push(result)
+      end
+    end
+    tempHash
+  end
 end

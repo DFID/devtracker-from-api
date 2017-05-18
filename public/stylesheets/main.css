@@ -1,7 +1,7 @@
 #countryMap img, object, embed { max-width: none; }
 #map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
 #countryMap {
-    height : 480px;
+    height : 300px;
 }
 #map {
     width: 100%; 
@@ -685,4 +685,8 @@ g.c3-axis-y > g:last-child {
 
 .meta {
   display:none;
+}
+
+#topSixResults .columns:nth-child(4){
+  clear: left;
 }

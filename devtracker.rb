@@ -52,13 +52,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -119,6 +119,7 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
+	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
@@ -126,7 +127,8 @@ get '/countries/:country_code/?' do |n|
  			country: country,
  			countryYearWiseBudgets: countryYearWiseBudgets,
  			countrySectorGraphData: countrySectorGraphData,
- 			results: results
+ 			results: results,
+ 			topSixResults: topSixResults
  		}
 end
 
