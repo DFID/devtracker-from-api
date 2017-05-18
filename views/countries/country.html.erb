@@ -185,85 +185,6 @@
     <%end%>
 </div>
 
-<div class="row row-summary">
-    <div class="six columns">
-        <h3>Key Info</h3>
-        <ul class="info-list vertical">
-            <% if country[:operationalBudget] > 0 then %>
-                <li class="fact-item">
-                Operational Plan Budget <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
-                    </div>
-                </aside>
-                <span><strong><%= Money.new(country[:operationalBudget].to_f.round(0)*100, country[:operationalBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
-                </li>
-            <% end %>
-            <li id='approved-project-budget-info' class="fact-item">
-                Project budget approved for <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                       Sum of project budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if projects are in an active procurement phase.
-                    </div>
-                </aside>
-                <span><strong><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
-            </li>
-            <li class="fact-item">
-                Project budget as % of DFID budget
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink7" target="7">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo7" class="more-info">            
-                    <div class="more-info-content">
-                       Total approved project budget for this financial year as a percentage of the total approved project budget for DFID.
-                    </div>
-                </aside>
-                <span><strong><%= country[:projectBudgetPercentToDfidBudget] %>%</strong></span>
-            </li>
-            <li class="fact-item">
-                Active Projects
-                <span><strong><%= country[:totalActiveProjects] || "&nbsp;" %></strong></span>
-            </li>
-            <% if country[:population] then %><% if country[:population] != "" then %>
-                <li class="fact-item">
-                    Population (<%if country[:population_year] then %><%if country[:population_year] != "" then %><%= country[:population_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SP.POP.TOTL?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= format_round_million country[:population].to_f%></strong></span>
-                </li>
-            <% end %><% end %>
-            <% if country[:belowPovertyLine] then %><% if country[:belowPovertyLine] != "" then %>
-                <li class="fact-item">
-                    % living below $1.90 per day (<%if country[:belowPovertyLine_year] then %><%if country[:belowPovertyLine_year] != "" then %><%= country[:belowPovertyLine_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:belowPovertyLine].to_f.round(2)%>%</strong></span>
-                </li>
-            <% end %><% end %>
-             <% if country[:fertilityRate] then %><% if country[:fertilityRate] != "" then %>
-                <li class="fact-item">
-                    Fertility rate (<% if country[:fertilityRate_year] then %><% if country[:fertilityRate_year] != "" then %><%= country[:fertilityRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SP.DYN.TFRT.IN?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:fertilityRate].to_f.round(2)%></strong></span>
-                </li>
-            <% end %><% end %>
-             <% if country[:gdpGrowthRate] then %><% if country[:gdpGrowthRate] != "" then %>
-                <li class="fact-item">
-                    GDP growth rate (<%if country[:gdpGrowthRate_year] then %><% if country[:gdpGrowthRate_year] != "" then %><%=country[:gdpGrowthRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:gdpGrowthRate].to_f.round(2)%>%</strong></span>
-                </li>
-            <% end %><% end %>
-        </ul>
-    </div>
-
-</div>
-
 <div class="row">
     <div class="six columns">
         <div class="country-info-container">  
@@ -292,7 +213,17 @@
             </aside>
          </div>
          <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
-         <div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%= country[:name] %>.</div>
+         <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
+         <div class="row">
+            <div style="text-align: center" class="six columns">
+                <span><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                <p><strong><%= current_financial_year %></strong></p>
+            </div>
+            <div style="text-align: center" class="six columns">
+                <span><%= country[:projectBudgetPercentToDfidBudget] %>%</span>
+                <p><strong>DFID Total</strong></p>
+            </div>
+         </div>
     </div>
 </div>
 
