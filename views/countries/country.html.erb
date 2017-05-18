@@ -216,7 +216,9 @@
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
          <div class="row">
             <div style="text-align: center" class="six columns">
-                <span><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                <%tempVal = Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <% tempVal = tempVal.gsub(",","")%>
+                <span><%= number_to_human(tempVal, :format => '%n%u', :precision => 2, :units => { :thousand => 'K', :million => 'M', :billion => 'B' }) %></span>
                 <p><strong><%= current_financial_year %></strong></p>
             </div>
             <div style="text-align: center" class="six columns">
