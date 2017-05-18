@@ -106,7 +106,7 @@
 </div>
 
 <!-- Top six results -->
-<div id="topSixResults" class="row">
+<div id="topSixResults" style="margin-top: 25px" class="row">
     <%if topSixResults.count > 0%>
         <%i = 1%> 
         <%tempCount = topSixResults.count%>
@@ -118,7 +118,7 @@
                     when 1 %>
                         <div class="twelve columns">
                             <div class="mi-style" style="text-align: center">
-                                <span style="font-size: 1.4em">--</span>
+                                <span style="font-size: 1.4em"></span>
                                 <h3><%= result['totals']%></h3>
                                 <p style="color: #6f777b"><%= result['results_indicators']%></p>
                             </div>
@@ -126,7 +126,7 @@
                     <%when 2 %>
                         <div class="six columns">
                             <div class="mi-style" style="text-align: center">
-                                <span style="font-size: 1.4em">--</span>
+                                <span style="font-size: 1.4em"></span>
                                 <h3><%= result['totals']%></h3>
                                 <p style="color: #6f777b"><%= result['results_indicators']%></p>
                             </div>
@@ -135,7 +135,7 @@
                     when 3 %>
                         <div class="four columns">
                             <div class="mi-style" style="text-align: center">
-                                <span style="font-size: 1.4em">--</span>
+                                <span style="font-size: 1.4em"></span>
                                 <h3><%= result['totals']%></h3>
                                 <p style="color: #6f777b"><%= result['results_indicators']%></p>
                             </div>
@@ -144,7 +144,7 @@
                 <%else%>
                     <div class="four columns">
                         <div class="mi-style" style="text-align: center">
-                            <span style="font-size: 1.4em">--</span>
+                            <span style="font-size: 1.4em"></span>
                             <h3><%= result['totals']%></h3>
                             <p style="color: #6f777b"><%= result['results_indicators']%></p>
                         </div>
@@ -156,7 +156,7 @@
                 when 4 %>
                     <div class="twelve columns">
                         <div class="mi-style" style="text-align: center">
-                            <span style="font-size: 1.4em">--</span>
+                            <span style="font-size: 1.4em"></span>
                             <h3><%= result['totals']%></h3>
                             <p style="color: #6f777b"><%= result['results_indicators']%></p>
                         </div>
@@ -164,7 +164,7 @@
                 <%when 5 %>
                     <div class="six columns">
                         <div class="mi-style" style="text-align: center">
-                            <span style="font-size: 1.4em">--</span>
+                            <span style="font-size: 1.4em"></span>
                             <h3><%= result['totals']%></h3>
                             <p style="color: #6f777b"><%= result['results_indicators']%></p>
                         </div>
@@ -173,7 +173,7 @@
                 when 6 %>
                     <div class="four columns">
                         <div class="mi-style" style="text-align: center">
-                            <span style="font-size: 1.4em">--</span>
+                            <span style="font-size: 1.4em"></span>
                             <h3><%= result['totals']%></h3>
                             <p style="color: #6f777b"><%= result['results_indicators']%></p>
                         </div>
