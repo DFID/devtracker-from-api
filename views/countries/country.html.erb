@@ -67,22 +67,22 @@
     <div class="four columns">
         <div class="mi-style" style="text-align: center">
             <span style="font-size: 1.4em">Population</span>
-            <h3>188.92 million</h3>
-            <p style="color: #6f777b">2015, source World Bank</p>
+            <h3><span id="populationCount">0</span> million</h3>
+            <p style="color: #6f777b"><%if country[:population_year] != "" then %><%=country[:population_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/SP.POP.TOTL?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
         </div>
     </div>
     <div class="four columns">
         <div class="mi-style" style="text-align: center">
             <span style="font-size: 1.4em">% living below $1.90 per day</span>
-            <h3>6.07%</h3>
-            <p style="color: #6f777b">2013, source World Bank</p>
+            <h3><span id="livingBelowCount">0</span>%</h3>
+            <p style="color: #6f777b"><%if country[:belowPovertyLine_year] != "" then %><%=country[:belowPovertyLine_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
         </div>
     </div>
     <div class="four columns">
         <div class="mi-style" style="text-align: center">
             <span style="font-size: 1.4em">GDP growth rate</span>
-            <h3>4.71%</h3>
-            <p style="color: #6f777b">2015, source World Bank</p>
+            <h3><span id="gdpGrowthRateCount">0</span>%</h3>
+            <p style="color: #6f777b"><%if country[:gdpGrowthRate_year] != "" then %><%=country[:gdpGrowthRate_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
         </div>
     </div>
 </div>
@@ -119,16 +119,16 @@
                         <div class="twelve columns">
                             <div class="mi-style" style="text-align: center">
                                 <span style="font-size: 1.4em"></span>
-                                <h3><%= result['totals']%></h3>
-                                <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
                             </div>
                         </div>
                     <%when 2 %>
                         <div class="six columns">
                             <div class="mi-style" style="text-align: center">
                                 <span style="font-size: 1.4em"></span>
-                                <h3><%= result['totals']%></h3>
-                                <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
                             </div>
                         </div>
                     <%
@@ -136,8 +136,8 @@
                         <div class="four columns">
                             <div class="mi-style" style="text-align: center">
                                 <span style="font-size: 1.4em"></span>
-                                <h3><%= result['totals']%></h3>
-                                <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
                             </div>
                         </div>
                     <%end%>
@@ -145,8 +145,8 @@
                     <div class="four columns">
                         <div class="mi-style" style="text-align: center">
                             <span style="font-size: 1.4em"></span>
-                            <h3><%= result['totals']%></h3>
-                            <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
                         </div>
                     </div>
                 <%end%>
@@ -157,16 +157,16 @@
                     <div class="twelve columns">
                         <div class="mi-style" style="text-align: center">
                             <span style="font-size: 1.4em"></span>
-                            <h3><%= result['totals']%></h3>
-                            <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
                         </div>
                     </div>
                 <%when 5 %>
                     <div class="six columns">
                         <div class="mi-style" style="text-align: center">
                             <span style="font-size: 1.4em"></span>
-                            <h3><%= result['totals']%></h3>
-                            <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
                         </div>
                     </div>
                 <%
@@ -174,8 +174,8 @@
                     <div class="four columns">
                         <div class="mi-style" style="text-align: center">
                             <span style="font-size: 1.4em"></span>
-                            <h3><%= result['totals']%></h3>
-                            <p style="color: #6f777b"><%= result['results_indicators']%></p>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
                         </div>
                     </div>
                 <%end%>
@@ -216,7 +216,7 @@
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
          <div class="row">
             <div style="text-align: center" class="six columns">
-                <span><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></span>
+                <span><%#= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %><%=country[:countryBudgetCurrency]%><%=convert_numbers_to_human_readable_format(country[:countryBudget].to_f.round(0)*100)%></span>
                 <p><strong><%= current_financial_year %></strong></p>
             </div>
             <div style="text-align: center" class="six columns">
@@ -237,9 +237,29 @@
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
  <script src="/javascripts/bar.js"></script> -->
-
+ <script src="/javascripts/jquery.color.min.js"></script>
+ <script src="/javascripts/jquery.animateNumber.min.js"></script>
 <script>
     $(document).ready(function() {
+        //$('#testingN')
+        $('#populationCount').animateNumber(
+        {
+          number: <%if country[:population] != "" then%><%= (country[:population]/1000000.0).round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
+        $('#livingBelowCount').animateNumber(
+        {
+          number: <%if country[:belowPovertyLine] != "" then%><%= country[:belowPovertyLine].to_f.round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
+        $('#gdpGrowthRateCount').animateNumber(
+        {
+          number: <%if country[:gdpGrowthRate] != "" then%><%= country[:gdpGrowthRate].to_f.round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {

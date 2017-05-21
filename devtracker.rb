@@ -16,6 +16,7 @@ require "em-synchrony/em-http"
 require 'oj'
 require 'rss'
 require "sinatra/json"
+require "action_view"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -119,6 +120,7 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
+
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 

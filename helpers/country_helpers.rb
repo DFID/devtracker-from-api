@@ -438,6 +438,9 @@ module CountryHelpers
     tempHash = []
     filteredResults.each do |result|
       if(top6ResultsTitles.detect{|title| title["results_indicators"]==result["results_indicators"]})
+        tempH = {}
+        tempH = top6ResultsTitles.select{|item| item["results_indicators"]==result["results_indicators"]}
+        result["title"] = tempH[0]["title"]
         tempHash.push(result)
       end
     end
