@@ -22,7 +22,7 @@
     <div class="twelve columns summary">
         <h2 class="visually-hidden">Summary</h2>
         <div class="country-description" style="height: 120px; overflow: hidden; text-align: justify"><%= markdown_to_html(country[:description])%>
-            <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;">
+            <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
 <div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Read more about <%= country[:name] %></div>
             </div>
             <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
