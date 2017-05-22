@@ -318,22 +318,25 @@ title: Development Tracker
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Interest Repayment</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5">
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink6" target="6">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo5" class="more-info">  
+            <aside id="moreinfo6" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    //Need to Add.
+                    Amount of interest paid on a loan or line of credit, including fees
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(//Need to Add)</p>
+            <p style="margin-bottom:2px;">(Amount of interest paid on a loan or line of credit, including fees)</p>
            </div>  
 
            <div class="trans-header-right">
             <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-            <%# Need to work Here - Gazi%>
               <% if interestRepayments.uniq{|m| m['currency']['code']}.count == 1%>
-               <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+               <div class="<%= project['aggregations']['activity_children']['interest_payment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+                <%begin%>  
+                <%= Money.new(project['aggregations']['activity_children']['interest_payment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['interest_payment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                <%rescue
+                end%>
                 </div>
               <%end%>
            </div>        
@@ -354,7 +357,12 @@ title: Development Tracker
               <td width="15%"><%= if !interestRepayment['receiver_organisation'].nil? then if interestRepayment['receiver_organisation']['narratives'].length > 0 then interestRepayment['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <td width="15%"><%= is_dfid_project(interestRepayment['activity']['id']) ? interestRepayment['activity']['id'] : ''%></td>
               <td width="15%"><%= Date.parse(interestRepayment['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= interestRepayment['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(interestRepayment['value'].to_f.round(0)*100, interestRepayment['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= interestRepayment['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
+                <%begin%>
+                <%= Money.new(interestRepayment['value'].to_f.round(0)*100, interestRepayment['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <%rescue
+                end%>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -374,22 +382,25 @@ title: Development Tracker
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
             <span class="trans-type-title">Purchase of Equity</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5">
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink7" target="7">
                <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
             </a> 
-            <aside id="moreinfo5" class="more-info">  
+            <aside id="moreinfo7" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
-                    //Need to Add
+                    Outgoing funds to purchase equity
                   </div>
             </aside>   
-            <p style="margin-bottom:2px;">(//Need to Add)</p>
+            <p style="margin-bottom:2px;">(Outgoing funds to purchase equity)</p>
            </div>  
 
            <div class="trans-header-right">
-            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-            <%# Need to work Here-Gazi%>
+            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>            
               <% if purchaseEquitys.uniq{|m| m['currency']['code']}.count == 1%>
-               <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+               <div class="<%= project['aggregations']['activity_children']['purchase_of_equity_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+                <%begin%>
+                <%= Money.new(project['aggregations']['activity_children']['purchase_of_equity_value'].to_f.round(0)*100, project['aggregations']['activity_children']['purchase_of_equity_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                <%rescue
+                end%>
                 </div>
               <%end%>
            </div>        
@@ -410,7 +421,12 @@ title: Development Tracker
               <td width="15%"><%= if !purchaseEquity['receiver_organisation'].nil? then if purchaseEquity['receiver_organisation']['narratives'].length > 0 then purchaseEquity['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <td width="15%"><%= is_dfid_project(purchaseEquity['activity']['id']) ? purchaseEquity['activity']['id'] : ''%></td>
               <td width="15%"><%= Date.parse(purchaseEquity['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= purchaseEquity['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;"><%= Money.new(purchaseEquity['value'].to_f.round(0)*100, purchaseEquity['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td width="15%" class="<%= purchaseEquity['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
+                <%begin%>  
+                <%= Money.new(purchaseEquity['value'].to_f.round(0)*100, purchaseEquity['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <%rescue
+                end%>
+              </td>
             </tr>
           <% end %>
         </tbody>
