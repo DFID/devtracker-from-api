@@ -94,14 +94,14 @@ span.language {
 }
 
 .marker.cluster {
-    background-image: url(/images/mapmarker.png);
+    background-image: url(/images/mapmarker_s.png);
     font-family:"Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    height: 36px;
-    width: 18px;
+    height: 30px;
+    width: 15px;
     border:none;
     text-align:center;
-    font-size:1em;
-    line-height: 1.4em;
+    font-size:0.6em;
+    line-height: 1.8em;
     font-weight: bold;
     color: #fff;
 }
@@ -136,7 +136,7 @@ span.language {
 }
 
 #countryMap .leaflet-popup-content{
-  width: 300px!important;
+  width: 350px!important;
 }
 
 .location-popup .location-label {
