@@ -1,7 +1,7 @@
 #countryMap img, object, embed { max-width: none; }
 #map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
 #countryMap {
-    height : 300px;
+    height : 350px;
 }
 #map {
     width: 100%; 
