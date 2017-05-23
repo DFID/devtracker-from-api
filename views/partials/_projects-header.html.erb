@@ -62,7 +62,7 @@
     <div class="twelve columns">
         <div class="tab-bar-container">
             <div class="row">
-                <div class="projects-nav six columns">
+                <div class="projects-nav seven columns">
                     <nav>
                         <ul class="tab-bar">
                             <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
@@ -70,13 +70,14 @@
                             <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
                             <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                 <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
+                                <li <%= active=="traceability" ? "class='active'" : ""%>><a id='Traceability' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/traceability">Traceability</a></li>
                             <% end %>
 
                             <!-- TODO: bring back in r4dDocs element -->
                         </ul>
                     </nav>
                 </div>
-                <div class="button-row six columns">
+                <div class="button-row five columns">
                     <span>
                         <% projectTitle = project['title']['narratives'][0]['text'] + " [" + project['iati_identifier'] + "]"%>
                         <a id='Report-Fraud' href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
