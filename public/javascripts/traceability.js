@@ -314,7 +314,7 @@ console.log(svgScale);
 //zoomFit(0.95, 200, root);
 //////////////////////////////////////////////////////
 var root = svg.select('#spe');
-var bounds = root.node().getBBox();
+//var bounds = root.node().getBBox();
   // var parent = root.node().parentElement;
   // var fullWidth = parent.clientWidth,
   //     fullHeight = parent.clientHeight;
