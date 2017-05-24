@@ -690,3 +690,13 @@ g.c3-axis-y > g:last-child {
 #topSixResults .columns:nth-child(4){
   clear: left;
 }
+
+
+/*CSS for project page, traceability tab */
+
+#traceability-toolbar{
+    margin-top: 20px;
+ background-color: rgb(244, 244, 244);
+ min-height: 200px;
+width: 100%;
+}

@@ -4,7 +4,23 @@
 
 <div class="row">
   <div class="twelve columns">
-    <div style="height: 300px; width: auto; overflow: scroll" id="chain-visualisation"></div>
+    <div style="height: 300px; width: auto; overflow: scroll" id="chain-visualisation"></div>    
+  </div>
+</div>
+
+<div class="row">
+  <div class="twelve columns">
+      <div id="traceability-toolbar">
+        <div class="row">
+            <div class="four columns" id="traceability-node-info">
+            </div>
+            <div class="four columns" id="traceability-line-info">
+            </div>
+            <div class="four columns" id="traceability--info">
+            </div>
+        </div>
+      </div>
+
   </div>
 </div>
 <%#getChain = Oj.load(RestClient.get  "https://dc-dfid.oipa.nl/api/chains/?format=json&includes_activity=" + project['iati_identifier'])%>
