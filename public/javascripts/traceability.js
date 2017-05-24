@@ -5,9 +5,6 @@
 jQuery( document ).ready(function($) {
 
 
-
-
-
 // OIPA URL - TODO - make dynamic
 
 var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
@@ -18,9 +15,9 @@ var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
 
 var svg;
 
-var margin = { top: 20, right: 120, bottom: 20, left: 120 },
+var margin = { top: 0, right: 0, bottom: 0, left: 0 },
 
-    width = 4660 - margin.right - margin.left,
+    width = 600 - margin.right - margin.left,
 
     height = 20000 - margin.top - margin.bottom,
 
@@ -299,13 +296,42 @@ Chain.prototype.createChain = function () {
 
   // USE D3 TO VISUALISE THE DATA
 
-
+var svgScale = Math.min(300/2000,300/200);
 
   // create the base for the visualisation
+console.log(svgScale);
+  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height)
+  //.attr("transform", "translate(-100) scale(" + svgScale + ")")
+  .call(d3.behavior.zoom().on("zoom", function () {
+        //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+      })).append("g").attr('id','spe');
+  //svg.append('<g id="sp"></g>');
 
-  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height);
+//svg.append('g').attr('id','spe');
+//var root = d3.select('#chain-visualisation svg')
 
+//zoomFit(0.95, 200, root);
+//////////////////////////////////////////////////////
+var root = svg.select('#spe');
+var bounds = root.node().getBBox();
+  // var parent = root.node().parentElement;
+  // var fullWidth = parent.clientWidth,
+  //     fullHeight = parent.clientHeight;
+  // var width = bounds.width,
+  //     height = bounds.height;
+  // var midX = bounds.x + width / 2,
+  //     midY = bounds.y + height / 2;
+  // if (width == 0 || height == 0) return; // nothing to fit
+  // var scale = (0.95 || 0.75) / Math.max(width / fullWidth, height / fullHeight);
+  // var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
+  //console.trace("zoomFit", translate, scale);
+  // root
+  //   .transition()
+  //   .duration(500 || 0) // milliseconds
+  //   .call(zoom.translate(translate).scale(scale).event);
+/////////////////////////////////////////////////////
 
   var intArray = [];
 
@@ -314,8 +340,6 @@ Chain.prototype.createChain = function () {
     intArray.push(i);
 
   }
-
-
 
   // create the legend
 
@@ -465,8 +489,6 @@ Chain.prototype.createChain = function () {
 
   svg.style("opacity", 0.01).transition().duration(1000).style("opacity", 0.02).transition().duration(1000).style("opacity", 1);
 
-
-
   // function clickNode(d){
 
   //   var self = this;
@@ -565,6 +587,6 @@ Chain.prototype.createChain = function () {
 
 // TODO - replace this with the current ID (depending on implementation)
 
-new Chain("GB-1-202035");
+new Chain(window.projectID);
 
 });

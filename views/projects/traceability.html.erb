@@ -4,7 +4,7 @@
 
 <div class="row">
   <div class="twelve columns">
-    <div style="height: 250px; width: auto" id="chain-visualisation"></div>
+    <div style="height: 300px; width: auto; overflow: scroll" id="chain-visualisation"></div>
   </div>
 </div>
 <%#getChain = Oj.load(RestClient.get  "https://dc-dfid.oipa.nl/api/chains/?format=json&includes_activity=" + project['iati_identifier'])%>
@@ -14,7 +14,7 @@
 <script type='text/javascript'>
   $(document).ready(function() {
     //window.oipaApiUrl = "<%#= oipa_api_url %>";
-    //window.
+    window.projectID = "<%= project['iati_identifier']%>";
   });
 </script>
 <script src="/javascripts/traceability.js" type="text/javascript"></script>
