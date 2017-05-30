@@ -5,7 +5,8 @@ jQuery( document ).ready(function($) {
 
 // OIPA URL - TODO - make dynamic
 var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
-
+var tempX = 0;
+var tempY = 0;
 // variables for the visualisation
 var svg;
 var margin = { top: 0, right: 0, bottom: 0, left: 0 },
@@ -63,7 +64,6 @@ Chain.prototype.getLinks = function () {
   var that = this;
   //$.getJSON(oipaApiUrl + "chains/" + that.chainId + "/links/?format=json", function (data) {
   $.getJSON("/getLinks?chainId="+that.chainId, function (data) {
-    // console.log(data)
     that.links = data.output;
     that.loadChainWhenReady();
   });
@@ -186,7 +186,8 @@ Chain.prototype.createChain = function () {
 
   width = 1000 + nodes.length * 5;
 
-  height = 200 * maxLevel;
+  //height = 200 * maxLevel;
+  height = (100 * maxLevel)+100;
 
 
 
@@ -196,38 +197,8 @@ var svgScale = Math.min(300/2000,300/200);
 
   // create the base for the visualisation
 console.log(svgScale);
-  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height)
-  //.attr("transform", "translate(-100) scale(" + svgScale + ")")
-  .call(d3.behavior.zoom().on("zoom", function () {
-        //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-        svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-      })).append("g").attr('id','spe');
-  //svg.append('<g id="sp"></g>');
-
-//svg.append('g').attr('id','spe');
-//var root = d3.select('#chain-visualisation svg')
-
-//zoomFit(0.95, 200, root);
-//////////////////////////////////////////////////////
-var root = svg.select('#spe');
-//var bounds = root.node().getBBox();
-  // var parent = root.node().parentElement;
-  // var fullWidth = parent.clientWidth,
-  //     fullHeight = parent.clientHeight;
-  // var width = bounds.width,
-  //     height = bounds.height;
-  // var midX = bounds.x + width / 2,
-  //     midY = bounds.y + height / 2;
-  // if (width == 0 || height == 0) return; // nothing to fit
-  // var scale = (0.95 || 0.75) / Math.max(width / fullWidth, height / fullHeight);
-  // var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
-
-  //console.trace("zoomFit", translate, scale);
-  // root
-  //   .transition()
-  //   .duration(500 || 0) // milliseconds
-  //   .call(zoom.translate(translate).scale(scale).event);
-/////////////////////////////////////////////////////
+  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container');
+  
 
   var intArray = [];
 
@@ -270,15 +241,10 @@ var root = svg.select('#spe');
    .on("mouseout", mouseOutLink);
 
   // create the nodes
-
   var node = svg.selectAll(".node").data(graph.nodes).enter().append("rect").attr("class", "node").attr("x", function (d) {
-
     return d.x;
-
   }).attr("y", function (d) {
-
     return d.y;
-
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
 
     return colors[d.level];
@@ -288,14 +254,13 @@ var root = svg.select('#spe');
     return colors[d.level].darker(2);
 
   })
-    .on("mouseenter", mouseOverNode);
+    .on("mouseenter", mouseOverNode)
 
 
 
 
 
   // use the d3 force layout to animate the data and put it into the hierarchies
-
   var force = d3.layout.force().charge(-1000).gravity(0.2).linkDistance(20).size([width, height]);
 
 
@@ -338,13 +303,21 @@ var root = svg.select('#spe');
   }
 
   // when loading, show th graph with limited visibility in the background
+  $('#loader').fadeOut('slow');
   svg.style("opacity", 0.01).transition().duration(1000).style("opacity", 0.02).transition().duration(1000).style("opacity", 1);
-  
+
+  svg.attr("transform", "translate(0,0) scale("+(width/2)/width+")");
+
 
 
    function mouseOverNode(d) {
         // display info on the node in the sidebar
-        $("#traceability-node-info").html("<strong>title</strong><br>" + d.activity.title.narratives[0].text + "<br><strong>reporting-org</strong><br>" + d.activity.reporting_organisation.narratives[0].text)
+        //$("#traceability-node-info").html("<strong>IATI Activity ID:</strong><br>" + d.activity.iati_identifier + "<br/><strong>Title</strong><br>" + d.activity.title.narratives[0].text + "<br><strong>Reporting-Org</strong><br>" + d.activity.reporting_organisation.narratives[0].text)
+        $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+   }
+
+   function mouseOutOfNode(d){
+      d3.select(this).style("fill","blue");
    }
 
    function mouseOverLink(d) {

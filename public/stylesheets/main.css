@@ -695,8 +695,99 @@ g.c3-axis-y > g:last-child {
 /*CSS for project page, traceability tab */
 
 #traceability-toolbar{
-    margin-top: 20px;
- background-color: rgb(244, 244, 244);
- min-height: 200px;
-width: 100%;
+  margin-top: 20px;
+  min-height: 200px;
+  width: 100%;
+}
+
+#graph-container .node {
+  cursor: pointer;
+}
+
+#chain-visualisation:hover {
+  overflow: scroll;
+}
+
+/*------------------------------*/
+/*------------------------------*/
+/*------------------------------*/
+/*------------------------------*/
+/*------------------------------*/
+.alert-callout-border {
+  width: 100%;
+  padding: 1.3rem;
+  border-left-width: 0.3125rem;
+  border-left-color: #cacaca;
+}
+
+.alert-callout-border strong {
+  color: #0a0a0a;
+}
+
+.alert-callout-border .close-button {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.alert-callout-border.radius {
+  border-radius: 0.6rem;
+}
+
+.alert-callout-border.primary {
+  border-left-color: #1779ba;
+}
+
+.alert-callout-border.primary strong {
+  color: #1779ba;
+}
+
+.alert-callout-border.secondary {
+  border-left-color: #767676;
+}
+
+.alert-callout-border.secondary strong {
+  color: #767676;
+}
+
+.alert-callout-border.alert {
+  border-left-color: #cc4b37;
+}
+
+.alert-callout-border.alert strong {
+  color: #cc4b37;
+}
+
+.alert-callout-border.success {
+  border-left-color: #3adb76;
+}
+
+.alert-callout-border.success strong {
+  color: #3adb76;
+}
+
+.alert-callout-border.warning {
+  border-left-color: #ffae00;
+}
+
+.alert-callout-border.warning strong {
+  color: #ffae00;
+}
+
+.callout.primary {
+    background-color: #d7ecfa;
+    color: #0a0a0a;
+}
+
+.alert-callout-border.primary {
+    border-left-color: #1779ba;
+}
+
+.alert-callout-border {
+    /* width: 100%; */
+    padding: 1.3rem;
+    border-left-width: 0.3125rem;
+    border-left-style: solid;
 }
