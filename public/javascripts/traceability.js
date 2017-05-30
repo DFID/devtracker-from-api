@@ -15,7 +15,7 @@ var margin = { top: 0, right: 0, bottom: 0, left: 0 },
     nodeWidth = 20,
     nodeHeight = 20;
 
-var colors = [d3.rgb(0, 130, 112), d3.rgb(58, 186, 168), d3.rgb(233, 186, 130), d3.rgb(59, 101, 126), d3.rgb(177, 68, 76), d3.rgb(0, 94, 165), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48)];
+var colors = [d3.rgb(0, 130, 112), d3.rgb(58, 186, 168), d3.rgb(233, 186, 130), d3.rgb(59, 101, 126), d3.rgb(177, 68, 76), d3.rgb(0, 94, 165), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(0, 255, 0)];
 
 var first = 1;
 
@@ -202,7 +202,7 @@ console.log(svgScale);
 
   var intArray = [];
 
-  for (var i = 0; i < maxLevel + 1; i++) {
+  for (var i = 0; i < maxLevel + 2; i++) {
 
     intArray.push(i);
 
@@ -219,8 +219,12 @@ console.log(svgScale);
     return d * 24 + 20;
 
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
-
-    return colors[d];
+    if (d == intArray.length - 1){
+      return colors[12];
+    }
+    else{
+      return colors[d];
+    }
 
   }).style("stroke", function (d, i) {
 
@@ -228,10 +232,15 @@ console.log(svgScale);
 
   });
 
-  legenNode.append("text").attr("x", 42).attr("y", function (d) {
-    return d * 24 + 32;
+  legenNode.append("text").attr("x", 44).attr("y", function (d) {
+    return d * 24 + 36;
   }).attr("fill", "black").text(function (d) {
-    return "tier " + d;
+    if (d == intArray.length - 1){
+      return "Current selected project";
+    }
+    else{
+      return "tier " + d;
+    }    
   });
 
 
@@ -246,9 +255,13 @@ console.log(svgScale);
   }).attr("y", function (d) {
     return d.y;
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
-
-    return colors[d.level];
-
+    if(d.activity.iati_identifier == window.projectID){
+      return colors[12];
+    }
+    else{
+      return colors[d.level];
+    }
+    //return colors['red'];
   }).style("stroke", function (d, i) {
 
     return colors[d.level].darker(2);
