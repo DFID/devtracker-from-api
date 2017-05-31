@@ -5,6 +5,7 @@ jQuery( document ).ready(function($) {
 
 // OIPA URL - TODO - make dynamic
 var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
+var toggleSwitch = 0;
 var tempX = 0;
 var tempY = 0;
 // variables for the visualisation
@@ -15,7 +16,7 @@ var margin = { top: 0, right: 0, bottom: 0, left: 0 },
     nodeWidth = 20,
     nodeHeight = 20;
 
-var colors = [d3.rgb(0, 130, 112), d3.rgb(58, 186, 168), d3.rgb(233, 186, 130), d3.rgb(59, 101, 126), d3.rgb(177, 68, 76), d3.rgb(0, 94, 165), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(0, 255, 0)];
+var colors = [d3.rgb(0, 130, 112), d3.rgb(58, 186, 168), d3.rgb(233, 186, 130), d3.rgb(59, 101, 126), d3.rgb(177, 68, 76), d3.rgb(0, 94, 165), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(48, 48, 48), d3.rgb(0, 255, 0),d3.rgb(240,240,240),d3.rgb(0,0,255)];
 
 var first = 1;
 
@@ -51,7 +52,7 @@ Chain.prototype.getChain = function () {
     $.getJSON("/getChains?project=" + this._activityId, function (data) {
 
     // TODO - if there are no results then this will crash the script
-    console.log(data.output);
+    //console.log(data.output);
     that.chainId = data.output.results[0].id;
 
     that.getLinks();
@@ -157,7 +158,9 @@ Chain.prototype.createChain = function () {
       return o._id === link.end_node.activity_iati_id;
 
     });
-
+    //console.log('-----------------------');
+    //console.log(link);
+    //console.log(link);
   });
 
 
@@ -196,18 +199,18 @@ Chain.prototype.createChain = function () {
 var svgScale = Math.min(300/2000,300/200);
 
   // create the base for the visualisation
-console.log(svgScale);
+//console.log(svgScale);
   svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container');
   
 
   var intArray = [];
 
-  for (var i = 0; i < maxLevel + 2; i++) {
+  /*for (var i = 0; i < maxLevel + 2; i++) {
 
     intArray.push(i);
 
-  }
-
+  }*/
+  intArray.push(0);
   // create the legend
 
   var legenNode = svg.selectAll(".legend-node").data(intArray).enter().append("g");
@@ -220,7 +223,7 @@ console.log(svgScale);
 
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
     if (d == intArray.length - 1){
-      return colors[12];
+      return colors[14];
     }
     else{
       return colors[d];
@@ -256,7 +259,7 @@ console.log(svgScale);
     return d.y;
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
     if(d.activity.iati_identifier == window.projectID){
-      return colors[12];
+      return colors[13];
     }
     else{
       return colors[d.level];
@@ -268,6 +271,7 @@ console.log(svgScale);
 
   })
     .on("mouseenter", mouseOverNode)
+    .on("click",mouseClickNode)
 
 
 
@@ -279,6 +283,91 @@ console.log(svgScale);
 
 
   force.nodes(graph.nodes).links(graph.links).on("tick", tick).start();
+
+///////////////Changes start from here
+var allLinks = link[0];
+//Find center
+var centerProject = '';
+for (var i=0;i<allLinks.length;i++){
+  if(allLinks[i].__data__.end_node.activity_iati_id == window.projectID && allLinks[i].__data__.start_node.activity_iati_id == window.projectID){
+    centerProject = allLinks[i].__data__;
+  }
+}
+//This stores the array of projectids which will be colored
+var coloredRectList = []
+function InsertWithoutDuplicate(array,value){
+  var IsDuplicate = false;
+  for(var i = 0; i< array.length;i++){
+    if(array[i] == value){
+      IsDuplicate = true;
+      break;
+    }
+  }
+  if(!IsDuplicate){
+    array.push(value);
+  }
+}
+function TreeCrawler(allLinks,targetProject,level,direction) {
+  if(direction == 'up'){
+    for(var i = 0; i< allLinks.length;i++){
+      if(allLinks[i].__data__.end_node.tier<=level && allLinks[i].__data__.end_node.activity_iati_id == targetProject && allLinks[i].__data__.end_node.activity_iati_id != allLinks[i].__data__.start_node.activity_iati_id){
+        InsertWithoutDuplicate(coloredRectList,allLinks[i].__data__.end_node.activity_iati_id);
+        InsertWithoutDuplicate(coloredRectList,allLinks[i].__data__.start_node.activity_iati_id);
+        TreeCrawler(allLinks,allLinks[i].__data__.start_node.activity_iati_id,allLinks[i].__data__.start_node.tier,'up');
+      }
+    }
+  }
+  else{
+    for(var i = 0; i< allLinks.length;i++){
+      if(allLinks[i].__data__.start_node.tier>=level && allLinks[i].__data__.start_node.activity_iati_id == targetProject && allLinks[i].__data__.end_node.activity_iati_id != allLinks[i].__data__.start_node.activity_iati_id){
+        InsertWithoutDuplicate(coloredRectList,allLinks[i].__data__.end_node.activity_iati_id);
+        InsertWithoutDuplicate(coloredRectList,allLinks[i].__data__.start_node.activity_iati_id);
+        TreeCrawler(allLinks,allLinks[i].__data__.end_node.activity_iati_id,allLinks[i].__data__.end_node.tier,'down');
+      }
+    } 
+  }
+}
+function FindTargetProject(node, projectId){
+  for(var i = 0; i < node.length; i ++){
+    if(node[i].__data__.activity.iati_identifier == projectId){
+      return node[i].__data__;
+      break;
+    }
+  }
+}
+var mainProjectData = FindTargetProject(node[0],window.projectID);
+TreeCrawler(allLinks,window.projectID,mainProjectData.level,'up');
+TreeCrawler(allLinks,window.projectID,mainProjectData.level,'down');
+console.log(coloredRectList);
+function IsItemInArray(array,item){
+  var found = false;
+  for(var i = 0; i < array.length; i ++){
+    if(array[i]==item){
+      found = true;
+      break;
+    }
+  }
+  return found;
+}
+node.style("fill",function(d,i){
+  if(IsItemInArray(coloredRectList,d._id)){
+    if(d._id==window.projectID){
+      return colors[14];
+    }
+    else return colors[12];
+  }
+  else return '#999';
+})
+console.log(link);
+link.style("stroke",function(d){
+  if(IsItemInArray(coloredRectList,d.end_node.activity_iati_id) && IsItemInArray(coloredRectList,d.start_node.activity_iati_id)){
+    return colors[14];
+  }
+  else{
+    return '#999';
+  }
+})
+///////////////Code changes end here
 
 
 
@@ -319,14 +408,22 @@ console.log(svgScale);
   $('#loader').fadeOut('slow');
   svg.style("opacity", 0.01).transition().duration(1000).style("opacity", 0.02).transition().duration(1000).style("opacity", 1);
 
-  svg.attr("transform", "translate(0,0) scale("+(width/2)/width+")");
+  //svg.attr("transform", "translate(0,0) scale("+(width/2)/width+")");
+  svg.attr("transform", "translate(0,0) scale("+((width/2)/width+.15)+")");
 
-
+  function mouseClickNode(){
+    if (toggleSwitch == 1){
+      toggleSwitch = 0;
+    }
+    else toggleSwitch = 1;
+  }
 
    function mouseOverNode(d) {
         // display info on the node in the sidebar
         //$("#traceability-node-info").html("<strong>IATI Activity ID:</strong><br>" + d.activity.iati_identifier + "<br/><strong>Title</strong><br>" + d.activity.title.narratives[0].text + "<br><strong>Reporting-Org</strong><br>" + d.activity.reporting_organisation.narratives[0].text)
-        $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+        if(toggleSwitch == 0){
+          $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+        }
    }
 
    function mouseOutOfNode(d){
@@ -334,14 +431,14 @@ console.log(svgScale);
    }
 
    function mouseOverLink(d) {
-       console.log(d)
-       d3.select(this)
-         .style("stroke", "#F5352B");
+       //console.log(d)
+       // d3.select(this)
+       //   .style("stroke", "#F5352B");
    }
 
 
    function mouseOutLink(d) {
-   d3.select(this).style("stroke", "#999");
+   //d3.select(this).style("stroke", "#999");
    }
 
 };
