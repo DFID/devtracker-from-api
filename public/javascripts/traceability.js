@@ -8,6 +8,7 @@ var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
 var toggleSwitch = 0;
 var tempX = 0;
 var tempY = 0;
+var drawLink = 0;
 // variables for the visualisation
 var svg;
 var margin = { top: 0, right: 0, bottom: 0, left: 0 },
@@ -198,9 +199,50 @@ Chain.prototype.createChain = function () {
 
 var svgScale = Math.min(300/2000,300/200);
 
+//Addition of the zoom in/out feature
+function zoomed() {
+  svg.select(".x.axis").call(xAxis);
+  svg.select(".y.axis").call(yAxis);
+}
+
+var x = d3.scale.linear()
+    .domain([-width / 2, width / 2])
+    .range([0, width]);
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickSize(-height);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(5)
+    .tickSize(-width);
+
+var zoom = d3.behavior.zoom().x(x).y(y).scaleExtent([1,32]).on("zoom", zoomed);
+//testing 
+var dragBehavior = d3.behavior.drag()
+                              .on('drag', onDrag);
+//circles.call(dragBehavior);
+
+function onDrag(d) {
+    var x = d3.event.x,
+        y = d3.event.y;
+    if (1 == 1) {
+        d3.select(this)
+            .attr('transform', function () {
+                return 'translate(' + x + ', ' + y + ')';
+            });
+    }
+}
   // create the base for the visualisation
 //console.log(svgScale);
-  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container');
+  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container')
+  .call(d3.behavior.zoom().on("zoom", function () {
+    //console.log(d3.event.translate);
+    //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+    svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + ((width/2)/width+.15) + ")")
+  })).append('g');
   
 
   var intArray = [];
@@ -259,7 +301,7 @@ var svgScale = Math.min(300/2000,300/200);
     return d.y;
   }).attr("width", nodeWidth).attr("height", nodeHeight).style("fill", function (d, i) {
     if(d.activity.iati_identifier == window.projectID){
-      return colors[13];
+      return colors[14];
     }
     else{
       return colors[d.level];
@@ -349,24 +391,32 @@ function IsItemInArray(array,item){
   }
   return found;
 }
-node.style("fill",function(d,i){
-  if(IsItemInArray(coloredRectList,d._id)){
-    if(d._id==window.projectID){
+
+if(drawLink == 1){
+  node.style("fill",function(d,i){
+    if(IsItemInArray(coloredRectList,d._id)){
+      if(d._id==window.projectID){
+        return colors[14];
+      }
+      else return colors[12];
+    }
+    else return '#999';
+  })
+
+  link.style("stroke",function(d){
+    if(IsItemInArray(coloredRectList,d.end_node.activity_iati_id) && IsItemInArray(coloredRectList,d.start_node.activity_iati_id)){
       return colors[14];
     }
-    else return colors[12];
-  }
-  else return '#999';
-})
-console.log(link);
-link.style("stroke",function(d){
-  if(IsItemInArray(coloredRectList,d.end_node.activity_iati_id) && IsItemInArray(coloredRectList,d.start_node.activity_iati_id)){
-    return colors[14];
-  }
-  else{
-    return '#999';
-  }
-})
+    else{
+      return '#999';
+    }
+  })
+}
+
+//svg.append("g")
+  //  .attr("transform", "translate(" + margin.left + "," + margin.top + ")").call(zoom);
+
+
 ///////////////Code changes end here
 
 
@@ -411,11 +461,18 @@ link.style("stroke",function(d){
   //svg.attr("transform", "translate(0,0) scale("+(width/2)/width+")");
   svg.attr("transform", "translate(0,0) scale("+((width/2)/width+.15)+")");
 
-  function mouseClickNode(){
+  function mouseClickNode(d){
     if (toggleSwitch == 1){
       toggleSwitch = 0;
+      $('#locked').hide();
+      $('#unlocked').show();
+      $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
     }
-    else toggleSwitch = 1;
+    else {
+      $('#locked').show();
+      $('#unlocked').hide();
+      toggleSwitch = 1;
+    }
   }
 
    function mouseOverNode(d) {
@@ -448,5 +505,18 @@ link.style("stroke",function(d){
 // TODO - replace this with the current ID (depending on implementation)
 
 new Chain(window.projectID);
+
+  $('#switchGraph').click(function(){
+    if(drawLink == 1){
+      drawLink = 0;
+    }
+    else{
+      drawLink = 1;
+    }
+    $('#chain-visualisation svg').fadeOut();
+    $('#loader').fadeIn();
+    $('#chain-visualisation svg').remove();
+    new Chain(window.projectID);
+  });
 
 });

@@ -705,7 +705,7 @@ g.c3-axis-y > g:last-child {
 }
 
 #chain-visualisation:hover {
-  overflow: scroll;
+  /*overflow: scroll;*/
 }
 
 /*------------------------------*/
