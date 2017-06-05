@@ -1,0 +1,62 @@
+<!-- title: Development Tracker -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "traceability"} %>
+
+<div class="row">
+  <div class="nine columns">
+    <div style="height: auto; width: 100%; overflow: hidden;" id="chain-visualisation">
+      <div style="top: 100px;left: 13px; display: none" class="leaflet-control-zoom leaflet-bar leaflet-control">
+        <a data-zoom="+1" class="leaflet-control-zoom-in" href="" title="Zoom in">+</a>
+        <a data-zoom="-1" class="leaflet-control-zoom-out" href="" title="Zoom out">-</a>
+        <button data-zoom="+1">Zoom In</button>
+        <button data-zoom="-1">Zoom Out</button>
+      </div>
+      <span id="loader" style="margin: 95px auto; text-align: center; width: 50%; display: block">
+        <div style="border-style: none" data-closable class="callout alert-callout-border primary">
+          <strong style="color: black">Loading Data...</strong>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="three columns">
+    <div id="traceability-toolbar">
+        <div class="row">
+          <div style="margin-bottom: 10px; float: left">
+            <div class="nine columns" id="traceability-line-info">
+              <!--<button id="switchGraph">Switch Graph</button> -->
+              <button id="switchGraph" class="button">Switch Graph</button>
+            </div>
+            <div class="three columns" style="padding-top: 18px; text-align: center;">
+              <img id="locked" style="display: none" src="/images/locked.png">
+              <img id="unlocked" src="/images/unlocked.png">
+            </div>
+          </div>
+          <div class="twelve columns" id="traceability-node-info">
+            <div data-closable class="callout alert-callout-border primary">
+              <strong>Info</strong> - Hover on the graph to see more details.
+            </div>
+          </div>
+            <!--<div class="four columns" id="traceability-info">
+            </div> -->
+        </div>
+      </div>
+  </div>
+</div>
+<%#getChain = Oj.load(RestClient.get  "https://dc-dfid.oipa.nl/api/chains/?format=json&includes_activity=" + project['iati_identifier'])%>
+<%#getLinks = Oj.load(RestClient.get  "https://dc-dfid.oipa.nl/api/chains/?format=json&includes_activity=" + project['iati_identifier'])%>
+
+<%#puts getChain%>
+<script type='text/javascript'>
+  $(document).ready(function() {
+    //window.oipaApiUrl = "<%#= oipa_api_url %>";
+    window.projectID = "<%= project['iati_identifier']%>";
+    $('#chain-visualisation').mouseenter(function(){
+      //$(this).css("overflow","scroll");
+    });
+    $('#chain-visualisation').mouseleave(function(){
+      //$(this).css("overflow","hidden");
+    });
+  });
+</script>
+<script src="/javascripts/traceability.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">

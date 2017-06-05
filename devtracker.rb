@@ -465,6 +465,35 @@ get '/projects/:proj_id/partners/?' do |n|
  		}
 end
 
+#Project partners page
+get '/projects/:proj_id/traceability/?' do |n|
+	# get the project data from the API
+	n = sanitize_input(n,"p")
+	project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	# get the funding projects from the API
+  	fundingProjectsData = get_funding_project_details(n)
+  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+
+	# get the funded projects from the API
+	fundedProjectsData = get_funded_project_details(n)
+
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Traceability'
+	erb :'projects/traceability',
+		:layout => :'layouts/layout',
+		:locals => {
+			project: project,
+			countryOrRegion: countryOrRegion,
+			fundedProjects: fundedProjectsData['results'],
+ 			fundedProjectsCount: fundedProjectsData['count'],
+ 			fundingProjects: fundingProjects,
+ 			fundingProjectsCount: fundingProjectsData['count']
+ 		}
+end
+
 #####################################################################
 #  SECTOR PAGES
 #####################################################################
@@ -893,6 +922,24 @@ get '/currency/?' do
   	currency = sanitize_input(params['currency'],"a")
   	returnCurrency = Money.new(amount.to_f*100,currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	json :output => returnCurrency
+end
+
+get '/getChains/?' do
+	projectId = sanitize_input(params['project'],"p")
+	result = Oj.load(RestClient.get "https://dc-dfid.oipa.nl/api/chains/?format=json&includes_activity=" + projectId)
+	json :output => result
+end
+
+get '/getLinks/?' do
+	chainId = sanitize_input(params['chainId'],"a")
+	result = Oj.load(RestClient.get "https://dc-dfid.oipa.nl/api/chains/" + chainId + "/links/?format=json")
+	json :output => result
+end
+
+get '/getActivities/?' do
+	chainId = sanitize_input(params['chainId'],"a")
+	result = Oj.load(RestClient.get "https://dc-dfid.oipa.nl/api/chains/" + chainId + "/activities/?format=json&page_size=400&fields=iati_identifier,title,reporting_organisation")
+	json :output => result
 end
 
 #####################################################################

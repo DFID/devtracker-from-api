@@ -73,3 +73,168 @@
           </div>
       </div>
   <% end %>
+
+
+
+<hr style="border-width: 50px 0 0">
+
+
+
+<div class="row">
+  <div class="twelve columns results-info">
+      <h3 class="section-group-title">Partner Projects</h3>
+      
+      <div id="tree-table">
+        
+      </div>
+  </div>
+</div>
+
+<style>
+
+    #tree-table tbody tr td{
+      color: #fff;
+    }
+    #tree-table thead{
+      background-color: #3abaa8;
+    }
+    #tree-table td{
+      padding: 10px;
+    }
+    
+    .hide-partner{
+        display: none;
+    }
+
+</style>
+<script type="text/javascript">
+"use strict";
+    
+    
+  // OIPA URL - TODO - make dynamic
+  var oipaApiUrl = "https://dc-dfid.oipa.nl/api/";
+  var Chain = function Chain(activityId) {
+    this._activityId = activityId;
+    this.chainId = null;
+    this.links = null;
+    this.getChain();
+  };
+  Chain.prototype.getChain = function () {
+    var that = this;
+      
+      
+    $.getJSON(oipaApiUrl + "chains/?format=json&includes_activity=" + this._activityId, function (data) {
+      // TODO - if there are no results then this will crash the script
+      that.chainId = data.results[0].id;
+      that.getLinks();
+      that.getActivities();
+    });
+  };
+  Chain.prototype.getLinks = function() {
+    var that = this;
+    $.getJSON(oipaApiUrl + "chains/" + that.chainId + "/links/?format=json", function (data) {
+      
+      that.links = data;
+      that.loadWhenReady();
+    });
+  };
+  Chain.prototype.getActivities = function() {
+    var that = this;
+    $.getJSON(oipaApiUrl + "chains/" + that.chainId + "/activities/?format=json&page_size=400&fields=id,iati_identifier,title,descriptions,reporting_organisation,aggregations", function (data) {
+      
+      var activities = {}
+      data.results.forEach(function(activity){
+        activities[activity.iati_identifier] = activity;
+      })
+      that.activities = activities;
+      that.loadWhenReady();
+    });
+  };
+  Chain.prototype.treeify = function (results, rootId) {
+    var root = { 
+        id: rootId, 
+        parent: null, 
+        children: []
+    }
+    var node_list = {}
+    node_list[rootId] = root
+    results = results.sort(function compare(a, b) {
+      if (a.start_node.tier < b.start_node.tier) {
+        return -1;
+      }
+      if (a.start_node.tier > b.start_node.tier) {
+        return 1;
+      }
+      return 0;
+    })
+    for (var i = 0; i < results.length; i++) {
+        if((results[i].start_node.tier + 1) != results[i].end_node.tier){
+            continue;
+        }
+        if(node_list[results[i].start_node.activity_iati_id] === undefined){
+            node_list[results[i].start_node.activity_iati_id] = results[i].start_node
+            node_list[results[i].start_node.activity_iati_id].children = []
+        }
+        if(node_list[results[i].end_node.activity_iati_id] === undefined){
+            node_list[results[i].end_node.activity_iati_id] = results[i].end_node
+            node_list[results[i].end_node.activity_iati_id].children = []
+        }
+        
+        node_list[results[i].start_node.activity_iati_id].children.push(node_list[results[i].end_node.activity_iati_id])
+    }
+    return node_list[rootId]
+      
+  };
+  Chain.prototype.createTableRows = function(tree, tableRows) {
+    var children = tree.children.sort(function(a, b){
+        var x = a.activity_iati_id.toLowerCase();
+        var y = b.activity_iati_id.toLowerCase();
+        if (x < y) {return -1;}
+        if (x > y) {return 1;}
+        return 0;
+    });
+    for(var i = 0; i < children.length; i++){
+      var activity = this.activities[children[i].activity_iati_id]
+      
+      tableRows.push(`<div data-activity="${activity.iati_identifier}" class="row">
+          <div class="four columns summary">
+              <h4>${activity.reporting_organisation.narratives[0].text}</h4>
+
+              <a href="#" class="partner-count">has ${children[i].children.length} partner projects</a>
+          </div>
+          <div class="eight columns">
+              <ul>
+
+                 <li><a href="/projects/${activity.iati_identifier}">${activity.title.narratives[0].text}</a>
+                   ${activity.descriptions[0].narratives[0].text}
+                   <span>${activity.aggregations.activity_children.incoming_funds_value}</span>
+
+                 </li>
+              </ul> 
+          </div>
+      </div>`)
+      
+      this.createTableRows(children[i], tableRows)
+    }
+    return tableRows
+  }
+  Chain.prototype.loadWhenReady = function(){
+    if(this.activities != null && this.links != null){
+      this.loadChain()
+    }
+  }
+  Chain.prototype.loadChain = function() {
+      
+    var tree = this.treeify(this.links, "GB-1-202035")
+    var trs = this.createTableRows(tree, [])
+    $("#tree-table").html(trs)
+  };
+
+jQuery( document ).ready(function($) {
+  new Chain("<%=project['id']%>")
+});
+
+
+</script>
+
+

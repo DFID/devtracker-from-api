@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
-
-gem 'rubygems-update'
+gem 'rubygems-update', '2.4.8'
 gem 'bundler'
 gem 'sinatra'
 gem 'rest-open-uri'
