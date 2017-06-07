@@ -237,12 +237,17 @@ function onDrag(d) {
 }
   // create the base for the visualisation
 //console.log(svgScale);
-  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container')
-  .call(d3.behavior.zoom().on("zoom", function () {
+  //svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height).append("g").attr('id','graph-container')
+  svg = d3.select("#chain-visualisation").append("svg").attr("width", width).attr("height", height)
+  //.attr("transform", "translate(0,0) scale("+((width/2)/width+.15)+")")
+  .call(d3.behavior.zoom()
+    .translate([0,0])
+    .scale(((width/2)/width))
+    .on("zoom", function () {
     //console.log(d3.event.translate);
-    //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-    svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + ((width/2)/width+.15) + ")")
-  })).append('g');
+    svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+    //svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + ((width/2)/width+.15) + ")")
+  })).append('g').attr('id','graph-container');
   
 
   var intArray = [];
@@ -459,7 +464,7 @@ if(drawLink == 1){
   svg.style("opacity", 0.01).transition().duration(1000).style("opacity", 0.02).transition().duration(1000).style("opacity", 1);
 
   //svg.attr("transform", "translate(0,0) scale("+(width/2)/width+")");
-  svg.attr("transform", "translate(0,0) scale("+((width/2)/width+.15)+")");
+  svg.attr("transform", "translate(0,0) scale("+((width/2)/width)+")");
 
   function mouseClickNode(d){
     if (toggleSwitch == 1){
@@ -479,7 +484,28 @@ if(drawLink == 1){
         // display info on the node in the sidebar
         //$("#traceability-node-info").html("<strong>IATI Activity ID:</strong><br>" + d.activity.iati_identifier + "<br/><strong>Title</strong><br>" + d.activity.title.narratives[0].text + "<br><strong>Reporting-Org</strong><br>" + d.activity.reporting_organisation.narratives[0].text)
         if(toggleSwitch == 0){
-          $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+          var tempActivityId = d.activity.iati_identifier;
+          if(tempActivityId.includes("GB-GOV-1")){
+            var splitArray = tempActivityId.split('-');
+            if(splitArray.length > 4){
+              $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+splitArray[0]+'-'+splitArray[1]+'-'+splitArray[2]+'-'+splitArray[3]+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+            }
+            else{
+              $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>'); 
+            }
+          }
+          else if (tempActivityId.includes("GB-1")){
+            var splitArray = tempActivityId.split('-');
+            if(splitArray.length > 3){
+              $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+splitArray[0]+'-'+splitArray[1]+'-'+splitArray[2]+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+            }
+            else{
+              $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>'); 
+            }
+          }
+          else{
+            $("#traceability-node-info").html('<table><thead><tr><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>IATI Activity ID:</td><td><a target="_BLANK" href="/projects/'+d.activity.iati_identifier+'">'+d.activity.iati_identifier+'</a></td></tr><tr><td>Project Title</td><td>' + d.activity.title.narratives[0].text + '</td></tr><tr><td>Reporting-Org</td><td>'+ d.activity.reporting_organisation.narratives[0].text +'</td></tr></tbody></table>');
+          }          
         }
    }
 
