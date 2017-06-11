@@ -1,7 +1,7 @@
 #countryMap img, object, embed { max-width: none; }
 #map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
 #countryMap {
-    height : 350px;
+    height : 450px;
 }
 #map {
     width: 100%; 
@@ -136,7 +136,7 @@ span.language {
 }
 
 #countryMap .leaflet-popup-content{
-  width: 350px!important;
+  width: 450px!important;
 }
 
 .location-popup .location-label {
