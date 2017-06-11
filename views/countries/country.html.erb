@@ -239,11 +239,11 @@
             <div style="text-align: center" class="six columns">
                 <% tempTotalBudget = Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
-                <span><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0)*100)%></span>
+                <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0)*100)%></span>
                 <p><strong><%= current_financial_year %></strong></p>
             </div>
             <div style="text-align: center" class="six columns">
-                <span><%= country[:projectBudgetPercentToDfidBudget] %>%</span>
+                <span style="font-size: 1.5em"><%= country[:projectBudgetPercentToDfidBudget] %>%</span>
                 <p><strong>DFID Total</strong></p>
             </div>
          </div>
