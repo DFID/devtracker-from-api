@@ -822,3 +822,8 @@ g.c3-axis-y > g:last-child {
     border-left-width: 0.3125rem;
     border-left-style: solid;
 }
+
+.link-wrapper {
+  width: 8em;
+  margin-top: -2.8em;
+}
