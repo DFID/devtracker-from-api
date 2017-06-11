@@ -718,3 +718,8 @@ g.c3-axis-y > g:last-child {
 #top5Sectors svg g:first-child {
   transform: translate(0px,0px);
 }
+
+.link-wrapper {
+  width: 8em;
+  margin-top: -2.8em;
+}
