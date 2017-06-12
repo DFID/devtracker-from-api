@@ -53,7 +53,7 @@
   	<%# dfid_complete_region_list("Regional").each do |region| %> 
       <!--<a href="/regions/<%#=region['code']%>"><%#= region['name'] %></a> | -->
     <%# end %>
-    <% dfid_regional_projects_data[:regionsDataJSON].each do |region|%>
+    <% dfid_regional_projects_data[:regionsDataJSON].sort_by{ |k| k["region"]}.each do |region|%>
     	<a href="/regions/<%=region['code']%>"><%=region['region']%></a> |
     <%end%>
 

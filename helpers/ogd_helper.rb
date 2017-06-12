@@ -41,7 +41,7 @@ Returns a Hash 'ogdData' with the following keys:
     allProjectsData['project_budget_higher_bound'] = 0
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
-    unless allProjectsData['projects']['results'][0].nil?
+    unless allProjectsData['projects']['results'][0].nil? || allProjectsData['projects']['results'][0]['aggregations']['activity_children'].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
     end
     allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{ogdCode}&hierarchy=1&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"

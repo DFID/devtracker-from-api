@@ -7,6 +7,7 @@
 
   <head>
     <meta charset="utf-8">
+    <meta name="description" content="The Development Tracker uses open data on international development published in the International Aid Transparency Intiative (IATI) open data standard by the UK Government and partners to show where the UK is investing in developing countries." />
     <title>DevTracker <%= settings.devtracker_page_title %></title>
 
   
@@ -51,6 +52,14 @@
     </script> -->
     <script> 
       $(document).ready(function() {
+        $('#IncludeClosedProjects').change(function(){
+          if(this.checked){
+            $('#includeClosed').val('1');
+          }
+          else{
+            $('#includeClosed').val('0'); 
+          }
+        });
         $(".more-info-link").click(function(e){
           e.stopPropagation();
           $("#moreinfo"+$(this).attr('target')).toggle();
@@ -90,6 +99,7 @@
         <% else %>
           window.baseUrl = '<%= oipa_api_url %>';
         <%end%>
+
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
@@ -133,6 +143,7 @@
           <form id="search" class="site-search" action="/search" method="GET" role="search">
             <label for="site-search-text" class="visually-hidden">Search</label>
             <input type="search" name="query" id="site-search-text" title="Search"><input class="button" type="submit" value="Search">
+            <input id="includeClosed" name="includeClosed" type="hidden" value="0">
           </form>
         </div>
       </div>

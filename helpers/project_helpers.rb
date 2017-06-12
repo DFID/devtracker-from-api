@@ -8,11 +8,20 @@ module ProjectHelpers
     include CodeLists
     include CommonHelpers
 
+    def check_if_project_exists(projectId)
+        begin
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        rescue => e
+            halt 404, "Activity not found"
+        end
+        return true
+    end
+
     def get_h1_project_details(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
-        project['local_document_links'] = get_document_links_local(projectId)
+        #project['local_document_links'] = get_document_links_local(projectId)
         project
     end
 
@@ -126,6 +135,7 @@ module ProjectHelpers
                  country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
              end
         end
+        countriesList = countriesList.sort_by{|k| k["recipient_country"]["name"]}
         countriesList
     end
 
