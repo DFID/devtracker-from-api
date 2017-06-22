@@ -686,3 +686,40 @@ g.c3-axis-y > g:last-child {
 .meta {
   display:none;
 }
+
+.dc-chart g.row text {
+  fill: black !important;
+}
+
+#top5Countries.dc-chart .axis { display: none; }
+
+#top5Sectors.dc-chart .axis { display: none; }
+
+#top-5-sectors.columns {
+  border-right: none;
+}
+
+#top-5-countries.columns {
+  border-left:1px solid #dee0e2;
+}
+
+#top5Countries svg text {
+  font-size: 18px;
+}
+
+#top5Countries svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+#top5Sectors svg text {
+  font-size: 18px;
+}
+
+#top5Sectors svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+.link-wrapper {
+  width: 8em;
+  margin-top: -2.8em;
+}
