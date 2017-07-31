@@ -54,12 +54,12 @@ include OGDHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
+#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'http://localhost:8001/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -408,6 +408,9 @@ get '/projects/:proj_id/transactions/?' do |n|
   	# get the Interest Repayment transactions from the API
   	interestRepayment = get_transaction_details(n,"5")
 
+  	# get the Loan Repayment transactions from the API
+  	loanRepayment = get_transaction_details(n,"6")
+
   	# get the Purchase of Equity transactions from the API
   	purchaseEquity = get_transaction_details(n,"8")
 
@@ -434,6 +437,7 @@ get '/projects/:proj_id/transactions/?' do |n|
  			disbursements: disbursements,
  			expenditures: expenditures,
  			interestRepayments: interestRepayment,
+ 			loanRepayments: loanRepayment,
  			purchaseEquitys: purchaseEquity,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
