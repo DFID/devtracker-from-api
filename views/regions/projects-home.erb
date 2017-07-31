@@ -15,7 +15,11 @@
                 </ul>
             </div>
             <h1>
-                <%= region[:name] + " Region"%>
+                <% if region[:code] == '998' then%>
+                    Global Projects
+                <%else%>
+                    <%= region[:name] + " Region"%>
+                <%end%>
             </h1>
         </div>
     </div>
