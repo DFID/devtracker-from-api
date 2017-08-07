@@ -57,7 +57,7 @@ module SectorHelpers
                #oipa v2.2
                #:budget       => elem["budget"]
                #oipa v3.1
-               :budget       => elem["value"]      			                         			           			                          
+               :budget       => elem["value"].to_i                       			           			                          
 	       } 
 	     end
 
