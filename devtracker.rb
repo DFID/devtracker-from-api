@@ -126,7 +126,8 @@ get '/countries/:country_code/?' do |n|
  			country: country,
  			countryYearWiseBudgets: countryYearWiseBudgets,
  			countrySectorGraphData: countrySectorGraphData,
- 			results: results
+ 			results: results,
+ 			oipa_api_url: settings.oipa_api_url
  		}
 end
 
@@ -171,6 +172,7 @@ get '/countries/:country_code/results/?' do |n|
 	erb :'countries/results', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
 	 		country: country,
 	 		totalProjects: totalProjects,
 	 		results: results,
@@ -288,6 +290,7 @@ get '/regions/:region_code/?' do |n|
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
  			region: region,
  			regionYearWiseBudgets: regionYearWiseBudgets,
  			regionSectorGraphData: regionSectorGraphData
@@ -351,6 +354,7 @@ get '/projects/:proj_id/?' do |n|
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
  			fundedProjectsCount: fundedProjectsCount,
@@ -379,6 +383,7 @@ get '/projects/:proj_id/documents/?' do |n|
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,
  			fundedProjectsCount: fundedProjectsCount,
@@ -420,6 +425,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
 			project: project,
 			countryOrRegion: countryOrRegion,
  			incomingFunds: incomingFunds,
@@ -452,6 +458,7 @@ get '/projects/:proj_id/partners/?' do |n|
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
 			project: project,
 			countryOrRegion: countryOrRegion, 			
  			fundedProjects: fundedProjectsData['results'],
@@ -474,6 +481,7 @@ get '/sector/?' do
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
  			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
@@ -485,6 +493,7 @@ get '/sector/:high_level_sector_code/?' do
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
  			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
  		}		
 end
@@ -529,6 +538,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
@@ -610,6 +620,7 @@ get '/location/country/?' do
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
+			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	dfid_country_map_data,
 			:dfid_complete_country_list => 	dfid_complete_country_list,
 			:dfid_total_country_budget => total_country_budget_location
@@ -622,6 +633,7 @@ get '/location/regional/?' do
 	erb :'location/regional/index', 
 		:layout => :'layouts/layout',
 		:locals => {
+			:oipa_api_url => settings.oipa_api_url,
 			:dfid_regional_projects_data => dfid_regional_projects_data("region")			
 		}
 end
@@ -632,6 +644,7 @@ get '/location/global/?' do
 	erb :'location/global/index', 
 		:layout => :'layouts/layout',
 		:locals => {
+			:oipa_api_url => settings.oipa_api_url,
 			:dfid_global_projects_data => dfid_regional_projects_data("global")
 		}
 end
@@ -898,35 +911,36 @@ end
 
 get '/department' do
   	settings.devtracker_page_title = 'Aid by Department Page'
-	erb :'department/department', :layout => :'layouts/layout'
+	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
 get '/about/?' do
   	settings.devtracker_page_title = 'About DevTracker Page'
-	erb :'about/about', :layout => :'layouts/layout'
+	erb :'about/about', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
 get '/cookies/?' do
   	settings.devtracker_page_title = 'Cookies Page'
-	erb :'cookies/index', :layout => :'layouts/layout'
+	erb :'cookies/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end  
 
 get '/faq/?' do
   	settings.devtracker_page_title = 'FAQ: What does this mean?'
-	erb :'faq/faq', :layout => :'layouts/layout'
+	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
 get '/feedback/?' do
   	settings.devtracker_page_title = 'Feedback Page'
 	erb :'feedback/index', :layout => :'layouts/layout_forms',
 	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey
+		googlePublicKey: settings.google_recaptcha_publicKey,
+		oipa_api_url: settings.oipa_api_url
 	}
 end 
 
 get '/whats-new/?' do
   	settings.devtracker_page_title = "What's New Page"
-	erb :'about/whats-new', :layout => :'layouts/layout'
+	erb :'about/whats-new', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end 
 
 post '/feedback/index' do
@@ -954,7 +968,8 @@ get '/fraud/?' do
   	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
 	erb :'fraud/index', :layout => :'layouts/layout_forms',
 	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey
+		googlePublicKey: settings.google_recaptcha_publicKey,
+		oipa_api_url: settings.oipa_api_url
 	}
 end  
 
@@ -1036,19 +1051,19 @@ end
 not_found do
   status 404
   settings.devtracker_page_title = "Error 404(Page not found!)"
-  erb :'404', :layout => :'layouts/layout'
+  erb :'404', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
 error 404 do
   status 404
   settings.devtracker_page_title = "Error 404(Page not found!)"
-  erb :'404', :layout => :'layouts/layout'
+  erb :'404', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
 error 500 do
   status 500
   settings.devtracker_page_title = "Error 500 Page"
-  erb :'500', :layout => :'layouts/layout'
+  erb :'500', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
 #error do
