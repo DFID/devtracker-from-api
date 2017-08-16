@@ -55,6 +55,7 @@ include OGDHelper
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
+#set :oipa_api_url, 'http://localhost:8001/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
@@ -409,6 +410,15 @@ get '/projects/:proj_id/transactions/?' do |n|
   	# get the expenditure transactions from the API
   	expenditures = get_transaction_details(n,"4")
 
+  	# get the Interest Repayment transactions from the API
+  	interestRepayment = get_transaction_details(n,"5")
+
+  	# get the Loan Repayment transactions from the API
+  	loanRepayment = get_transaction_details(n,"6")
+
+  	# get the Purchase of Equity transactions from the API
+  	purchaseEquity = get_transaction_details(n,"8")
+
   	# get yearly budget for H1 Activity from the API
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 	
@@ -432,6 +442,9 @@ get '/projects/:proj_id/transactions/?' do |n|
  			commitments: commitments,
  			disbursements: disbursements,
  			expenditures: expenditures,
+ 			interestRepayments: interestRepayment,
+ 			loanRepayments: loanRepayment,
+ 			purchaseEquitys: purchaseEquity,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount 
