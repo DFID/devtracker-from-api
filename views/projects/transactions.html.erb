@@ -1,6 +1,6 @@
-<!-- ---
+<!--
 title: Development Tracker
---- -->
+ -->
 
 <%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "transactions"} %>
 
@@ -23,7 +23,6 @@ title: Development Tracker
         </aside>   
         <p style="margin-bottom:2px;">(Current approved budget)</p>
        </div>  
-       <%# projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'],"P") %>
        <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
          <div class="<%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
@@ -60,250 +59,42 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-    <%# incomingFunds=transactions.select {|group| group['transaction_type']['code'] == "1" } %>
-    <%if !incomingFunds.nil? && incomingFunds.length > 0 %>
-    <%# totalIncomingFund=get_sum_transaction(incomingFunds).to_f %>
-     <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Incoming Funds</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
-               <img src="/images/icon-information.png" alt="More information about Incoming Funds" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfo2" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                   Funds that originate from a source other than the donor(s) reported in the activity.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;">(Funds received from an external funding source)</p>
-           </div>  
 
-           <div class="trans-header-right">
-              <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '1' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if incomingFunds.uniq{|m| m['currency']['code']}.count == 1%>
-                <div class="<%= project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-                  <%begin%>
-                  <%= Money.new(project['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100, project['aggregations']['activity_children']['incoming_funds_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
-                  <%rescue
-                  end%>
-                </div>
-              <%end%>
-           </div>        
-      </div> 
-      <table class="transactions-table" style="width:100%">
-        <tbody>
-          <tr>
-            <th><%= "Activity Description" %></th>
-            <th width="30%">Provider</th>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
-          </tr>
-          <% incomingFunds.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |incomingFund| %>
-            <tr>
-              <td><%= if !incomingFund['description'].nil? then incomingFund['description']['narratives'][0]['text'] else "" end %></td>
-              <td width="30%"><%= 
-              if incomingFund['provider_organisation'].nil? then '' 
-                else if incomingFund['provider_organisation']['narratives'][0].nil? then '' 
-                else incomingFund['provider_organisation']['narratives'][0]['text'] end + 
-              if incomingFund['provider_organisation']['provider_activity_id'].nil? then '' else " (" + incomingFund['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
-              <td width="15%"><%= Date.parse(incomingFund['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= incomingFund['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
-              <%begin%>
-                <%= Money.new(incomingFund['value'].to_f.round(0)*100, incomingFund['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                <%rescue
-                end%>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-</div>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency' , :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-    <%# commitments=transactions.select {|group| group['transaction_type']['code'] == '2' } %>
-    <%if !commitments.nil? && commitments.length > 0 %>
-    <% h2Activities = get_h2_project_details(project['id'])%>
-    <%# totalCommitments=get_sum_transaction(commitments).to_f %>
-    <%#= totalCommitments%>
-     <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Commitment</span><%#= commitments.length%>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3">
-               <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfo3" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                    A firm obligation to provide resources of a specified amount.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;">(Obligation to provide funding)</p>
-           </div>  
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :active => "transactions"} %>
 
-           <div class="trans-header-right">
-            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '2' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if commitments.uniq{|m| m['currency']['code']}.count == 1%>
-                <div class="<%= project['aggregations']['activity_children']['commitment_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-                  <%begin%>
-                  <%= Money.new(project['aggregations']['activity_children']['commitment_value'].to_f.round(0)*100, project['aggregations']['activity_children']['commitment_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
-                  <%rescue
-                  end%>
-             </div>
-             <%end%>
-           </div>        
-      </div> 
-      <table class="transactions-table" style="width:100%">
-        <tbody>
-          <tr>
-            <th><%= "Activity Description" %></th>
-            <th width="15%">Activity ID</th>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
-          </tr>
-          <% commitments.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |commitment| %>
-            <tr>
-              <td><%= get_h2Activity_title(h2Activities,commitment['activity']['id']) %></td>
-              <td width="15%"><%= is_dfid_project(commitment['activity']['id']) ? commitment['activity']['id'] : ''  %></td>
-              <td width="15%"><%= Date.parse(commitment['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= commitment['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
-                <%begin%>
-                <%= Money.new(commitment['value'].to_f.round(0)*100, commitment['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                <%rescue
-                end%></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-</div>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   D I S B U R S E M E N T S   T A B L E                  %>
 <%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-    <%# disbursements=transactions.select {|group| group['transaction_type']['code'] == '3' } %>
-    <%if !disbursements.nil? && disbursements.length > 0 %>
-    <%# totalDisbursements=get_sum_transaction(disbursements).to_f %>
-     <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Disbursement</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4">
-               <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfo4" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                    The amount placed at the disposal of a recipient country or agency.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;">(Fund transfer to implementing agency)</p>
-           </div>  
 
-           <div class="trans-header-right">
-            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '3' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if disbursements.uniq{|m| m['currency']['code']}.count == 1%>
-              <div class="<%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%= Money.new(project['aggregations']['activity_children']['disbursement_value'].to_f.round(0)*100, project['aggregations']['activity_children']['disbursement_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
-              end%>
-             </div>
-             <%end%>
-           </div>        
-      </div> 
-      <table class="transactions-table" style="width:100%">
-        <tbody>
-          <tr>
-            <th><%= "Activity Description" %></th>
-            <th width="15%">Receiver Org</th>
-            <th width="15%">Activity ID</th>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
-          </tr>
-          <% disbursements.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |disbursement| %>
-          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
-            <tr>
-              <td><%= if !disbursement['description'].nil? then disbursement['description']['narratives'][0]['text'] else "" end %></td>
-              <td width="15%"><%= if !disbursement['receiver_organisation'].nil? then if disbursement['receiver_organisation']['narratives'].length > 0 then disbursement['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
-              <td width="15%"><%= disbursement['activity']['id'] %></td>
-              <td width="15%"><%= Date.parse(disbursement['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= disbursement['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
-                <%begin%>
-                <%= Money.new(disbursement['value'].to_f.round(0)*100, disbursement['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                <%rescue
-                end%></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-</div>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursement', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '(Fund transfer to implementing agency)', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   E X P E N D I T U R E   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<div class="row">
-  <div class="twelve columns transactions">
-    <%# expenditures=transactions.select {|group| group['transaction_type']['code'] == '4' } %>
-    <%if !expenditures.nil? && expenditures.length > 0 %>
-    <%#totalExpenditures=get_sum_transaction(expenditures).to_f %>
-     <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Expenditure</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5">
-               <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfo5" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                    Funds spent on goods and services.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;">(Project spend)</p>
-           </div>  
 
-           <div class="trans-header-right">
-            <%# mixedCurrencyExists = transactions.select {|group| group['transaction_type']['code'] == '4' }.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] } %>
-              <% if expenditures.uniq{|m| m['currency']['code']}.count == 1%>
-               <div class="<%= project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
-                <%begin%>
-                <%= Money.new(project['aggregations']['activity_children']['expenditure_value'].to_f.round(0)*100, project['aggregations']['activity_children']['expenditure_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
-                <%rescue
-                end%>
-                </div>
-              <%end%>
-           </div>        
-      </div> 
-      <table class="transactions-table" style="width:100%">
-        <tbody>
-          <tr>
-            <th><%= "Activity Description" %></th>
-            <th width="15%">Receiver Org</th>
-            <th width="15%">Activity ID</th>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
-          </tr>
-          <% expenditures.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |expenditure| %>
-          <%# commitment.sort_by { | tx | -tx['transaction_date'] }.each do |transaction| %>
-            <tr>
-              <td><%= if !expenditure['description'].nil? then expenditure['description']['narratives'][0]['text'] else "" end %></td>
-              <td width="15%"><%= if !expenditure['receiver_organisation'].nil? then if expenditure['receiver_organisation']['narratives'].length > 0 then expenditure['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
-              <td width="15%"><%= is_dfid_project(expenditure['activity']['id']) ? expenditure['activity']['id'] : ''%></td>
-              <td width="15%"><%= Date.parse(expenditure['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= expenditure['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
-                <%begin%>
-                <%= Money.new(expenditure['value'].to_f.round(0)*100, expenditure['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                <%rescue
-                end%>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-</div>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '(Project spend)', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   I N T E R E S T  R E P A Y M E N T   T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '(Amount of interest paid on a loan or line of credit, including fees)', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   L O A N  R E P A Y M E N T   T A B L E                              %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '(The actual amount of principal (amortisation) repaid, including any arrears)', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   P U R C H A S E  O F  E Q U I T Y    T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquitys, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '(Outgoing funds to purchase equity)', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
