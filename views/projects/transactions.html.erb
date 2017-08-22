@@ -60,41 +60,41 @@ title: Development Tracker
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   D I S B U R S E M E N T S   T A B L E                  %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursement', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '(Fund transfer to implementing agency)', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursement', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '(Fund transfer to implementing agency)', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :cssId => 'disbursements', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   E X P E N D I T U R E   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '(Project spend)', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '(Project spend)', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :cssId => 'expenditures', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   I N T E R E S T  R E P A Y M E N T   T A B L E                      %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '(Amount of interest paid on a loan or line of credit, including fees)', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '(Amount of interest paid on a loan or line of credit, including fees)', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :cssId => 'interestRepayments', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   L O A N  R E P A Y M E N T   T A B L E                              %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '(The actual amount of principal (amortisation) repaid, including any arrears)', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '(The actual amount of principal (amortisation) repaid, including any arrears)', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :cssId => 'loanRepayments', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   P U R C H A S E  O F  E Q U I T Y    T A B L E                      %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquitys, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '(Outgoing funds to purchase equity)', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquities, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '(Outgoing funds to purchase equity)', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :cssId => 'purchaseEquities', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions"} %>

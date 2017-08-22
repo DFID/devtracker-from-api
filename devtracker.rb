@@ -443,7 +443,7 @@ get '/projects/:proj_id/transactions/?' do |n|
  			expenditures: expenditures,
  			interestRepayments: interestRepayment,
  			loanRepayments: loanRepayment,
- 			purchaseEquitys: purchaseEquity,
+ 			purchaseEquities: purchaseEquity,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount 
