@@ -64,7 +64,8 @@
 
         $(".more-info-link").click(function(e){
           e.stopPropagation();
-          $("#moreinfo"+$(this).attr('target')).toggle();
+          $(this).parent().children('aside').toggle();
+          //$("#moreinfo"+$(this).attr('target')).toggle();
         });
 
         $(".more-info").on('click', function(e){
