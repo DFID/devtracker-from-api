@@ -54,4 +54,17 @@ $(document).ready(function() {
     });
 
     chart3.render();
+    $('rect').click(function(){
+        console.log($(this).parent().parent().parent().parent().attr('id'));
+        if($(this).parent().parent().parent().parent().attr('id') == 'top5Countries'){
+            var temp = $(this).parent().children('text').text();
+            var result = $.grep(window.top5Countries,function(e){return e.name == temp});
+            window.location.href = "countries/"+ result[0].code  + "/";
+        }
+        else{
+            var temp = $(this).parent().children('text').text();
+            var result = $.grep(window.top5Sectors,function(e){return e.name == temp});
+            window.location.href = "sector/"+ result[0].code  + "/"; 
+        }
+    });
 });
