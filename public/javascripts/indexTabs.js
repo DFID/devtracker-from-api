@@ -1,8 +1,6 @@
 $(document).ready(function() {
     var chart2 = dc.rowChart("#top5Countries");
-
-
-    var info = crossfilter(top5Countries);
+    var info = crossfilter(window.top5Countries);
     var dimentions = info.dimension(function(d){
         return d.name;
     });
@@ -22,7 +20,7 @@ $(document).ready(function() {
 
     chart2.on('renderlet', function(chart) {
         chart.selectAll("text").on("click", function (d) {
-            var result = $.grep(top5Countries,function(e){return e.name == d.key});
+            var result = $.grep(window.top5Countries,function(e){return e.name == d.key});
             window.location.href = "countries/"+ result[0].code  + "/";
         });
     });
@@ -30,7 +28,7 @@ $(document).ready(function() {
     chart2.render();
 
     var chart3 = dc.rowChart("#top5Sectors");
-    var info2 = crossfilter(top5Sectors);
+    var info2 = crossfilter(window.top5Sectors);
     var dimentions2 = info2.dimension(function(d){
         return d.name;
     });
@@ -50,7 +48,7 @@ $(document).ready(function() {
 
     chart3.on('renderlet', function(chart) {
         chart.selectAll("text").on("click", function (d) {
-            var result = $.grep(top5Sectors,function(e){return e.name == d.key});
+            var result = $.grep(window.top5Sectors,function(e){return e.name == d.key});
             window.location.href = "sector/"+ result[0].code  + "/";
         });
     });
