@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="twelve columns transactions">
+    <%if !transactionsList.nil? && transactionsList.length > 0 %>
+     <div class="section-group-title trans-header-container">
+          <div class="trans-header-left">
+            <span class="trans-type-title"><%= transactionTypeTitle %></span>
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink<%=cssId%>" target="2">
+               <img src="/images/icon-information.png" alt="More information about Incoming Funds" class="more-info-link-middle"/>
+            </a> 
+            <aside id="moreinfo<%=cssId%>" class="more-info">  
+                  <div class="more-info-content trans-more-info-box-limiter">
+                   <%= transactionTypeDetails %>
+                  </div>
+            </aside>   
+            <p style="margin-bottom:2px;"><%= transactionTypeDetails2 %></p>
+           </div>  
+
+           <div class="trans-header-right">
+              <% if transactionsList.uniq{|m| m['currency']['code']}.count == 1%>
+                <div class="<%= project['aggregations']['activity_children'][transactionValueParameter].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
+                  <%begin%>
+                  <%= Money.new(project['aggregations']['activity_children'][transactionValueParameter].to_f.round(0)*100, project['aggregations']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                  <%rescue
+                  end%>
+                </div>
+              <%end%>
+           </div>        
+      </div> 
+      <table class="transactions-table" style="width:100%">
+        <tbody>
+          <tr>
+            <th><%= "Activity Description" %></th>
+            <%if transactionTypeTitle == 'Incoming Funds' %>
+            <th width="15%">Provider</th>
+            <%end%>
+            <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitment'  %>
+              <th width="15%"><%= fifthcolumn%></th>
+            <%end%>
+            <%if transactionTypeTitle != 'Incoming Funds' %>
+            <th width="15%">Activity ID</th>
+            <%end%>
+            <th width="15%">Date</th>
+            <th width="15%" style="text-align:right;">Value</th>
+          </tr>
+          <% transactionsList.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction| %>
+            <tr>
+              <%if transactionTypeTitle == 'Commitment' %>
+                <% h2Activities = get_h2_project_details(project['id'])%>
+                <td><%= get_h2Activity_title(h2Activities,transaction['activity']['id']) %></td>
+              <%else%>
+                <td><%= if !transaction['description'].nil? then transaction['description']['narratives'][0]['text'] else "" end %></td>
+              <%end%>
+              <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitment'  %>
+                <td width="15%"><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
+              <%end%>
+              <%if transactionTypeTitle != 'Incoming Funds' %> 
+                <td width="15%"><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
+              <%end%>
+              <%if transactionTypeTitle == 'Incoming Funds' %>
+              <td width="30%"><%= 
+              if transaction['provider_organisation'].nil? then '' 
+                else if transaction['provider_organisation']['narratives'][0].nil? then '' 
+                else transaction['provider_organisation']['narratives'][0]['text'] end + 
+              if transaction['provider_organisation']['provider_activity_id'].nil? then '' else " (" + transaction['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
+              <%end%>
+              <td width="15%"><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
+              <td width="15%" class="<%= transaction['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
+              <%begin%>
+                <%= Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <%rescue
+                end%>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
