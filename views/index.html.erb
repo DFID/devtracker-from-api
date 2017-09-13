@@ -1,9 +1,9 @@
-<!-- ---
+<!--
 published: "true"
 title: Development Tracker
 layout: landing
 
---- -->
+-->
 
 <div class="row">
     <div class="ten columns">
@@ -11,7 +11,6 @@ layout: landing
         <p class="meta">The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p>
     </div>
     <div class="two columns" style="text-align:right;">
-        <!--<img style="margin-top:20px;" src="/images/ukaid_logo.png" alt="UK aid from the British people"> -->
     </div>
 </div>
 <div class="row">
@@ -128,26 +127,7 @@ layout: landing
             </aside>
         </div>
         <div id="top5Countries"></div>
-        <!--<div id="demoTab">          
-            <ul class="resp-tabs-list tabs">
-                <li> aaa </li>
-                <li> bbb </li>
-                <li> ccc</li>
-            </ul> 
-
-            <div class="resp-tabs-container tabs">                                                        
-                <div> xxx </div>
-                <div> yyy </div>
-                <div> zzz </div>
-            </div>
-        </div> -->
         <ol>
-        <%# top_5_countries.each do |country| %>
-          <!--<li>
-             <a href="/countries/<%#= country[:code] %>" class="truncate" title="<%#= country[:name] %>"> <%#= country[:name] %> </a>
-              <em><span class="visually-hidden">Budget</span><%#= format_million_stg country[:budget] %></em>
-          </li>-->
-        <%# end %>
         </ol>
         <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
     </div>
@@ -164,15 +144,7 @@ layout: landing
                          </div>
                 </aside>
             </div> 
-            <div id="top5Sectors"></div>
-            <!--<ol>
-                <%# what_we_do.each do |sector| %>
-                    <li>
-                       <a href="/sector/<%#=sector[:code]%>"><%#=sector[:name]%></a>
-                       <em><span class="visually-hidden">Budget</span><%#= format_million_stg sector[:budget].to_f %></em>                       
-                    </li>
-                <%# end %>                
-            </ol> -->        
+            <div id="top5Sectors"></div>     
         <%end%>
         <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
     </div>
@@ -185,115 +157,12 @@ layout: landing
 <link type="text/css" rel="stylesheet" href="/stylesheets/dc.min.css" >
 <script type="text/javascript" src="/javascripts/crossfilter.min.js"></script>
 <script type="text/javascript" src="/javascripts/dc.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('#demoTab').easyResponsiveTabs({
-        type: 'vertical'
-    });
-    $('#demoTab').hide();
-    //$('.tabs').easyResponsiveTabs({ tabidentify: 'vert' });
-    var chart = dc.rowChart("#test2");
-    d3.csv("/javascripts/morley.csv", function(error, experiments) {
-      experiments.forEach(function(x) {
-        x.Speed = +x.Speed;
-      });
-      var ndx                 = crossfilter(experiments),
-          runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-          speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-      chart
-        .width(350)
-        .height(150)
-        .x(d3.scale.linear().domain([6,20]))
-        .elasticX(true)
-        .dimension(runDimension)
-        .group(speedSumGroup)
-        .render();
-    });
-    <%
-    tempCountries = JSON.parse(top_5_countries.to_json)
-    tempCountries.each do |j|
-        j.delete("code")
-    end
-    %>
-    var top5Countries = <%=top_5_countries.to_json%>;
-    var top5Sectors = <%=what_we_do.to_json%>;
-    var chart2 = dc.rowChart("#top5Countries");
-
-
-    var info = crossfilter(top5Countries);
-    var dimentions = info.dimension(function(d){
-        return d.name;
-    });
-    /*var parsedinfo = info.dimension(function(d){
-        var country = d.name;
-        return country;
-    });*/
-    //var dataGrouping = parsedinfo.group();
-    //console.log(dataGrouping);
-    //var grouping = dimentions.group();
-    var grouping = dimentions.group().reduceSum(function(d) {return d.budget;});
-    chart2
-    .width(320)
-    .height(420)
-    .x(d3.scale.ordinal())
-    .elasticX(true)
-    .dimension(dimentions)
-    .group(grouping)
-    //.title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
-    .title(function(d){return "Budget: £" + d3.format(".4s")(d.value)})
-    .ordering(function(t){return t.budget;})
-    .cap(10)
-    .ordinalColors(['#D8DCBF'])
-    .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
-
-    chart2.on('renderlet', function(chart) {
-        chart.selectAll("text").on("click", function (d) {
-            var result = $.grep(top5Countries,function(e){return e.name == d.key});
-            window.location.href = "countries/"+ result[0].code  + "/";
-        });
-    });
-
-    chart2.render();
-
-    //console.log(top5Countries);
-
-    var chart3 = dc.rowChart("#top5Sectors");
-    var info2 = crossfilter(top5Sectors);
-    var dimentions2 = info2.dimension(function(d){
-        return d.name;
-    });
-    var grouping2 = dimentions2.group().reduceSum(function(d) {return d.budget;});
-    chart3
-    .width(340)
-    .height(420)
-    .x(d3.scale.ordinal())
-    .elasticX(true)
-    .dimension(dimentions2)
-    .group(grouping2)
-    .title(function(d){return "Budget: £" + d3.format(".4s")(d.value)})
-    //.title(function(d) { return "Budget: £ " + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") })
-    .ordering(function(t){return t.budget;})
-    .cap(10)
-    .ordinalColors(['#D8DCBF'])
-    .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
-
-    chart3.on('renderlet', function(chart) {
-        chart.selectAll("text").on("click", function (d) {
-            var result = $.grep(top5Sectors,function(e){return e.name == d.key});
-            window.location.href = "sector/"+ result[0].code  + "/";
-        });
-    });
-
-    chart3.render();
-
-
-});
-  </script>
-  <style>
+<script type="text/javascript" src="/javascripts/indexTabs.js"></script>
+<style>
   .ui-tabs-vertical { width: 55em; }
   .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
   .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
   .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
   .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
   .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
-  </style>
+</style>
