@@ -1,22 +1,4 @@
 $(document).ready(function() {
-    var chart = dc.rowChart("#test2");
-    d3.csv("/javascripts/morley.csv", function(error, experiments) {
-      experiments.forEach(function(x) {
-        x.Speed = +x.Speed;
-      });
-      var ndx                 = crossfilter(experiments),
-          runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-          speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-      chart
-        .width(350)
-        .height(150)
-        .x(d3.scale.linear().domain([6,20]))
-        .elasticX(true)
-        .dimension(runDimension)
-        .group(speedSumGroup)
-        .render();
-    });
-    /////////////////////
     var chart2 = dc.rowChart("#top5Countries");
 
 
