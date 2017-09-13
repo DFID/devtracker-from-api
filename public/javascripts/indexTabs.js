@@ -16,14 +16,7 @@ $(document).ready(function() {
         .group(speedSumGroup)
         .render();
     });
-    <%
-    tempCountries = JSON.parse(top_5_countries.to_json)
-    tempCountries.each do |j|
-        j.delete("code")
-    end
-    %>
-    var top5Countries = <%=top_5_countries.to_json%>;
-    var top5Sectors = <%=what_we_do.to_json%>;
+    /////////////////////
     var chart2 = dc.rowChart("#top5Countries");
 
 

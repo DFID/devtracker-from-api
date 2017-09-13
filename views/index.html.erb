@@ -150,13 +150,24 @@ layout: landing
     </div>
 
 </div>
-
+<%
+    tempCountries = JSON.parse(top_5_countries.to_json)
+    tempCountries.each do |j|
+        j.delete("code")
+    end
+%>
 <script src="/javascripts/easyResponsiveTabs.js" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" href="/stylesheets/easy-responsive-tabs.css" >
 <script src="/javascripts/d3.v3.js" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" href="/stylesheets/dc.min.css" >
 <script type="text/javascript" src="/javascripts/crossfilter.min.js"></script>
 <script type="text/javascript" src="/javascripts/dc.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var top5Countries = <%=top_5_countries.to_json%>;
+    var top5Sectors = <%=what_we_do.to_json%>;
+});
+</script>
 <script type="text/javascript" src="/javascripts/indexTabs.js"></script>
 <style>
   .ui-tabs-vertical { width: 55em; }
