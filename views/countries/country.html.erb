@@ -17,102 +17,149 @@
 </div>
 
 <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects], :results_count => results.length } %>
-
+<% if country[:description].length > 0%>
 <div class="row">
     <div class="twelve columns summary">
         <h2 class="visually-hidden">Summary</h2>
-        <div class="description"><%= markdown_to_html(country[:description])%></div>
+        <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify"><%= markdown_to_html(country[:description])%>
+            <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
+<div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Read more about <%= country[:name] %></div>
+            </div>
+            <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
+        </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('div.description').expander({
-                    slicePoint    : 300,
-                    expandSpeed   : 0,
-                    collapseSpeed : 0,
-                    expandText    : 'Read more about <%= country[:name] %>' 
+                var curHeight = $('.country-description').height();
+                $('.country-description').css('height', 'auto');
+                var autoHeight = $('.country-description').height();
+                $('.country-description').height(curHeight);
+                // $('div.description').expander({
+                //     slicePoint    : 300,
+                //     expandSpeed   : 0,
+                //     collapseSpeed : 0,
+                //     expandText    : 'Read more about <%#= country[:name] %>' 
+                // });
+                $('.description-expander').click(function(){
+                    $('.country-description').animate({
+                        height: autoHeight
+                    },1000,function(){
+                        $('.description-collapse').fadeIn();
+                    });
+                    $(this).parent().fadeOut('slow');
+                });
+
+                $('.description-collapse').click(function(){
+                    $(this).hide();
+                    $('.description-overlay').fadeIn('slow');
+                    $('.country-description').animate({
+                        height: curHeight
+                    },1000);
                 });
             });
         </script>
     </div>
 </div>
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"><hr></div>
+    <div class="four columns"></div>
+</div>
+<%end%>
 
-<div class="row row-summary">
-    <div class="six columns">
-        <h3>Key Info</h3>
-        <ul class="info-list vertical">
-            <% if country[:operationalBudget] > 0 then %>
-                <li class="fact-item">
-                Operational Plan Budget <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the operational plan budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       This is the figure quoted in the Country's Operational Plan that we plan to spend in the current financial year.
+<!-- Top six results -->
+<div id="topSixResults" style="margin-top: 25px" class="row">
+    <%if topSixResults.count > 0%>
+        <%i = 1%> 
+        <%tempCount = topSixResults.count%>
+        <%topSixResults.each do |result|%>
+            <%if i < 4%>
+                <%if topSixResults.count < 4%>
+                    <%
+                    case tempCount
+                    when 1 %>
+                        <div class="twelve columns">
+                            <div class="mi-style" style="text-align: center">
+                                <span style="font-size: 1.4em"></span>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
+                                <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                            </div>
+                        </div>
+                    <%when 2 %>
+                        <div class="six columns">
+                            <div class="mi-style" style="text-align: center">
+                                <span style="font-size: 1.4em"></span>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
+                                <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                            </div>
+                        </div>
+                    <%
+                    when 3 %>
+                        <div class="four columns">
+                            <div class="mi-style" style="text-align: center">
+                                <span style="font-size: 1.4em"></span>
+                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                                <p style="color: #6f777b"><%= result['title']%></p>
+                                <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                            </div>
+                        </div>
+                    <%end%>
+                <%else%>
+                    <div class="four columns">
+                        <div class="mi-style" style="text-align: center">
+                            <span style="font-size: 1.4em"></span>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
+                            <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                        </div>
                     </div>
-                </aside>
-                <span><strong><%= Money.new(country[:operationalBudget].to_f.round(0)*100, country[:operationalBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
-                </li>
-            <% end %>
-            <li id='approved-project-budget-info' class="fact-item">
-                Project budget approved for <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                       Sum of project budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if projects are in an active procurement phase.
+                <%end%>
+            <%else%>
+                <%
+                case tempCount
+                when 4 %>
+                    <div class="twelve columns">
+                        <div class="mi-style" style="text-align: center">
+                            <span style="font-size: 1.4em"></span>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
+                            <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                        </div>
                     </div>
-                </aside>
-                <span><strong><%= Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %></strong></span>
-            </li>
-            <li class="fact-item">
-                Project budget as % of DFID budget
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink7" target="7">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo7" class="more-info">            
-                    <div class="more-info-content">
-                       Total approved project budget for this financial year as a percentage of the total approved project budget for DFID.
+                <%when 5 %>
+                    <div class="six columns">
+                        <div class="mi-style" style="text-align: center">
+                            <span style="font-size: 1.4em"></span>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
+                            <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                        </div>
                     </div>
-                </aside>
-                <span><strong><%= country[:projectBudgetPercentToDfidBudget] %>%</strong></span>
-            </li>
-            <li class="fact-item">
-                Active Projects
-                <span><strong><%= country[:totalActiveProjects] || "&nbsp;" %></strong></span>
-            </li>
-            <% if country[:population] then %><% if country[:population] != "" then %>
-                <li class="fact-item">
-                    Population (<%if country[:population_year] then %><%if country[:population_year] != "" then %><%= country[:population_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SP.POP.TOTL?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= format_round_million country[:population].to_f%></strong></span>
-                </li>
-            <% end %><% end %>
-            <% if country[:belowPovertyLine] then %><% if country[:belowPovertyLine] != "" then %>
-                <li class="fact-item">
-                    % living below $1.90 per day (<%if country[:belowPovertyLine_year] then %><%if country[:belowPovertyLine_year] != "" then %><%= country[:belowPovertyLine_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:belowPovertyLine].to_f.round(2)%>%</strong></span>
-                </li>
-            <% end %><% end %>
-             <% if country[:fertilityRate] then %><% if country[:fertilityRate] != "" then %>
-                <li class="fact-item">
-                    Fertility rate (<% if country[:fertilityRate_year] then %><% if country[:fertilityRate_year] != "" then %><%= country[:fertilityRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/SP.DYN.TFRT.IN?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:fertilityRate].to_f.round(2)%></strong></span>
-                </li>
-            <% end %><% end %>
-             <% if country[:gdpGrowthRate] then %><% if country[:gdpGrowthRate] != "" then %>
-                <li class="fact-item">
-                    GDP growth rate (<%if country[:gdpGrowthRate_year] then %><% if country[:gdpGrowthRate_year] != "" then %><%=country[:gdpGrowthRate_year]%>, <% end %><% end %>
-                    source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=<%=country[:code] %>" rel="external">World Bank</a>):
-                    <span><strong><%= country[:gdpGrowthRate].to_f.round(2)%>%</strong></span>
-                </li>
-            <% end %><% end %>
-        </ul>
-    </div>
-
-    <div class="six columns" role="presentation">
+                <%
+                when 6 %>
+                    <div class="four columns">
+                        <div class="mi-style" style="text-align: center">
+                            <span style="font-size: 1.4em"></span>
+                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
+                            <p style="color: #6f777b"><%= result['title']%></p>
+                            <p style="color: #6f777b">2011/12 - 2015/16 , <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16" rel="external">Source</a></p>
+                        </div>
+                    </div>
+                <%end%>
+            <%end%>
+            <%i = i+1%>
+        <%end%>
+    <%end%>
+</div>
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"></div>
+    <div class="four columns"></div>
+</div>
+<!-- Map position -->
+<div class="row">
+    <div class="twelve columns" role="presentation">
         <div id="countryMap" class="countryMap">
             <div class="modal_map_markers">
                <div>Loading Map Markers <br /> Please Wait</div>
@@ -126,9 +173,41 @@
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
         </div>
     </div>
-
 </div>
-
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"><hr></div>
+    <div class="four columns"></div>
+</div>
+<!-- Three column stuffs -->
+<div style="margin-top: 30px" class="row">
+    <div class="four columns">
+        <div class="mi-style" style="text-align: center">
+            <span style="font-size: 1.4em">Population</span>
+            <h3><span id="populationCount">0</span> million</h3>
+            <p style="color: #6f777b"><%if country[:population_year] != "" then %><%=country[:population_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/SP.POP.TOTL?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
+        </div>
+    </div>
+    <div class="four columns">
+        <div class="mi-style" style="text-align: center">
+            <span style="font-size: 1.4em">% living below $1.90 per day</span>
+            <h3><span id="livingBelowCount">0</span>%</h3>
+            <p style="color: #6f777b"><%if country[:belowPovertyLine_year] != "" then %><%=country[:belowPovertyLine_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/SI.POV.DDAY?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
+        </div>
+    </div>
+    <div class="four columns">
+        <div class="mi-style" style="text-align: center">
+            <span style="font-size: 1.4em">GDP growth rate</span>
+            <h3><span id="gdpGrowthRateCount">0</span>%</h3>
+            <p style="color: #6f777b"><%if country[:gdpGrowthRate_year] != "" then %><%=country[:gdpGrowthRate_year]%>,<%end%> source <a href="http://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=<%=country[:code] %>" rel="external">World Bank</a></p>
+        </div>
+    </div>
+</div>
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"><hr></div>
+    <div class="four columns"></div>
+</div>
 <div class="row">
     <div class="six columns">
         <div class="country-info-container">  
@@ -157,7 +236,19 @@
             </aside>
          </div>
          <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
-         <div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%= country[:name] %>.</div>
+         <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
+         <div class="row">
+            <div style="text-align: center" class="six columns">
+                <% tempTotalBudget = Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
+                <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                <p><strong><%= current_financial_year %></strong></p>
+            </div>
+            <div style="text-align: center" class="six columns">
+                <span style="font-size: 1.5em"><%= country[:projectBudgetPercentToDfidBudget] %>%</span>
+                <p><strong>DFID Total</strong></p>
+            </div>
+         </div>
     </div>
 </div>
 
@@ -171,9 +262,29 @@
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
  <script src="/javascripts/bar.js"></script> -->
-
+ <script src="/javascripts/jquery.color.min.js"></script>
+ <script src="/javascripts/jquery.animateNumber.min.js"></script>
 <script>
     $(document).ready(function() {
+        //$('#testingN')
+        $('#populationCount').animateNumber(
+        {
+          number: <%if country[:population] != "" then%><%= (country[:population]/1000000.0).round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
+        $('#livingBelowCount').animateNumber(
+        {
+          number: <%if country[:belowPovertyLine] != "" then%><%= country[:belowPovertyLine].to_f.round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
+        $('#gdpGrowthRateCount').animateNumber(
+        {
+          number: <%if country[:gdpGrowthRate] != "" then%><%= country[:gdpGrowthRate].to_f.round(2)%><%else%>0<%end%>
+        },
+        2000
+      )
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {

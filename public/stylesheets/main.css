@@ -1,7 +1,7 @@
 #countryMap img, object, embed { max-width: none; }
 #map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
 #countryMap {
-    height : 480px;
+    height : 450px;
 }
 #map {
     width: 100%; 
@@ -94,14 +94,14 @@ span.language {
 }
 
 .marker.cluster {
-    background-image: url(/images/mapmarker.png);
+    background-image: url(/images/mapmarker_s.png);
     font-family:"Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    height: 36px;
-    width: 18px;
+    height: 30px;
+    width: 15px;
     border:none;
     text-align:center;
-    font-size:1em;
-    line-height: 1.4em;
+    font-size:0.6em;
+    line-height: 1.8em;
     font-weight: bold;
     color: #fff;
 }
@@ -136,7 +136,7 @@ span.language {
 }
 
 #countryMap .leaflet-popup-content{
-  width: 300px!important;
+  width: 450px!important;
 }
 
 .location-popup .location-label {
@@ -685,4 +685,44 @@ g.c3-axis-y > g:last-child {
 
 .meta {
   display:none;
+}
+
+.dc-chart g.row text {
+  fill: black !important;
+}
+
+#top5Countries.dc-chart .axis { display: none; }
+
+#top5Sectors.dc-chart .axis { display: none; }
+
+#top-5-sectors.columns {
+  border-right: none;
+}
+
+#top-5-countries.columns {
+  border-left:1px solid #dee0e2;
+}
+
+#top5Countries svg text {
+  font-size: 18px;
+}
+
+#top5Countries svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+#top5Sectors svg text {
+  font-size: 18px;
+}
+
+#top5Sectors svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+.link-wrapper {
+  width: 8em;
+  margin-top: -2.8em;
+}
+#topSixResults .columns:nth-child(4){
+  clear: left;
 }

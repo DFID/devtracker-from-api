@@ -11,6 +11,19 @@
 <div class="row">
 
     <div class="six columns">
+        <div class="more-info-container">  
+            <span class="more-info-title">Status - <%= activity_status(project['activity_status']['code']) %></span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        The current stage of the project, consistent with the International Aid Transparency Initiative's (IATI) classifications.
+                    </div>
+            </aside>
+        </div> 
+
+
+        <div id="time-progress" style="height: 150px;" class="progress"></div>
+        
          <div class="more-info-container">  
             <span class="more-info-title">Funding</span> 
             <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
@@ -30,19 +43,6 @@
                 <p><strong>Project budget:</strong>  </p>
            </div>
         <![endif]-->
-        
-        <div class="more-info-container">  
-            <span class="more-info-title">Status - <%= activity_status(project['activity_status']['code']) %></span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
-            <aside id="moreinfo3" class="more-info">            
-                    <div class="more-info-content">
-                        The current stage of the project, consistent with the International Aid Transparency Initiative's (IATI) classifications.
-                    </div>
-            </aside>
-        </div> 
-
-
-        <div id="time-progress" style="height: 150px;" class="progress"></div>
 
         <!--[if lte IE 8]>
             <div>

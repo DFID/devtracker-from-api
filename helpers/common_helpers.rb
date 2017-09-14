@@ -188,4 +188,12 @@ module CommonHelpers
       end
   end
 
+  def convert_numbers_to_human_readable_format(num)
+    begin
+      ActionView::Base.new.number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+    rescue
+      ActionView::Base.new.number_to_human(num, :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+    end
+  end
+
 end
