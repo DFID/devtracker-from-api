@@ -17,7 +17,7 @@
 </div>
 
 <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects], :results_count => results.length } %>
-
+<% if country[:description].length > 0%>
 <div class="row">
     <div class="twelve columns summary">
         <h2 class="visually-hidden">Summary</h2>
@@ -64,6 +64,8 @@
     <div class="four columns"><hr></div>
     <div class="four columns"></div>
 </div>
+<%end%>
+
 <!-- Top six results -->
 <div id="topSixResults" style="margin-top: 25px" class="row">
     <%if topSixResults.count > 0%>
