@@ -1,4 +1,13 @@
 $(document).ready(function() {
+    function reformCurrencyFormat(value){
+        if(value.indexOf("G") > -1){
+            var temp = value.replace("G","B");
+            return temp;
+        }
+        else{
+            return value;
+        }
+    }
     var chart2 = dc.rowChart("#top5Countries");
     var info = crossfilter(window.top5Countries);
     var dimentions = info.dimension(function(d){
@@ -12,7 +21,7 @@ $(document).ready(function() {
     .elasticX(true)
     .dimension(dimentions)
     .group(grouping)
-    .title(function(d){return "Budget: £" + d3.format(".4s")(d.value)})
+    .title(function(d){return "Budget: £" + reformCurrencyFormat(d3.format(".4s")(d.value))})
     .ordering(function(t){return t.budget;})
     .cap(10)
     .ordinalColors(['#D8DCBF'])
@@ -40,7 +49,7 @@ $(document).ready(function() {
     .elasticX(true)
     .dimension(dimentions2)
     .group(grouping2)
-    .title(function(d){return "Budget: £" + d3.format(".4s")(d.value)})
+    .title(function(d){return "Budget: £" + reformCurrencyFormat(d3.format(".4s")(d.value))})
     .ordering(function(t){return t.budget;})
     .cap(10)
     .ordinalColors(['#D8DCBF'])
