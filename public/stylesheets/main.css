@@ -721,7 +721,7 @@ g.c3-axis-y > g:last-child {
 
 .link-wrapper {
   width: 8em;
-  margin-top: -2.8em;
+  /*margin-top: -2.8em;*/ /*This is causing Aid by containers to overlap on one another in the front page. Hence commented the line out.*/
 }
 #topSixResults .columns:nth-child(4){
   clear: left;
