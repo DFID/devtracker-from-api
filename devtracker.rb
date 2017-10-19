@@ -53,9 +53,9 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
+set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
