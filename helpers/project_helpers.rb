@@ -334,6 +334,7 @@ module ProjectHelpers
                 actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
                 disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
                 expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             else
                 #oipa v2.2
                 #actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
@@ -343,6 +344,7 @@ module ProjectHelpers
                 actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
                 disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
                 expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             end
 
             actualBudget = JSON.parse(actualBudgetJSON)
@@ -351,12 +353,15 @@ module ProjectHelpers
             disbursement = disbursement['results'].select {|project| !project['disbursement'].nil? }
             expenditure = JSON.parse(expenditureJSON)    
             expenditure = expenditure['results'].select {|project| !project['expenditure'].nil? }
+            purchaseOfEquity = JSON.parse(purchaseOfEquityJSON)
+            purchaseOfEquity = purchaseOfEquity['results'].select {|project| !project['purchase_of_equity'].nil? }
 
             actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
             disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
             expenditurePerFy = get_spend_budget_per_fy(expenditure,"expenditure")
+            purchaseOfEquityPerFy = get_spend_budget_per_fy(purchaseOfEquity,"purchase_of_equity")
 
-            spendBudgetPerFy = (disbursementPerFy + expenditurePerFy).group_by { |item|
+            spendBudgetPerFy = (disbursementPerFy + expenditurePerFy + purchaseOfEquityPerFy).group_by { |item|
                 item['fy']
             }.map { |fy, bs|
                 {
