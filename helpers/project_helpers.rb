@@ -538,7 +538,7 @@ module ProjectHelpers
                     tempHash['Activity ID'] = ''
                 end
                 tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
@@ -552,7 +552,7 @@ module ProjectHelpers
                 tempHash = {}
                 tempHash['Financial Year'] = transaction['fy']
                 #tempHash['Value'] = transaction['value']
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
                 tempStorage.push(tempHash)
             end
             puts tempStorage
@@ -582,7 +582,7 @@ module ProjectHelpers
                     tempHash['Activity ID'] = ''
                 end
                 tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
