@@ -5,7 +5,7 @@
           <div class="trans-header-left">
             <span class="trans-type-title"><%= transactionTypeTitle %></span>
             <a class="more-info-link more-info-link-spacer" id="moreinfolink<%=cssId%>" target="2">
-               <img src="/images/icon-information.png" alt="More information about Incoming Funds" class="more-info-link-middle"/>
+               <img src="/images/icon-information.png" alt="More information about <%= transactionTypeTitle %>" class="more-info-link-middle"/>
             </a> 
             <aside id="moreinfo<%=cssId%>" class="more-info">  
                   <div class="more-info-content trans-more-info-box-limiter">
@@ -21,7 +21,7 @@
                   <%begin%>
                   <%= Money.new(project['aggregations']['activity_children'][transactionValueParameter].to_f.round(0)*100, project['aggregations']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                   <%rescue
-                  end%>
+                  end%><a href="<%= csvurl%>" class="export">CSV</a>
                 </div>
               <%end%>
            </div>        

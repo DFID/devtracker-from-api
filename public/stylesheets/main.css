@@ -204,6 +204,21 @@ span.language {
   background-image: url(/images/down-arrow.png);
 }
 
+.export {
+  background-image: url(/images/download.png);
+  background-color: #F9F7F7;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  padding: 2px 5px 2px 23px;
+  background-position-y: 3px;
+  font-size: 0.8em;
+  margin-left: 15px;
+}
+
+.export:hover {
+  text-decoration: none;
+}
+
 .proj-filter-exp-collapse-sign-up {
   background-image: url(/images/up-arrow.png);
 }

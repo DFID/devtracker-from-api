@@ -513,8 +513,82 @@ module ProjectHelpers
 
     #End TODO
 
-    
+    def hash_to_csv(data)
+        #puts data
+        column_names = data.first.keys
+        csv_string = CSV.generate do |csv|
+            csv << column_names
+            data.each do |item|
+                csv << item.values
+            end
+        end
+        csv_string
+    end
 
+    def transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
+        if transactionType == '2'
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                h2Activities = get_h2_project_details(projID)
+                tempHash['Activity Description'] = get_h2Activity_title(h2Activities,transaction['activity']['id'])
+                if is_dfid_project(transaction['activity']['id'])
+                    tempHash['Activity ID'] = transaction['activity']['id']
+                else
+                    tempHash['Activity ID'] = ''
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
+        elsif transactionType == '1'
+            #Not implemented yet
+        elsif transactionType == '0'
+            project = get_h1_project_details(projID)
+            tempStorage = Array.new
+            #puts transactionsForCSV
+            transactionsForCSV.each do |transaction|
+                tempHash = {}
+                tempHash['Financial Year'] = transaction['fy']
+                #tempHash['Value'] = transaction['value']
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempStorage.push(tempHash)
+            end
+            puts tempStorage
+            tempTransactions = hash_to_csv(tempStorage)
+        else
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                if !transaction['description'].nil?
+                    tempHash['Activity Description'] = transaction['description']['narratives'][0]['text']
+                else
+                    tempHash['Activity Description'] = ""
+                end
+                #tempHash['Activity Description'] = transaction['description']
+                if !transaction['receiver_organisation'].nil?
+                    if transaction['receiver_organisation']['narratives'].length > 0 
+                        tempHash['Receiver Org'] = transaction['receiver_organisation']['narratives'][0]['text']
+                    else 
+                        tempHash['Receiver Org'] = "" 
+                    end 
+                else
+                    tempHash['Receiver Org'] = ""
+                end
+                if is_dfid_project(transaction['activity']['id'])
+                    tempHash['Activity ID'] = transaction['activity']['id']
+                else
+                    tempHash['Activity ID'] = ''
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
+        end
+        tempTransactions
+    end
 end
 
 #helpers ProjectHelpers
