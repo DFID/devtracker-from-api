@@ -934,7 +934,7 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
 	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
 	tempTitle = transactionsForCSV.first
-	content_type 'application/csv'
+	content_type 'text/csv'
 	if transactionType != '0'
 		attachment "Export-" +tempTitle['transaction_type']['name']+ "s.csv"
 	else
