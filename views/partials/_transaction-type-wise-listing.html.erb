@@ -21,7 +21,7 @@
                   <%begin%>
                   <%= Money.new(project['aggregations']['activity_children'][transactionValueParameter].to_f.round(0)*100, project['aggregations']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                   <%rescue
-                  end%><a href="<%= csvurl%>" class="export">CSV</a>
+                  end%><a href="<%= csvurl%>" class="api-link button">CSV</a>
                 </div>
               <%end%>
            </div>        
