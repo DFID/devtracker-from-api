@@ -538,12 +538,33 @@ module ProjectHelpers
                     tempHash['Activity ID'] = ''
                 end
                 tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
         elsif transactionType == '1'
-            #Not implemented yet
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                if !transaction['description'].nil?
+                    tempHash['Activity Description'] = transaction['description']['narratives'][0]['text']
+                else
+                    tempHash['Activity Description'] = ""
+                end
+                if transaction['provider_organisation'].nil?
+                    tempHash['Provider'] = ''
+                elsif transaction['provider_organisation']['narratives'][0].nil?
+                    tempHash['Provider'] = ''
+                else
+                    tempHash['Provider'] = transaction['provider_organisation']['narratives'][0]['text']
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
         elsif transactionType == '0'
             project = get_h1_project_details(projID)
             tempStorage = Array.new
@@ -552,7 +573,8 @@ module ProjectHelpers
                 tempHash = {}
                 tempHash['Financial Year'] = transaction['fy']
                 #tempHash['Value'] = transaction['value']
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = project['default_currency']['code']
                 tempStorage.push(tempHash)
             end
             puts tempStorage
@@ -582,7 +604,8 @@ module ProjectHelpers
                     tempHash['Activity ID'] = ''
                 end
                 tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false).strip
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
