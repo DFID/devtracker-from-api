@@ -196,4 +196,12 @@ module CommonHelpers
     end
   end
 
+  def convert_transactions_for_csv(proj_id,transaction_type)
+    if transaction_type == '0'
+      get_project_yearwise_budget(proj_id)
+    else
+      get_transaction_details(proj_id,transaction_type)
+    end
+  end
+
 end

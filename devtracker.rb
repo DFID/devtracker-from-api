@@ -17,6 +17,7 @@ require 'oj'
 require 'rss'
 require "sinatra/json"
 require "action_view"
+require 'csv'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -108,6 +109,7 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
+	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation=GB-GOV-1&page_size=1")
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
@@ -131,7 +133,8 @@ get '/countries/:country_code/?' do |n|
  			countrySectorGraphData: countrySectorGraphData,
  			results: results,
  			topSixResults: topSixResults,
- 			oipa_api_url: settings.oipa_api_url
+ 			oipa_api_url: settings.oipa_api_url,
+ 			activityCount: tempActivityCount['count']
  		}
 end
 
@@ -424,7 +427,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 
   	# get yearly budget for H1 Activity from the API
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
-	
+
 	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
@@ -918,6 +921,26 @@ get '/currency/?' do
   	currency = sanitize_input(params['currency'],"a")
   	returnCurrency = Money.new(amount.to_f*100,currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	json :output => returnCurrency
+end
+
+#####################################################################
+#  CSV HANDLER
+#####################################################################
+
+
+get '/downloadCSV/:proj_id/:transaction_type?' do
+	projID = sanitize_input(params[:proj_id],"p")
+	transactionType = sanitize_input(params[:transaction_type],"p")
+	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
+	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
+	tempTitle = transactionsForCSV.first
+	content_type 'text/csv'
+	if transactionType != '0'
+		attachment "Export-" +tempTitle['transaction_type']['name']+ "s.csv"
+	else
+		attachment "Export-Budgets.csv"
+	end
+	tempTransactions
 end
 
 #####################################################################
