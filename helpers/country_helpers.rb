@@ -446,14 +446,4 @@ module CountryHelpers
     end
     tempHash
   end
-
-  #Partially implemented
-  def json_to_csv(json)
-    csv_string = CSV.generate do |csv|
-      json.each do |ha|
-        csv << ha
-      end
-    end
-    csv_string
-  end
 end
