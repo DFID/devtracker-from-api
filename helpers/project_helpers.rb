@@ -208,8 +208,12 @@ module ProjectHelpers
     end
 
     def get_funding_project(projectId)
-        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json" 
-        fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
+        begin
+            fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json" 
+            fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
+        rescue
+            return ''
+        end
     end
 
     def reporting_organisation(project)
