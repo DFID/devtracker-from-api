@@ -678,10 +678,10 @@ get '/search/?' do
 	includeClosed = sanitize_input(params['includeClosed'],"a")
 	activityStatusList = ''
 	if(includeClosed == "1") then 
-		activityStatusList = '2,3,4'
+		activityStatusList = '1,2,3,4'
 	else
 		includeClosed = 0
-		activityStatusList = '2'
+		activityStatusList = '1,2,3,4'
 	end
 	puts activityStatusList
 	results = generate_searched_data(query,activityStatusList);
