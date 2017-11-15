@@ -54,13 +54,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -678,10 +678,10 @@ get '/search/?' do
 	includeClosed = sanitize_input(params['includeClosed'],"a")
 	activityStatusList = ''
 	if(includeClosed == "1") then 
-		activityStatusList = '2,3,4'
+		activityStatusList = '1,2,3,4'
 	else
 		includeClosed = 0
-		activityStatusList = '2'
+		activityStatusList = '1,2,3,4'
 	end
 	puts activityStatusList
 	results = generate_searched_data(query,activityStatusList);
