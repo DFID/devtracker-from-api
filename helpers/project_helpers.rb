@@ -208,8 +208,12 @@ module ProjectHelpers
     end
 
     def get_funding_project(projectId)
-        fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json" 
-        fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
+        begin
+            fundingProjectDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json" 
+            fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
+        rescue
+            return ''
+        end
     end
 
     def reporting_organisation(project)
@@ -334,6 +338,7 @@ module ProjectHelpers
                 actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
                 disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
                 expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             else
                 #oipa v2.2
                 #actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
@@ -343,6 +348,7 @@ module ProjectHelpers
                 actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
                 disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
                 expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             end
 
             actualBudget = JSON.parse(actualBudgetJSON)
@@ -351,12 +357,15 @@ module ProjectHelpers
             disbursement = disbursement['results'].select {|project| !project['disbursement'].nil? }
             expenditure = JSON.parse(expenditureJSON)    
             expenditure = expenditure['results'].select {|project| !project['expenditure'].nil? }
+            purchaseOfEquity = JSON.parse(purchaseOfEquityJSON)
+            purchaseOfEquity = purchaseOfEquity['results'].select {|project| !project['purchase_of_equity'].nil? }
 
             actualBudgetPerFy = get_actual_budget_per_fy(actualBudget)
             disbursementPerFy = get_spend_budget_per_fy(disbursement,"disbursement")
             expenditurePerFy = get_spend_budget_per_fy(expenditure,"expenditure")
+            purchaseOfEquityPerFy = get_spend_budget_per_fy(purchaseOfEquity,"purchase_of_equity")
 
-            spendBudgetPerFy = (disbursementPerFy + expenditurePerFy).group_by { |item|
+            spendBudgetPerFy = (disbursementPerFy + expenditurePerFy + purchaseOfEquityPerFy).group_by { |item|
                 item['fy']
             }.map { |fy, bs|
                 {
@@ -508,8 +517,105 @@ module ProjectHelpers
 
     #End TODO
 
-    
+    def hash_to_csv(data)
+        #puts data
+        column_names = data.first.keys
+        csv_string = CSV.generate do |csv|
+            csv << column_names
+            data.each do |item|
+                csv << item.values
+            end
+        end
+        csv_string
+    end
 
+    def transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
+        if transactionType == '2'
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                h2Activities = get_h2_project_details(projID)
+                tempHash['Activity Description'] = get_h2Activity_title(h2Activities,transaction['activity']['id'])
+                if is_dfid_project(transaction['activity']['id'])
+                    tempHash['Activity ID'] = transaction['activity']['id']
+                else
+                    tempHash['Activity ID'] = ''
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
+        elsif transactionType == '1'
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                if !transaction['description'].nil?
+                    tempHash['Activity Description'] = transaction['description']['narratives'][0]['text']
+                else
+                    tempHash['Activity Description'] = ""
+                end
+                if transaction['provider_organisation'].nil?
+                    tempHash['Provider'] = ''
+                elsif transaction['provider_organisation']['narratives'][0].nil?
+                    tempHash['Provider'] = ''
+                else
+                    tempHash['Provider'] = transaction['provider_organisation']['narratives'][0]['text']
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
+        elsif transactionType == '0'
+            project = get_h1_project_details(projID)
+            tempStorage = Array.new
+            #puts transactionsForCSV
+            transactionsForCSV.each do |transaction|
+                tempHash = {}
+                tempHash['Financial Year'] = transaction['fy']
+                #tempHash['Value'] = transaction['value']
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = project['default_currency']['code']
+                tempStorage.push(tempHash)
+            end
+            puts tempStorage
+            tempTransactions = hash_to_csv(tempStorage)
+        else
+            tempStorage = Array.new
+            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+                tempHash = {}
+                if !transaction['description'].nil?
+                    tempHash['Activity Description'] = transaction['description']['narratives'][0]['text']
+                else
+                    tempHash['Activity Description'] = ""
+                end
+                #tempHash['Activity Description'] = transaction['description']
+                if !transaction['receiver_organisation'].nil?
+                    if transaction['receiver_organisation']['narratives'].length > 0 
+                        tempHash['Receiver Org'] = transaction['receiver_organisation']['narratives'][0]['text']
+                    else 
+                        tempHash['Receiver Org'] = "" 
+                    end 
+                else
+                    tempHash['Receiver Org'] = ""
+                end
+                if is_dfid_project(transaction['activity']['id'])
+                    tempHash['Activity ID'] = transaction['activity']['id']
+                else
+                    tempHash['Activity ID'] = ''
+                end
+                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['value']
+                tempHash['Currency'] = transaction['currency']['code']
+                tempStorage.push(tempHash)
+            end
+            tempTransactions = hash_to_csv(tempStorage)
+        end
+        tempTransactions
+    end
 end
 
 #helpers ProjectHelpers

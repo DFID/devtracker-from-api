@@ -68,7 +68,7 @@ module CountryHelpers
 
       countriesInfo = JSON.parse(File.read('data/countries.json'))
 
-      top5countriesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=5&format=json"
+      top5countriesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json"
       top5countries = JSON.parse(top5countriesJSON)
 
       top5countriesBudget = top5countries["results"].map do |elem| 
@@ -430,5 +430,20 @@ module CountryHelpers
     end
     totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
     totalAmount
+  end
+
+  def pick_top_six_results(countryCode)
+    filteredResults = get_country_results(countryCode);
+    top6ResultsTitles = JSON.parse(File.read('data/top6ResultsTitles.json'))
+    tempHash = []
+    filteredResults.each do |result|
+      if(top6ResultsTitles.detect{|title| title["results_indicators"]==result["results_indicators"]})
+        tempH = {}
+        tempH = top6ResultsTitles.select{|item| item["results_indicators"]==result["results_indicators"]}
+        result["title"] = tempH[0]["title"]
+        tempHash.push(result)
+      end
+    end
+    tempHash
   end
 end

@@ -64,7 +64,8 @@
 
         $(".more-info-link").click(function(e){
           e.stopPropagation();
-          $("#moreinfo"+$(this).attr('target')).toggle();
+          $(this).parent().children('aside').toggle();
+          //$("#moreinfo"+$(this).attr('target')).toggle();
         });
 
         $(".more-info").on('click', function(e){
@@ -91,9 +92,17 @@
           });
         });
         //This stores the base url inside a global variable so that we can make the oipa calls through the varnish
-        var tempGetUrl = window.location;
-        window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
-        //window.baseUrl = 'https://staging-dfid.oipa.nl/api/';
+        //var tempGetUrl = window.location;
+        //window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        //window.baseUrl = 'http://staging-dfid.oipa.nl/api/';
+        //window.baseUrl = '<%#= oipa_api_url %>';
+
+        <% if oipa_api_url.include? "127.0.0.1" %>
+          var tempGetUrl = window.location;
+          window.baseUrl = tempGetUrl.protocol + "//" + tempGetUrl.host + "/" + "api/";
+        <% else %>
+          window.baseUrl = '<%= oipa_api_url %>';
+        <%end%>
         $('#search').submit(function(){
             $('.modal_free_text_search').show();
             setTimeout(patience,10000);
@@ -133,9 +142,9 @@
       <div class="row">
         <!--<div class="twelve columns" id="whatsnew-banner">
           <p>
-            <span>We have updated the Development Tracker. <a href="/whats-new">Find out more</a> and give us your <a href="/feedback">feedback</a> to help improve it.</span>
+            <span>Any banners go here</span>
           </p>
-        </div>-->
+        </div> -->
       </div>
                <%= yield %>
                <div id="toTop"></div>
@@ -173,7 +182,6 @@
       </div>
     </footer>
     <%= erb :'partials/_analytics'%>
-    <!-- <%=DateTime.now%> -->
+    <!-- <%#=DateTime.now%> -->
   </body>
 </html>
-

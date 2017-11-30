@@ -188,4 +188,20 @@ module CommonHelpers
       end
   end
 
+  def convert_numbers_to_human_readable_format(num)
+    begin
+      ActionView::Base.new.number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+    rescue
+      ActionView::Base.new.number_to_human(num, :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+    end
+  end
+
+  def convert_transactions_for_csv(proj_id,transaction_type)
+    if transaction_type == '0'
+      get_project_yearwise_budget(proj_id)
+    else
+      get_transaction_details(proj_id,transaction_type)
+    end
+  end
+
 end

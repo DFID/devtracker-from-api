@@ -58,7 +58,8 @@
         });
          $(".more-info-link").click(function(e){
             e.stopPropagation();
-            $("#moreinfo"+$(this).attr('target')).toggle();
+            $(this).parent().children('aside').toggle();
+            //$("#moreinfo"+$(this).attr('target')).toggle();
            });
          
          $(".more-info").on('click', function(e){
@@ -103,9 +104,9 @@
       <div class="row">
         <!--<div class="twelve columns" id="whatsnew-banner">
           <p>
-            <span>We have updated the Development Tracker. <a href="/whats-new">Find out more</a> and give us your <a href="/feedback">feedback</a> to help improve it.</span>
+            <span>Put any banners here</span>
           </p>
-        </div>-->
+        </div> -->
       </div>
       <%= yield %>
       <div class="modal_free_text_search">

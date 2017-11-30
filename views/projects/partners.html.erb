@@ -12,26 +12,28 @@
             <% fundingProjects.each do |fundingProject| %>
                 <% if is_valid_project(fundingProject[0]) %>
                   <% fundingProjectDetails= get_funding_project(fundingProject[0])%>
-                  <% fundingProjectDetailsCurrency= get_funding_project(project['iati_identifier'])%>
-                  <div class="row">        
-                    <div class="four columns summary">
-                        <h4><%= fundingProjectDetails['reporting_organisations'][0]['narratives'][0]['text'] %></h4>         
+                  <%if fundingProjectDetails != '' %>
+                    <% fundingProjectDetailsCurrency= get_funding_project(project['iati_identifier'])%>
+                    <div class="row">        
+                      <div class="four columns summary">
+                          <h4><%= fundingProjectDetails['reporting_organisations'][0]['narratives'][0]['text'] %></h4>         
+                      </div>
+                      <div class="eight columns">
+                          <ul>
+                              <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
+                                  <span>
+                                     <%# If the default currency value is undefined do not show a value for the project%>
+                                     <%=begin
+                                         Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                                      rescue
+                                               
+                                      end %>
+                                  </span>    
+                              </li>
+                          </ul> 
+                      </div>
                     </div>
-                    <div class="eight columns">
-                        <ul>
-                            <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
-                                <span>
-                                   <%# If the default currency value is undefined do not show a value for the project%>
-                                   <%=begin
-                                       Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
-                                    rescue
-                                             
-                                    end %>
-                                </span>    
-                            </li>
-                        </ul> 
-                    </div>
-                  </div>
+                  <%end%>
                 <% end %>
             <% end %>
           </div>

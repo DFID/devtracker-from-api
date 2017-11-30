@@ -1,22 +1,22 @@
-<!-- ---
+<!--
 published: "true"
 title: Development Tracker
 layout: landing
 
---- -->
+-->
 
 <div class="row">
     <div class="ten columns">
-        <h3 style="font-size: 2em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
-        <p class="meta">The Development Tracker uses open data on international development published by the UK Government and partners to show where the UK is investing in developing countries. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p>
+        <h3 style="font-size: 1.8em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
+        <p class="meta">The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p>
     </div>
     <div class="two columns" style="text-align:right;">
-        <img style="margin-top:20px;" src="/images/ukaid_logo.png" alt="UK aid from the British people">
     </div>
 </div>
 <div class="row">
     <div class="twelve columns">
-        <div id="search-bar">
+        <div class="summary"><p>The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Intiative</a> (IATI) open data standard.</p></div>
+        <div style="margin-top: 0px" id="search-bar">
             <form id="mid-search-form" action="/search" method="GET">
                 <div class="row">
                     <div class="three columns">
@@ -56,7 +56,7 @@ layout: landing
                     <span class="image-wrapper">
                         <img src="/images/by-location.png" alt="Aid by Location">
                     </span>
-                    <span class="link-wrapper"><small>Explore aid by</small> Location</span>
+                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Location</span>
                 </a>
             </p>
         </div>
@@ -66,7 +66,7 @@ layout: landing
                     <span class="image-wrapper">
                         <img src="/images/by-sector.png" alt="Aid by Sector">
                     </span>
-                    <span class="link-wrapper"><small>Explore aid by</small> Sector</span>
+                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Sector</span>
                 </a>
             </p>
         </div>
@@ -76,7 +76,7 @@ layout: landing
                     <span class="image-wrapper">
                         <img src="/images/by-department.png" alt="Aid by Departments">
                     </span>
-                    <span class="link-wrapper"><small>Explore aid by</small> Department</span>
+                    <span class="link-wrapper"><small>Explore aid by UK government</small> Organisation</span>
                 </a>
             </p>
         </div>
@@ -86,57 +86,12 @@ layout: landing
 
 <div class="row">
     <div class="twelve columns">
-        <h3 class="section-group-title">UK AID TOP 5s</h3>
+        <h3 class="section-group-title">KEY DFID INDICATORS</h3>
     </div>
 </div>
 
 <div class="row top-5s">
-    <div class="four columns" id="top-5-countries">
-        <div class="top-five-header">        
-            <span class="top-five-title">Top 5 places we work</span> 
-            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
-            <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                        The countries where the most money has been identified as being
-                         spent solely in that country. 
-                    </div>
-            </aside>
-        </div>
-        <ol>
-        <% top_5_countries.each do |country| %>
-          <li>
-             <a href="/countries/<%= country[:code] %>" class="truncate" title="<%= country[:name] %>"> <%= country[:name] %> </a>
-              <em><span class="visually-hidden">Budget</span><%= format_million_stg country[:budget] %></em>
-          </li>
-        <% end %>
-        </ol>
-        <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
-    </div>
-
-    <div class="four columns" id="top-5-sectors">
-        <%#= what_we_do  %>
-        <%if !what_we_do.nil?  %>
-           <div class="top-five-header">        
-                <span class="top-five-title">Top 5 things we do</span>
-                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 5 things we do"/></a>
-                <aside id="moreinfo2" class="more-info">            
-                        <div class="more-info-content">
-                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
-                         </div>
-                </aside>
-            </div> 
-            <ol>
-                <% what_we_do.each do |sector| %>
-                    <li>
-                       <a href="/sector/<%=sector[:code]%>"><%=sector[:name]%></a>
-                       <em><span class="visually-hidden">Budget</span><%= format_million_stg sector[:budget].to_f %></em>                       
-                    </li>
-                <% end %>                
-            </ol>        
-        <%end%>
-        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
-    </div>
-
+    
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
@@ -160,4 +115,65 @@ layout: landing
         <p>Results achieved (up to 2015/16 inclusive) from <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16">DFID Annual Report 2015-16</a></p>
     </div>
 
+    <div class="four columns" id="top-5-countries">
+        <div class="top-five-header">        
+            <span class="top-five-title">Top 10 places we work</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 10 places we work"/></a>
+            <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                        The countries where the most money has been identified as being
+                         spent solely in that country. 
+                    </div>
+            </aside>
+        </div>
+        <div id="top5Countries"></div>
+        <ol>
+        </ol>
+        <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+    </div>
+
+    <div class="four columns" id="top-5-sectors">
+        <%#= what_we_do  %>
+        <%if !what_we_do.nil?  %>
+           <div class="top-five-header">        
+                <span class="top-five-title">Top 10 things we do</span>
+                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
+                <aside id="moreinfo2" class="more-info">            
+                        <div class="more-info-content">
+                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
+                         </div>
+                </aside>
+            </div> 
+            <div id="top5Sectors"></div>     
+        <%end%>
+        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+    </div>
+
 </div>
+<script src="/javascripts/easyResponsiveTabs.js" type="text/javascript"></script>
+<link type="text/css" rel="stylesheet" href="/stylesheets/easy-responsive-tabs.css" >
+<script src="/javascripts/d3.v3.js" type="text/javascript"></script>
+<link type="text/css" rel="stylesheet" href="/stylesheets/dc.min.css" >
+<script type="text/javascript" src="/javascripts/crossfilter.min.js"></script>
+<script type="text/javascript" src="/javascripts/dc.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    <%
+    tempCountries = JSON.parse(top_5_countries.to_json)
+    tempCountries.each do |j|
+        j.delete("code")
+    end
+    %>
+    window.top5Countries = <%=top_5_countries.to_json%>;
+    window.top5Sectors = <%=what_we_do.to_json%>;
+});    
+</script>
+<script type="text/javascript" src="/javascripts/indexTabs.js"></script>
+<style>
+  .ui-tabs-vertical { width: 55em; }
+  .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+  .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+  .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+  .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
+  .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
+</style>
