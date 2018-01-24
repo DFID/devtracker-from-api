@@ -42,10 +42,10 @@ module ProjectHelpers
                 end
                 fundingOrgs
             else
-                return null
+                nil
             end
         else
-            return null
+            nil
         end
     end
 
