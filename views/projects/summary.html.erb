@@ -73,7 +73,7 @@
                 </ul>
             </div>
         <% end %>
-        <%if fundedByOrganisationList['orgList'].length > 0 %>
+        <%if fundedByOrganisationList['orgList'].length > 0 && fundedByOrganisationList['fundingType'] != 'Do nothing' %>
             <div class="more-info-container">  
                 <span class="more-info-title"><%= fundedByOrganisationList['fundingType']%></span>
             </div>
