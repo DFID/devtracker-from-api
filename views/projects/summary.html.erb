@@ -73,6 +73,23 @@
                 </ul>
             </div>
         <% end %>
+        <%if fundedByOrganisationList['orgList'].length > 0 %>
+            <div class="more-info-container">  
+                <span class="more-info-title"><%= fundedByOrganisationList['fundingType']%></span>
+            </div>
+            <div id="funding-organisations">
+                <ul>
+                    <% fundedByOrganisationList['orgList'].each {|fundingOrg| %>
+                        <% begin %>
+                            <li>
+                               <%= fundingOrg['narratives'][0]['text'] %>
+                            </li>
+                        <%rescue%>
+                        <%end%>
+                    <% } %>
+                </ul>
+            </div>
+        <% end %>
     </div>
 
 

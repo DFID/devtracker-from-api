@@ -726,3 +726,7 @@ g.c3-axis-y > g:last-child {
 #topSixResults .columns:nth-child(4){
   clear: left;
 }
+
+#funding-organisations ul li{
+  list-style: none;
+}

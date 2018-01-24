@@ -56,11 +56,11 @@ include OGDHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
+set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -341,6 +341,9 @@ get '/projects/:proj_id/?' do |n|
 	# get the project data from the API
   	project = get_h1_project_details(n)
 
+  	#get the funded by organisation list
+  	fundedByOrganisationList = get_funded_by_organisations(project) 
+  	puts fundedByOrganisationList
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
@@ -367,7 +370,8 @@ get '/projects/:proj_id/?' do |n|
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
- 			projectSectorGraphData: projectSectorGraphData
+ 			projectSectorGraphData: projectSectorGraphData,
+ 			fundedByOrganisationList: fundedByOrganisationList
  		}
 end
 
