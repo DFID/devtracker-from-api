@@ -26,7 +26,7 @@ module ProjectHelpers
     end
 
     def get_funded_by_organisations(project)
-        if(is_dfid_project(project['id']))
+        #if(is_dfid_project(project['id']))
             if(is_hmg_project(project['reporting_organisations'][0]['ref']))
                 fundingOrgs = {}
                 fundingOrgs['orgList'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
@@ -44,9 +44,9 @@ module ProjectHelpers
             else
                 nil
             end
-        else
-            nil
-        end
+        #else
+        #    nil
+        #end
     end
 
     def get_document_links_local(projectId)
