@@ -26,7 +26,7 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&activity_status=2"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
 	end
 	
 	def group_hashes arr, group_fields
@@ -87,7 +87,7 @@ module SectorHelpers
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
-		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json&activity_status=2"
+		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
   		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -151,7 +151,8 @@ module SectorHelpers
 	 end
 
 	def get_sector_projects(n)
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}"
+		puts settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}"
 		projects= JSON.parse(oipa_project_list)
 		results = {}
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_sector=#{n}&activity_status=2"
