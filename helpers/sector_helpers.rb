@@ -26,7 +26,7 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&activity_status=2"
 	end
 	
 	def group_hashes arr, group_fields
@@ -87,9 +87,7 @@ module SectorHelpers
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
-
-
-		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json&activity_status=2"
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
   		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -167,30 +165,22 @@ module SectorHelpers
 		unless projects['results'][0].nil?
 			results['project_budget_higher_bound'] = projects['results'][0]['aggregations']['activity_children']['budget_value']
 		end
-		begin
-			results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
-			results['actualStartDate'] = JSON.parse(results['actualStartDate'])
-			tempStartDate = results['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
-			if (tempStartDate.nil?)
-			tempStartDate = results['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
-			end
-	      	results['actualStartDate'] = tempStartDate
-	      	results['actualStartDate'] = results['actualStartDate']['iso_date']
-		rescue
-			results['actualStartDate'] = '1990-01-01T00:00:00'
+		results['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
+		results['actualStartDate'] = JSON.parse(results['actualStartDate'])
+		tempStartDate = results['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+		if (tempStartDate.nil?)
+		tempStartDate = results['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
 		end
+      	results['actualStartDate'] = tempStartDate
+      	results['actualStartDate'] = results['actualStartDate']['iso_date']
 
 		#unless results['actualStartDate']['results'][0].nil? 
 		#	results['actualStartDate'] = results['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
 		#end
-		begin
-			results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
-			results['plannedEndDate'] = JSON.parse(results['plannedEndDate'])
-			results['plannedEndDate'] = results['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
-			results['plannedEndDate'] = results['plannedEndDate']['iso_date']
-		rescue
-			results['plannedEndDate'] = '2000-01-01T00:00:00'
-		end
+		results['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_sector=#{n}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
+		results['plannedEndDate'] = JSON.parse(results['plannedEndDate'])
+		results['plannedEndDate'] = results['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
+		results['plannedEndDate'] = results['plannedEndDate']['iso_date']
 
 		#unless results['plannedEndDate']['results'][0].nil?
 		#	if !results['plannedEndDate']['results'][0]['activity_dates'][2].nil?
