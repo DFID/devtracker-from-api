@@ -1998,5 +1998,795 @@
     "Category (L2)":998,
     "Category Name":"UNALLOCATED/ UNSPECIFIED",
     "Category Description":""
+  },
+  {
+    "Code (L3)": 11231,
+    "High Level Code (L1)": 1,
+    "High Level Sector Description": "Education",
+    "Name": "Basic life skills for youth",
+    "Description": "Formal and non-formal education for basic life skills for young people.",
+    "Category (L2)": 112,
+    "Category Name": "Basic education",
+    "Category Description": "Formal and non-formal primary education for children; all elementary and first cycle systematic instruction; provision of learning materials."
+  },
+  {
+    "Code (L3)": 11232,
+    "High Level Code (L1)": 1,
+    "High Level Sector Description": "Education",
+    "Name": "Primary education equivalent for adults",
+    "Description": "Formal primary education for adults.",
+    "Category (L2)": 112,
+    "Category Name": "Basic education",
+    "Category Description": "Formal and non-formal primary education for children; all elementary and first cycle systematic instruction; provision of learning materials."
+  },
+  {
+    "Code (L3)": 11321,
+    "High Level Code (L1)": 1,
+    "High Level Sector Description": "Education",
+    "Name": "Lower secondary education",
+    "Description": "Second cycle systematic instruction at junior level.",
+    "Category (L2)": 113,
+    "Category Name": "Secondary education",
+    "Category Description": "Second cycle systematic instruction at both junior and senior levels."
+  },
+  {
+    "Code (L3)": 11322,
+    "High Level Code (L1)": 1,
+    "High Level Sector Description": "Education",
+    "Name": "Upper secondary education",
+    "Description": "Second cycle systematic instruction at senior level.",
+    "Category (L2)": 113,
+    "Category Name": "Secondary education",
+    "Category Description": "Second cycle systematic instruction at both junior and senior levels."
+  },
+  {
+    "Code (L3)": 15114,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Domestic Revenue Mobilisation",
+    "Description": "Support to domestic revenue mobilisation/tax policy, analysis and administration as well as non-tax public revenue, which includes work with ministries of finance, line ministries, revenue authorities or other local, regional or national public bodies. (Use code 16010 for social security and other social protection.)",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15116,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Tax collection",
+    "Description": "Operation of the inland revenue authority.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15117,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Budget planning",
+    "Description": "Operation of the budget office and planning as part of the budget process.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15118,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "National audit",
+    "Description": "Operation of the accounting and audit services.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15119,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Debt and aid management",
+    "Description": "Management of public debt and foreign aid received (in the partner country). For reporting on debt reorganisation, use codes 600xx.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15121,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Foreign affairs",
+    "Description": "Administration of external affairs and services.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15122,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Diplomatic missions",
+    "Description": "Operation of diplomatic and consular missions stationed abroad or at offices of international organisations.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15123,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Administration of developing countries' foreign aid",
+    "Description": "Support to administration of developing countries' foreign aid (including triangular and south-south cooperation).",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15124,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "General personnel services",
+    "Description": "Administration and operation of the civil service including policies, procedures and regulations.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15125,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Central procurement",
+    "Description": "Administration and operation of centralised supply and purchasing services.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15126,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Other general public services",
+    "Description": "Maintenance and storage of government records and archives, operation of government-owned or occupied buildings, central motor vehicle pools, government-operated printing offices, centralised computer and data processing services, etc.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15127,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "National monitoring and evaluation",
+    "Description": "Operation or support of institutions providing national monitoring and evaluation.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15128,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Local government finance",
+    "Description": "Financial transfers to local government; support to institutions managing such transfers. (Use specific sector codes for sector-related transfers.)",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15129,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Other central transfers to institutions",
+    "Description": "Transfers to non sector-specific autonomous bodies or state-owned enterprises outside of local government finance; support to institutions managing such transfers. (Use specific sector codes for sector-related transfers.)",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15131,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Justice, law and order policy, planning and administration",
+    "Description": "Judicial law and order sectors; policy development within ministries of justice or equivalents.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15132,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Police",
+    "Description": "Police affairs and services.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15133,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Fire and rescue services",
+    "Description": "Fire-prevention and fire-fighting affairs and services.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15134,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Judicial affairs",
+    "Description": "Civil and criminal law courts and the judicial system, including enforcement of fines and legal settlements imposed by the courts and operation of parole and probation systems.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15135,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Ombudsman",
+    "Description": "Independent service representing the interests of the public by investigating and addressing complaints of unfair treatment or maladministration.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15136,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Immigration",
+    "Description": "Immigration affairs and services, including alien registration, issuing work and travel documents to immigrants.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15137,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Prisons",
+    "Description": "",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15142,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Macroeconomic policy",
+    "Description": "Macroeconomic policy development and implementation.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15143,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Meteorological services",
+    "Description": "Operation or support of institutions dealing with weather forecasting.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15144,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "National standards development",
+    "Description": "Operation or support of institutions dealing with national standards development. (Use code 16062 for statistical capacity-building.)",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15154,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Executive office",
+    "Description": "Administration, operation or support of executive office. Includes office of the chief executive at all levels of government (monarch, governor-general, president, prime minister, governor, mayor, etc.).",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15155,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Tax policy and administration support",
+    "Description": "",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15156,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Other non-tax revenue mobilisation",
+    "Description": "Non-tax public revenue, which includes line ministries, revenue authorities or other local, regional or national public bodies.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15180,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Ending violence against women and girls",
+    "Description": "Support to programmes designed to prevent and eliminate all forms of violence against women and girls/gender-based violence. This encompasses a broad range of forms of physical, sexual and psychological violence including but not limited to: intimate partner violence (domestic violence); sexual violence; female genital mutilation/cutting (FGM/C); child, early and forced marriage; acid throwing; honour killings; and trafficking of women and girls. Prevention activities may include efforts to empower women and girls; change attitudes, norms and behaviour; adopt and enact legal reforms; and strengthen implementation of laws and policies on ending violence against women and girls, including through strengthening institutional capacity. Interventions to respond to violence against women and girls/gender-based violence may include expanding access to services including legal assistance, psychosocial counselling and health care; training personnel to respond more effectively to the needs of survivors; and ensuring investigation, prosecution and punishment of perpetrators of violence.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 15185,
+    "High Level Code (L1)": 4,
+    "High Level Sector Description": "Government and Civil Society",
+    "Name": "Local government administration",
+    "Description": "Decentralisation processes (including political, administrative and fiscal dimensions); intergovernmental relations and federalism; strengthening local authorities.",
+    "Category (L2)": 151,
+    "Category Name": "Government and civil society, general",
+    "Category Description": "Institution-building assistance to strengthen core public sector management systems and capacities. This includes macro-economic and other policy management, co-ordination, planning and reform; human resource management; organisational development; civil service reform; e-government; development planning, monitoring and evaluation; support to ministries involved in aid co-ordination; other ministries and government departments when sector cannot be specified. (Use specific sector codes for development of systems and capacities in sector ministries.)"
+  },
+  {
+    "Code (L3)": 16011,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Social protection and welfare services policy, planning and administration",
+    "Description": "Administration of overall social protection policies, plans, programmes and budgets including legislation, standards and statistics on social protection.",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16012,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Social security (excl pensions)",
+    "Description": "Social protection shemes in the form of cash or in-kind benefits to people unable to work due to sickness or injury.",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16013,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "General pensions",
+    "Description": "Social protection schemes in the form of cash or in-kind benefits, including pensions, against the risks linked to old age.",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16014,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Civil service pensions",
+    "Description": "Pension schemes for government personnel.",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16015,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Social services (incl youth development and women+ children)",
+    "Description": "Social protection schemes in the form of cash or in-kind benefits to households with dependent children, including parental leave benefits.",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16065,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Recreation and sport",
+    "Description": "",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 16066,
+    "High Level Code (L1)": 5,
+    "High Level Sector Description": "Other Social Infrastructure and Services",
+    "Name": "Culture",
+    "Description": "",
+    "Category (L2)": 160,
+    "Category Name": "OTHER SOCIAL INFRASTRUCTURE AND SERVICES",
+    "Category Description": "Social legislation and administration; institution capacity building and advice; social security and other social schemes; special programmes for the elderly, orphans, the disabled, street children; social dimensions of structural adjustment; unspecified social infrastructure and services, including consumer protection."
+  },
+  {
+    "Code (L3)": 21011,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "Transport policy, planning and administration",
+    "Description": "Administration of affairs and services concerning transport systems.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21012,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "Public transport services",
+    "Description": "Administration of affairs and services concerning public transport.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21013,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "Transport regulation",
+    "Description": "Supervision and regulation of users, operations, construction and maintenance of transport systems (registration, licensing, inspection of equipment, operator skills and training; safety standards, franchises, tarriffs, levels of service, etc.).",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21021,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "Feeder road construction",
+    "Description": "Construction or operation of feeder road transport systems and facilities.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21022,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "Feeder road maintenance",
+    "Description": "Maintenance of feeder road transport systems and facilities.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21023,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "National road construction",
+    "Description": "Construction or operation of national road transport systems and facilities.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 21024,
+    "High Level Code (L1)": 6,
+    "High Level Sector Description": "Transport and Storage",
+    "Name": "National road maintenance",
+    "Description": "Maintenance of national road transport systems and facilities.",
+    "Category (L2)": 210,
+    "Category Name": "TRANSPORT AND STORAGE",
+    "Category Description": "Transport sector policy, planning and programmes; aid to transport ministries; institution capacity building and advice; unspecified transport; activities that combine road, rail, water and/or air transport. Whenever possible, report transport of goods under the sector of the good being transported."
+  },
+  {
+    "Code (L3)": 22011,
+    "High Level Code (L1)": 7,
+    "High Level Sector Description": "Communications",
+    "Name": "Communications policy, planning and administration",
+    "Description": "",
+    "Category (L2)": 220,
+    "Category Name": "COMMUNICATIONS",
+    "Category Description": "Communications sector policy, planning and programmes; institution capacity building and advice; including postal services development; unspecified communications activities."
+  },
+  {
+    "Code (L3)": 22012,
+    "High Level Code (L1)": 7,
+    "High Level Sector Description": "Communications",
+    "Name": "Postal services",
+    "Description": "Development and operation of postal services.",
+    "Category (L2)": 220,
+    "Category Name": "COMMUNICATIONS",
+    "Category Description": "Communications sector policy, planning and programmes; institution capacity building and advice; including postal services development; unspecified communications activities."
+  },
+  {
+    "Code (L3)": 22013,
+    "High Level Code (L1)": 7,
+    "High Level Sector Description": "Communications",
+    "Name": "Information services",
+    "Description": "Provision of information services.",
+    "Category (L2)": 220,
+    "Category Name": "COMMUNICATIONS",
+    "Category Description": "Communications sector policy, planning and programmes; institution capacity building and advice; including postal services development; unspecified communications activities."
+  },
+  {
+    "Code (L3)": 23110,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy policy and administrative management",
+    "Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities.",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23111,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy sector policy, planning and administration",
+    "Description": "",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23112,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy regulation",
+    "Description": "Regulation of the energy sector, including wholesale and retail electricity provision.",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23181,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy education/training",
+    "Description": "All levels of training not included elsewhere.",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23182,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy research",
+    "Description": "Including general inventories, surveys.",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23183,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy conservation and demand-side efficiency",
+    "Description": "All projects in support of energy demand reduction, e.g. building and industry upgrades, smart grids, metering and tariffs. Also includes efficient cook-stoves and biogas projects.",
+    "Category (L2)": 231,
+    "Category Name": "Energy generation, distribution and efficiency - general",
+    "Category Description": "Energy sector policy, planning; aid to energy ministries; institution capacity building and advice; unspecified energy activities."
+  },
+  {
+    "Code (L3)": 23210,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy generation, renewable sources - multiple technologies",
+    "Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23220,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Hydro-electric power plants",
+    "Description": "Including energy generating river barges.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23230,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Solar energy",
+    "Description": "Including photo-voltaic cells, solar thermal applications and solar heating.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23240,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Wind energy",
+    "Description": "Wind energy for water lifting and electric power generation.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23250,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Marine energy",
+    "Description": "Including ocean thermal energy conversion, tidal and wave power.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23260,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Geothermal energy",
+    "Description": "Use of geothermal energy for generating electric power or directly as heat for agriculture, etc.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23270,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Biofuel-fired power plants",
+    "Description": "Use of solids and liquids produced from biomass for direct power generation. Also includes biogases from anaerobic fermentation (e.g. landfill gas, sewage sludge gas, fermentation of energy crops and manure) and thermal processes (also known as syngas); waste-fired power plants making use of biodegradable municipal waste (household waste and waste from companies and public services that resembles household waste, collected at installations specifically designed for their disposal with recovery of combustible liquids, gases or heat). See code 23360 for non- renewable waste-fired power plants.",
+    "Category (L2)": 232,
+    "Category Name": "Energy generation, renewable sources",
+    "Category Description": "Renewable energy generation programmes that cannot be attributed to one single technology (codes 23220 through 23280 below). Fuelwood/charcoal production should be included under forestry 31261."
+  },
+  {
+    "Code (L3)": 23310,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Energy generation, non-renewable sources - unspecified",
+    "Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23320,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Coal-fired electric power plants",
+    "Description": "Thermal electric power plants that use coal as the energy source.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23330,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Oil-fired electric power plants",
+    "Description": "Thermal electric power plants that use fuel oil or diesel fuel as the energy source.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23340,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Natural gas-fired electric power plants",
+    "Description": "Electric power plants that are fuelled by natural gas.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23350,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Fossil fuel electric power plants with carbon capture and storage (CCS)",
+    "Description": "Fossil fuel electric power plants employing technologies to capture carbon dioxide emissions. CCS not related to power plants should be included under 41020. CCS activities are not reportable as ODA.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23360,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Non-renewable waste-fired electric power plants",
+    "Description": "Electric power plants that use non-biodegradable industrial and municipal waste as the energy source.",
+    "Category (L2)": 233,
+    "Category Name": "Energy generation, non-renewable sources",
+    "Category Description": "Thermal power plants including when energy source cannot be determined; combined gas-coal power plants."
+  },
+  {
+    "Code (L3)": 23410,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Hybrid energy electric power plants",
+    "Description": "Electric power plants that make use of both non-renewable and renewable energy sources.",
+    "Category (L2)": 234,
+    "Category Name": "Hybrid energy electric power plants",
+    "Category Description": "Electric power plants that make use of both non-renewable and renewable energy sources."
+  },
+  {
+    "Code (L3)": 23510,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Nuclear energy electric power plants",
+    "Description": "Including nuclear safety.",
+    "Category (L2)": 235,
+    "Category Name": "Nuclear energy electric power plants",
+    "Category Description": "Including nuclear safety."
+  },
+  {
+    "Code (L3)": 23610,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Heat plants",
+    "Description": "Power plants which are designed to produce heat only.",
+    "Category (L2)": 236,
+    "Category Name": "Heating, cooling and energy distribution",
+    "Category Description": "Power plants which are designed to produce heat only."
+  },
+  {
+    "Code (L3)": 23620,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "District heating and cooling",
+    "Description": "Distribution of heat generated in a centralised location, or delivery of chilled water, for residential and commercial heating or cooling purposes.",
+    "Category (L2)": 236,
+    "Category Name": "Heating, cooling and energy distribution",
+    "Category Description": "Power plants which are designed to produce heat only."
+  },
+  {
+    "Code (L3)": 23630,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Electric power transmission and distribution",
+    "Description": "Grid distribution from power source to end user; transmission lines. Also includes storage of energy to generate power (e.g. pumped hydro, batteries) and the extension of grid access, often to rural areas.",
+    "Category (L2)": 236,
+    "Category Name": "Heating, cooling and energy distribution",
+    "Category Description": "Power plants which are designed to produce heat only."
+  },
+  {
+    "Code (L3)": 23640,
+    "High Level Code (L1)": 12,
+    "High Level Sector Description": "Industry",
+    "Name": "Gas distribution",
+    "Description": "Delivery for use by ultimate consumer.",
+    "Category (L2)": 236,
+    "Category Name": "Heating, cooling and energy distribution",
+    "Category Description": "Power plants which are designed to produce heat only."
+  },
+  {
+    "Code (L3)": 43031,
+    "High Level Code (L1)": 15,
+    "High Level Sector Description": "Multisector",
+    "Name": "Urban land policy and management",
+    "Description": "Urban development and planning; urban management, land information systems.",
+    "Category (L2)": 430,
+    "Category Name": "Other multisector",
+    "Category Description": ""
+  },
+  {
+    "Code (L3)": 43032,
+    "High Level Code (L1)": 15,
+    "High Level Sector Description": "Multisector",
+    "Name": "Urban development",
+    "Description": "Integrated urban development projects; local development; urban infrastructure and services; municipal finances; urban environment systems; urban renewal and urban housing.",
+    "Category (L2)": 430,
+    "Category Name": "Other multisector",
+    "Category Description": ""
+  },
+  {
+    "Code (L3)": 43041,
+    "High Level Code (L1)": 15,
+    "High Level Sector Description": "Multisector",
+    "Name": "Rural land policy and management",
+    "Description": "Regional development planning; promotion of decentralised and multi-sectoral competence for planning, co-ordination and management; land management; land use planning; geographical information systems.",
+    "Category (L2)": 430,
+    "Category Name": "Other multisector",
+    "Category Description": ""
+  },
+  {
+    "Code (L3)": 43042,
+    "High Level Code (L1)": 15,
+    "High Level Sector Description": "Multisector",
+    "Name": "Rural development",
+    "Description": "Integrated rural development projects; implementation of regional development and measures (including natural reserve management); land settlement and resettlement activities [excluding resettlement of refugees and internally displaced persons (72010)]; functional integration of rural and urban areas.",
+    "Category (L2)": 430,
+    "Category Name": "Other multisector",
+    "Category Description": ""
   }
 ]
