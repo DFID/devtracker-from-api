@@ -1023,7 +1023,7 @@ post '/fraud/index' do
 		telno = sanitize_input(params[:telno],"t")
 	 	Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
-		    :to => "devtracker-feedback@dfid.gov.uk",
+		    :to => "reportingconcerns@dfid.gov.uk",
 		    :subject => "(Fraud Report): " + country + " - " + project,
 		    #:body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
 		    :body => "Country: " + country + "\n" + "Project: " + project + "\n" + "Description: \n" + description + "\n \nContact Information: \n" + "Name: " + name + "\n" + "Email: " + email + "\n" + "Telephone Number: " + telno,
