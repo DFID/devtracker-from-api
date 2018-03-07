@@ -1025,7 +1025,8 @@ post '/fraud/index' do
 			:from => "devtracker-feedback@dfid.gov.uk",
 		    :to => "devtracker-feedback@dfid.gov.uk",
 		    :subject => country + " " + project,
-		    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    #:body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    :body => country + "\n" + project + "\n" + description + "\n" + name + "\n" + email + "\n" + telno,
 		    :via => :smtp,
 		    :via_options => {
 		    	:address              => '127.0.0.1',
