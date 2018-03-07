@@ -49,6 +49,19 @@ module ProjectHelpers
         #end
     end
 
+    def get_participating_organisations(project)
+        if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+            participatingOrgs = {}
+            participatingOrgs['Funding'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
+            participatingOrgs['Accountable'] = project['participating_organisations'].select{|org| org['role']['code'] == '2'}
+            participatingOrgs['Extending'] = project['participating_organisations'].select{|org| org['role']['code'] == '3'}
+            participatingOrgs['Implementing'] = project['participating_organisations'].select{|org| org['role']['code'] == '4'}
+            participatingOrgs
+        else
+            nil
+        end
+    end
+
     def get_document_links_local(projectId)
         local_documents = JSON.parse(File.read('data/document_inclusion_list.json'))
         matched_local_documents = local_documents.select{|p| p['projectid'] == projectId}

@@ -342,8 +342,9 @@ get '/projects/:proj_id/?' do |n|
   	project = get_h1_project_details(n)
 
   	#get the funded by organisation list
-  	fundedByOrganisationList = get_funded_by_organisations(project) 
-  	puts fundedByOrganisationList
+  	#fundedByOrganisationList = get_funded_by_organisations(project)
+  	participatingOrgList = get_participating_organisations(project)
+
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
@@ -371,7 +372,7 @@ get '/projects/:proj_id/?' do |n|
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
- 			fundedByOrganisationList: fundedByOrganisationList
+ 			participatingOrgList: participatingOrgList
  		}
 end
 

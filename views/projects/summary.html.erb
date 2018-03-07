@@ -73,24 +73,37 @@
                 </ul>
             </div>
         <% end %>
-        <%if fundedByOrganisationList != nil %>
-            <%if fundedByOrganisationList['orgList'].length > 0 && fundedByOrganisationList['fundingType'] != 'Do nothing' %>
-                <div class="more-info-container">  
-                    <span class="more-info-title"><%= fundedByOrganisationList['fundingType']%></span>
-                </div>
-                <div id="funding-organisations">
-                    <ul>
-                        <% fundedByOrganisationList['orgList'].each {|fundingOrg| %>
-                            <% begin %>
-                                <li>
-                                   <%= fundingOrg['narratives'][0]['text'] %>
-                                </li>
-                            <%rescue%>
-                            <%end%>
-                        <% } %>
-                    </ul>
-                </div>
-            <% end %>
+         <% if participatingOrgList != nil %>
+            <div class="more-info-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th colspan="2">Participating Organisations</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <%participatingOrgList.each { |participatingOrgType, participatingOrgData| %>
+                        <% if participatingOrgType != nil && participatingOrgData.length > 0%>
+                            <tr>
+                                <td><b><%= participatingOrgType %>:</b></td>
+                                <td>
+                                    <% participatingOrgData.each_with_index { |org, index| %>
+                                        <% begin %>
+                                            <a target="_BLANK" href="/search?query=<%= org['narratives'][0]['text']%>&includeClosed=0"><%= org['narratives'][0]['text']%></a>
+                                        <% rescue %>
+                                            Name not available
+                                        <% end %>
+                                        <% if index != participatingOrgData.size - 1 %>
+                                            , 
+                                        <% end %>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    <% } %>
+                  </tbody>
+                </table>
+            </div>
         <% end %>
     </div>
 
