@@ -1024,7 +1024,7 @@ post '/fraud/index' do
 	 	Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
 		    :to => "devtracker-feedback@dfid.gov.uk",
-		    :subject => country + " " + project,
+		    :subject => "(Fraud Report): " + country + " - " + project,
 		    #:body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
 		    :body => "Country: " + country + "\n" + "Project: " + project + "\n" + "Description: \n" + description + "\n \n Contact Information: \n" + "Name: " + name + "\n" + "Email: " + email + "\n" + "Telephone Number: " + telno,
 		    :via => :smtp,
