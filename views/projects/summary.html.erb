@@ -196,6 +196,24 @@
     </script>
     <script>
     $(document).ready(function() {
+        function graphCurrencyHandlerFront(string){
+            if(string.search("0") != 0){
+                console.log(string.slice(0,string.search("0") - 1));
+                return string.slice(0,string.search("0"));
+            }
+            else{
+                return '';
+            }
+        }
+        function graphCurrencyHandlerBack(string){
+            if(string.search("0") != 0){
+                return '';
+            }
+            else{
+                console.log(string.slice(4,string.length));
+                return string.slice(4,string.length);
+            }
+        }
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -238,7 +256,24 @@
         <% budgetYearData = project_budget_per_fy(project['id']) %>
 
         <% if !budgetYearData.nil? then %>
-            
+            <% begin %>
+                <%if !project["default_currency"]["code"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
+                    //var graphCurrency = '<%#= Money.new(0,"GBP").format %>'
+                <% elsif !project["aggregations"]["activity_children"]["budget_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["budget_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["disbursement_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["disbursement_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["incoming_funds_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["incoming_funds_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["expenditure_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["expenditure_currency"]).format %>'
+                <% else %>
+                    var graphCurrency = "N/A"    
+                <% end %>
+            <% rescue %>
+                var graphCurrency = "N/A";
+            <% end %>
             var yTicks = [];
             var chart = c3.generate({
                 bindto: '#budget-plan-spend',
@@ -248,7 +283,7 @@
                 tooltip: {
                     format: {
                         value: function(value){
-                            return "£" + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            return graphCurrencyHandlerFront(graphCurrency) + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + graphCurrencyHandlerBack(graphCurrency);
                         }
                     }
                 },
@@ -279,7 +314,7 @@
                             //count: 6,
                             format: function(d){ 
                                 yTicks.push(d3.format(".2s")(d)); 
-                                return "£" + d3.format(".2s")(d);
+                                return graphCurrency + d3.format(".2s")(d);
                             } 
                                 /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
