@@ -163,7 +163,6 @@
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
-    <script type="text/javascript" src="/javascripts/indexTabs.js"></script>
     <script type="text/javascript">
     <%
     dis_curr = defined?(project['aggregations']['activity_children']['disbursement_currency']).nil?.to_s
@@ -196,6 +195,15 @@
     </script>
     <script>
     $(document).ready(function() {
+        function reformCurrencyFormat(value){
+            if(value.indexOf("G") > -1){
+                var temp = value.replace("G","B");
+                return temp;
+            }
+            else{
+                return value;
+            }
+        }
         function graphCurrencyHandlerFront(string){
             if(string.search("0") != 0){
                 console.log(string.slice(0,string.search("0") - 1));
