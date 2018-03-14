@@ -314,7 +314,7 @@
                             //count: 6,
                             format: function(d){ 
                                 yTicks.push(d3.format(".2s")(d)); 
-                                return graphCurrency + d3.format(".2s")(d);
+                                return graphCurrencyHandlerFront(graphCurrency) + d3.format(".2s")(d) + graphCurrencyHandlerBack(graphCurrency);
                             } 
                                 /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
