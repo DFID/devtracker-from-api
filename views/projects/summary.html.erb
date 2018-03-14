@@ -278,10 +278,10 @@
                 <% elsif !project["aggregations"]["activity_children"]["expenditure_currency"].nil? %>
                     var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["expenditure_currency"]).format %>'
                 <% else %>
-                    var graphCurrency = "N/A"    
+                    var graphCurrency = ""    
                 <% end %>
             <% rescue %>
-                var graphCurrency = "N/A";
+                var graphCurrency = "";
             <% end %>
             var yTicks = [];
             var chart = c3.generate({
@@ -343,7 +343,9 @@
                 yTicks = [];
                 //chart.ygrids.add({value: tempString[i]});
             }
-
+            if(graphCurrency == ''){
+                $('#budget-plan-spend').append('<span style="text-align: center; margin: 0 60px;">Please note: No Valid currency present in the above data.</span>');
+            }            
             <% else %>
 
             $('#budget-plan-spend').html("Data not found");
