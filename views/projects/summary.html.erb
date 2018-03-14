@@ -219,7 +219,8 @@
             }
             else{
                 console.log(string.slice(4,string.length));
-                return string.slice(4,string.length);
+                //return string.slice(4,string.length);
+                return string.replace(/[0.]*/,"");
             }
         }
         var stacked = c3.generate({
