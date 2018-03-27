@@ -340,7 +340,6 @@ get '/projects/:proj_id/?' do |n|
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
-
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
