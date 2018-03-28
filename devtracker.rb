@@ -836,7 +836,7 @@ end
 
 #Department for Environment Food and Rural Affairs
 get '/department-for-environment-food-and-rural-affairs' do
-	ogdCode = 'GB-7'
+	ogdCode = 'GB-7,GB-GOV-7'
 	projectData = get_ogd_all_projects_data(ogdCode)
   	settings.devtracker_page_title = 'Department for Environment Food and Rural Affairs Projects Page'
 	erb :'other-govt-departments/other_govt_departments',
