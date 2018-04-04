@@ -992,7 +992,8 @@ post '/feedback/index' do
 		    :via => :smtp,
 		    :via_options => {
 		    	:address              => '127.0.0.1',
-		     	:port                 => '25'
+		     	:port                 => '25',
+		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
 		    }
 		})
 		redirect '/'
@@ -1029,8 +1030,9 @@ post '/fraud/index' do
 		    :via => :smtp,
 		    :via_options => {
 		    	:address              => '127.0.0.1',
-		    	:port                 => '25'
-	     	}
+		     	:port                 => '25',
+		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
+		    }
 	    })
 	    redirect '/'
 	else
