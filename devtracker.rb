@@ -1149,7 +1149,34 @@ end
 #  COUNTRY PROJECT PAGE
 #####################################################################
 
-#TO-DO
+get '/cw/countries/:country_code/projects/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	projectData = ''
+	projectData = get_country_all_projects_data(n)
+#	 Benchmark.bm(7) do |x|
+#	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
+#	end
+	#projectData = get_country_all_projects_data_para(n)
+  	settings.devtracker_page_title = 'Country ' + projectData['country'][:name] + ' Projects Page'
+	erb :'countries/projects', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		country: projectData['country'],
+	 		total_projects: projectData['projects']['count'],
+	 		projects: projectData['projects']['results'],
+	 		results: projectData['results'],
+	 		highLevelSectorList: projectData['highLevelSectorList'],
+	 		budgetHigherBound: projectData['project_budget_higher_bound'],
+	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+	 		actualStartDate: projectData['actualStartDate'],
+	 		plannedEndDate: projectData['plannedEndDate'],
+	 		documentTypes: projectData['document_types'],
+	 		implementingOrgTypes: projectData['implementingOrg_types'],
+	 		projectCount: projectData['projects']['count']
+	 	}
+		 			
+end
 
 #####################################################################
 #  COUNTRY RESULTS PAGE
