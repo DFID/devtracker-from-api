@@ -1119,31 +1119,223 @@ end
 #  HOME PAGE
 #####################################################################
 
-#TO-DO
+get '/cw' do  #homepage
+	#read static data from JSON files for the front page
+	top5results = JSON.parse(File.read('data/top5results.json'))
+  	top5countries = get_top_5_countries()
+  	settings.devtracker_page_title = ''
+ 	erb :index,
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			top_5_countries: top5countries, 
+ 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			what_we_achieve: top5results 	
+ 		}
+end
 
 #####################################################################
 #  AID BY LOCATION PAGE
 #####################################################################
 
-#TO-DO
+get '/cw/location/country/?' do
+  	settings.devtracker_page_title = 'Aid by Location Page'
+	erb :'location/country/index', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			:dfid_country_map_data => 	dfid_country_map_data,
+			:dfid_complete_country_list => 	dfid_complete_country_list,
+			:dfid_total_country_budget => total_country_budget_location
+		}
+end
 
 #####################################################################
 #  AID BY SECTOR PAGE
 #####################################################################
 
-#TO-DO
+# High Level Sector summary page
+get '/cw/sector/?' do
+	# Get the high level sector data from the API
+  	settings.devtracker_page_title = 'Sector Page'
+  	erb :'sector/index', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 		}		
+end
+
+# Category Page (e.g. Three Digit DAC Sector) 
+get '/cw/sector/:high_level_sector_code/?' do
+	# Get the three digit DAC sector data from the API
+  	settings.devtracker_page_title = 'Sector '+sanitize_input(params[:high_level_sector_code],"p")+' Page'
+  	erb :'sector/categories', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+ 		}		
+end
+
+# List of all the High level sector projects (e.g. Three Digit DAC Sector) 
+get '/cw/sector/:high_level_sector_code/projects/?' do
+	countryAllProjectFilters = get_static_filter_list()
+	sectorData = {}
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
+	sectorData['sectorCode'] = ""
+	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
+	sectorJsonData.each do |sdata|
+		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
+	end
+	sectorData['sectorName'] = ""
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
+  	erb :'sector/projects', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
+ 			sectorData: sectorData,
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
+	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
+	 		actualStartDate: getSectorProjects['actualStartDate'],
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 		}	
+end
+
+# Sector Page (e.g. Five Digit DAC Sector) 
+get '/cw/sector/:high_level_sector_code/categories/:category_code/?' do
+	# Get the three digit DAC sector data from the API
+  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Page'
+  	erb :'sector/sectors', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+ 		}		
+end
+
+# List of all the 3 DAC projects 
+get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/?' do
+	countryAllProjectFilters = get_static_filter_list()
+	sectorData = {}
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
+	sectorData['sectorCode'] = ""
+	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
+	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
+	sectorJsonData.each do |sdata|
+		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
+	end
+	sectorData['sectorName'] = ""
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+  	erb :'sector/projects', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+ 			sectorData: sectorData,
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
+	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
+	 		actualStartDate: getSectorProjects['actualStartDate'],
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 		}	
+end
+
+# Sector All Projects Page (e.g. Five Digit DAC Sector)
+get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/:sector_code/?' do
+	# Get the five digit DAC sector project data from the API
+	countryAllProjectFilters = get_static_filter_list()
+	sectorData = {}
+	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
+	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
+	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
+	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
+	sectorData['sectorName'] = sectorJsonData["Name"]
+	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+
+  	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
+  	erb :'sector/projects', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+ 			sectorData: sectorData,
+ 			total_projects: getSectorProjects['projects']['count'],
+	 		projects: getSectorProjects['projects']['results'],
+	 		countryAllProjectFilters: countryAllProjectFilters,
+	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
+	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
+	 		actualStartDate: getSectorProjects['actualStartDate'],
+ 			plannedEndDate: getSectorProjects['plannedEndDate'],
+ 			locationCountryFilters: getSectorProjects['LocationCountries'],
+ 			locationRegionFilters: getSectorProjects['LocationRegions'],
+ 			documentTypes: getSectorProjects['document_types'],
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 		}		
+end
 
 #####################################################################
 #  WHAT DOES THIS MEAN? PAGE
 #####################################################################
 
-#TO-DO
+get '/cw/faq/?' do
+  	settings.devtracker_page_title = 'FAQ: What does this mean?'
+	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
+end 
 
 #####################################################################
 #  COUNTRY SUMMARY PAGE 
 #####################################################################
 
-#TO-DO
+get '/cw/countries/:country_code/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	country = ''
+	results = ''
+	countryYearWiseBudgets = ''
+	countrySectorGraphData = ''
+	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation=GB-GOV-1&page_size=1")
+	Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {
+	 		country = get_country_details(n)
+	 		results = get_country_results(n)
+	 		#oipa v2.2
+    		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
+			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
+			#oipa v3.1
+			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
+	 	}
+	end
+
+	topSixResults = pick_top_six_results(n)
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
+	erb :'countries/country', 
+		:layout => :'layouts/layout',
+		:locals => {
+ 			country: country,
+ 			countryYearWiseBudgets: countryYearWiseBudgets,
+ 			countrySectorGraphData: countrySectorGraphData,
+ 			results: results,
+ 			topSixResults: topSixResults,
+ 			oipa_api_url: settings.oipa_api_url,
+ 			activityCount: tempActivityCount['count']
+ 		}
+end
 
 #####################################################################
 #  COUNTRY PROJECT PAGE
@@ -1182,40 +1374,227 @@ end
 #  COUNTRY RESULTS PAGE
 #####################################################################
 
-#TO-DO
+get '/cw/countries/:country_code/results/?' do |n|		
+	n = sanitize_input(n,"p").upcase
+	country = get_country_code_name(n)
+	results = get_country_results(n)
+	resultsPillar = results_pillar_wise_indicators(n,results)
+    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
+  	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
+	erb :'countries/results', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		country: country,
+	 		totalProjects: totalProjects,
+	 		results: results,
+	 		resultsPillar: resultsPillar
+	 		}
+		 			
+end
 
 #####################################################################
 #  PROJECT SUMMARY PAGE
 #####################################################################
 
-#TO-DO
+# Project summary page
+get '/cw/projects/:proj_id/?' do |n|
+	n = sanitize_input(n,"p")
+	check_if_project_exists(n)
+	# get the project data from the API
+  	project = get_h1_project_details(n)
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	#get total project budget and spend Data
+  	#projectBudget = get_project_budget(n)
+
+  	#get project sectorwise graph  data
+  	
+  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	
+	# get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
+
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
+	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']
+	erb :'projects/summary', 
+		:layout => :'layouts/layout',
+		 :locals => {
+		 	oipa_api_url: settings.oipa_api_url,
+ 			project: project,
+ 			countryOrRegion: countryOrRegion,	 					 			
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			#projectBudget: projectBudget,
+ 			projectSectorGraphData: projectSectorGraphData
+ 		}
+end
 
 #####################################################################
 #  PROJECT DOCUMENTS PAGE
 #####################################################################
 
-#TO-DO
+# Project documents page
+get '/cw/projects/:proj_id/documents/?' do |n|
+	n = sanitize_input(n,"p")
+	# get the project data from the API
+	project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	# get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
+
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
+  	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
+	erb :'projects/documents', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+ 			project: project,
+ 			countryOrRegion: countryOrRegion,
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount 
+ 		}
+end
 
 #####################################################################
 #  PROJECT TRANSACTIONS PAGE
 #####################################################################
 
-#TO-DO
+#Project transactions page
+get '/cw/projects/:proj_id/transactions/?' do |n|
+	n = sanitize_input(n,"p")
+	# get the project data from the API
+	project = get_h1_project_details(n)
+		
+	# get the transactions from the API
+  	incomingFunds = get_transaction_details(n,"1")
+
+  	# get the incomingFund transactions from the API
+  	commitments = get_transaction_details(n,"2")
+
+  	# get the disbursement transactions from the API
+  	disbursements = get_transaction_details(n,"3")
+
+  	# get the expenditure transactions from the API
+  	expenditures = get_transaction_details(n,"4")
+
+  	# get the Interest Repayment transactions from the API
+  	interestRepayment = get_transaction_details(n,"5")
+
+  	# get the Loan Repayment transactions from the API
+  	loanRepayment = get_transaction_details(n,"6")
+
+  	# get the Purchase of Equity transactions from the API
+  	purchaseEquity = get_transaction_details(n,"8")
+
+  	# get yearly budget for H1 Activity from the API
+	projectYearWiseBudgets= get_project_yearwise_budget(n)
+
+	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+    # get the funding projects Count from the API
+  	fundingProjectsCount = get_funding_project_count(n)
+
+	# get the funded projects Count from the API
+	fundedProjectsCount = get_funded_project_count(n)
+	
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
+	erb :'projects/transactions', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+			countryOrRegion: countryOrRegion,
+ 			incomingFunds: incomingFunds,
+ 			commitments: commitments,
+ 			disbursements: disbursements,
+ 			expenditures: expenditures,
+ 			interestRepayments: interestRepayment,
+ 			loanRepayments: loanRepayment,
+ 			purchaseEquities: purchaseEquity,
+ 			projectYearWiseBudgets: projectYearWiseBudgets, 			
+ 			fundedProjectsCount: fundedProjectsCount,
+ 			fundingProjectsCount: fundingProjectsCount 
+ 		}
+end
 
 #####################################################################
 #  SEARCH RESULTS PAGE
 #####################################################################
 
-#TO-DO
+get '/cw/search/?' do
+	countryAllProjectFilters = get_static_filter_list()
+	query = sanitize_input(params['query'],"a")
+	includeClosed = sanitize_input(params['includeClosed'],"a")
+	activityStatusList = ''
+	if(includeClosed == "1") then 
+		activityStatusList = '1,2,3,4'
+	else
+		includeClosed = 0
+		activityStatusList = '1,2'
+	end
+	puts activityStatusList
+	results = generate_searched_data(query,activityStatusList);
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/search',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		projects: results['projects'],
+		project_count: results['project_count'],
+		:query => query,
+		countryAllProjectFilters: countryAllProjectFilters,
+		budgetHigherBound: results['project_budget_higher_bound'],
+		highLevelSectorList: results['highLevelSectorList'],
+		dfidCountryBudgets: results['dfidCountryBudgets'],
+		dfidRegionBudgets: results['dfidRegionBudgets'],
+		actualStartDate: results['actualStartDate'],
+ 		plannedEndDate: results['plannedEndDate'],
+ 		documentTypes: results['document_types'],
+ 		implementingOrgTypes: results['implementingOrg_types'],
+ 		includeClosed: includeClosed
+	}
+end
 
 #####################################################################
 #  PROJECT PARTNER PAGE
 #####################################################################
 
-#TO-DO
+#Project partners page
+get '/cw/projects/:proj_id/partners/?' do |n|
+	# get the project data from the API
+	n = sanitize_input(n,"p")
+	project = get_h1_project_details(n)
 
-#####################################################################
-#  SECTOR PAGES
-#####################################################################
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
 
-#TO-DO
+  	# get the funding projects from the API
+  	fundingProjectsData = get_funding_project_details(n)
+  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+
+	# get the funded projects from the API
+	fundedProjectsData = get_funded_project_details(n)
+
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
+	erb :'projects/partners', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+			countryOrRegion: countryOrRegion, 			
+ 			fundedProjects: fundedProjectsData['results'],
+ 			fundedProjectsCount: fundedProjectsData['count'],
+ 			fundingProjects: fundingProjects,
+ 			fundingProjectsCount: fundingProjectsData['count']
+ 		}
+end
