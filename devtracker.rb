@@ -38,6 +38,9 @@ require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
 require_relative 'helpers/ogd_helper.rb'
+require_relative 'helpers/cw/country_helpers.rb'
+require_relative 'helpers/cw/search_helper.rb'
+require_relative 'helpers/cw/sector_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -52,6 +55,9 @@ include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
 include OGDHelper
+include CountryHelpersCW
+include SectorHelpersCW
+include SearchHelperCW
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
