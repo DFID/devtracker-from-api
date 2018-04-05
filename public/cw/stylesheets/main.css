@@ -1,0 +1,728 @@
+#countryMap img, object, embed { max-width: none; }
+#map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
+#countryMap {
+    height : 450px;
+}
+#map {
+    width: 100%; 
+    height: 545px;
+}
+
+.static-background {
+    background-image: url(/images/map_transparent.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.truncate {
+    width: 200px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#feedback-banner {
+  background-color:#ADD8E6;position:relative;z-index:0;
+  border: 1px solid #a1acb2;
+  width:100%;
+  padding-top:20px;
+}
+
+#whatsnew-banner {
+  background-color:#FFFFFF;position:relative;z-index:0;
+  border-bottom: 1px solid #a1acb2;
+  padding: 10px 0 8px 15px;
+  /*margin:0 15px;*/
+}
+#whatsnew-banner p {
+  margin-bottom:0;
+}
+
+.countryMap {
+    height : 380px;
+}
+
+.negative { }
+
+.leaflet-popup-tip-container { display: none; }
+
+div.progress { border: none;}
+
+.transactions-table th { font-weight: bold!important; }
+
+span.category { 
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #999999;
+  font-family: 'Helvetica Neue';
+}
+
+span.language { 
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #0000A0;
+  font-family: 'sans-serif';
+}
+
+.leaflet-div-icon {
+    border: none!important;
+}
+
+.transactions-table td{
+  white-space: normal;
+}
+
+.marker.cluster {
+    background-image: url(/images/mapmarker_s.png);
+    font-family:"Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    height: 30px;
+    width: 15px;
+    border:none;
+    text-align:center;
+    font-size:0.6em;
+    line-height: 1.8em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.country-link, .region-link {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.location-button {
+  font-size: 1.6em;
+  margin-top: 30px;
+}
+
+.cookies ul {
+  margin-left:30px;
+}
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+  /*color: transparent!important;*/
+}
+
+.leaflet-popup-content-wrapper {
+  padding-right: 0px!important;
+}
+
+.location-popup {
+  min-width: 200px;
+  width:100%;
+}
+
+#countryMap .leaflet-popup-content{
+  width: 450px!important;
+}
+
+.location-popup .location-label {
+  font-weight: bold;
+}
+
+.location-popup .row {
+  margin-bottom:5px;
+}
+
+.location-popup.large {
+  max-height: 350px;
+  overflow-y:scroll;  
+}
+
+#disclaimer {
+  margin-bottom:15px;
+}
+
+
+#implementing-organisations ul
+{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;}
+
+.ie7 #map_container{
+    display: none;
+}
+
+.download-link {
+    padding-top:40px;
+    width:100%;
+    float:right;
+    text-align:right;
+}
+
+.sort-proj-sectors {
+    text-align: center;
+    margin: auto 0px;
+    width:25px;
+    height:25px;
+    border:none;
+    vertical-align: baseline;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    cursor:pointer;
+}
+
+.proj-filter-exp-collapse-sign{
+    width:22px;
+    height:22px;;
+    text-align: left;
+    vertical-align:top;
+    font-size:1.5em;
+    margin: 0px 2px 2px 2px;
+    border: none;
+    float:right;
+    cursor:pointer;
+    color: #f4f4f4;
+}
+
+.proj-filter-exp-collapse-sign-down {
+  background-image: url(/images/down-arrow.png);
+}
+
+.proj-filter-exp-collapse-sign-up {
+  background-image: url(/images/up-arrow.png);
+}
+
+a.documentTitleLink{
+  font-size: 1.5em;
+}
+
+ul.legend-list, ul.legend-list li{
+  border:none;
+}
+
+ul.legend-list li div span{
+  font-size:small;
+  font-weight:bold; 
+  position:relative;
+}
+
+.documentContainer{
+  margin-top: 20px;
+}
+
+.moreDocsLink{
+  font-weight:bold; 
+  margin-left:1.5em;
+}
+
+.button-row {
+    padding-right: 40px;
+}
+
+.button-row span {
+  margin:0.5em 0em;
+  float: right;
+}
+
+.button.inform {
+  background-color:#ffffff;
+  color:#000;
+  font-weight: bold;
+}
+.button.inform:hover {
+  background-color:#ffffff;
+  color:#000;
+}
+
+.envelope {
+  display:inline;
+  font-size:bigger;
+}
+
+/* CSS to control the information boxes */
+
+.more-info  {
+  display: none; 
+}
+
+.more-info-content {
+  background: #f8f8f8;
+ /*  top: 1em; */
+  position: absolute; 
+  margin: 8px 15px 0 0;
+  padding: 0.6em; 
+ /* right: 0; */
+  width: 80%;
+  z-index: 101;
+  list-style: none;
+  background: #f8f8f8;
+  border: 3px solid #097f96;
+  box-sizing: border-box;
+  zoom: 1;
+ /* font-size: 160%; */
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  font-family: "nta", Arial, sans-serif;
+}
+
+.more-info-container{
+  margin: 15px 0px 15px 0px; 
+}
+
+.more-info-title
+{
+  font-size: 27px;
+  font-weight: bold;  
+}
+
+.more-info-link{
+  cursor:pointer;
+}
+
+.move-up-4{
+  margin-top:-4px;
+}
+
+.move-down-4{
+  margin-top: 4px;
+}
+
+.more-info-link-spacer{
+  margin-left: 10px;
+}
+
+.float-right{
+  float:right;   
+}
+
+.float-left{
+  float:left;   
+}
+
+/*More Information CSS for landing page*/
+
+.top-five-header{
+    margin-bottom: 14px;
+    width:100%;    
+}
+
+.top-five-title{
+  font-size: 23px;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-style: normal;
+  color: #222222;
+  text-rendering: optimizeLegibility;
+  line-height: 1.1;
+  -webkit-margin-after: 1.33em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*More Information CSS for Project Page*/
+
+.project-country-title{
+  /*float:left;*/
+  font-size: 1.25em;
+  margin-bottom: 20px;
+}
+
+.move-message-box{
+  margin-top:-35px;
+  margin-right:90px;
+}
+
+.more-info-limit-size{
+  width: 320px;
+  margin-right: 689px;
+}
+
+/*More Information CSS for Country Page*/
+
+.country-info{
+  font-size: 27px;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizeLegibility;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  margin-top: 
+}
+
+/*More Information CSS for Transactions Page*/
+
+.trans-header-container{
+  float:left;
+  width:100%;
+  margin-bottom:14px;
+}
+
+.trans-header-left{
+  float:left; 
+  width:70%;
+  margin-bottom:5px;
+}
+
+.trans-header-right{
+  float:left; 
+  width:30%;
+  margin-bottom:5px;
+}
+
+.trans-type-title{
+  font-size: 27px;
+  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizelegibility;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  margin-top: 14px;
+}
+
+.trans-type-value{
+  font-size: 27px;
+  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(34, 34, 34);
+  text-rendering: optimizelegibility;
+  line-height: 1.1;
+  margin-top: 24px;
+}
+
+
+.trans-more-info-box-limiter{
+  width: 320px;
+  margin-right: 689px;
+  margin-top: 5px;
+}
+
+/*CSS for departments page*/
+
+.overview-text{
+  margin-top: 45px;
+  margin-bottom: 30px;
+}
+
+/*This is a small hack to avoid the background text
+that is shown on the zoom in / zoom out buttons generated by the leaflet*/
+.leaflet-control-zoom a{
+/*  color: transparent !important;*/
+}
+
+.c3-grid-lines {
+  stroke: #d8dcbf;
+}
+
+#budget-year-chart .domain {
+  /*display: none;*/
+  height: 0px;
+}
+
+g.c3-axis-y > g:last-child {
+  transform: translate(0,4);
+}
+
+
+.c3-axis-y .tick:last-of-type{
+  opacity: 0 !important;
+}
+
+#budget-year-chart {
+  font-size: 12px;
+}
+
+
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 );
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+#showResults .loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+#showResults .loading .modal {
+    display: block;
+}
+
+.modal div {
+  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
+  display: block;
+  font-size: 24px;
+  font-size: 2.4vw;
+  /*height: 136px;*/
+  min-height: 185px;
+  margin: 200px auto;
+  text-align: center;
+  width: auto;
+}
+
+#scrollUp {
+    padding: 15px 14px 10px;
+    background: #f2f2f2;
+    bottom: 0;
+    right: 37px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: bold;
+    border-left: 1px solid #CBCBCB;
+    border-top: 1px solid #CBCBCB;
+    border-right: 1px solid #CBCBCB;
+    text-decoration: none;
+}
+
+#sectorChart {
+  font-size: 12px;
+  height: 250px;
+}
+
+.c3-grid line {
+  stroke: #d8dcbf !important;
+}
+
+#budget-year-chart .c3-axis-y .tick line {
+  stroke: transparent !important;
+}
+
+.popup h2,
+.popup h3,
+.popup h4 {
+  font-size: 1.1em;
+}
+
+.popup h1 {
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 33px;
+  padding-right: 20px;
+  text-indent: 10px;
+  text-transform: capitalize;
+}
+
+.popup h1 img {
+  float: left;
+}
+
+.popup .row .stat p {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+
+.modal_free_text_search {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 );
+}
+
+.modal_free_text_search div {
+  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 0% transparent;
+  display: block;
+  font-size: 24px;
+  font-size: 2.4vw;
+  min-height: 185px;
+  margin: 200px auto;
+  text-align: center;
+  width: auto;
+}
+
+.projects-nav nav {
+  width: 100%;
+  /*background: #f0f0f0;*/
+  /*border: 1px solid #ccc;*/
+  border-right: none;
+}
+
+.projects-nav nav ul {
+    overflow: hidden;
+/*    margin: 0;*/
+    padding: 0;
+}
+
+.projects-nav nav ul li {
+    list-style: none;
+    float: left;
+    text-align: center;
+/*    border-left: 1px solid #fff;
+    border-right: 1px solid #ccc;*/
+    /*width: 16.6667%;*/ /* fallback for non-calc() browsers */
+    /*width: calc(100% / 4);*/
+    box-sizing: border-box;
+    width: auto;
+}
+
+.projects-nav nav ul li:first-child {
+    /*border-left: none;*/
+}
+
+.projects-nav nav ul li a {
+    display: block;
+    text-decoration: none;
+    /*color: #616161;*/
+    /*padding: 10px 0; */
+    font-size: 1em;
+}
+
+.modal_map_markers {
+    /*display:    none;*/
+    position:   relative;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     auto;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 );
+}
+
+.modal_map_markers div {
+  background: url("/images/ajax-loader.gif") no-repeat scroll 50% 50% transparent;
+  display: block;
+  font-size: 24px;
+  font-size: 2.5vw;
+  height: auto;
+  margin: 200px auto;
+  text-align: center;
+  width: auto;
+}
+
+.modal_free_text_search div div{
+  background: none repeat scroll 0% 0% transparent; 
+  width: auto; 
+  height: auto; 
+  padding-top: 33px;
+}
+
+.modal div div{
+  background: none repeat scroll 0% 0% transparent; 
+  width: 300px; 
+  height: auto; 
+  padding-top: 33px;
+}
+
+.mContent {
+  display: none; 
+  margin-bottom: 15px; 
+  overflow-x: hidden; 
+  overflow-y: scroll; 
+  min-height: 10px;
+  max-height: 200px;
+  width: 100%;
+}
+
+.mContent ul li {
+  border-bottom: 1px solid #DEDEDE;
+}
+
+#filter h3,
+#filter h4 {
+  margin-bottom: 1px;
+}
+
+#filter h4 {
+  margin-top: 1px;
+}
+
+ .filter-header {
+  margin-bottom: 10px;
+ }
+
+ .info {
+    background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    font: 14px/16px Arial,Helvetica,sans-serif;
+    padding: 6px 8px;
+}
+
+.info h6 {
+    color: #777;
+    margin: 0 0 5px;
+}
+
+ .tpcbcv {
+  display: none;
+ }
+
+ #ui-datepicker-div {
+  z-index: 2 !important;
+ }
+
+.meta {
+  display:none;
+}
+
+.dc-chart g.row text {
+  fill: black !important;
+}
+
+#top5Countries.dc-chart .axis { display: none; }
+
+#top5Sectors.dc-chart .axis { display: none; }
+
+#top-5-sectors.columns {
+  border-right: none;
+}
+
+#top-5-countries.columns {
+  border-left:1px solid #dee0e2;
+}
+
+#top5Countries svg text {
+  font-size: 18px;
+}
+
+#top5Countries svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+#top5Sectors svg text {
+  font-size: 18px;
+}
+
+#top5Sectors svg g:first-child {
+  transform: translate(0px,0px);
+}
+
+.link-wrapper {
+  width: 8em;
+  /*margin-top: -2.8em;*/ /*This is causing Aid by containers to overlap on one another in the front page. Hence commented the line out.*/
+}
+#topSixResults .columns:nth-child(4){
+  clear: left;
+}
