@@ -1330,8 +1330,8 @@ get '/cw/countries/:country_code/?' do |n|
 
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
-	erb :'countries/country', 
-		:layout => :'layouts/layout',
+	erb :'/cw/countries/cw_country', 
+		:layout => :'/cw/layouts/cw_layout',
 		:locals => {
  			country: country,
  			countryYearWiseBudgets: countryYearWiseBudgets,
