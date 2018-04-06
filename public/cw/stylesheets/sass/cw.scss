@@ -139,12 +139,13 @@ Breadcrumbs
      top:0px;
      right: 0;
      &:nth-last-child(2) {
-         top:5px;
-         right: 140px;
+         top:10px;
+         right: 120px;
+         float: right!important;
+         width: 178px!important;
     }
  &:nth-last-child(3) {
     padding: 10px 15px;
-    background: #fff;
 }
     }
 }
@@ -184,6 +185,44 @@ Breadcrumbs
     }
 }
 
+
+/*-------------------------------------------------------
+Small hero banner no-tabs
+---------------------------------------------------------*/
+.hero-notabs {
+#page-title {
+ img {
+     top:-8px;
+     &:nth-last-child(2) {
+         top:-8px;
+    }
+ &:nth-last-child(3) {
+    padding: 0px 15px;
+}
+    }
+}
+}
+
+
+/*-------------------------------------------------------
+Results pagination make sit right
+---------------------------------------------------------*/
+.light-pagination ul {float:right}
+
+
+h1 span {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.7em;
+}
+
+p.iati-id {font-size: 1em; float:right; padding-bottom: 12px; letter-spacing: 0.02em;} 
+
+.ui-state-highlight {padding: 10px;}
+
+.ui-icon-info {float: left; margin:-0.1em 0.4em 0 0;}
+
+
 /*-------------------------------------------------------
 Large Image links homepage
 ---------------------------------------------------------*/
@@ -216,6 +255,27 @@ a.by-location, a.by-sector {
         
     }
     }
+}
+
+/*-------------------------------------------------------
+Location page country list
+---------------------------------------------------------*/
+#country-list {
+    .two, .row .two {
+        @media screen and (min-width:767px) {
+            width:  18%;  
+        }
+}
+        .two, .row .two,
+        .three, .row .three{
+        h4 {
+            display: block;
+            border-bottom: 3px solid #0b0c0c;
+        }
+        a, p {display: block;
+        padding-bottom: 10px;
+            margin: 0;}
+}
 }
 
 

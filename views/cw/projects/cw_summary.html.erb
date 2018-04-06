@@ -1,6 +1,4 @@
-
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
-
+<%= erb :'cw/partials/_cw_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
 <div class="row">
     <div class="twelve columns summary">
         <p class="project-description"><%= project['descriptions'].length>0 ? project['descriptions'][0]['narratives'][0]['text'] : "" %></p>

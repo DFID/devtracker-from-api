@@ -1145,8 +1145,8 @@ end
 
 get '/cw/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
-	erb :'location/country/index', 
-		:layout => :'layouts/layout',
+	erb :'/cw/location/country/cw_index', 
+		:layout => :'/cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	dfid_country_map_data,
@@ -1163,8 +1163,8 @@ end
 get '/cw/sector/?' do
 	# Get the high level sector data from the API
   	settings.devtracker_page_title = 'Sector Page'
-  	erb :'sector/index', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_index', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
@@ -1175,8 +1175,8 @@ end
 get '/cw/sector/:high_level_sector_code/?' do
 	# Get the three digit DAC sector data from the API
   	settings.devtracker_page_title = 'Sector '+sanitize_input(params[:high_level_sector_code],"p")+' Page'
-  	erb :'sector/categories', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_categories', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
@@ -1196,8 +1196,8 @@ get '/cw/sector/:high_level_sector_code/projects/?' do
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_projects', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
@@ -1220,8 +1220,8 @@ end
 get '/cw/sector/:high_level_sector_code/categories/:category_code/?' do
 	# Get the three digit DAC sector data from the API
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Page'
-  	erb :'sector/sectors', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_sectors', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
@@ -1242,8 +1242,8 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_projects', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
@@ -1275,8 +1275,8 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/:sect
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
 
   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
+  	erb :'cw/sector/cw_projects', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
@@ -1301,7 +1301,7 @@ end
 
 get '/cw/faq/?' do
   	settings.devtracker_page_title = 'FAQ: What does this mean?'
-	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
+	erb :'/cw/faq/cw_faq', :layout => :'/cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
 #####################################################################
@@ -1319,10 +1319,6 @@ get '/cw/countries/:country_code/?' do |n|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
 	 		results = get_country_results(n)
-	 		#oipa v2.2
-    		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
-			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
-			#oipa v3.1
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
@@ -1351,13 +1347,9 @@ get '/cw/countries/:country_code/projects/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	projectData = ''
 	projectData = get_country_all_projects_data(n)
-#	 Benchmark.bm(7) do |x|
-#	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
-#	end
-	#projectData = get_country_all_projects_data_para(n)
   	settings.devtracker_page_title = 'Country ' + projectData['country'][:name] + ' Projects Page'
-	erb :'countries/projects', 
-		:layout => :'layouts/layout',
+	erb :'/cw/countries/cw_projects', 
+		:layout => :'/cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		country: projectData['country'],
@@ -1376,28 +1368,6 @@ get '/cw/countries/:country_code/projects/?' do |n|
 		 			
 end
 
-#####################################################################
-#  COUNTRY RESULTS PAGE
-#####################################################################
-
-get '/cw/countries/:country_code/results/?' do |n|		
-	n = sanitize_input(n,"p").upcase
-	country = get_country_code_name(n)
-	results = get_country_results(n)
-	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
-  	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
-	erb :'countries/results', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		country: country,
-	 		totalProjects: totalProjects,
-	 		results: results,
-	 		resultsPillar: resultsPillar
-	 		}
-		 			
-end
 
 #####################################################################
 #  PROJECT SUMMARY PAGE
@@ -1412,11 +1382,7 @@ get '/cw/projects/:proj_id/?' do |n|
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
-  	#get total project budget and spend Data
-  	#projectBudget = get_project_budget(n)
-
   	#get project sectorwise graph  data
-  	
   	projectSectorGraphData = get_project_sector_graph_data(n)
   	
 	# get the funding projects Count from the API
@@ -1426,8 +1392,8 @@ get '/cw/projects/:proj_id/?' do |n|
 	fundedProjectsCount = get_funded_project_count(n)
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']
-	erb :'projects/summary', 
-		:layout => :'layouts/layout',
+	erb :'cw/projects/cw_summary', 
+		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
@@ -1459,8 +1425,8 @@ get '/cw/projects/:proj_id/documents/?' do |n|
 	fundedProjectsCount = get_funded_project_count(n)
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
-	erb :'projects/documents', 
-		:layout => :'layouts/layout',
+	erb :'cw/projects/cw_documents', 
+		:layout => :'cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			project: project,
@@ -1514,8 +1480,8 @@ get '/cw/projects/:proj_id/transactions/?' do |n|
 	fundedProjectsCount = get_funded_project_count(n)
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
-	erb :'projects/transactions', 
-		:layout => :'layouts/layout',
+	erb :'cw/projects/cw_transactions', 
+		:layout => :'cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
@@ -1592,8 +1558,8 @@ get '/cw/projects/:proj_id/partners/?' do |n|
 	fundedProjectsData = get_funded_project_details(n)
 
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
-	erb :'projects/partners', 
-		:layout => :'layouts/layout',
+	erb :'/cw/projects/cw_partners', 
+		:layout => :'cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
@@ -1604,3 +1570,35 @@ get '/cw/projects/:proj_id/partners/?' do |n|
  			fundingProjectsCount: fundingProjectsData['count']
  		}
 end
+
+#####################################################################
+#  STATIC PAGES
+#####################################################################
+
+
+get '/cw/about/?' do
+  	settings.devtracker_page_title = 'About DevTracker Page'
+	erb :'cw/about/cw_about', :layout => :'cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end
+
+get '/cw/cookies/?' do
+  	settings.devtracker_page_title = 'Cookies Page'
+	erb :'cw/cookies/cw_index', :layout => :'cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end  
+
+get '/cw/faq/?' do
+  	settings.devtracker_page_title = 'FAQ: What does this mean?'
+	erb :'cw/faq/cw_faq', :layout => :'cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url }
+end 
+
+#####################################################################
+#  Do we need a separate Fraud link page
+#####################################################################
+get '/fraud/?' do
+  	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
+	erb :'fraud/index', :layout => :'layouts/layout_forms',
+	:locals => {
+		googlePublicKey: settings.google_recaptcha_publicKey,
+		oipa_api_url: settings.oipa_api_url
+	}
+end  

@@ -1,22 +1,22 @@
-
+<div class="hero">
 <div id="page-title" class="row">
     <div class="twelve columns">
-        <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
+        <img src="/cw/images/cw_ukaid_logo.png" alt="UK aid from the British people"><img src="/cw/images/cw-logo.png" title="the commonweatlth logo">
         <div>
             <div class="breadcrumb">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/location/country/">Aid by Location</a></li>
+                    <li><a href="/cw">Home</a></li>
+                    <li><a href="/cw/location/country/">Aid by Location</a></li>
                     <li><%= country[:name] %></li>
                 </ul>
             </div>
             <h1>
-                <img src="/images/flags/<%= country[:code].downcase%>.png" alt="Country Flag"><%= country[:name] %></small>
+                <%= country[:name] %>
             </h1>
         </div>
     </div>
 </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => projectCount, :results_count => results.length } %>
-
-<%= erb :'partials/_project_list', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes} %>
+<%= erb :'cw/partials/_cw_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => projectCount, :results_count => results.length } %>
+</div>
+<%= erb :'cw/partials/_cw_project_list', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes} %>
