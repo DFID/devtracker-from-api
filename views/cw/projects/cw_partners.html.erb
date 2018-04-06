@@ -1,0 +1,77 @@
+<!-- title: Development Tracker -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners"} %>
+
+  <% if fundingProjectsCount > 0 then %>
+      <div class="row">
+          <div class="twelve columns results-info">
+            <h3 class="section-group-title">Funding Project</h3>
+            <% fundingProjects=fundingProjects.group_by{|b| b['provider_organisation']['provider_activity_id'].to_s.strip}.map{|provider_activity_id, budgets|
+                    summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget['value'].to_f}
+                    [provider_activity_id, summedBudgets]} %>
+            <% fundingProjects.each do |fundingProject| %>
+                <% if is_valid_project(fundingProject[0]) %>
+                  <% fundingProjectDetails= get_funding_project(fundingProject[0])%>
+                  <%if fundingProjectDetails != '' %>
+                    <% fundingProjectDetailsCurrency= get_funding_project(project['iati_identifier'])%>
+                    <div class="row">        
+                      <div class="four columns summary">
+                          <h4><%= fundingProjectDetails['reporting_organisations'][0]['narratives'][0]['text'] %></h4>         
+                      </div>
+                      <div class="eight columns">
+                          <ul>
+                              <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
+                                  <span>
+                                     <%# If the default currency value is undefined do not show a value for the project%>
+                                     <%=begin
+                                         Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                                      rescue
+                                               
+                                      end %>
+                                  </span>    
+                              </li>
+                          </ul> 
+                      </div>
+                    </div>
+                  <%end%>
+                <% end %>
+            <% end %>
+          </div>
+      </div>
+  <% end %>
+
+  <% if fundedProjectsCount > 0 then %>
+      <div class="row">
+          <div class="twelve columns results-info">                 
+              <% if is_dfid_project(project['id']) then %>
+                <h3 class="section-group-title">Partner Projects</h3>
+              <%else%>
+                 <h3 class="section-group-title">Funded Projects</h3>
+              <%end%>
+                <% fundedProjects.each do |fundedProject| %>
+                  <div class="row">
+                      <div class="four columns summary">
+                          <h4><%= if fundedProject['reporting_organisations'][0]['narratives'].length==0 then '' else fundedProject['reporting_organisations'][0]['narratives'][0]['text'] end %></h4>
+                      </div>
+                      <div class="eight columns">
+                          <ul>
+                             <%# TODO - deal with the situation where we have multiple languages %>
+                             <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                               <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
+                               <span>
+                                   <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
+                                   <%=begin       
+                                            Money.new(fundedProject['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                      rescue
+                                             
+                                      end %>    
+                                 </span>
+                               <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
+                             </li>
+                          </ul> 
+                      </div>
+                  </div>  
+              <% end %>
+          </div>
+      </div>
+  <% end %>

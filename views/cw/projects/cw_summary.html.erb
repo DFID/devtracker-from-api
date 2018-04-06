@@ -1,0 +1,367 @@
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
+
+<div class="row">
+    <div class="twelve columns summary">
+        <p class="project-description"><%= project['descriptions'].length>0 ? project['descriptions'][0]['narratives'][0]['text'] : "" %></p>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="six columns">
+        <div class="more-info-container">  
+            <span class="more-info-title">Status - <%= activity_status(project['activity_status']['code']) %></span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        The current stage of the project, consistent with the International Aid Transparency Initiative's (IATI) classifications.
+                    </div>
+            </aside>
+        </div> 
+
+
+        <div id="time-progress" style="height: 150px;" class="progress"></div>
+        
+         <div class="more-info-container">  
+            <span class="more-info-title">Funding</span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
+            <aside id="moreinfo2" class="more-info">            
+                    <div class="more-info-content">
+                        Project budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
+                    </div>
+            </aside>
+         </div> 
+
+        <div id="funding-progress" style="height: 150px;" class="progress"></div>
+
+        <!-- TODO: add back in the number_to_currency method based on the money gem -->
+        <!--[if lte IE 8]>
+           <div>
+                <p><strong>Budget spend to date:</strong> </p>
+                <p><strong>Project budget:</strong>  </p>
+           </div>
+        <![endif]-->
+
+        <!--[if lte IE 8]>
+            <div>
+                 <p><strong>Start Date:</strong> <%#= format_date(choose_better_date(project['start-actual'], project['start-planned'])) %></p>
+                 <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
+            </div>
+        <![endif]-->
+        <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <% if (implementingOrgs.length>0)  %>
+
+            <div class="more-info-container">  
+                <span class="more-info-title">Implementing Organisation(s)</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
+                <aside id="moreinfo4" class="more-info">            
+                        <div class="more-info-content">
+                            These organisations have received funding disbursements from this DFID IATI activity.
+                        </div>
+                </aside>
+            </div>
+
+            <div id="implementing-organisations">
+                <ul>
+                    <% implementingOrgs.each {|implementingOrg| %>
+                    <li>
+                       <%= implementingOrg %>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        <% end %>
+    </div>
+
+
+    <div class="six columns" role="presentation">
+    <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
+        <div class="project-country-title"> 
+          <strong>Benefitting country/region</strong>: <%= countryOrRegion[:label] %>
+          
+           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
+           <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content more-info-limit-size">
+                        The country/countries/regions that benefit from this project.
+                    </div>
+            </aside>
+        </div>  
+    <%#end%>
+
+        <div><%#= countryOrRegion %></div>
+        <div><%#= countryOrRegion[:label] %></div>
+        <div id="countryMap" class="countryMap"></div>
+
+        <!--TODO - do some logic to get these  types-->
+
+        <input type="hidden" id="countryName" value="<%= countryOrRegion[:name] %>">
+        <input type="hidden" id="countryCode" value="<%= countryOrRegion[:code] %>">
+        <% if countryOrRegion[:code] == "NS" || countryOrRegion[:code] == "ZZ" || countryOrRegion[:code] == "998" %>
+            <input id="projectType" value="global" type="hidden">
+        <%else%>
+            <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
+        <%end%>
+       
+        <script src="/javascripts/regionBounds.js" type="text/javascript"></script>
+        <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+<!--        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
+        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">
+        <script src="/javascripts/leaflet/leaflet.js"></script>
+        <script src="/javascripts/leaflet/leaflet-googlemaps.js"></script>
+        <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
+        <script type="text/javascript">
+            var mapType = "project";
+            var locations = <%=project['locations'].to_json%>;
+            var ProjectTitle = "<%= project['title']['narratives'][0]['text'] %>";
+        </script> 
+        <script src="/javascripts/countrymap.js" type="text/javascript"></script>
+
+        <div id="countryMapDisclaimer" class="disclaimer grey">
+            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="six columns">
+        <div class="more-info-container">  
+                <span class="more-info-title">Sector groups as a percentage of project budget</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5"><img src="/images/icon-information.png" alt="More information about project sector groups" class="more-info-link-middle"/></a>
+                <aside id="moreinfo5" class="more-info">            
+                        <div class="more-info-content">
+                            A project can have up to 8 sectors, which are displayed with percentage allocations that total up to 100%.  They are consistent with the Development Assistance Committee's (DAC) classifications.
+                        </div>
+                </aside>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <div id="sectorChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+        <div class="more-info-container">  
+                <span class="more-info-title">Project budget vs actual spend</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink6" target="6"><img src="/images/icon-information.png" alt="More information about project budget vs actual spend" class="more-info-link-middle"/></a>
+                <aside id="moreinfo6" class="more-info">            
+                        <div class="more-info-content">
+                           A comparison of forecast spend and the total amount of money spent on the project to date.  Some budgets may not be shown if projects are in an active procurement phase.
+                        </div>
+                </aside>
+        </div>
+        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
+
+    </div>
+
+    <script type="text/javascript" src="/javascripts/donut.js"></script>
+    <script type="text/javascript" src="/javascripts/progress.js"></script>
+    <script type="text/javascript" src="/javascripts/bar.js"></script>
+    <script type="text/javascript">
+    <%
+    dis_curr = defined?(project['aggregations']['activity_children']['disbursement_currency']).nil?.to_s
+    exp_curr = defined?(project['aggregations']['activity_children']['expenditure_currency']).nil?.to_s
+    default_curr = defined?(project['default_currency']['code']).nil?.to_s
+    if(dis_curr == 'true') then dis_curr = '' else dis_curr = project['aggregations']['activity_children']['disbursement_currency'] end
+    if(exp_curr== 'true') then exp_curr = '' else exp_curr = project['aggregations']['activity_children']['expenditure_currency'] end
+    if(default_curr == 'true') then default_curr = '' else default_curr = project['default_currency']['code'] end
+    %>
+        (function(){
+            var funding = [ {label: "", text: "", value: 0},
+                            {label: "Spend to date", text: "<%= Money.new((project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) + project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) + project['aggregations']['activity_children']['purchase_of_equity_value'].to_f.round(0))*100 , choose_better_currency(dis_curr,exp_curr,default_curr)).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['aggregations']['activity_children']['disbursement_value'].to_f.round(0) + project['aggregations']['activity_children']['expenditure_value'].to_f.round(0) + project['aggregations']['activity_children']['purchase_of_equity_value'].to_f.round(0) %>},
+                            {label: "Project budget", text: "<%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f.round(0)*100 , if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) %>}]
+            charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
+
+            var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
+                          text: "<%= format_date(choose_better_date(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])))%>",
+                          value: <%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>},
+                         {label: "Progress by time",
+                          text: "",
+                          value: new Date().getTime()},
+                         {label: "<%=choose_better_date_label(actualEndDate(project['activity_dates']),plannedEndDate(project['activity_dates'])) %> End",
+                          text: "<%= format_date(choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates']))) %>",
+                          value: <%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>}];
+            charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
+
+            //var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
+            //charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
+        })()
+    </script>
+    <script>
+    $(document).ready(function() {
+        function reformCurrencyFormat(value){
+            if(value.indexOf("G") > -1){
+                var temp = value.replace("G","B");
+                return temp;
+            }
+            else{
+                return value;
+            }
+        }
+        function graphCurrencyHandlerFront(string){
+            if(string.search("0") != 0){
+                console.log(string.slice(0,string.search("0") - 1));
+                return string.slice(0,string.search("0"));
+            }
+            else{
+                return '';
+            }
+        }
+        function graphCurrencyHandlerBack(string){
+            if(string.search("0") != 0){
+                return '';
+            }
+            else{
+                console.log(string.slice(4,string.length));
+                //return string.slice(4,string.length);
+                return string.replace(/[0.]*/,"");
+            }
+        }
+        var stacked = c3.generate({
+            bindto: '#sectorChart',
+            data: {
+                columns: [
+                    <%= projectSectorGraphData[0] %>
+                ],
+                type: 'bar',
+                labels: false,
+                groups: [
+                    <%= projectSectorGraphData[1] %>
+                ]
+            },
+            tooltop: {
+                grouped: false
+            },
+            padding: {left: 10, right: 10},
+            axis: {
+                rotated: true,
+                x: {
+                    show: false
+                },
+                y: {
+                    label: '%',
+                    min: 0,
+                    max: 100,
+                    padding: {top: 0, bottom: 0}
+                }
+            },
+            bar: {
+                width: {
+                    ratio: .6
+                }
+            },
+            tooltip: {
+                format: {
+                    title: function (x) { return 'Sector %' }
+                }
+            }
+        });
+        <% budgetYearData = project_budget_per_fy(project['id']) %>
+
+        <% if !budgetYearData.nil? then %>
+            <% begin %>
+                <%if !project["default_currency"]["code"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
+                    //var graphCurrency = '<%#= Money.new(0,"GBP").format %>'
+                <% elsif !project["aggregations"]["activity_children"]["budget_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["budget_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["disbursement_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["disbursement_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["incoming_funds_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["incoming_funds_currency"]).format %>'
+                <% elsif !project["aggregations"]["activity_children"]["expenditure_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["expenditure_currency"]).format %>'
+                <% else %>
+                    var graphCurrency = ""    
+                <% end %>
+            <% rescue %>
+                var graphCurrency = "";
+            <% end %>
+            var yTicks = [];
+            var chart = c3.generate({
+                bindto: '#budget-plan-spend',
+                legend: {
+                    show: true
+                },
+                tooltip: {
+                    format: {
+                        value: function(value){
+                            return graphCurrencyHandlerFront(graphCurrency) + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + graphCurrencyHandlerBack(graphCurrency);
+                        }
+                    }
+                },
+                bar: {
+                    width: {
+                        ratio: .7
+                    }
+                },
+                data: {
+                    x: 'x',
+                    columns: [
+                        ['x', <%= budgetYearData[0] %>],
+                        ['Budget', <%= budgetYearData[1] %>],
+                        ['Spend', <%= budgetYearData[2] %>]
+                    ],
+                    type: 'bar'
+                },
+                color: {
+                    pattern: ["#D8DCBF", "#2B6367"]
+                },
+                axis:{
+                    x:{
+                        type: 'category',
+                        show: true
+                    },
+                    y: {
+                        tick: {
+                            //count: 6,
+                            format: function(d){ 
+                                yTicks.push(d3.format(".2s")(d)); 
+                                return graphCurrencyHandlerFront(graphCurrency) + reformCurrencyFormat(d3.format(".2s")(d)) + graphCurrencyHandlerBack(graphCurrency);
+                            } 
+                                /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                        },
+                    }
+                },
+            });
+            /*This code is for generating the grid line values for the bar chart*/
+            var tempString = [];
+            yTicks.pop();
+            for(i = 0; i < 5; i++) {
+                tempString[i] = yTicks.pop().replace("M","") + '000000';
+            }
+            /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
+            yTicks = [];
+            /* Generating the grid lines */
+            for(i=0;i<tempString.length;i++){
+                yTicks = [];
+                //chart.ygrids.add({value: tempString[i]});
+            }
+            if(graphCurrency == ''){
+                $('#budget-plan-spend').append('<span style="text-align: center; margin: 0 60px;">Please note: No Valid currency present in the above data.</span>');
+            }            
+            <% else %>
+
+            $('#budget-plan-spend').html("Data not found");
+
+            <% end %>
+        
+    });
+ </script>
+
+</div>
+
+    <div class="row">
+        <div class="twelve columns download-link">
+            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['id'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
+            <%if !project['last_updated_datetime'].nil?%>
+                <p>Project data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
+            <% end %>
+        </div>
+    </div>

@@ -1,0 +1,92 @@
+<!--
+title: Development Tracker
+ -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "transactions"} %>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                       B U D G E T S   T A B L E                          %>
+<%# ------------------------------------------------------------------------ %>
+<div class="row">
+  <div class="twelve columns transactions">
+
+    <div class="section-group-title trans-header-container">
+      <div class="trans-header-left">
+        <span class="trans-type-title">Budget</span>
+        <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+           <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
+        </a> 
+        <aside id="moreinfo1" class="more-info">  
+              <div class="more-info-content trans-more-info-box-limiter">
+                The total amount of money available to spend.  Some budgets may not be shown if projects are in an active procurement phase.
+              </div>
+        </aside>   
+        <p style="margin-bottom:2px;">(Current approved budget)</p>
+       </div>  
+       <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
+       <div class="trans-header-right">
+         <div class="<%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%=  Money.new(project['aggregations']['activity_children']['budget_value'].to_f.round(0)*100, if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
+
+           end%><a href="/downloadCSV/<%= project['id']%>/0" style="margin-left: 5px" class="api-link button">CSV</a></div>
+       </div>        
+    </div>
+    <table id="dvData" class="transactions-table" style="width:100%">
+      <tbody>
+        <tr>
+          <th>Financial Year</th>
+          <th>Value</th>
+        </tr>
+        <% projectYearWiseBudgets.each do |projectYearWiseBudget| %>
+          <tr>
+            <td><%= projectYearWiseBudget['fy'] %></td>
+            <!--<td><span class="<%#= projectYearWiseBudget['value'].round(0) < 0 ? 'negative' : ''%>"> -->
+              <td><span><%begin%><%= Money.new(projectYearWiseBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %><%rescue%><%end%></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   I N C O M I N G   F U N D S   T A B L E                %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/1"} %>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   C O M M I T M E N T S   T A B L E                      %>
+<%# ------------------------------------------------------------------------ %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
+
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   D I S B U R S E M E N T S   T A B L E                  %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursement', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '(Fund transfer to implementing agency)', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :cssId => 'disbursements', :fifthcolumn=> 'Receiver Org' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/3"} %>
+
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   E X P E N D I T U R E   T A B L E                      %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '(Project spend)', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :cssId => 'expenditures', :fifthcolumn=> 'Receiver Org' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/4"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   I N T E R E S T  R E P A Y M E N T   T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '(Amount of interest paid on a loan or line of credit, including fees)', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :cssId => 'interestRepayments', :fifthcolumn=> 'Receiver Org' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/5"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   L O A N  R E P A Y M E N T   T A B L E                              %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '(The actual amount of principal (amortisation) repaid, including any arrears)', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :cssId => 'loanRepayments', :fifthcolumn=> 'Receiver Org' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/6"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   P U R C H A S E  O F  E Q U I T Y    T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquities, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '(Outgoing funds to purchase equity)', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :cssId => 'purchaseEquities', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Org' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/8"} %>

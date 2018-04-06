@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="twelve columns">
+        <div class="tab-bar-container">
+            <div class="row">
+
+  
+                 <div class="button-row six columns">
+                    <% if project_count > 0 %>
+                    <span>
+                        <a id='Subscribe' href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string country[:code] %>" title="Subscribe to receive updates on <%= country[:name] %> by email" class="button inform">&#9993; Subscribe</a>
+                    </span>
+                    <% end %>
+                     <span>
+                        <a id='Report-Fraud' href="/fraud?country=<%= format_query_string country[:name] %>" class="button serious" title="Report fraud">Report Fraud</a>
+                    </span>
+                </div>  
+              
+                <div class="projects-nav six columns">
+                    <nav>
+                        <ul class="tab-bar">
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/cw/countries/<%= country[:code] %>">Summary</a></li>
+                            <%if project_count !=0 %>
+                                <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/cw/countries/<%= country[:code] %>/projects">Active Projects (<%=project_count%>)</a></li>
+                            <%end%>
+                            
+                        </ul>
+                    </nav>
+                </div>  
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "documents"} %>
+
+<div class="row">
+    <div class="twelve columns summary">
+        <h2 class="visually-hidden">Documents</h2>
+        <% if(is_dfid_project(project['iati_identifier'])) %>
+          <p>DFID aim to be as transparent as possible however, in some cases, we are unable to show all the documents that are associated with a project, for example where there is a potential security risk. Documents for projects approved before January 2011 are not normally published.</p>
+          <p>Where document dates are shown in brackets following the document title, these refer to the date the document was first published.</p>
+        <% end %>
+        <div class="row">
+    
+</div>
+        <table class="results-list">
+            <thead class="visually-hidden">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Doc Type</th>
+                    <th scope="col">Categories</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% project['document_links'].each do |document| %>
+                  <%begin%>
+                    <%
+                    t_url = document['url']
+                    t_url_txt = document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '')
+                    t_code = document['title']['narratives'][0]['language']['code']
+                    t_title = document['title']['narratives'][0]['language']['name']
+                    %>
+                    <tr class="result-list-row">
+                        <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
+                        <% if t_code != "en" then%>
+                           <td scope="col">
+                              <span class="language">
+                                <%= t_title %>
+                              </span>
+                           </td>
+                        <% end %>
+                        <td scope="col">
+                          <%= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
+                        </td>
+                        <td scope="col">
+                          <% document['categories'].each do |category| %>
+                            <span class="category">
+                              <%= category['name']%>
+                            </span>
+                          <% end %>
+                        </td>
+                    </tr>
+                  <%rescue%>
+                  <%end%>
+                <% end %>
+                <!-- This part is to handle documents with application/mail formats -->
+                <%# project['local_document_links'].each do |document| %>
+               <!-- <tr class="result-list-row">
+                        <th scope="row"><a href="<%#= document['url']%>"><%#= document['title']%></a></th>
+                        
+                        <td scope="col">
+                          <%#= iati_mime_type document['format']%>
+                        </td>
+                        <td scope="col">
+                          <%# tempCategories = document['category'].split(",") %>
+                          <%# tempDocCategories = JSON.parse(File.read('data/doc_category_list.json')) %>
+                          <%#tempCategories.each do |category|%>
+                          <%# matchedCategory = tempDocCategories.select{|c| c['code'] == category} %>
+                            <span class="category">
+                              <%#= matchedCategory[0]["text"]%>
+                            </span>
+                          <%# end %>
+                        </td>
+                    </tr> -->
+                  <%#end%>
+            </tbody>
+        </table>       
+        
+        
+        
+    </div>
+</div>
