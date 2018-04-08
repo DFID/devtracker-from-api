@@ -1128,13 +1128,13 @@ end
 get '/cw' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
-  	top5countries = get_top_5_countries()
+  	top5countries = get_top_5_countries_cw()
   	settings.devtracker_page_title = ''
  	erb :'cw/cw_index',
  		:layout => :'cw/layouts/cw_landing', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			what_we_do: high_level_sector_list_cw( get_5_dac_sector_data_cw(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results 	
  		}
 end

@@ -50,43 +50,27 @@ layout: cw_landing
 </div>
 
 <div class="row top-5s">
-    <div class="four columns" id="top-5-achiee">    
-       
-       <div class="top-five-header">
-    <span class="top-five-title">Strategic Outcomes</span>
-           <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"></a>
-           <aside id="moreinfo3" class="more-info">            
-                   <div class="more-info-content">
-                       Results achieved up to 2015/16 inclusive towards DFID commitments for the period 2011-16.
-                   </div>
-           </aside>
-       </div>
-       <ol>
-         
-         <li>
-           Greater adherence to Commonwealth political values and principles
-         </li>
-         
-         <li>
-More effective, efficient and equitable public governance
-         </li>
-         
-         <li>
-People of the Commonwealth fulfil their potential with dignity and equality in a healthy environment
-         </li>
-         
-         <li>
-More inclusive economic growth and sustainable development
-         </li>
-         
-         <li>
-Strengthened resilience of small and other vulnerable states, including adaptation and mitigation against climate change
-         </li>
-         
-       </ol>
-       
-       <p>Source: <a href="http://thecommonwealth.org/sites/default/files/inline/CommonwealthSecretariatStrategic_Plan_17_21.pdf">Commonwealth Secretariat Strategic Plan</a></p>
-   </div>
+    <div class="four columns" id="top-5-achiee">
+        <%if !what_we_achieve.nil?  %>
+        <div class="top-five-header">        
+            <span class="top-five-title">Strategic Outcomes</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        Results achieved up to 2015/16 inclusive towards DFID commitments for the period 2011-16.
+                    </div>
+            </aside>
+        </div>
+        <ol>
+          <% what_we_achieve.each do |entry| %>
+          <li>
+            <%= entry['title'] %>
+          </li>
+          <% end %>
+        </ol>
+        <%end%>
+        <p>Source: <a href="http://thecommonwealth.org/sites/default/files/inline/CommonwealthSecretariatStrategic_Plan_17_21.pdf">Commonwealth Secretariat Strategic Plan</a></p>
+    </div>
     <div class="four columns" id="top-5-countries">
         <div class="top-five-header">        
             <span class="top-five-title">Top 10 Places We Work</span> 
@@ -140,7 +124,7 @@ $(document).ready(function() {
     window.top5Sectors = <%=what_we_do.to_json%>;
 });    
 </script>
-<script type="text/javascript" src="/javascripts/indexTabs.js"></script>
+<script type="text/javascript" src="/cw/javascripts/indexTabs.js"></script>
 <style>
   .ui-tabs-vertical { width: 55em; }
   .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
