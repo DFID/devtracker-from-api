@@ -320,7 +320,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1973"
   },
   {
     "code": "BH",
@@ -358,7 +359,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1972"
   },
   {
     "code": "BB",
@@ -738,7 +740,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1995"
   },
   {
     "code": "CA",
@@ -1194,7 +1197,8 @@
     "fertilityRate_year": 2003,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2002,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1978"
   },
   {
     "code": "DO",
@@ -1593,7 +1597,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1957"
   },
   {
     "code": "GI",
@@ -1954,7 +1959,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1947"
   },
   {
     "code": "ID",
@@ -2106,7 +2112,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1962"
   },
   {
     "code": "JP",
@@ -2201,7 +2208,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1963"
   },
   {
     "code": "KI",
@@ -2372,7 +2380,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1966"
   },
   {
     "code": "LR",
@@ -2543,7 +2552,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1964"
   },
   {
     "code": "MY",
@@ -2885,7 +2895,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1995"
   },
   {
     "code": "MM",
@@ -3094,7 +3105,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1960"
   },
   {
     "code": "NU",
@@ -3208,7 +3220,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1947"
   },
   {
     "code": "PW",
@@ -3512,7 +3525,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"2009"
   },
   {
     "code": "BL",
@@ -3797,7 +3811,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1961"
   },
   {
     "code": "SG",
@@ -3930,7 +3945,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1931"
   },
   {
     "code": "GS",
@@ -4006,7 +4022,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": 2015
+    "population_year": 2015,
+    "commonwealth_year":"1948"
   },
   {
     "code": "SD",
@@ -4196,7 +4213,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": ""
+    "population_year": "",
+    "commonwealth_year":"1961"
   },
   {
     "code": "TH",
@@ -4424,7 +4442,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": ""
+    "population_year": "",
+    "commonwealth_year":"1962"
   },
   {
     "code": "UA",
@@ -4576,7 +4595,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": ""
+    "population_year": "",
+    "commonwealth_year":"1980"
   },
   {
     "code": "VE",
@@ -4728,7 +4748,8 @@
     "fertilityRate_year": 2014,
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
-    "population_year": ""
+    "population_year": "",
+    "commonwealth_year":"1964"
   },
   {
     "code": "ZW",

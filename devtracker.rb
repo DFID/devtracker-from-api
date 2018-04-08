@@ -1319,7 +1319,7 @@ get '/cw/countries/:country_code/?' do |n|
 	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation=GB-GOV-1&page_size=1")
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
-	 		country = get_country_details(n)
+	 		country = get_country_details_cw(n)
 	 		results = get_country_results(n)
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
