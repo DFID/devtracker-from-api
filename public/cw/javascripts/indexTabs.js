@@ -30,7 +30,7 @@ $(document).ready(function() {
     chart2.on('renderlet', function(chart) {
         chart.selectAll("text").on("click", function (d) {
             var result = $.grep(window.top5Countries,function(e){return e.name == d.key});
-            window.location.href = "countries/"+ result[0].code  + "/";
+            window.location.href = "cw/countries/"+ result[0].code  + "/";
         });
     });
 
@@ -58,7 +58,7 @@ $(document).ready(function() {
     chart3.on('renderlet', function(chart) {
         chart.selectAll("text").on("click", function (d) {
             var result = $.grep(window.top5Sectors,function(e){return e.name == d.key});
-            window.location.href = "sector/"+ result[0].code  + "/";
+            window.location.href = "cw/sector/"+ result[0].code  + "/";
         });
     });
 
@@ -68,12 +68,12 @@ $(document).ready(function() {
         if($(this).parent().parent().parent().parent().attr('id') == 'top5Countries'){
             var temp = $(this).parent().children('text').text();
             var result = $.grep(window.top5Countries,function(e){return e.name == temp});
-            window.location.href = "countries/"+ result[0].code  + "/";
+            window.location.href = "cw/countries/"+ result[0].code  + "/";
         }
         else{
             var temp = $(this).parent().children('text').text();
             var result = $.grep(window.top5Sectors,function(e){return e.name == temp});
-            window.location.href = "sector/"+ result[0].code  + "/"; 
+            window.location.href = "cw/sector/"+ result[0].code  + "/"; 
         }
     });
 });
