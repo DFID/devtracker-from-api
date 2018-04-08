@@ -1382,7 +1382,7 @@ get '/cw/projects/:proj_id/?' do |n|
 	# get the project data from the API
   	project = get_h1_project_details(n)
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region_cw(n)
 
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_data(n)
@@ -1402,7 +1402,6 @@ get '/cw/projects/:proj_id/?' do |n|
  			countryOrRegion: countryOrRegion,	 					 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
- 			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData
  		}
 end
