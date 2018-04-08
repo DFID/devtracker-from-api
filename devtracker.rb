@@ -1517,10 +1517,10 @@ get '/cw/search/?' do
 		activityStatusList = '1,2'
 	end
 	puts activityStatusList
-	results = generate_searched_data(query,activityStatusList);
+	results = generate_searched_data_cw(query,activityStatusList);
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/search',
-	:layout => :'layouts/layout',
+	erb :'cw/search/search',
+	:layout => :'cw/layouts/cw_layout',
 	:locals => {
 		oipa_api_url: settings.oipa_api_url,
 		projects: results['projects'],
