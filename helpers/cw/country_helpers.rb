@@ -92,6 +92,7 @@ module CountryHelpersCW
             :fertilityRate_year => country['fertilityRate_year'],
             :gdpGrowthRate => country['gdpGrowthRate'],
             :gdpGrowthRate_year => country['gdpGrowthRate_year'],
+            :commonwealth_year => country['commonwealth_year'],
             :totalProjects => totalProjectsDetails['count'],
             :totalActiveProjects => totalActiveProjects,
             :operationalBudget => operationalBudget,
