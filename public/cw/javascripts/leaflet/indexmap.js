@@ -71,10 +71,10 @@
         "   </div>" +
         "   <div class='row'>" +
         "       <div class='six columns'>" +
-        "           <div class='stat'><a href='cw/countries/" + countryData.id + "'>View country info</a></div>"  +
+        "           <div class='stat'><a href='/cw/countries/" + countryData.id + "'>View country info</a></div>"  +
         "       </div>" +
         "       <div class='six columns'> " +
-        "          <div class='stat'><a href='cw/countries/" + countryData.id + "/projects'>View projects list</a></div>"  +
+        "          <div class='stat'><a href='/cw/countries/" + countryData.id + "/projects'>View projects list</a></div>"  +
         "        </div>"  +
         "   </div>" +
         "</div>";
