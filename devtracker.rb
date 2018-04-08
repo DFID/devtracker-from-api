@@ -41,6 +41,7 @@ require_relative 'helpers/ogd_helper.rb'
 require_relative 'helpers/cw/country_helpers.rb'
 require_relative 'helpers/cw/search_helper.rb'
 require_relative 'helpers/cw/sector_helpers.rb'
+require_relative 'helpers/cw/project_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -58,6 +59,7 @@ include OGDHelper
 include CountryHelpersCW
 include SectorHelpersCW
 include SearchHelperCW
+include ProjectHelpersCW
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
@@ -1149,9 +1151,9 @@ get '/cw/location/country/?' do
 		:layout => :'/cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			:dfid_country_map_data => 	dfid_country_map_data,
-			:dfid_complete_country_list => 	dfid_complete_country_list,
-			:dfid_total_country_budget => total_country_budget_location
+			:dfid_country_map_data => 	dfid_country_map_data_cw,
+			#:dfid_complete_country_list => 	dfid_complete_country_list_cw,
+			:dfid_total_country_budget => total_country_budget_location_cw
 		}
 end
 
