@@ -48,7 +48,7 @@
                  <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
             </div>
         <![endif]-->
-        <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <% implementingOrgs=get_implementing_orgs_cw(project['iati_identifier'])%>
         <% if (implementingOrgs.length>0)  %>
 
             <div class="more-info-container">  
@@ -77,7 +77,7 @@
     <div class="six columns" role="presentation">
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
         <div class="project-country-title"> 
-          <strong>Benefitting country/region</strong>: <%= countryOrRegion[:label] %>
+          <strong>Benefitting Country</strong>: <%= countryOrRegion[:label] %>
           
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
            <aside id="moreinfo1" class="more-info">            

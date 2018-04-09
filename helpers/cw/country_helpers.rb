@@ -125,7 +125,7 @@ module CountryHelpersCW
       #iterate through the array
       countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
       regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
-
+      puts countries
       #project type logic
       if(!countries.empty?) then 
         numberOfCountries = countries.count
@@ -157,18 +157,18 @@ module CountryHelpersCW
       #  projectType = "region"
       else 
         projectType = "global"
-        breadcrumbLabel = "Global"
-        breadcrumbUrl = "/location/global"
+        breadcrumbLabel = "Country"
+        breadcrumbUrl = "/location/country"
       end
 
       #generate the text label for the country or region
       globalLabel = []
+      commonwealthCountries = 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'.split(',')
       countries.map do |c|
-        country = get_country_code_name(c['country']['code'])
-        globalLabel << country[:name]
-      end
-      regions.map do |r|
-        globalLabel << r['region']['name']
+        if commonwealthCountries.include? c['country']['code']
+          country = get_country_code_name(c['country']['code'])
+          globalLabel << country[:name]
+        end
       end
       label = globalLabel.sort.join(", ")
 

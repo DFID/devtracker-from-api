@@ -44,9 +44,9 @@
         <div>
             <div class="breadcrumb">
                 <ul>
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/cw">Home</a></li>
                     <%#if countryOrRegion[:projectType] == "country" %>
-                        <li><a href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
+                        <li><a href="/cw<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
                     <%# end %>
                     <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
                 </ul>

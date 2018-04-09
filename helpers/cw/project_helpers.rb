@@ -17,8 +17,8 @@ module ProjectHelpersCW
         return true
     end
 
-    def get_h1_project_details(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+    def get_h1_project_details_cw(projectId)
+        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK"
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
         #project['local_document_links'] = get_document_links_local(projectId)
@@ -224,12 +224,13 @@ module ProjectHelpersCW
         end
     end
 
-    def get_implementing_orgs(projectId)
+    #Debug-04-09-18 API call
+    def get_implementing_orgs_cw(projectId)
         if is_dfid_project(projectId) then
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK"
         else
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
-        end    
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK"
+        end
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         implementingOrg=implementingOrgsDetails['results']
 
