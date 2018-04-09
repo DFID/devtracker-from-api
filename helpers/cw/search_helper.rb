@@ -106,7 +106,7 @@ Returns a Hash 'searchedData' with the following keys:
 		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation
 		# The following api call returns the projects list based on the search query. The result is returned with data sorted
 		# by budget value so that we can get the budget higher bound from a single api call.
-		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status="+activityStatusList+"&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK"
+		oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{query}&activity_status="+activityStatusList+"&ordering=-activity_plus_child_budget_value&reporting_organisation=GB-GOV-1&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK"
 		projects_list= JSON.parse(oipa_project_list)
 		searchedData['projects'] = projects_list['results'] # Storing the returned project list
 		# Checking if the returned result count is 0 or not. If not, then store the budget value of the first item from the returned search data.
@@ -116,8 +116,9 @@ Returns a Hash 'searchedData' with the following keys:
 			end
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
+		puts searchedData['project_count']
 		# This returns the relevant sector list to populate the left hand side sectors filter.
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation_startswith=GB&activity_status="+activityStatusList+'&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation=GB-GOV-1&activity_status="+activityStatusList+'&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
 		#puts searchedData['highLevelSectorList']
 		searchedData['highLevelSectorList'] = searchedData['highLevelSectorList'].sort_by {|key| key}

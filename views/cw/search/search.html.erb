@@ -1,57 +1,60 @@
 <div class="page-wrapper">
-    <div class="row" id="page-title">
-        <div class="twelve columns">
-            <img alt="UK aid from the British people" src="/images/ukaid_logo.png">
-            <div>
-                <div class="breadcrumb">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li>Search Results</li>
-                    </ul>
+    <div class="hero">
+        <div class="row" id="page-title">
+            <div class="twelve columns">
+                <img src="/cw/images/cw_ukaid_logo.png" alt="UK aid from the British people">
+                <img src="/cw/images/cw-logo.png" title="the commonweatlth logo">
+                <div>
+                    <div class="breadcrumb">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li>Search Results</li>
+                        </ul>
+                    </div>
+                    <h1>
+                        Search Results for: 
+                        "<%= query %>"
+                    </h1>
                 </div>
-                <h1>
-                    Search Results for: 
-                    "<%= query %>"
-                </h1>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="twelve columns">
-            <div id="search-bar">
-                <form id="mid-search-form" method="GET" action="/cw/search">
-                    <div class="row">
-                        <div class="three columns">
-                            <label for="query">
-                                <h3>Search Projects</h3>
-                            </label>
-                        </div>
-                        <div class="nine columns">
-                            <div class="row">
-                                <div class="eight columns">
-                                    <div class="row">
-                                        <div class="twelve columns">
-                                            <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
-                                        </div>
-                                        <div class="twelve columns" style="text-align: left">
-                                            <%if includeClosed == "1" then %>
-                                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox" checked><label for="IncludeClosedProjects">Include Completed Projects</label>
-                                                <input id="includeClosed" name="includeClosed" type="hidden" value="1">
-                                            <%else%>
-                                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
-                                                <input id="includeClosed" name="includeClosed" type="hidden" value="0">
-                                            <%end%>
+        <div class="row">
+            <div class="twelve columns">
+                <div id="search-bar">
+                    <form id="mid-search-form" method="GET" action="/cw/search">
+                        <div class="row">
+                            <div class="three columns">
+                                <label for="query">
+                                    <h3>Search Projects</h3>
+                                </label>
+                            </div>
+                            <div class="nine columns">
+                                <div class="row">
+                                    <div class="eight columns">
+                                        <div class="row">
+                                            <div class="twelve columns">
+                                                <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
+                                            </div>
+                                            <div class="twelve columns" style="text-align: left">
+                                                <%if includeClosed == "1" then %>
+                                                    <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox" checked><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                                    <input id="includeClosed" name="includeClosed" type="hidden" value="1">
+                                                <%else%>
+                                                    <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                                    <input id="includeClosed" name="includeClosed" type="hidden" value="0">
+                                                <%end%>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="four columns">
-                                    <input type="submit" class="button" value="Search">
+                                    <div class="four columns">
+                                        <input type="submit" class="button" value="Search">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <br>
-                </form>
+                        <br>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
