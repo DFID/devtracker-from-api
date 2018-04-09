@@ -19,7 +19,7 @@
     <div class="row">
         <div class="twelve columns">
             <div id="search-bar">
-                <form id="mid-search-form" method="GET" action="/search">
+                <form id="mid-search-form" method="GET" action="/cw/search">
                     <div class="row">
                         <div class="three columns">
                             <label for="query">
@@ -67,14 +67,14 @@
                         <b>Sort results by:</b>
                         &nbsp;
                         Title
-                        <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
+                        <span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span>
                         &nbsp;
                         Budget
-                        <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▼</span>
-                        <input type="hidden" id="sort_results_type" value=""  />
+                        <span class="sortProjBudg sort-proj-sectors" style="display:inline;">▼</span>
+                        <input type="hidden" class="sort_results_type" value=""  />
                     </div>
                     <div class="seven columns">
-                        <div id="light-pagination"></div>
+                        <div class="light-pagination"></div>
                     </div>
                 </div>
                 <!--<div class="modal">
@@ -84,18 +84,7 @@
                     <% if !dfidCountryBudgets.empty? %>
                         <% dfidCountryBudgets.each do |results| %>
                             <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                                <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                                <p></p>
-                                <h3><em><%= results[1][1]%></em></h3>
-                                Budget: <em><%= results[1][0]%></em>
-                                <p></p>
-                            </div>
-                        <%end%>
-                    <%end%>
-                    <% if !dfidRegionBudgets.empty? %>
-                        <% dfidRegionBudgets.each do |results| %>
-                            <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                                <p>Did you mean the <em>region <a href="/regions/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                <p>Did you mean the <em>country <a href="/cw/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
                                 <p></p>
                                 <h3><em><%= results[1][1]%></em></h3>
                                 Budget: <em><%= results[1][0]%></em>
@@ -105,7 +94,7 @@
                     <%end%>
                 </div>
                 <div id="showResults">
-                    <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em; display: none"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters or select the checkbox to search for completed projects.</p></div>
+                    <div class="ui-state-highlight ui-corner-all" style="padding: 10px"><p>Default filter shows currently active projects. To see projects at other stages, use the status filters or select the checkbox to search for completed projects.</p></div>
                     <div>
                         Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                         <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -117,16 +106,26 @@
                     <div class="search-result">
                         <h3>    
                             <%unless project['iati_identifier'].nil? %>
-                                <a href="/projects/<%= sanitize_input(project['iati_identifier'],"id") %>">
+                                <a href="/cw/projects/<%= sanitize_input(project['iati_identifier'],"id") %>">
                                 <%unless project['title']['narratives'].nil? %>
                                     <%unless project['title']['narratives'][0]['text'].nil? %>
                                         <%=project['title']['narratives'][0]['text']%>
                                     <%end%>
                                 <%end%>
-                                <small>[<%= project['iati_identifier']%>]</small>
                                 </a>
                             <%end%>
                         </h3>
+                        <span>Reporting Org: <em>
+                            <%unless project['reporting_organisations'].empty? %>
+                                <%unless project['reporting_organisations'][0]['narratives'].empty? %>
+                                    <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                                <%end%>
+                            <%end%>
+                        </em></span>
+                        <span>IATI Identifier: <em><%= project['iati_identifier']%></em></span>
+                        <%unless project['activity_status']['name'].nil? %>
+                        <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                        <%end%>
                         <%
                         #to handle different budget aggregations for DFID and non-DFID projects
                         if is_dfid_project(project['iati_identifier']) then
@@ -155,16 +154,6 @@
                                 <%end%>
                             <%end
                         end%>
-                        <%unless project['activity_status']['name'].nil? %>
-                        <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                        <%end%>
-                        <span>Reporting Org: <em>
-                            <%unless project['reporting_organisations'].empty? %>
-                                <%unless project['reporting_organisations'][0]['narratives'].empty? %>
-                                    <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
-                                <%end%>
-                            <%end%>
-                        </em></span>
                         <p class="description">
                             <%unless project['descriptions'].empty? %>
                                 <%unless project['descriptions'][0]['narratives'].empty? %>
@@ -174,6 +163,21 @@
                         </p>
                     </div>
                     <% end %>
+                </div>
+                <div class="row">
+                    <div class="five columns">
+                        <b>Sort results by:</b>
+                        &nbsp;
+                        Title
+                        <span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span>
+                        &nbsp;
+                        Budget
+                        <span class="sortProjBudg sort-proj-sectors" style="display:inline;">▼</span>
+                        <input type="hidden" class="sort_results_type" value=""  />
+                    </div>
+                    <div class="seven columns">
+                        <div class="light-pagination"></div>
+                    </div>
                 </div>
             </div>
             <div class="three columns pull-nine">
@@ -360,7 +364,7 @@
                     });
                 });
             </script>
-            <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
+            <script src="/cw/javascripts/searchPageFilters.js" type="text/javascript"></script>
         </div>
     <%else%>
         <div class="row">
