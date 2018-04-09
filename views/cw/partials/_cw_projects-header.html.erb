@@ -110,6 +110,11 @@
 </div>
 <div class="row">
     <div class="twelve columns">
-<p class="iati-id"><strong>IATI Identifier: <%= project['iati_identifier'] %></strong></p>
+        <%if !project['last_updated_datetime'].nil?%>
+        <p class="last-updated"><strong>Project Data Last Updated: <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></strong></p>
+        <% end %>
+        <%if !project['iati_identifier'].nil?%>
+            <p class="iati-id"><strong>IATI Identifier: <%= project['iati_identifier'] %></strong></p>
+        <% end %>    
     </div>
 </div>
