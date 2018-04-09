@@ -360,5 +360,8 @@
     <div class="row">
         <div class="twelve columns download-link">
             <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['id'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
+            <%if !project['last_updated_datetime'].nil?%>
+                <p>Project data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
+            <% end %>
         </div>
     </div>

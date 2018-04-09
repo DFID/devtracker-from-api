@@ -215,12 +215,35 @@ h1 span {
     color: rgba(255,255,255,0.7);
     font-size: 0.7em;
 }
-
+p.last-updated {
+    float:left;
+}
 p.iati-id {font-size: 1em; float:right; padding-bottom: 12px; letter-spacing: 0.02em;} 
 
-.ui-state-highlight {padding: 10px;}
+.ui-state-highlight {
+    padding: 10px;
+line-height: 1.2em;
+margin-bottom: 10px;}
 
 .ui-icon-info {float: left; margin:-0.1em 0.4em 0 0;}
+
+
+
+#search-bar {
+    margin-top:0;
+label h3 {
+    margin: 4px 0 0 0!important;
+    text-align: left;
+    }
+}
+
+/*-------------------------------------------------------
+Results bullet text style
+---------------------------------------------------------*/
+#search-results span {
+    font-size: 1em;
+    font-weight: bold;
+}
 
 
 /*-------------------------------------------------------
@@ -283,6 +306,27 @@ box-shadow: 7px 6px 44px -2px rgba(0,0,0,0.23);
 //        border-width: 7px;
 //        margin-left: -7px;
 //}
+}
+
+
+.more-info-container,
+.project-country-title {
+    padding-right: 60px;
+    position: relative;
+
+    
+    .more-info-title {
+ 
+    }
+    .more-info-link {
+        top: -2px;
+    }
+}
+
+.project-country-title .more-info-link {
+            position: absolute;
+    top:-1px;
+    right:0;
 }
 
 /*-------------------------------------------------------
