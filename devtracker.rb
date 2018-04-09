@@ -1169,7 +1169,7 @@ get '/cw/sector/?' do
 		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data_cw(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
 
@@ -1181,7 +1181,7 @@ get '/cw/sector/:high_level_sector_code/?' do
 		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+ 			category_list: sector_parent_data_list_cw( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
  		}		
 end
 
@@ -1196,7 +1196,7 @@ get '/cw/sector/:high_level_sector_code/projects/?' do
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
 	sectorData['sectorName'] = ""
-	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects_cw(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
   	erb :'cw/sector/cw_projects', 
 		:layout => :'cw/layouts/cw_layout',
@@ -1226,7 +1226,7 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/?' do
 		:layout => :'cw/layouts/cw_layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+ 			sector_list: sector_parent_data_list_cw(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
 
@@ -1242,7 +1242,7 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
 	sectorData['sectorName'] = ""
-	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects_cw(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
   	erb :'cw/sector/cw_projects', 
 		:layout => :'cw/layouts/cw_layout',

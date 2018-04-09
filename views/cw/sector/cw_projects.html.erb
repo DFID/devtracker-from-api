@@ -8,11 +8,11 @@ title: Development Tracker
         <div>
             <div class="breadcrumb">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/sector">Aid by Sector</a></li>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"></a></li>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
+                    <li><a href="/cw">Home</a></li>
+                    <li><a href="/cw/sector">Aid by Sector</a></li>
+                    <li><a href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
+                    <li><a href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"></a></li>
+                    <li><a href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
                     <li><%= sectorData['sectorName'] %></li>
                 </ul>
             </div>
