@@ -38,7 +38,7 @@
             <ul class="sector-list" id='aid-by-sector-list'>
                 <% (high_level_sector_list[:sectorsData] || []).each do |sector| %>
                     <li>
-                       <a href="/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%> </a>
+                       <a href="/cw/sector/<%=sector[:code]%>" class="sort-sectorName"><%=sector[:name]%> </a>
                          <div class="progress">
                              <%budgetPercentage = 100*sector[:budget].to_f/high_level_sector_list[:totalBudget].to_f %>
                              <em><%=format_percentage budgetPercentage %></em>

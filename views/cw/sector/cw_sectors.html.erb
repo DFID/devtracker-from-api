@@ -5,9 +5,9 @@
         <div>
             <div class="breadcrumb">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/sector">Aid by Sector</a></li>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
+                    <li><a href="/cw">Home</a></li>
+                    <li><a href="/cw/sector">Aid by Sector</a></li>
+                    <li><a href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
                     <li><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></li>                          
                 </ul>
             </div>
@@ -24,13 +24,13 @@
         <div class="row">
             <div class="four columns summary">
                 <p><%= sector_list[:sectorHierarchyPath][:categoryDescription]%></p>
-                <a id='view-all-relevant-sector-projects' class="button" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects" style="width:100%;">View All <%= sector_list[:sectorHierarchyPath][:categoryDescription]%> Projects</a>
+                <a id='view-all-relevant-sector-projects' class="button" href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects" style="width:100%;">View All <%= sector_list[:sectorHierarchyPath][:categoryDescription]%> Projects</a>
             </div>
             <div class="eight columns">
                 <ul class="sector-list" id='aid-by-sector-list'>
                     <% (sector_list[:sectorData]).each do |sector| %>
                         <li>
-                            <a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects/<%=sector[:code]%>"><%=sector[:name]%></a>                              
+                            <a href="/cw/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sector_list[:sectorHierarchyPath][:categoryCode]%>/projects/<%=sector[:code]%>"><%=sector[:name]%></a>                              
                             <div class="progress">
                                 <%budgetPercentage = 100*sector[:budget].to_f/sector_list[:totalBudget].to_f %>
                                 <em><%=format_percentage budgetPercentage%> </em>
