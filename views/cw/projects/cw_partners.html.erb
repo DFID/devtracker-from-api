@@ -56,7 +56,7 @@
                       <div class="eight columns">
                           <ul>
                              <%# TODO - deal with the situation where we have multiple languages %>
-                             <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                             <li><a href="/cw/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
                                <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
                                <span>
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
