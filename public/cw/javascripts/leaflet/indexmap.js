@@ -18,7 +18,7 @@
     }
 
     function calculateBrightness(country, max){
-        return d3.rgb("#79A9D6").brighter(-(country.budget/max)*3).toString()
+        return d3.rgb("#ba247c").brighter(-(country.budget/max)*3).toString()
     }
 
     // function used for number formatting (100000 becomes 100,000)
@@ -138,6 +138,32 @@
                         });
                     })
                 }(countryData),multiPolygon);
+            }
+            else {
+                var multiVertices = new Array();
+                for (var countryPolygonesDefArrayIndex=0; countryPolygonesDefArrayIndex<polygonsData[countryData.id].length; countryPolygonesDefArrayIndex++) {
+                    var countryPolygoneDefString = polygonsData[countryData.id][countryPolygonesDefArrayIndex];
+                    var verticesDefArray = countryPolygoneDefString.split(" ");
+                    var vertices = new Array();
+                    for (var vertexDefStringIndex=0; vertexDefStringIndex<verticesDefArray.length; vertexDefStringIndex++) {
+                        var vertexDefString = verticesDefArray[vertexDefStringIndex].split(",");
+                        var longitude=vertexDefString[0];
+                        var latitude=vertexDefString[1];
+                        var latLng=new L.LatLng(latitude,longitude);
+                        vertices[vertices.length]=latLng;
+                    }
+                    multiVertices[multiVertices.length]=vertices;
+                }
+                var multiPolygon = L.multiPolygon(multiVertices,{
+                    stroke: true, /* draws the border when true */
+                    color: '#ffffff', /* border color */
+                    weight: 1, /* stroke width in pixels */
+                    fill:true,
+                    fillColor: '#DCDCDC',//"#204B63",
+                    fillOpacity: 1//calculateOpacity(countryData, maxBudget)
+                });
+
+                multiPolygon.addTo(map); /* finally addes the polygon to the map */
             }
 
             map.on('zoomend', function(e) {

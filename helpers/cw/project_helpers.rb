@@ -193,6 +193,14 @@ module ProjectHelpersCW
         # Edit the returned hash object so that the data is in the correct format (e.g. remove enclosing [])
         #puts projectValuesMapInput
         #projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
+        commonWealthCountriesWithNoProjects = Oj.load(File.read('data/cw/commonwealth_countries.json'))
+        commonWealthCountriesWithNoProjects.each_key do |key|
+          if ( projectDataHash.has_key?(key) )
+            #do nothing
+          else
+               projectDataHash[key] = commonWealthCountriesWithNoProjects[key]
+          end
+        end
         projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
     end
 

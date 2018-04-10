@@ -1147,11 +1147,12 @@ end
 
 get '/cw/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
+  	commonwealthCountriesWithData = dfid_country_map_data_cw
 	erb :'/cw/location/country/cw_index', 
 		:layout => :'/cw/layouts/cw_layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			:dfid_country_map_data => 	dfid_country_map_data_cw,
+			:dfid_country_map_data => 	commonwealthCountriesWithData,
 			#:dfid_complete_country_list => 	dfid_complete_country_list_cw,
 			:dfid_total_country_budget => total_country_budget_location_cw
 		}
