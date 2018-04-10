@@ -529,6 +529,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', end
     }
 }
 
+.stuffs-grey {
+        padding:5px 0 20px;
+    margin: 30px 0;
+        @media screen and (min-width:768px){
+        padding:30px 0; 
+        margin: 20px 0;
+    }
+}
+
 /*-------------------------------------------------------
 Footer banner
 ---------------------------------------------------------*/
@@ -590,3 +599,5 @@ Random Fixes
     width: auto;
         }
     }
+
+.map { margin: 0 0 20px;}
