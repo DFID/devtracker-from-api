@@ -3106,7 +3106,7 @@
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
     "population_year": 2015,
-    "commonwealth_year":"1960 (suspended 1995–99)"
+    "commonwealth_year":"1960 <br/> (suspended 1995–99)"
   },
   {
     "code": "NU",
@@ -3221,7 +3221,7 @@
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
     "population_year": 2015,
-    "commonwealth_year":"1947 (left in 1972, rejoined in 1989)"
+    "commonwealth_year":"1947 <br /> Left in 1972 <br /> Rejoined back in 1989"
   },
   {
     "code": "PW",
@@ -3946,7 +3946,7 @@
     "gdpGrowthRate_year": 2015,
     "lifeExpectancy_year": 2014,
     "population_year": 2015,
-    "commonwealth_year":"1931 (Statute of Westminster; left in 1961, rejoined in 1994)"
+    "commonwealth_year":"1931 <br /> Statute of Westminster <br /> Left in 1961 <br/> Rejoined in 1994"
   },
   {
     "code": "GS",
