@@ -1386,7 +1386,7 @@ get '/cw/projects/:proj_id/?' do |n|
   	countryOrRegion = get_country_or_region_cw(n)
 
   	#get project sectorwise graph  data
-  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	projectSectorGraphData = get_project_sector_graph_data_cw(n)
   	
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)

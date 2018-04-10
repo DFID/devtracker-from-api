@@ -256,7 +256,7 @@ module ProjectHelpersCW
         implementingOrgsList = implementingOrgsList.uniq.sort
     end
 
-    def get_project_sector_graph_data(projectId)
+    def get_project_sector_graph_data_cw(projectId)
         if is_dfid_project(projectId) then
             projectSectorGraphJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000"
         else
@@ -274,7 +274,7 @@ module ProjectHelpersCW
             topFiveCounter = 0
             totalOtherBudget = 0
             projectSector.each do |sector|
-                if topFiveCounter < 5
+                if topFiveCounter < 11
                     sectorGroupPercentage = (100*sector['value'].to_f/totalBudgets.to_f).round(2)
                     c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
                     c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
@@ -283,7 +283,7 @@ module ProjectHelpersCW
                 end
                 topFiveCounter = topFiveCounter + 1
             end
-            if topFiveCounter > 4
+            if topFiveCounter > 10
                 sectorGroupPercentage = (100*totalOtherBudget.to_f/totalBudgets.to_f).round(2)
                 c3ReadyStackBarData[0].concat('["Other Sectors",'+sectorGroupPercentage.to_s+"],")
                 c3ReadyStackBarData[1].concat('"Other Sectors",')
