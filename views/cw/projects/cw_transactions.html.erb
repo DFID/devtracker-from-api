@@ -57,7 +57,7 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
+<%= erb :'cw/partials/_cw_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitment', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '(Obligation to provide funding)', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
