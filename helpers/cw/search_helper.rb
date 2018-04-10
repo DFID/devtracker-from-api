@@ -62,11 +62,12 @@ Returns a Hash 'searchedData' with the following keys:
 		searchedData['project_budget_higher_bound'] = 0
 		# The following loop goes through the previously search specific country data hash and does the following.
 		dfidCountriesResults.each do |results|
-			recipient_countries.concat(results["code"] + ',');	# This is storing the country codes using ',' in a single string.
-			recipient_countries = 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK' # Overriding the country list with the Commonwealth countries
-			searchedData['dfidCountryBudgets'][results["code"]] = {} # Created empty hash and the country code is used as the key
-			searchedData['dfidCountryBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the country specific budget value.
-			searchedData['dfidCountryBudgets'][results["code"]][1] = results["name"] # Storing the country name
+			if 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'.split(',').include? results["code"]
+				recipient_countries.concat(results["code"] + ',');	# This is storing the country codes using ',' in a single string.
+				searchedData['dfidCountryBudgets'][results["code"]] = {} # Created empty hash and the country code is used as the key
+				searchedData['dfidCountryBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the country specific budget value.
+				searchedData['dfidCountryBudgets'][results["code"]][1] = results["name"] # Storing the country name
+			end
 		end
 		# The following loop goes through the previously search specific country data hash and does the following.
 		dfidRegionsResults.each do |results|
@@ -85,7 +86,9 @@ Returns a Hash 'searchedData' with the following keys:
 			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the country specific budget value
 			countries_project_budget['results'].each do |budgets|
 				unless budgets['recipient_country']['code'].nil?
-					searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					if 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'.split(',').include? budgets['recipient_country']['code']
+						searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					end
 				end
 			end
 		end
@@ -116,11 +119,9 @@ Returns a Hash 'searchedData' with the following keys:
 			end
 		end
 		searchedData['project_count'] = projects_list['count'] # Stored the project count here
-		puts searchedData['project_count']
 		# This returns the relevant sector list to populate the left hand side sectors filter.
 		sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{query}&reporting_organisation=GB-GOV-1&activity_status="+activityStatusList+'&recipient_country=CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK'
 		searchedData['highLevelSectorList'] = high_level_sector_list_filter( sectorValuesJSON) # Returns the high level sector data with name and codes
-		#puts searchedData['highLevelSectorList']
 		searchedData['highLevelSectorList'] = searchedData['highLevelSectorList'].sort_by {|key| key}
 
 		# Initiating the actual start date and the planned end date.
