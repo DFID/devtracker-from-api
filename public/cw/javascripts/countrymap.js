@@ -26,7 +26,7 @@
             items.push([
                 "<div class='row'>", 
                     "<div class='five columns location-label'>", 
-                        "<a href='/projects/", location.id ,"'>", location.id, "</a>",
+                        "<a href='/cw/projects/", location.id ,"'>", location.id, "</a>",
                     "</div>", 
                     "<div class='seven columns'>", location.title, "</div>",
                 "</div>"

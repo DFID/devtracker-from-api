@@ -24,7 +24,7 @@ $(document).ready(function() {
                 items.push([
                     "<div class='row'>", 
                         "<div class='five columns location-label'>", 
-                            "<a href='/projects/", location.id ,"'>", location.id, "</a>",
+                            "<a href='/cw/projects/", location.id ,"'>", location.id, "</a>",
                         "</div>", 
                         "<div class='seven columns'>", location.title, "</div>",
                     "</div>"
@@ -169,7 +169,7 @@ $(document).ready(function() {
             //iterate through every activity
                 iati.results.forEach(function (d) {
                     var iatiIdentifier = d.iati_identifier;
-                    var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
+                    var dtUrl = "http://devtracker.dfid.gov.uk/cw/projects/" + iatiIdentifier;
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
                     //console.log(iatiIdentifier);
                     
