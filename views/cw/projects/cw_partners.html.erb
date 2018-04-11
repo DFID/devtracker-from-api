@@ -20,7 +20,8 @@
                       </div>
                       <div class="eight columns">
                           <ul>
-                              <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
+                              <li><%if fundingProjectDetails['id'].start_with?('GB-1','GB-GOV-1') %><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a> <%else %> <h4><%= fundingProjectDetails['title']['narratives'][0]['text'] %></h4> <%end%>
+                                <%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
                                   <span>
                                      <%# If the default currency value is undefined do not show a value for the project%>
                                      <%=begin
@@ -56,7 +57,12 @@
                       <div class="eight columns">
                           <ul>
                              <%# TODO - deal with the situation where we have multiple languages %>
-                             <li><a href="/cw/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                             <li>
+                              <%if fundedProject['id'].start_with?('GB-1','GB-GOV-1') %>
+                                <a href="/cw/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                              <% else %>
+                               <h4> <%= fundedProject['title']['narratives'][0]['text']%> </h4>
+                              <% end %>
                                <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
                                <span>
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
