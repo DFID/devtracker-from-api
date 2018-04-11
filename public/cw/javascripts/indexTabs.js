@@ -24,7 +24,7 @@ $(document).ready(function() {
     .title(function(d){return "Budget: £" + reformCurrencyFormat(d3.format(".4s")(d.value))})
     .ordering(function(t){return t.budget;})
     .cap(10)
-    .ordinalColors(['#D8DCBF'])
+    .ordinalColors(['#4a0e31'])
     .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
 
     chart2.on('renderlet', function(chart) {
