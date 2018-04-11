@@ -1275,7 +1275,7 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/:sect
 	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
 	sectorData['sectorName'] = sectorJsonData["Name"]
-	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+	getSectorProjects = get_sector_projects_cw(sectorData['sectorCode'])
 
   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
   	erb :'cw/sector/cw_projects', 

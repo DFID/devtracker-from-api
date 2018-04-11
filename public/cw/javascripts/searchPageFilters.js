@@ -143,6 +143,9 @@ $(document).ready(function() {
     //The following updates the result based on selected location country filter
     $('.location_country').click(function(){
         var tmpCountryList = $('.location_country:checked').map(function(){return $(this).val()}).get().join();
+        if (tmpCountryList.length == 0){
+            tmpCountryList = 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK';
+        }
         $('#locationCountryFilterStates').val(tmpCountryList);
         refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
