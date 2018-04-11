@@ -1418,7 +1418,7 @@ get '/cw/projects/:proj_id/documents/?' do |n|
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region_cw(n)
 
   	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
@@ -1473,7 +1473,7 @@ get '/cw/projects/:proj_id/transactions/?' do |n|
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 
 	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region_cw(n)
 
     # get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
@@ -1550,7 +1550,7 @@ get '/cw/projects/:proj_id/partners/?' do |n|
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region_cw(n)
 
   	# get the funding projects from the API
   	fundingProjectsData = get_funding_project_details(n)
