@@ -971,7 +971,7 @@ get '/cookies/?' do
 end  
 
 get '/faq/?' do
-  	settings.devtracker_page_title = 'FAQ: What does this mean?'
+  	settings.devtracker_page_title = 'FAQ: Definitions'
 	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
@@ -1298,14 +1298,6 @@ get '/cw/sector/:high_level_sector_code/categories/:category_code/projects/:sect
  		}		
 end
 
-#####################################################################
-#  WHAT DOES THIS MEAN? PAGE
-#####################################################################
-
-get '/cw/faq/?' do
-  	settings.devtracker_page_title = 'FAQ: What does this mean?'
-	erb :'/cw/faq/cw_faq', :layout => :'/cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url }
-end 
 
 #####################################################################
 #  COUNTRY SUMMARY PAGE 
@@ -1589,7 +1581,7 @@ get '/cw/cookies/?' do
 end  
 
 get '/cw/faq/?' do
-  	settings.devtracker_page_title = 'FAQ: What does this mean?'
+  	settings.devtracker_page_title = 'FAQ: Definitions'
 	erb :'cw/faq/cw_faq', :layout => :'cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
