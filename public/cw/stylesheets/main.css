@@ -687,7 +687,11 @@ g.c3-axis-y > g:last-child {
   display:none;
 }
 
-.dc-chart g.row text {
+#top5Countries.dc-chart g.row text {
+  fill: white !important;
+}
+
+#top5Sectors.dc-chart g.row text {
   fill: black !important;
 }
 
@@ -704,7 +708,7 @@ g.c3-axis-y > g:last-child {
 }
 
 #top5Countries svg text {
-  font-size: 18px;
+    font-size: 18px; 
 }
 
 #top5Countries svg g:first-child {
