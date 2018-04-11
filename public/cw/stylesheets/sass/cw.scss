@@ -5,41 +5,64 @@
 }*/
 
 /*---------------------------------
-Header Search
+Global Stuff
 ---------------------------------*/
-#global-header form#search input.button {
-background: #3abaa8;
-    border-radius: 0;
-    top: 0;
-    box-shadow: none;
-    padding: 5px;
-    font-size: 16px;
+#global-header { 
+    form#search {
+    input.button {
+        background: #3abaa8;
+        border-radius: 0;
+        top: 0;
+        box-shadow: none;
+        padding: 5px;
+        font-size: 16px;
+        @media screen and (max-width:768px) {
+            display: inline-block;
+            width: 20%;
+        }
 }
-
-#global-header form#search #site-search-text {
-    border:0;
-    border-radius: 0;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    width: 200px;
-    padding: 6px 5px;
+    #site-search-text {
+        border:0;
+        border-radius: 0;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        width: 200px;
+        padding: 6px 5px;
+        @media screen and (max-width:768px) {
+            width: 78%;
+        }
 }
+    @media screen and (max-width:768px) {
+        display: block;
+        float: none;
+        padding-bottom: 16px;
+        }
+    }
 
-#global-header h2 a {
+h2 a {
     padding-left: 42px;
     background-size: 30px 26px;
     background-position: 0 -2px;
-    &:focus {
-        color: #fff!important;
+        &:focus {
+            color: #fff!important;
+        }
+    }   
+}
+
+#page-title img + div {
+    padding: 0;
+    @media screen and (min-width:768px) {
+        padding-right: 90px;
     }
 }
+
 
 /*---------------------------------
 Homepage hero banner
 ---------------------------------*/
 .hero {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     padding: 20px 0;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
 background: #ba247c; /* Old browsers */
@@ -61,13 +84,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', end
         text-decoration: underline;
     }
     .nine {
+        width:100%;
+        @media screen and (min-width:768px){
         width: 80%!important;
+        }
+    }
+    img {
+        display:none;
+        @media screen and (min-width:768px) {
+            display: inline-block;
+        }
+    }
+    @media screen and (min-width:768px){
+    margin-bottom: 40px;
     }
 }
 
 
 #nav-entry {
-    margin: 60px auto;
+    margin: 0px auto 40px;
+    @media screen and (min-width:768px){
+         margin: 60px auto;   
+    }
 }
 
 
@@ -161,6 +199,11 @@ Breadcrumbs
     .button-row {
         padding-right: 15px;
     }
+    .tab-bar li a {
+        @media screen and (max-width:768px) {
+            padding: 0.5em 0.5em;   
+        }
+    }
 }
 
 .country-description > p:first-of-type:first-letter {
@@ -176,12 +219,21 @@ Breadcrumbs
 }
 
 .country-flag {
+    position: static;
     img {
         float:right;
-        margin-right: -15px;
+        width: 93%;
+        margin-top: 8px;    
         -webkit-box-shadow: 0px 7px 24px 0px rgba(0,0,0,0.2);
 -moz-box-shadow: 0px 7px 24px 0px rgba(0,0,0,0.2);
 box-shadow: 0px 7px 24px 0px rgba(0,0,0,0.2);
+        @media screen and (max-width:768px) {
+            position: absolute;
+            top: 138px;
+            right: -5px;
+            width: 70px!important;
+            border: 1px solid #fff;
+        }
     }
     p {
         text-align: center;
@@ -189,6 +241,9 @@ box-shadow: 0px 7px 24px 0px rgba(0,0,0,0.2);
         display: block;
         padding: 212px 5px 5px;
         font-weight: bold;
+                @media screen and (max-width:768px) {
+                    padding-top: 40px;
+        }
     }
 }
 
@@ -237,10 +292,22 @@ h1 span {
     color: rgba(255,255,255,0.7);
     font-size: 0.7em;
 }
-p.last-updated {
-    float:left;
+p.last-updated { 
+    padding-top: 20px;
+    @media screen and (min-width:768px) {
+        float:left;
+        padding-top: 0; 
+    }
 }
-p.iati-id {font-size: 1em; float:right; padding-bottom: 12px; letter-spacing: 0.02em;} 
+p.iati-id {
+    font-size: 1em; 
+    padding-bottom: 12px;
+    letter-spacing: 0.02em;
+    @media screen and (min-width:768px) {
+        float:right; 
+    }
+    
+} 
 
 .ui-state-highlight {
     padding: 10px;
@@ -276,8 +343,8 @@ info tooltip icon
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   background: #0b0c0c;
-  width: 26px; /* Width of new image */
-  height: 26px; /* Height of new image */
+  width: 22px; /* Width of new image */
+  height: 22px; /* Height of new image */
   padding-left: 0px; /* Equal to width of new image */
     border-radius: 100%;
     position: relative;
@@ -294,7 +361,7 @@ info tooltip icon
     color: #fff;
     text-align: center;
     display: block;
-    line-height: 26px;
+    line-height: 22px;
     
     }
     img{
@@ -333,7 +400,9 @@ box-shadow: 7px 6px 44px -2px rgba(0,0,0,0.23);
 
 
 .more-info-container,
-.project-country-title {
+.project-country-title,
+.trans-header-left
+{
     padding-right: 60px;
     position: relative;
 
@@ -361,7 +430,9 @@ a.by-location, a.by-sector {
     
         display: block;
     .image-wrapper {
+        @media screen and (min-height:768px){
         height: 190px;
+        }
 
         display: block;
         img {
@@ -411,6 +482,12 @@ Location page country list
 /*-------------------------------------------------------
 Footer banner
 ---------------------------------------------------------*/
+
+.tab-bar-container .button-row{
+    @media screen and (max-width:768px){
+    display: none;
+    }
+}
 #Report-Fraud,
 #Subscribe {
     display: none;
@@ -426,8 +503,8 @@ background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%); /* FF3.6-15 *
 background: -webkit-linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', endColorstr='#b73e3e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    padding:60px 0;
-    margin: 60px 0;
+    padding:5px 0 20px;
+    margin: 30px 0;
     h3, p, span, a {
         color: #fff;
         text-align: left!important;
@@ -445,6 +522,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', end
     p:last-of-type {
         color: rgba(255,255,255,0.6);
         margin-top: 40px;
+    }
+    @media screen and (min-width:768px){
+        padding:60px 0; 
+        margin: 60px 0;
+    }
+}
+
+.stuffs-grey {
+        padding:5px 0 20px;
+    margin: 30px 0;
+        @media screen and (min-width:768px){
+        padding:30px 0; 
+        margin: 20px 0;
     }
 }
 
@@ -486,3 +576,28 @@ Footer
     text-align: right;
 
 }
+
+
+
+/*-------------------------------------------------------
+Random Fixes
+---------------------------------------------------------*/
+.projects-nav p {
+    display: none;
+}
+
+.country-info-container .country-info {
+    padding: 14px 0;
+    display: block;
+    @media screen and (min-width:768px) {
+        padding: 0 0 14px;
+    }
+}
+    .transactions-table th, .transactions-table td {
+        width:auto;
+        &:first-child{
+    width: auto;
+        }
+    }
+
+.map { margin: 0 0 20px;}

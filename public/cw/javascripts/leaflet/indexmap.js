@@ -18,7 +18,7 @@
     }
 
     function calculateBrightness(country, max){
-        return d3.rgb("#ba247c").brighter(-(country.budget/max)*3).toString()
+        return d3.rgb("#79A9D6").brighter(-(country.budget/max)*3).toString() //purple #ba247c
     }
 
     // function used for number formatting (100000 becomes 100,000)
@@ -159,7 +159,7 @@
                     color: '#ffffff', /* border color */
                     weight: 1, /* stroke width in pixels */
                     fill:true,
-                    fillColor: '#DCDCDC',//"#204B63",
+                    fillColor: '#A9A9A9',//'#DCDCDC',//"#204B63",
                     fillOpacity: 1//calculateOpacity(countryData, maxBudget)
                 });
 
@@ -185,7 +185,8 @@
 
 
     // creates a new map and centers it somewhere in the indian ocean
-    var map = L.map('map').setView([0, 60], 2);
+   // var map = L.map('map').setView([0, 60], 2);
+    var map = L.map('map').setView([25, 20], 2);
 
     // map.addLayer(new L.Google('ROADMAP'))
     // creates a tile layer with the tiles hosted in mapbox
@@ -198,19 +199,19 @@
     }).addTo(map);
 
     // control that shows state info on hover
-    var info = L.control();
+    //var info = L.control();
 
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info');
-        this.update();
-        return this._div;
-    };
+    //info.onAdd = function (map) {
+    //    this._div = L.DomUtil.create('div', 'info');
+    //    this.update();
+    //    return this._div;
+    //};
 
-    info.update = function (props) {
-        this._div.innerHTML = '<h6>Total DFID Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
-    };
+    //info.update  = function (props) {
+       //    this._div.innerHTML = '<h6>Total DFID Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
+    //   };
 
-    info.addTo(map);
+    //info.addTo(map);
 
     //L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
     //    attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',

@@ -37,7 +37,7 @@
               <th width="15%"><%= fifthcolumn%></th>
             <%end%>
             <%if transactionTypeTitle != 'Incoming Funds' %>
-            <th width="15%">Activity ID</th>
+            <th width="700px">Activity ID</th>
             <%end%>
             <th width="15%">Date</th>
             <th width="15%" style="text-align:right;">Value</th>
@@ -54,7 +54,7 @@
                 <td width="15%"><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' %> 
-                <td width="15%"><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
+                <td width="700px"><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
               <%end%>
               <%if transactionTypeTitle == 'Incoming Funds' %>
               <td width="30%"><%= 
