@@ -63,7 +63,8 @@ Homepage hero banner
 ---------------------------------*/
 .hero {
     margin-bottom: 10px;
-    padding: 20px 0;
+    padding: 20px 0 0;
+    position: relative;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
 background: #ba247c; /* Old browsers */
 background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%); /* FF3.6-15 */
@@ -97,6 +98,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', end
     }
     @media screen and (min-width:768px){
     margin-bottom: 40px;
+    }
+    
+    > .row:last-of-type .columns {
+        position: relative;
+        bottom: -1px;
+        
     }
 }
 
@@ -193,7 +200,7 @@ Breadcrumbs
 }
 
 .tab-bar-container {
-    margin: 0 0 -23px 0;
+    margin: 0;
     border: 0;
     background: none;
     .button-row {
@@ -436,7 +443,6 @@ a.by-location, a.by-sector {
 
         display: block;
         img {
-            position: absolute;
                 transition: transform  0.3s ease-in-out;
                 &:hover {
                     transform: scale(1.03); 
