@@ -84,8 +84,8 @@ set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, true
-set :show_exceptions, true
+set :raise_errors, false
+set :show_exceptions, false
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -1583,16 +1583,4 @@ end
 get '/cw/faq/?' do
   	settings.devtracker_page_title = 'FAQ: Definitions'
 	erb :'cw/faq/cw_faq', :layout => :'cw/layouts/cw_layout', :locals => {oipa_api_url: settings.oipa_api_url }
-end 
-
-#####################################################################
-#  Do we need a separate Fraud link page
-#####################################################################
-get '/fraud/?' do
-  	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
-	erb :'fraud/index', :layout => :'layouts/layout_forms',
-	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey,
-		oipa_api_url: settings.oipa_api_url
-	}
-end  
+end
