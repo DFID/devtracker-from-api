@@ -17,7 +17,7 @@
                     <% regionSubscription = false
                     if project_count > 0  && regionSubscription%>
                     <span>
-                        <a href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string region['code'] %>" title="Subscribe to receive updates on <%= region['name'] %> by email" class="button inform">&#9993; Subscribe</a>
+                        <a target="_BLANK" href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new?topic_id=UKDFID_<%= format_query_string region['code'] %>" title="Subscribe to receive updates on <%= region['name'] %> by email" class="button inform">&#9993; Subscribe</a>
                     </span>
                     <% end %>
                      <span>
