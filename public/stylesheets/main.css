@@ -879,3 +879,8 @@ g.c3-axis-y > g:last-child {
   top: 5px;
   left: 16px;
 }
+
+.logo,
+.ogd-title {
+  cursor: pointer;
+}
