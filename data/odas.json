@@ -1,0 +1,138 @@
+{
+    "DFID":
+    [
+        {
+            "name":"Department for International Development",
+            "year":"2016",
+            "value": 9874
+        }
+    ],
+    "BEIS":
+    [
+        {
+            "name":"Department for Business, Energy and Industrial Strategy",
+            "year":"2016",
+            "value": 696
+        }
+    ],
+    "CSSF":
+    [
+        {
+            "name":"Conflict, Stability and Security Fund",
+            "year":"2016",
+            "value": 601
+        }
+    ],
+    "FCO":
+    [
+        {
+            "name":"Foreign and Commonwealth Office",
+            "year":"2016",
+            "value": 504
+        }
+    ],
+    "HO":
+    [
+        {
+            "name":"Home Office",
+            "year":"2016",
+            "value": 360
+        }
+    ],
+    "HMT":
+    [
+        {
+            "name":"HM Treasury",
+            "year":"2016",
+            "value": 73
+        }
+    ],
+    "DEFRA":
+    [
+        {
+            "name":"Department for Environment Food and Rural Affairs",
+            "year":"2016",
+            "value": 67
+        }
+    ],
+    "DH":
+    [
+        {
+            "name":"Department of Health",
+            "year":"2016",
+            "value": 46
+        }
+    ],
+    "PF":
+    [
+        {
+            "name":"Prosperity Fund",
+            "year":"2016",
+            "value": 38
+        }
+    ],
+    "DFE":
+    [
+        {
+            "name":"Department for Education",
+            "year":"2016",
+            "value": 28
+        }
+    ],
+    "DWP":
+    [
+        {
+            "name":"Department for Work and Pensions",
+            "year":"2016",
+            "value": 24
+        }
+    ],
+    "HMRC":
+    [
+        {
+            "name":"HM Revenue and Customs",
+            "year":"2016",
+            "value": 9
+        }
+    ],
+    "MOD":
+    [
+        {
+            "name":"Ministry of Defence",
+            "year":"2016",
+            "value": 5
+        }
+    ],
+    "UKEF":
+    [
+        {
+            "name":"Export Credit Guarantee Department",
+            "year":"2016",
+            "value": 2
+        }
+    ],
+    "DCMS":
+    [
+        {
+            "name":"Department for Culture, Media and Sports",
+            "year":"2016",
+            "value": 2
+        }
+    ],
+    "ONS":
+    [
+        {
+            "name":"Office for National Statistics",
+            "year":"2016",
+            "value": 0
+        }
+    ],
+    "CDC":
+    [
+        {
+            "name":"CDC Group PLC",
+            "year":"2016",
+            "value": 0
+        }
+    ],
+}
