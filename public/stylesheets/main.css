@@ -729,16 +729,12 @@ g.c3-axis-y > g:last-child {
 
 .logo h1 {
   font-size: 27px;
-  line-height: 1.04167;
+  line-height: 1em;
   padding: 0;
   font-family: "nta", Arial, sans-serif;
   margin: 0;
   vertical-align: baseline;
   display: block;
-  -webkit-margin-before: 0.67em;
-  -webkit-margin-after: 0.67em;
-  -webkit-margin-start: 0px;
-  -webkit-margin-end: 0px; 
   -webkit-font-smoothing: antialiased;
 }
 
@@ -778,7 +774,7 @@ g.c3-axis-y > g:last-child {
 
 .logo {
   background-color:  rgba(192, 192, 192, 0.26);
-  padding: 1px 25px;
+  padding: 25px;
 }
 
 .fco h1,
