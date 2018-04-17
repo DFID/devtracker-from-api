@@ -959,7 +959,7 @@ get '/department/:dept_id/?' do
 		redirect '/department'
 	end
 	if deptIdentifier == ''
-		error 404
+		redirect '/department'
 	end
 	projectData = get_ogd_all_projects_data(deptIdentifier)
   	settings.devtracker_page_title = ogds[dept_id]["name"]
