@@ -956,7 +956,7 @@ get '/department/:dept_id/?' do
 	if ogds.has_key?(dept_id)
 		deptIdentifier = ogds[dept_id]["identifiers"]
 	else
-		error 404
+		redirect '/department'
 	end
 	if deptIdentifier == ''
 		error 404
