@@ -880,3 +880,25 @@ g.c3-axis-y > g:last-child {
 .ogd-title {
   cursor: pointer;
 }
+
+.oda-table thead tr th,
+.oda-table thead tr th:last-child {
+  background-color: transparent;
+  text-align: center;
+}
+
+.oda-table thead {
+  background-color: #f5f5f5;
+}
+
+.oda-table tbody tr td {
+  text-align: center;
+}
+
+.oda-table td:last-child {
+  text-align: center; 
+}
+
+.oda-table td:first-child {
+  text-align: left; 
+}
