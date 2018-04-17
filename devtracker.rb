@@ -340,9 +340,6 @@ get '/projects/:proj_id/?' do |n|
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
-
-  	#get the funded by organisation list
-  	#fundedByOrganisationList = get_funded_by_organisations(project)
   	participatingOrgList = get_participating_organisations(project)
 
   	#get the country/region data from the API
@@ -842,7 +839,7 @@ end
 
 #Department for Environment Food and Rural Affairs
 get '/department-for-environment-food-and-rural-affairs' do
-	ogdCode = 'GB-7'
+	ogdCode = 'GB-7,GB-GOV-7'
 	projectData = get_ogd_all_projects_data(ogdCode)
   	settings.devtracker_page_title = 'Department for Environment Food and Rural Affairs Projects Page'
 	erb :'other-govt-departments/other_govt_departments',
@@ -998,7 +995,8 @@ post '/feedback/index' do
 		    :via => :smtp,
 		    :via_options => {
 		    	:address              => '127.0.0.1',
-		     	:port                 => '25'
+		     	:port                 => '25',
+		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
 		    }
 		})
 		redirect '/'
@@ -1028,14 +1026,16 @@ post '/fraud/index' do
 		telno = sanitize_input(params[:telno],"t")
 	 	Pony.mail({
 			:from => "devtracker-feedback@dfid.gov.uk",
-		    :to => "devtracker-feedback@dfid.gov.uk",
-		    :subject => country + " " + project,
-		    :body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    :to => "reportingconcerns@dfid.gov.uk",
+		    :subject => "(Fraud Report): " + country + " - " + project,
+		    #:body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
+		    :body => "Country: " + country + "\n" + "Project: " + project + "\n" + "Description: \n" + description + "\n \nContact Information: \n" + "Name: " + name + "\n" + "Email: " + email + "\n" + "Telephone Number: " + telno,
 		    :via => :smtp,
 		    :via_options => {
 		    	:address              => '127.0.0.1',
-		    	:port                 => '25'
-	     	}
+		     	:port                 => '25',
+		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
+		    }
 	    })
 	    redirect '/'
 	else
