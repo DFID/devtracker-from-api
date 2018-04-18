@@ -54,13 +54,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -174,7 +174,7 @@ get '/countries/:country_code/results/?' do |n|
 	country = get_country_code_name(n)
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
+    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
   	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
 	erb :'countries/results', 
 		:layout => :'layouts/layout',
