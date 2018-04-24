@@ -50,7 +50,8 @@
                  <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
             </div>
         <![endif]-->
-        <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <%# implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <% implementingOrgs=get_implementing_orgs(project['id'])%>
         <% if (implementingOrgs.length>0)  %>
 
             <div class="more-info-container">  
