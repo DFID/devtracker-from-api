@@ -945,9 +945,9 @@ end
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
 	puts dept_id
-	if dept_id == 'DFID'
-		redirect '/'
-	end
+	# if dept_id == 'DFID'
+	# 	redirect '/'
+	# end
 	if dept_id == 'abs'
 		redirect '/sector'
 	end
