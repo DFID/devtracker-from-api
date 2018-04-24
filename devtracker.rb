@@ -182,7 +182,7 @@ get '/countries/:country_code/results/?' do |n|
 	country = get_country_code_name(n)
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
+    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
   	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
 	erb :'countries/results', 
 		:layout => :'layouts/layout',
