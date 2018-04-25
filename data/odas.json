@@ -29,7 +29,7 @@
     "CSSF":
     [
         {
-            "name":"Conflict, Stability and Security Fund (CSSF)<sup>2</sup>",
+            "name":"Conflict, Stability and Security Fund (CSSF)",
             "year":"2016",
             "value": 557,
             "percentage": 4.0
@@ -119,7 +119,7 @@
     "UKEF":
     [
         {
-            "name":"Export Credits Guarantee Department<sup>3</sup>",
+            "name":"Export Credits Guarantee Department",
             "year":"2016",
             "value": 3,
             "percentage": 0.0
@@ -128,7 +128,7 @@
     "CO":
     [
         {
-            "name":"Cabinet Office<sup>4</sup>",
+            "name":"Cabinet Office",
             "year":"2016",
             "value": 3,
             "percentage": 0.0
@@ -137,7 +137,7 @@
     "HMT":
     [
         {
-            "name":"HM Treasury<sup>5</sup>",
+            "name":"HM Treasury",
             "year":"2016",
             "value": 1,
             "percentage": 0.0
@@ -146,7 +146,7 @@
     "ONS":
     [
         {
-            "name":"Office for National Statistics<sup>6</sup>",
+            "name":"Office for National Statistics",
             "year":"2016",
             "value": -1,
             "percentage": 0.0
