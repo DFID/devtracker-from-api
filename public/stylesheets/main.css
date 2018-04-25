@@ -902,3 +902,8 @@ g.c3-axis-y > g:last-child {
 .oda-table td:first-child {
   text-align: left; 
 }
+
+.ogdDepartment {
+  margin-left: 28px;
+  font-size: 1.5em;
+}

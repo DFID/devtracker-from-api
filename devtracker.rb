@@ -961,7 +961,22 @@ get '/department/:dept_id/?' do
 	if deptIdentifier == ''
 		redirect '/department'
 	end
-	projectData = get_ogd_all_projects_data(deptIdentifier)
+	if(deptIdentifier != 'x')
+		projectData = get_ogd_all_projects_data(deptIdentifier)
+	else
+		projectData = {}
+		projectData['projects'] = {}
+		projectData['projects']['count'] = 0
+ 		projectData['projects']['results'] = ''
+ 		projectData['results'] = ''
+ 		projectData['highLevelSectorList'] = ''
+ 		projectData['project_budget_higher_bound'] = ''
+ 		projectData['countryAllProjectFilters'] = ''
+ 		projectData['actualStartDate'] = ''
+ 		projectData['plannedEndDate'] = ''
+ 		projectData['document_types'] = ''
+ 		projectData['implementingOrg_types'] = ''
+	end
   	settings.devtracker_page_title = ogds[dept_id]["name"]
 	erb :'other-govt-departments/other_govt_departments',
 	:layout => :'layouts/layout',
@@ -979,7 +994,8 @@ get '/department/:dept_id/?' do
  		plannedEndDate: projectData['plannedEndDate'],
  		documentTypes: projectData['document_types'],
  		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
+ 		projectCount: projectData['projects']['count'],
+ 		deptName: ogds[dept_id]["name"]
 	}
 end
 

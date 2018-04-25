@@ -4,7 +4,7 @@
         {
             "name":"Department for International Development",
             "year":"2016",
-            "value": 9874
+            "value": 10105
         }
     ],
     "BEIS":
@@ -12,23 +12,23 @@
         {
             "name":"Department for Business, Energy and Industrial Strategy",
             "year":"2016",
-            "value": 696
-        }
-    ],
-    "CSSF":
-    [
-        {
-            "name":"Conflict, Stability and Security Fund",
-            "year":"2016",
-            "value": 601
+            "value": 769
         }
     ],
     "FCO":
     [
         {
-            "name":"Foreign and Commonwealth Office",
+            "name":"Foreign & Commonwealth Office",
             "year":"2016",
-            "value": 504
+            "value": 560
+        }
+    ],
+    "CSSF":
+    [
+        {
+            "name":"Conflict, Stability and Security Fund (CSSF)<sup>2</sup>",
+            "year":"2016",
+            "value": 557
         }
     ],
     "HO":
@@ -36,15 +36,15 @@
         {
             "name":"Home Office",
             "year":"2016",
-            "value": 360
+            "value": 335
         }
     ],
-    "HMT":
+    "DH":
     [
         {
-            "name":"HM Treasury",
+            "name":"Department of Health and Social Care",
             "year":"2016",
-            "value": 73
+            "value": 101
         }
     ],
     "DEFRA":
@@ -55,34 +55,26 @@
             "value": 67
         }
     ],
-    "DH":
-    [
-        {
-            "name":"Department of Health",
-            "year":"2016",
-            "value": 46
-        }
-    ],
     "PF":
     [
         {
-            "name":"Prosperity Fund",
+            "name":"Prosperity Cross-Government Fund",
             "year":"2016",
-            "value": 38
-        }
-    ],
-    "DFE":
-    [
-        {
-            "name":"Department for Education",
-            "year":"2016",
-            "value": 28
+            "value": 46
         }
     ],
     "DWP":
     [
         {
             "name":"Department for Work and Pensions",
+            "year":"2016",
+            "value": 29
+        }
+    ],
+    "DFE":
+    [
+        {
+            "name":"Department for Education",
             "year":"2016",
             "value": 24
         }
@@ -92,7 +84,7 @@
         {
             "name":"HM Revenue and Customs",
             "year":"2016",
-            "value": 9
+            "value": 14
         }
     ],
     "MOD":
@@ -103,36 +95,44 @@
             "value": 5
         }
     ],
-    "UKEF":
-    [
-        {
-            "name":"Export Credit Guarantee Department",
-            "year":"2016",
-            "value": 2
-        }
-    ],
     "DCMS":
     [
         {
             "name":"Department for Culture, Media and Sports",
             "year":"2016",
-            "value": 2
+            "value": 4
+        }
+    ],
+    "UKEF":
+    [
+        {
+            "name":"Export Credits Guarantee Department<sup>3</sup>",
+            "year":"2016",
+            "value": 3
+        }
+    ],
+    "CO":
+    [
+        {
+            "name":"Cabinet Office<sup>4</sup>",
+            "year":"2016",
+            "value": 3
+        }
+    ],
+    "HMT":
+    [
+        {
+            "name":"HM Treasury<sup>5</sup>",
+            "year":"2016",
+            "value": 1
         }
     ],
     "ONS":
     [
         {
-            "name":"Office for National Statistics",
+            "name":"Office for National Statistics<sup>6</sup>",
             "year":"2016",
             "value": -1
-        }
-    ],
-    "CDC":
-    [
-        {
-            "name":"CDC Group PLC",
-            "year":"2016",
-            "value": 0
         }
     ]
 }
