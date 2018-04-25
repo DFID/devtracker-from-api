@@ -950,6 +950,63 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	tempTransactions
 end
 
+get '/department/:dept_id/?' do
+	dept_id = sanitize_input(params[:dept_id],"a")
+	puts dept_id
+	# if dept_id == 'DFID'
+	# 	redirect '/'
+	# end
+	if dept_id == 'abs'
+		redirect '/sector'
+	end
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	deptIdentifier = ''
+	if ogds.has_key?(dept_id)
+		deptIdentifier = ogds[dept_id]["identifiers"]
+	else
+		redirect '/department'
+	end
+	if deptIdentifier == ''
+		redirect '/department'
+	end
+	if(deptIdentifier != 'x')
+		projectData = get_ogd_all_projects_data(deptIdentifier)
+	else
+		projectData = {}
+		projectData['projects'] = {}
+		projectData['projects']['count'] = 0
+ 		projectData['projects']['results'] = ''
+ 		projectData['results'] = ''
+ 		projectData['highLevelSectorList'] = ''
+ 		projectData['project_budget_higher_bound'] = ''
+ 		projectData['countryAllProjectFilters'] = ''
+ 		projectData['actualStartDate'] = ''
+ 		projectData['plannedEndDate'] = ''
+ 		projectData['document_types'] = ''
+ 		projectData['implementingOrg_types'] = ''
+	end
+  	settings.devtracker_page_title = ogds[dept_id]["name"]
+	erb :'other-govt-departments/other_govt_departments',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		ogd_title: settings.devtracker_page_title,
+		ogd: deptIdentifier,
+ 		total_projects: projectData['projects']['count'],
+ 		projects: projectData['projects']['results'],
+ 		results: projectData['results'],
+ 		highLevelSectorList: projectData['highLevelSectorList'],
+ 		budgetHigherBound: projectData['project_budget_higher_bound'],
+ 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+ 		actualStartDate: projectData['actualStartDate'],
+ 		plannedEndDate: projectData['plannedEndDate'],
+ 		documentTypes: projectData['document_types'],
+ 		implementingOrgTypes: projectData['implementingOrg_types'],
+ 		projectCount: projectData['projects']['count'],
+ 		deptName: ogds[dept_id]["name"]
+	}
+end
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################
@@ -957,7 +1014,15 @@ end
 
 get '/department' do
   	settings.devtracker_page_title = 'Aid by Department Page'
-	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+  	odas = Oj.load(File.read('data/odas.json'))
+  	totalOdaValue = 0
+  	odas.each do |oda|
+  		if oda[1][0]["value"] >= 0
+  			totalOdaValue = totalOdaValue + oda[1][0]["value"]
+  		end
+  	end
+  	puts totalOdaValue
+	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
 end
 
 get '/about/?' do

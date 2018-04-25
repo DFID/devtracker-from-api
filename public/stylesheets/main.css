@@ -726,3 +726,184 @@ g.c3-axis-y > g:last-child {
 #topSixResults .columns:nth-child(4){
   clear: left;
 }
+
+.logo h1 {
+  font-size: 27px;
+  line-height: 1em;
+  padding: 0;
+  font-family: "nta", Arial, sans-serif;
+  margin: 0;
+  vertical-align: baseline;
+  display: block;
+  -webkit-font-smoothing: antialiased;
+}
+
+.logo .organisation-logo {
+  border-color: #003e74;
+  padding: 42px 0 0 10px;
+  background-repeat: no-repeat;
+  background-position: 9px top;
+  background-size: auto 27px;
+  border-left: 3px solid;
+  line-height: 30px;
+  font-size: 27px;
+  z-index: auto;
+  font-family: Helvetica, Arial;
+  font-weight: 400;
+  display: block;
+  position: relative;
+  text-decoration: none;
+  border: none;
+  margin: 0;
+  min-height: 80px;
+}
+
+.logo .organisation-logo span {
+  display: block;
+  position: relative;
+  top: 0px;
+  color: #0b0c0c;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 13px;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+.logo {
+  background-color:  rgba(192, 192, 192, 0.26);
+  padding: 25px;
+}
+
+.fco h1,
+.dfbei h1,
+.dfid h1 {
+  border-left: 3px solid #003e74;
+}
+
+.defra h1 {
+  border-left: 3px solid #00a33b;
+}
+
+.ho h1 {
+  border-left: 3px solid #9325b2;
+}
+
+.hmt h1 {
+ border-left: 3px solid #af292e; 
+}
+
+.dhsc h1 {
+ border-left: 3px solid #00ad93; 
+}
+
+.de h1 {
+ border-left: 3px solid #003a69; 
+}
+
+.dfwp h1 {
+ border-left: 3px solid #00beb7; 
+}
+
+.hmrc h1 {
+ border-left: 3px solid #009390;
+}
+
+.mod h1 {
+ border-left: 3px solid #4d2942;
+}
+
+.ef h1 {
+ border-left: 3px solid #CF102D;
+}
+
+.ddcm h1 {
+  border-left: 3px solid #d40072;
+}
+
+.ogd-title {
+  margin-top: 10px;
+  display: block;
+  font-size: 16px;
+}
+
+.ogd-row-space {
+  margin-bottom: 25px !important;
+}
+
+.logo .uk-gov-logo {
+  background-image: url(/images/org-crest-27px.png);
+}
+
+.logo .uk-gov-logo-ho {
+  background-image: url(/images/HO.png);
+  background-size: 28px;
+}
+
+.logo .uk-gov-logo-hmrc {
+  background-image: url(/images/hmrc.png);
+  background-size: 35px;
+}
+
+.logo .uk-gov-logo-mod {
+  background-image: url(/images/mod.png);
+  background-size: 35px;
+}
+
+.logo .uk-gov-logo-ef {
+  background-image: url(/images/ef.png);
+  background-size: 35px;
+}
+
+.logo .uk-gov-logo-ons {
+  background-image: url(/images/ons-logo.svg);
+  background-size: 150px;
+  top: 25px;
+}
+
+.logo .uk-gov-logo-mrc {
+  background-image: url(/images/mrc.png);
+  background-size: 150px;
+  top: 5px;
+}
+
+.logo .uk-gov-logo-cdc {
+  background-image: url(/images/cdc.png);
+  background-size: 110px;
+  top: 5px;
+  left: 16px;
+}
+
+.logo,
+.ogd-title {
+  cursor: pointer;
+}
+
+.oda-table thead tr th,
+.oda-table thead tr th:last-child {
+  background-color: transparent;
+  text-align: center;
+}
+
+.oda-table thead {
+  background-color: #f5f5f5;
+}
+
+.oda-table tbody tr td {
+  text-align: center;
+}
+
+.oda-table td:last-child {
+  text-align: center; 
+}
+
+.oda-table td:first-child {
+  text-align: left; 
+}
+
+.ogdDepartment {
+  margin-left: 28px;
+  font-size: 1.5em;
+}
