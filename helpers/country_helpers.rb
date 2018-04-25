@@ -109,7 +109,8 @@ module CountryHelpers
       currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}")
       currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value")
 
-      totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2")
+      #totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2")
+      totalProjectsDetails = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2")
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
 
       if countryOperationalBudget.length > 0 then
@@ -311,9 +312,9 @@ module CountryHelpers
     #oipa_project_list_count = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"
     #allProjectsData['projectsCount']= JSON.parse(oipa_project_list_count)
 
-    oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value&related_activity_recipient_country=#{countryCode}"
+    oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value&recipient_country=#{countryCode}"
     allProjectsData['projects']= JSON.parse(oipa_project_list)
-    sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_country=#{countryCode}&activity_status=2"
+    sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-GOV-1&recipient_country=#{countryCode}&activity_status=2"
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
     #projects = projects_list['results']
     allProjectsData['project_budget_higher_bound'] = 0
@@ -322,7 +323,7 @@ module CountryHelpers
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
     end
-    allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
+    allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{countryCode}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
     allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
     tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
     if (tempStartDate.nil?)
@@ -334,20 +335,20 @@ module CountryHelpers
     #unless allProjectsData['actualStartDate']['results'][0].nil? 
     #  allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
     #end
-    allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
+    allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{countryCode}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
     allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
     allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
     allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
     #unless allProjectsData['plannedEndDate']['results'][0].nil?
     #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
     #end
-    oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_country=#{countryCode}&activity_status=2"
+    oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&recipient_country=#{countryCode}&activity_status=2"
     document_type_list = JSON.parse(oipa_document_type_list)
     allProjectsData['document_types'] = document_type_list['results']
 
     #Implementing org type filters
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
-    oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_recipient_country=#{countryCode}&hierarchy=1&activity_status=2"
+    oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=GB-GOV-1&recipient_country=#{countryCode}&hierarchy=1&activity_status=2"
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
