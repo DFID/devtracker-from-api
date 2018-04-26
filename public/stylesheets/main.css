@@ -824,13 +824,13 @@ g.c3-axis-y > g:last-child {
 }
 
 .ogd-title {
-  margin-top: 10px;
+  margin-top: 14px;
   display: block;
   font-size: 16px;
 }
 
 .ogd-row-space {
-  margin-bottom: 25px !important;
+  margin-bottom: 30px !important;
 }
 
 .logo .uk-gov-logo {
