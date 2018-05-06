@@ -1,82 +1,41 @@
 <!--
 published: "true"
 title: Development Tracker
-layout: landing
+layout: cw_landing
 
 -->
-
+<div class="hero hero-notabs">    
 <div class="row">
-    <div class="ten columns">
-        <h3 style="font-size: 1.8em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
-        <p class="meta">The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Initiative</a> (IATI) open data standard.</p>
+    <div class="eight columns">
+        <h1>Follow how the UK invests in developing countries</h1>
+        <p class="meta">UK government departments work closely together to deliver the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>, demonstrating global leadership in making development assistance more effective. Development Tracker uses the IATI open data standard, published by <a href="https://www.gov.uk">UK Government Departments</a> and its partners, to provide a meaningful way to understand how the UK Government supports international development and humanitarian aid projects.</p>
+        <div class="summary"><p>UK government departments work closely together to deliver the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>, demonstrating global leadership in making development assistance more effective. Development Tracker uses the IATI open data standard, published by <a href="https://www.gov.uk">UK Government Departments</a> and its partners, to provide a meaningful way to understand how the UK Government supports international development and humanitarian aid projects.</p></div>
     </div>
-    <div class="two columns" style="text-align:right;">
-    </div>
+    <div class="three columns" style="text-align:right; margin-top:60px;">
+           <img src="/images/ukaid_logo.png">
+   </div>
 </div>
-<div class="row">
-    <div class="twelve columns">
-        <div class="summary"><p>The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Initiative</a> (IATI) open data standard.</p></div>
-        <div style="margin-top: 0px" id="search-bar">
-            <form id="mid-search-form" action="/search" method="GET">
-                <div class="row">
-                    <div class="three columns">
-                        <label for="query">
-                            <h3 style="line-height:2em;">Search Projects</h3>
-                        </label>
-                    </div>
-                    <div class="nine columns">
-                        <div class="row">
-                            <div class="eight columns">
-                                <div class="row">
-                                    <div class="twelve columns">
-                                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
-                                    </div>
-                                    <div class="twelve columns" style="text-align: left; display: none">
-                                        <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
-                                        <input id="includeClosed" name="includeClosed" type="hidden" value="0">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="four columns">
-                                <input type="submit" value="Search" class="button">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
-</div>
 
 <nav>
     <div class="row" id="nav-entry">
-        <div class="four columns col">
+        <div class="six columns col">
             <p>
                 <a id="location-link" href="/location/country" class="by-location">
                     <span class="image-wrapper">
-                        <img src="/images/by-location.png" alt="Aid by Location">
+                        <img src="/images/by-location-large.png" alt="Aid by Location">
                     </span>
                     <span class="link-wrapper"><small>Explore DFID AID BY</small> Location</span>
                 </a>
             </p>
         </div>
-        <div class="four columns col">
+        <div class="six columns col">
             <p>
                 <a id="sector-link" href="/sector" class="by-sector">
                     <span class="image-wrapper">
-                        <img src="/images/by-sector.png" alt="Aid by Sector">
+                        <img src="/images/by-sector-large.png" alt="Aid by Sector">
                     </span>
                     <span class="link-wrapper"><small>Explore DFID AID BY</small> Sector</span>
-                </a>
-            </p>
-        </div>
-        <div class="four columns col">
-            <p>
-                <a id="ogd-link" href="/department" class="by-departments">
-                    <span class="image-wrapper">
-                        <img src="/images/by-department.png" alt="Aid by Departments">
-                    </span>
-                    <span class="link-wrapper"><small>Explore aid by UK government</small> Organisation</span>
                 </a>
             </p>
         </div>
@@ -86,20 +45,19 @@ layout: landing
 
 <div class="row">
     <div class="twelve columns">
-        <h3 class="section-group-title">KEY DFID INDICATORS</h3>
+        <h3 class="section-group-title">Strategic objectives</h3>
     </div>
 </div>
 
 <div class="row top-5s">
-    
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
-            <span class="top-five-title">Top 5 things we achieve</span> 
+            <span class="top-five-title">Strategic Outcomes</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        Results achieved up to 2015/16 inclusive towards DFID commitments for the period 2011-16.
+                        The Commonwealth Secretariat Strategic Plan  (2017/18 – 2020/21)  Strategic Outcomes.
                     </div>
             </aside>
         </div>
@@ -107,22 +65,19 @@ layout: landing
           <% what_we_achieve.each do |entry| %>
           <li>
             <%= entry['title'] %>
-            <em><span class="visually-hidden">Achieved</span><%= entry['value'] %></em>
           </li>
           <% end %>
         </ol>
         <%end%>
-        <p>Results achieved (up to 2015/16 inclusive) from <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16">DFID Annual Report 2015-16</a></p>
+        <p>Source: <a target="_BLANK" href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/478834/ODA_strategy_final_web_0905.pdf">UK Aid - Tackling Global Challenges in the National Interest</a></p>
     </div>
-
     <div class="four columns" id="top-5-countries">
         <div class="top-five-header">        
-            <span class="top-five-title">Top 10 places we work</span> 
+            <span class="top-five-title">Top 10 Places We Work</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 10 places we work"/></a>
             <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content">
-                        The countries where the most money has been identified as being
-                         spent solely in that country. 
+                        The countries where most money has been identified as being spent. 
                     </div>
             </aside>
         </div>
@@ -136,11 +91,11 @@ layout: landing
         <%#= what_we_do  %>
         <%if !what_we_do.nil?  %>
            <div class="top-five-header">        
-                <span class="top-five-title">Top 10 things we do</span>
+                <span class="top-five-title">Top 10 Things We Do</span>
                 <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
                 <aside id="moreinfo2" class="more-info">            
                         <div class="more-info-content">
-                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
+                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's classifications.
                          </div>
                 </aside>
             </div> 

@@ -26,7 +26,8 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		#sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
 	end
 	
 	def group_hashes arr, group_fields
