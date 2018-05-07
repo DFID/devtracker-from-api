@@ -124,6 +124,15 @@ get '/countries/:country_code/?' do |n|
 	 	}
 	end
 	relevantReportingOrgs = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}")
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	relevantReportingOrgsFinal = []
+	relevantReportingOrgs["results"].each do |reportingOrg|
+		tempOgd = ogds.select{|key, hash| hash["identifiers"] == reportingOrg["reporting_organisation"]["organisation_identifier"]}
+		tempOgd.each do |o|
+			relevantReportingOrgsFinal.push(o[1]["name"])
+		end
+	end
+	puts relevantReportingOrgsFinal
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
@@ -136,7 +145,7 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount['count'],
- 			relevantReportingOrgs: relevantReportingOrgs
+ 			relevantReportingOrgs: relevantReportingOrgsFinal
  		}
 end
 

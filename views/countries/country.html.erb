@@ -58,9 +58,19 @@
             });
         </script>
     </div>
-            <div class="four columns country-flag">
+    <div class="four columns country-flag">
         <img src="/images/flags_l/<%= country[:code] %>.png">
-            </div>
+        <%if relevantReportingOrgs.count > 0%>
+        <div class="activeGovermentDepartments">
+            <span><b>Active Goverment Departments:</b></span>
+            <ul>
+                <% relevantReportingOrgs.each do |result| %>
+                    <li><%= result %></li>
+                <%end%>
+            </ul>
+        </div>
+        <%end%>
+    </div>
 </div>
 <div style="margin: 15px auto" class="row">
     <div class="four columns"></div>

@@ -132,6 +132,11 @@ Homepage country summary info
   #top-5-countries p:last-of-type {
     color: rgba(255, 255, 255, 0.6); }
 
+.activeGovermentDepartments {
+  display: block;
+  margin-top: 27px;
+  float: left; }
+
 /*-------------------------------------------------------
 Breadcrumbs
 ---------------------------------------------------------*/
