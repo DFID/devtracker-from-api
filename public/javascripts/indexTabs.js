@@ -16,7 +16,8 @@ $(document).ready(function() {
     var grouping = dimentions.group().reduceSum(function(d) {return d.budget;});
     chart2
     .width(320)
-    .height(420)
+    //.height(420)
+    .height(280)
     .x(d3.scale.ordinal())
     .elasticX(true)
     .dimension(dimentions)
@@ -44,7 +45,7 @@ $(document).ready(function() {
     var grouping2 = dimentions2.group().reduceSum(function(d) {return d.budget;});
     chart3
     .width(340)
-    .height(420)
+    .height(280)
     .x(d3.scale.ordinal())
     .elasticX(true)
     .dimension(dimentions2)
