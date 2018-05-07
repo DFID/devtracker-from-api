@@ -1,0 +1,92 @@
+{
+	"DFID":
+	{
+		"identifiers":"GB-GOV-1, GB-1",
+		"name": "Department for International Development"
+	},
+	"FCO":
+	{
+		"identifiers":"GB-GOV-3",
+		"name": "Foreign & Commonwealth Office"
+	},
+	"BEIS":
+	{
+		"identifiers":"GB-GOV-13",
+		"name": "Department for Business, Energy and Industrial Strategy"
+	},
+	"DEFRA":
+	{
+		"identifiers":"GB-GOV-7",
+		"name": "Department for Environment, Food and Rural Affairs"
+	},
+	"CSSF":
+	{
+		"identifiers":"GB-GOV-52",
+		"name": "Conflict, Stability and Security Fund"
+	},
+	"HO":
+	{
+		"identifiers":"GB-6",
+		"name": "Home Office"
+	},
+	"HMT":
+	{
+		"identifiers":"x",
+		"name": "HM Treasury"
+	},
+	"DH":
+	{
+		"identifiers":"GB-GOV-10",
+		"name": "Department of Health"
+	},
+	"PF":
+	{
+		"identifiers":"GB-GOV-50",
+		"name": "Prosperity Fund"
+	},
+	"DFE":
+	{
+		"identifiers":"x",
+		"name": "Department of Education"
+	},
+	"DWP":
+	{
+		"identifiers":"GB-9",
+		"name": "Department for Work and Pensions"
+	},
+	"HMRC":
+	{
+		"identifiers":"x",
+		"name": "HM Revenue and Customs"
+	},
+	"MOD":
+	{
+		"identifiers":"GB-GOV-8",
+		"name": "Ministry of Defence"
+	},
+	"UKEF":
+	{
+		"identifiers":"GB-GOV-5",
+		"name": "UK Export Finance"
+	},
+	"DCMS":
+	{
+		"identifiers":"GB-GOV-12",
+		"name": "Department for Culture, Media and Sport"
+	},
+	"ONS":
+	{
+		"identifiers":"x",
+		"name": "Office for National Statistics"
+	},
+	"MRC":
+	{
+		"identifiers":"GB-COH-RC000346",
+		"name": "Medical Research Council"
+	},
+	"CDC":
+	{
+		"identifiers":"GB-COH-03877777",
+		"name": "CDC Group PLC"
+	}
+}
