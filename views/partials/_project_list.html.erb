@@ -7,25 +7,28 @@
 <div class="row project-results">
         <div class="nine columns push-three" id="search-results">
             <div class="row">
-                <div class="five columns">
+                <div class="six columns">
                     <b>Sort results by:</b>
                     &nbsp;
                     Title
-                    <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span>
+                    <span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span>
                     &nbsp;
                     Budget
-                    <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▼</span>
-                    <input type="hidden" id="sort_results_type" value=""  />
+                    <span class="sortProjBudg sort-proj-sectors" style="display:inline;">▼</span>
+                    &nbsp;
+                    Start Date
+                    <span class="sortProjSDate sort-proj-sectors" style="display:inline;">▼</span>
+                    <input type="hidden" class="sort_results_type" value=""  />
                 </div>
-                <div class="seven columns">
-                    <div id="light-pagination"></div>
+                <div class="six columns">
+                    <div class="light-pagination"></div>
                 </div>
             </div>
             <div class="modal">
                 <div><div>Loading Data <br> Please Wait</div></div>
             </div>
             <div id="showResults">
-                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
+                <div class="ui-state-highlight ui-corner-all" style="padding: 10px">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
@@ -43,10 +46,22 @@
                                     <%=project['title']['narratives'][0]['text']%>
                                 <%end%>
                             <%end%>
-                            <small>[<%= project['iati_identifier']%>]</small>
                             </a>
                         <%end%>
                     </h3>
+                    <span>Reporting:<em>
+                        <%unless project['reporting_organisations'].empty? %>
+                            <%unless project['reporting_organisations'][0]['narratives'].empty? %>
+                                <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                            <%end%>
+                        <%end%>
+                    </em></span>
+                    <%unless project['iati_identifier'].nil? %>
+                    <span>IATI Identifier: <em><%= project['iati_identifier']%></em></span>
+                    <%end%>
+                    <%unless project['activity_status']['name'].nil? %>
+                    <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                    <%end%>
                     <%unless project['aggregations']['activity_children'].nil? || project['aggregations']['activity_children']['budget_value'].nil? %>
                         <%if project['aggregations']['activity_children']['budget_value'].to_i != 0 %>
                         <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
@@ -54,16 +69,8 @@
                             <span class="budget">Budget: <em>Not Provided</em></span>
                         <%end%>
                     <%end%>
-                    <%unless project['activity_status']['name'].nil? %>
-                    <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <%end%>
-                    <span>Reporting Org: <em>
-                        <%unless project['reporting_organisations'].empty? %>
-                            <%unless project['reporting_organisations'][0]['narratives'].empty? %>
-                                <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
-                            <%end%>
-                        <%end%>
-                    </em></span>
+                    
+                    
                     <p class="description">
                         <%unless project['descriptions'].empty? %>
                             <%unless project['descriptions'][0]['narratives'].empty? %>
@@ -73,6 +80,13 @@
                     </p>
                 </div>
                 <% end %>
+            </div>
+            <div class="row">
+                <div class="five columns">
+                </div>
+                <div class="seven columns">
+                    <div class="light-pagination"></div>
+                </div>
             </div>
         </div>
         <div class="three columns pull-nine">
@@ -125,7 +139,7 @@
                             </div>
                             <input type="hidden" id="locationCountryFilterStates" value=""  />
                         </div>
-                        <div id='sector-region-filter' class="filter-header" style="margin-left:20px;background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 0px 0 5px 5px" name="regions">
+                        <div id='sector-region-filter' class="filter-header" style="display: none; margin-left:20px;background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 0px 0 5px 5px" name="regions">
                             <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div>
                             <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                                 <h4>Regions</h4>
