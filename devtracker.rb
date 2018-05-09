@@ -537,6 +537,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorJsonData.each do |sdata|
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
+	sectorData['categoryCode'] = ""
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
