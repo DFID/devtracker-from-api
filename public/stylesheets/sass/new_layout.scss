@@ -4,6 +4,20 @@
     content: "";
 }*/
 
+
+/*----------------------------------------
+MIXINS
+  ---------------------------------------*/
+
+@mixin the-gradient {
+ background: #2a78ba;
+    background: -moz-linear-gradient( 30deg, rgb(42,120,186) 1%, rgb(59,130,189) 33%, rgb(75,139,192) 71%);
+    background: -webkit-linear-gradient( 30deg, rgb(42,120,186) 1%, rgb(59,130,189) 33%, rgb(75,139,192) 71%);
+    background: -ms-linear-gradient( 30deg, rgb(42,120,186) 1%, rgb(59,130,189) 33%, rgb(75,139,192) 71%);
+    background: linear-gradient( 30deg, rgb(42,120,186) 1%, rgb(59,130,189) 33%, rgb(75,139,192) 71%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
 /*---------------------------------
 Global Stuff
 ---------------------------------*/
@@ -65,12 +79,9 @@ Homepage hero banner
     margin-bottom: 10px;
     padding: 20px 0 0;
     position: relative;
+    @include the-gradient;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
-background: #ba247c; /* Old browsers */
-background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', endColorstr='#b73e3e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+   
     h1 {
         font-size: 1.8em;
         line-height: 1.5em;
@@ -138,11 +149,7 @@ Homepage country summary info
 
 #top-5-countries {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
-background: #ba247c; /* Old browsers */
-background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', endColorstr='#b73e3e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+@include the-gradient;
     .top-five-title {
         color: #fff;
     }
