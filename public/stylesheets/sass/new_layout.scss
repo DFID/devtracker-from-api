@@ -102,7 +102,7 @@ Homepage hero banner
     }
     img {
         display:none;
-        padding-top: 30px;
+        /*padding-top: 30px;*/
         @media screen and (min-width:768px) {
             display: inline-block;
         }
@@ -615,3 +615,7 @@ Random Fixes
     }
 
 .map { margin: 0 0 20px;}
+
+.resize-static-headers {
+    min-height: 150px;
+}

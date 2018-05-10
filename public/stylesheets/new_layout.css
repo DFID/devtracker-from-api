@@ -79,7 +79,7 @@ Homepage hero banner
         width: 80% !important; } }
   .hero img {
     display: none;
-    padding-top: 30px; }
+    /*padding-top: 30px;*/ }
     @media screen and (min-width: 768px) {
       .hero img {
         display: inline-block; } }
@@ -491,5 +491,8 @@ Random Fixes
 
 .map {
   margin: 0 0 20px; }
+
+.resize-static-headers {
+  min-height: 150px; }
 
 /*# sourceMappingURL=new_layout.css.map */
