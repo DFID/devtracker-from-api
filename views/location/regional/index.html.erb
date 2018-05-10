@@ -1,6 +1,7 @@
-<%= erb :'partials/_location-title-bar' %>
-<%= erb :'partials/_location-tabs', :locals => { :active => "regional" } %>
-
+<div class="hero" style="margin-bottom: 0px">
+	<%= erb :'partials/_location-title-bar' %>
+	<%= erb :'partials/_location-tabs', :locals => { :active => "regional" } %>
+</div>
 <div class="row">
     <div class="twelve columns map">
         <div id="map" class="static-background"></div>
