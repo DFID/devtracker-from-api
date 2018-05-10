@@ -62,8 +62,7 @@ Homepage hero banner
   background: -ms-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );
-  /* IE6-9 fallback on horizontal gradient */
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */ }
+  /* IE6-9 fallback on horizontal gradient */ }
   .hero h1 {
     font-size: 1.8em;
     line-height: 1.5em;
@@ -79,7 +78,8 @@ Homepage hero banner
       .hero .nine {
         width: 80% !important; } }
   .hero img {
-    display: none; }
+    display: none;
+    padding-top: 30px; }
     @media screen and (min-width: 768px) {
       .hero img {
         display: inline-block; } }
@@ -116,7 +116,6 @@ Homepage country summary info
     left: 15px; }
 
 #top-5-countries {
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
   background: #2a78ba;
   background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: -webkit-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
@@ -349,24 +348,25 @@ info tooltip icon
 /*-------------------------------------------------------
 Large Image links homepage
 ---------------------------------------------------------*/
-a.by-location, a.by-sector {
+a.by-location, a.by-sector, a.by-departments {
   overflow: hidden;
   display: block; }
-  a.by-location .image-wrapper, a.by-sector .image-wrapper {
+  a.by-location .image-wrapper, a.by-sector .image-wrapper, a.by-departments .image-wrapper {
     display: block; }
     @media screen and (min-height: 768px) {
-      a.by-location .image-wrapper, a.by-sector .image-wrapper {
+      a.by-location .image-wrapper, a.by-sector .image-wrapper, a.by-departments .image-wrapper {
         height: 190px; } }
-    a.by-location .image-wrapper img, a.by-sector .image-wrapper img {
+    a.by-location .image-wrapper img, a.by-sector .image-wrapper img, a.by-departments .image-wrapper img {
       transition: transform  0.3s ease-in-out; }
-      a.by-location .image-wrapper img:hover, a.by-sector .image-wrapper img:hover {
-        transform: scale(1.03);
-        height: auto; }
-  a.by-location .link-wrapper, a.by-sector .link-wrapper {
-    transition: 0.3s ease-in-out; }
-  a.by-location:hover .link-wrapper, a.by-sector:hover .link-wrapper {
+  a.by-location .link-wrapper, a.by-sector .link-wrapper, a.by-departments .link-wrapper {
+    transition: 0.3s ease-in-out;
+    width: 8.6em; }
+  a.by-location:hover .link-wrapper, a.by-sector:hover .link-wrapper, a.by-departments:hover .link-wrapper {
     width: 9em;
     padding-left: 10px; }
+  a.by-location:hover .image-wrapper img, a.by-sector:hover .image-wrapper img, a.by-departments:hover .image-wrapper img {
+    transform: scale(1.03);
+    height: auto; }
 
 /*-------------------------------------------------------
 Location page country list
@@ -400,16 +400,12 @@ Footer banner
 Pink summary section
 ---------------------------------------------------------*/
 .stuffs {
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
-  background: #ba247c;
-  /* Old browsers */
-  background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%);
-  /* FF3.6-15 */
-  background: -webkit-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%);
-  /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(45deg, #ba247c 0%, #b73e3e 100%);
-  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', endColorstr='#b73e3e',GradientType=1 );
+  background: #2a78ba;
+  background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  background: -webkit-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  background: -ms-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  background: linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
   padding: 5px 0 20px;
   margin: 30px 0; }

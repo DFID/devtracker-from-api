@@ -70,7 +70,7 @@ module SectorHelpers
 	    
 	    if listType == "top_five_sectors"
 	    	hiLevSecBudAggSorted = highLevelSectorBudgetAggregatedNoUnalloc.sort_by{ |k| k[:budget].to_f}.reverse
-	    	hiLevSecBudAggSorted.first(5)	    	  
+	    	hiLevSecBudAggSorted.first(10)	    	  
 		else 
 			#Sort the sectors by name
 			sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}

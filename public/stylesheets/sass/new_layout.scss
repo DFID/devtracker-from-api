@@ -80,7 +80,6 @@ Homepage hero banner
     padding: 20px 0 0;
     position: relative;
     @include the-gradient;
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
    
     h1 {
         font-size: 1.8em;
@@ -103,6 +102,7 @@ Homepage hero banner
     }
     img {
         display:none;
+        padding-top: 30px;
         @media screen and (min-width:768px) {
             display: inline-block;
         }
@@ -148,7 +148,6 @@ Homepage country summary info
 }
 
 #top-5-countries {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
 @include the-gradient;
     .top-five-title {
         color: #fff;
@@ -445,10 +444,10 @@ box-shadow: 7px 6px 44px -2px rgba(0,0,0,0.23);
 Large Image links homepage
 ---------------------------------------------------------*/
 
-a.by-location, a.by-sector {
-            overflow: hidden;
+a.by-location, a.by-sector, a.by-departments {
+    overflow: hidden;
+    display: block;
     
-        display: block;
     .image-wrapper {
         @media screen and (min-height:768px){
         height: 190px;
@@ -456,23 +455,24 @@ a.by-location, a.by-sector {
 
         display: block;
         img {
-                transition: transform  0.3s ease-in-out;
-                &:hover {
-                    transform: scale(1.03); 
-            height: auto;
-            }
+            transition: transform  0.3s ease-in-out;
         }
         
     }
     .link-wrapper {
         transition: 0.3s ease-in-out;
+        width: 8.6em;
     }
     &:hover {
-    .link-wrapper {
-        width: 9em;
+        .link-wrapper {
+            width: 9em;
             padding-left:10px;
         
-    }
+        }
+        .image-wrapper img {
+            transform: scale(1.03); 
+            height: auto;
+        }
     }
 }
 
@@ -516,12 +516,7 @@ Footer banner
 Pink summary section
 ---------------------------------------------------------*/
 .stuffs {
- /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba247c+0,b73e3e+100 */
-background: #ba247c; /* Old browsers */
-background: -moz-linear-gradient(45deg, #ba247c 0%, #b73e3e 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(45deg, #ba247c 0%,#b73e3e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ba247c', endColorstr='#b73e3e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    @include the-gradient;
     padding:5px 0 20px;
     margin: 30px 0;
     h3, p, span, a {
