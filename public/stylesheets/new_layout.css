@@ -131,7 +131,11 @@ Homepage country summary info
 .activeGovermentDepartments {
   display: block;
   margin-top: 27px;
-  float: left; }
+  float: left;
+  margin-left: 25px; }
+  .activeGovermentDepartments ul {
+    margin-left: 16px;
+    margin-top: 10px; }
 
 /*-------------------------------------------------------
 Breadcrumbs
