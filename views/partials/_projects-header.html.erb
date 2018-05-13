@@ -35,60 +35,60 @@
         <%end%>
     });
 </script>
-<div id="page-title" class="row">
-    <div class="twelve columns">
-        <% if(is_dfid_project(project['iati_identifier'])) %>
-            <img src="/images/ukaid_logo.png" alt="UK aid from the British people">
-        <%end%>
-        <div>
-            <div class="breadcrumb">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <%#if countryOrRegion[:projectType] == "country" %>
-                        <li><a href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
-                    <%# end %>
-                    <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
-                </ul>
-            </div>
-            <h1>
-                <%= project['title']['narratives'][0]['text'] %> <small>[<%= project['iati_identifier'] %>]</small>
-            </h1>
-            <h2>
-                <%= reporting_organisation(project) %>
-             </h2>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="twelve columns">
-        <div class="tab-bar-container">
-            <div class="row">
-                <div class="projects-nav six columns">
-                    <nav>
-                        <ul class="tab-bar">
-                            <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
-                            <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
-                            <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
-                            <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
-                                <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
-                            <% end %>
-
-                            <!-- TODO: bring back in r4dDocs element -->
-                        </ul>
-                    </nav>
+<div class="hero">
+    <div id="page-title" class="row">
+        <div class="twelve columns">
+            <% if(is_dfid_project(project['iati_identifier'])) %>
+                <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
+            <%end%>
+            <div>
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <%#if countryOrRegion[:projectType] == "country" %>
+                            <li><a href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
+                        <%# end %>
+                        <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
+                    </ul>
                 </div>
-                <div class="button-row six columns">
-                    <span>
-                        <% projectTitle = project['title']['narratives'][0]['text'] + " [" + project['iati_identifier'] + "]"%>
-                        <a id='Report-Fraud' href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
-                    </span>
-                </div>    
+                <h1>
+                    <%= project['title']['narratives'][0]['text'] %> <small>[<%= project['iati_identifier'] %>]</small>
+                </h1>
+                <h2 style="color: white">
+                    <%= reporting_organisation(project) %>
+                 </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <div class="tab-bar-container">
+                <div class="row">
+                    <div class="projects-nav six columns">
+                        <nav>
+                            <ul class="tab-bar">
+                                <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
+                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                                <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
+                                <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
+                                    <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
+                                <% end %>
+
+                                <!-- TODO: bring back in r4dDocs element -->
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="button-row six columns">
+                        <span>
+                            <% projectTitle = project['title']['narratives'][0]['text'] + " [" + project['iati_identifier'] + "]"%>
+                            <a id='Report-Fraud' href="/fraud?project=<%= format_query_string(projectTitle) %>" class="button serious" title="Report fraud">Report Fraud</a>
+                        </span>
+                    </div>    
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="twelve columns">
         <% if(!is_dfid_project(project['iati_identifier'])) %>
