@@ -16,47 +16,55 @@
     </div>
 </div>
 <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects], :results_count => results.length } %>
-<% if country[:description].length > 0%>
 </div>
 <div class="row">
     <div class="eight columns summary">
         <h2 class="visually-hidden">Summary</h2>
-        <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify"><%= markdown_to_html(country[:description])%>
-            <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
-<div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Read more about <%= country[:name] %></div>
+        <% if country[:description].length > 0%>
+            <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify">
+                    <%= markdown_to_html(country[:description])%>
+                    <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
+    <div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Read more about <%= country[:name] %></div>
+                </div>
+                <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
             </div>
-            <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
-        </div>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                var curHeight = $('.country-description').height();
-                $('.country-description').css('height', 'auto');
-                var autoHeight = $('.country-description').height();
-                $('.country-description').height(curHeight);
-                // $('div.description').expander({
-                //     slicePoint    : 300,
-                //     expandSpeed   : 0,
-                //     collapseSpeed : 0,
-                //     expandText    : 'Read more about <%#= country[:name] %>' 
-                // });
-                $('.description-expander').click(function(){
-                    $('.country-description').animate({
-                        height: autoHeight
-                    },1000,function(){
-                        $('.description-collapse').fadeIn();
+        <%else%>
+            <div class="country-description" style="height: 235px; overflow: hidden; text-align: center; margin-top: 112px;">
+                Description Not Available.
+            </div>
+        <%end%>
+        <% if country[:description].length > 0%>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var curHeight = $('.country-description').height();
+                    $('.country-description').css('height', 'auto');
+                    var autoHeight = $('.country-description').height();
+                    $('.country-description').height(curHeight);
+                    // $('div.description').expander({
+                    //     slicePoint    : 300,
+                    //     expandSpeed   : 0,
+                    //     collapseSpeed : 0,
+                    //     expandText    : 'Read more about <%#= country[:name] %>' 
+                    // });
+                    $('.description-expander').click(function(){
+                        $('.country-description').animate({
+                            height: autoHeight
+                        },1000,function(){
+                            $('.description-collapse').fadeIn();
+                        });
+                        $(this).parent().fadeOut('slow');
                     });
-                    $(this).parent().fadeOut('slow');
-                });
 
-                $('.description-collapse').click(function(){
-                    $(this).hide();
-                    $('.description-overlay').fadeIn('slow');
-                    $('.country-description').animate({
-                        height: curHeight
-                    },1000);
+                    $('.description-collapse').click(function(){
+                        $(this).hide();
+                        $('.description-overlay').fadeIn('slow');
+                        $('.country-description').animate({
+                            height: curHeight
+                        },1000);
+                    });
                 });
-            });
-        </script>
+            </script>
+        <%end%>
     </div>
     <div class="four columns country-flag">
         <img src="/images/flags_l/<%= country[:code] %>.png">
@@ -77,7 +85,6 @@
     <div class="four columns"><hr></div>
     <div class="four columns"></div>
 </div>
-<%end%>
 <div style="margin: 15px auto" class="row">
     <div class="four columns"></div>
     <div class="four columns"></div>
