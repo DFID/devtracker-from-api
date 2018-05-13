@@ -38,10 +38,7 @@
 <div class="hero">
     <div id="page-title" class="row">
         <div class="twelve columns">
-            <% if(is_dfid_project(project['iati_identifier'])) %>
-                <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-            <%end%>
-            <div>
+            <div class="eight columns">
                 <div class="breadcrumb">
                     <ul>
                         <li><a href="/">Home</a></li>
@@ -57,6 +54,11 @@
                 <h2 style="color: white">
                     <%= reporting_organisation(project) %>
                  </h2>
+            </div>
+            <div class="four columns">
+                <% if(is_dfid_project(project['iati_identifier'])) %>
+                    <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
+                <%end%>
             </div>
         </div>
     </div>
