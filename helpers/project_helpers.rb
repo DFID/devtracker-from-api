@@ -265,7 +265,7 @@ module ProjectHelpers
             topFiveCounter = 0
             totalOtherBudget = 0
             projectSector.each do |sector|
-                if topFiveCounter < 5
+                if topFiveCounter < 11
                     sectorGroupPercentage = (100*sector['value'].to_f/totalBudgets.to_f).round(2)
                     c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
                     c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
@@ -274,7 +274,7 @@ module ProjectHelpers
                 end
                 topFiveCounter = topFiveCounter + 1
             end
-            if topFiveCounter > 4
+            if topFiveCounter > 10
                 sectorGroupPercentage = (100*totalOtherBudget.to_f/totalBudgets.to_f).round(2)
                 c3ReadyStackBarData[0].concat('["Other Sectors",'+sectorGroupPercentage.to_s+"],")
                 c3ReadyStackBarData[1].concat('"Other Sectors",')
