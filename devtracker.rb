@@ -351,6 +351,8 @@ get '/projects/:proj_id/?' do |n|
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
+  	participatingOrgList = get_participating_organisations(project)
+
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
@@ -377,7 +379,8 @@ get '/projects/:proj_id/?' do |n|
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
- 			projectSectorGraphData: projectSectorGraphData
+ 			projectSectorGraphData: projectSectorGraphData,
+ 			participatingOrgList: participatingOrgList
  		}
 end
 

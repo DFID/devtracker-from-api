@@ -907,3 +907,25 @@ g.c3-axis-y > g:last-child {
   margin-left: 28px;
   font-size: 1.5em;
 }
+
+#funding-organisations ul li{
+  list-style: none;
+}
+
+.more-info-container table {
+border: none;
+width: 100%;
+}
+.more-info-container table thead {
+background: none;
+}
+
+.more-info-container table thead tr th {
+font-size: 1.9em;
+padding: 30px 0 20px 0;
+border-top: 1px solid #ddd;
+}
+
+.more-info-container table tbody tr td {
+padding: 9px 0px;
+}

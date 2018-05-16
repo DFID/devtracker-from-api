@@ -25,6 +25,43 @@ module ProjectHelpers
         project
     end
 
+    def get_funded_by_organisations(project)
+        #if(is_dfid_project(project['id']))
+            if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+                fundingOrgs = {}
+                fundingOrgs['orgList'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
+                if(fundingOrgs['orgList'].length > 0)
+                    checkIfFundingOrgMatchesWithReportingOrg = fundingOrgs['orgList'].select{|org| org['ref'] == project['reporting_organisations'][0]['ref']}
+                    if(checkIfFundingOrgMatchesWithReportingOrg.length == 1 && fundingOrgs['orgList'].length == 1)
+                        fundingOrgs['fundingType'] = 'Do nothing'
+                    elsif (checkIfFundingOrgMatchesWithReportingOrg.length == 0 && fundingOrgs['orgList'].length > 0)
+                        fundingOrgs['fundingType'] = 'Funded by'
+                    else
+                        fundingOrgs['fundingType'] = 'Part funded by'
+                    end
+                end
+                fundingOrgs
+            else
+                nil
+            end
+        #else
+        #    nil
+        #end
+    end
+
+    def get_participating_organisations(project)
+        if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+            participatingOrgs = {}
+            participatingOrgs['Funding'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
+            participatingOrgs['Accountable'] = project['participating_organisations'].select{|org| org['role']['code'] == '2'}
+            participatingOrgs['Extending'] = project['participating_organisations'].select{|org| org['role']['code'] == '3'}
+            participatingOrgs['Implementing'] = project['participating_organisations'].select{|org| org['role']['code'] == '4'}
+            participatingOrgs
+        else
+            nil
+        end
+    end
+
     def get_document_links_local(projectId)
         local_documents = JSON.parse(File.read('data/document_inclusion_list.json'))
         matched_local_documents = local_documents.select{|p| p['projectid'] == projectId}
@@ -444,6 +481,10 @@ module ProjectHelpers
 
     def is_dfid_project(projectCode)   
         projectCode[0, 5] == "GB-1-" || projectCode[0, 9] == "GB-GOV-1-"
+    end
+
+    def is_hmg_project(reportingOrgCode)
+        reportingOrgCode.downcase.include? "gb-gov"
     end
 
     def is_valid_project(projectCode)
