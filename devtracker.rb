@@ -89,13 +89,16 @@ get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
   	top5countries = get_top_5_countries()
+  	odas = Oj.load(File.read('data/odas.json'))
+  	odas = odas.first(10)
   	settings.devtracker_page_title = ''
  	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
  			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
- 			what_we_achieve: top5results 	
+ 			what_we_achieve: top5results,
+ 			odas: odas
  		}
 end
 

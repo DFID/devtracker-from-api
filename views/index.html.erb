@@ -67,19 +67,31 @@ layout: cw_landing
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        Strategic Plan  (2017/18 – 2020/21)  Strategic Outcomes.
+                        UK ODA by Government Department in 2017*
                     </div>
             </aside>
         </div>
-        <ol>
-          <%# what_we_achieve.each do |entry| %>
-          <!-- <li>
-            <%#= entry['title'] %>
-          </li> -->
-          <%# end %>
-        </ol>
+        <table class="transactions-table oda-table" style="width:100%">
+          <tbody>
+            <thead>
+              <th></th>
+              <th style="border-left: 1px solid rgb(218, 218, 218)">£m</th>
+            </thead>
+            <% odas.each do |oda| %>
+              <tr>
+                <td><%= oda[1][0]["name"] %></td>
+                <% if oda[1][0]["value"] >= 0 %>
+                  <td style="border-left: 1px solid rgb(218, 218, 218)"><span><%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %></span>
+                  <!-- <td style="border-left: 1px solid rgb(218, 218, 218)"><%#= ((oda[1][0]["value"].to_f / totalOdaValue.to_f)*100.0).round(1) %>%</td> -->
+                <%else%>
+                  <td style="border-left: 1px solid rgb(218, 218, 218)">~</td>
+                <%end%>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
         <%end%>
-        <p>Source: <a target="_BLANK" href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/478834/ODA_strategy_final_web_0905.pdf">UK Aid - Tackling Global Challenges in the National Interest</a></p>
+        <!-- <p>Source: <a target="_BLANK" href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/478834/ODA_strategy_final_web_0905.pdf">UK Aid - Tackling Global Challenges in the National Interest</a></p> -->
     </div>
     <div class="four columns" id="top-5-countries">
         <div class="top-five-header">        
