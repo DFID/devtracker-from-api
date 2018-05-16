@@ -6,12 +6,12 @@ layout: cw_landing
 -->
 <div class="hero hero-notabs">    
 <div class="row">
-    <div class="eight columns">
-        <h1>Follow how the UK invests in developing countries</h1>
-        <p class="meta">UK government departments work closely together to deliver the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>, demonstrating global leadership in making development assistance more effective. Development Tracker uses the IATI open data standard, published by <a href="https://www.gov.uk">UK Government Departments</a> and its partners, to provide a meaningful way to understand how the UK Government supports international development and humanitarian aid projects.</p>
-        <div class="summary"><p>UK government departments work closely together to deliver the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>, demonstrating global leadership in making development assistance more effective. Development Tracker uses the IATI open data standard, published by <a href="https://www.gov.uk">UK Government Departments</a> and its partners, to provide a meaningful way to understand how the UK Government supports international development and humanitarian aid projects.</p></div>
+    <div class="nine columns">
+        <h1>Making Development Assistance More Effective</h1>
+        <p class="meta">Development Tracker uses IATI data published by UK Government Departments and its Partners to provide a meaningful way to understand how the UK Government implements the UK Aid Strategy and supports international development and humanitarian aid projects.</p>
+        <div class="summary"><p>Development Tracker uses IATI data published by UK Government Departments and its Partners to provide a meaningful way to understand how the UK Government implements the UK Aid Strategy and supports international development and humanitarian aid projects.</p></div>
     </div>
-    <div class="three columns" style="text-align:right; margin-top:10px;">
+    <div class="two columns" style="text-align:right; margin-top:10px;">
            <img src="/images/UK_AID_logo-w.png">
    </div>
 </div>
@@ -21,11 +21,21 @@ layout: cw_landing
     <div class="row" id="nav-entry">
         <div class="four columns col">
             <p>
+                <a id="ogd-link" href="/department" class="by-departments">
+                    <span class="image-wrapper">
+                        <img src="/images/by-department.png" alt="Aid by Departments">
+                    </span>
+                    <span class="link-wrapper"><small>Explore aid by UK government</small> Department</span>
+                </a>
+            </p>
+        </div>
+        <div class="four columns col">
+            <p>
                 <a id="location-link" href="/location/country" class="by-location">
                     <span class="image-wrapper">
                         <img src="/images/by-location.png" alt="Aid by Location">
                     </span>
-                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Location</span>
+                    <span class="link-wrapper"><small>Explore AID BY</small> Location</span>
                 </a>
             </p>
         </div>
@@ -35,17 +45,7 @@ layout: cw_landing
                     <span class="image-wrapper">
                         <img src="/images/by-sector.png" alt="Aid by Sector">
                     </span>
-                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Sector</span>
-                </a>
-            </p>
-        </div>
-        <div class="four columns col">
-            <p>
-                <a id="ogd-link" href="/department" class="by-departments">
-                    <span class="image-wrapper">
-                        <img src="/images/by-department.png" alt="Aid by Departments">
-                    </span>
-                    <span class="link-wrapper"><small>Explore aid by UK government</small> Department</span>
+                    <span class="link-wrapper"><small>Explore AID BY</small> Sector</span>
                 </a>
             </p>
         </div>
@@ -63,20 +63,20 @@ layout: cw_landing
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
-            <span class="top-five-title">Strategic Outcomes</span> 
+            <span class="top-five-title">Top 10 UK Government Departments</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        The Commonwealth Secretariat Strategic Plan  (2017/18 – 2020/21)  Strategic Outcomes.
+                        Strategic Plan  (2017/18 – 2020/21)  Strategic Outcomes.
                     </div>
             </aside>
         </div>
         <ol>
-          <% what_we_achieve.each do |entry| %>
-          <li>
-            <%= entry['title'] %>
-          </li>
-          <% end %>
+          <%# what_we_achieve.each do |entry| %>
+          <!-- <li>
+            <%#= entry['title'] %>
+          </li> -->
+          <%# end %>
         </ol>
         <%end%>
         <p>Source: <a target="_BLANK" href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/478834/ODA_strategy_final_web_0905.pdf">UK Aid - Tackling Global Challenges in the National Interest</a></p>

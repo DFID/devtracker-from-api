@@ -49,7 +49,7 @@
                             </a>
                         <%end%>
                     </h3>
-                    <span>Reporting:<em>
+                    <span>Reporting Organisation:<em>
                         <%unless project['reporting_organisations'].empty? %>
                             <%unless project['reporting_organisations'][0]['narratives'].empty? %>
                                 <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
@@ -57,14 +57,14 @@
                         <%end%>
                     </em></span>
                     <%unless project['iati_identifier'].nil? %>
-                    <span>IATI Identifier: <em><%= project['iati_identifier']%></em></span>
+                    <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
                     <%end%>
                     <%unless project['activity_status']['name'].nil? %>
-                    <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                    <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>
                     <%unless project['aggregations']['activity_children'].nil? || project['aggregations']['activity_children']['budget_value'].nil? %>
                         <%if project['aggregations']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Total Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%else%>
                             <span class="budget">Budget: <em>Not Provided</em></span>
                         <%end%>

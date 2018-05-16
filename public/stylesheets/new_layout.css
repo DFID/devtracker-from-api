@@ -289,6 +289,9 @@ Results bullet text style
   font-size: 1em;
   font-weight: bold; }
 
+#search-results h3 {
+  font-size: 1.5em; }
+
 /*-------------------------------------------------------
 info tooltip icon
 ---------------------------------------------------------*/

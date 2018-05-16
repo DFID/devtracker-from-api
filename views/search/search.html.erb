@@ -110,22 +110,22 @@
                                 </a>
                             <%end%>
                         </h3>
-                        <span>Reporting Org: <em>
+                        <span>Reporting Organisation: <em>
                             <%unless project['reporting_organisations'].empty? %>
                                 <%unless project['reporting_organisations'][0]['narratives'].empty? %>
                                     <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
                                 <%end%>
                             <%end%>
                         </em></span>
-                        <span>IATI Identifier: <em><%= project['iati_identifier']%></em></span>
+                        <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
                         <%unless project['activity_status']['name'].nil? %>
-                        <span>Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                        <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                         <%end%>
                         <%
                         #to handle different budget aggregations for DFID and non-DFID projects
                         if is_dfid_project(project['iati_identifier']) then
                             unless project['aggregations']['activity_children']['budget_value'].nil? %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Total Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%end
                         else
                             unless project['aggregations']['activity_children']['budget_value'].nil? %>
