@@ -79,7 +79,7 @@ layout: cw_landing
             </thead> -->
             <% odas.each do |oda| %>
               <tr>
-                <td><%= oda[1][0]["shortName"] %></td>
+                <td><a href="department/<%= oda[0]%>"><%= oda[1][0]["shortName"] %></a></td>
                 <% if oda[1][0]["value"] >= 0 %>
                   <td style="border-left: 1px solid rgb(218, 218, 218)"><span><%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %></span>
                   <!-- <td style="border-left: 1px solid rgb(218, 218, 218)"><%#= ((oda[1][0]["value"].to_f / totalOdaValue.to_f)*100.0).round(1) %>%</td> -->
