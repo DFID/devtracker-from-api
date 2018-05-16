@@ -324,8 +324,7 @@ ul.legend-list li div span{
 }
 
 .top-five-title{
-  /*font-size: 23px;*/
-  font-size: 1.2em;
+  font-size: 23px;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-style: normal;
