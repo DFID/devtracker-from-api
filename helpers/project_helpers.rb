@@ -263,22 +263,24 @@ module ProjectHelpers
 
     def get_implementing_orgs(projectId)
         if is_dfid_project(projectId) then
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+            #implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation=GB-GOV-1&hierarchy=2&related_activity_id=#{projectId}&fields=participating_organisations"
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         else
-            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"    
-        end    
+            #implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"
+            puts "activities/#{projectId}/?format=json"
+            implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        end
+        puts implementingOrgsDetailsJSON
+        puts '--------------------------'
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
-        implementingOrg=implementingOrgsDetails['results']
+        implementingOrg=implementingOrgsDetails['participating_organisations']
 
         #implementingOrg = data.collect{ |activity| activity['participating_organisations'][2]}.uniq.compact
         #implementingOrg = implementingOrg.select{ |activity| activity['role']['code']=="4"}
-
         implementingOrgsList = []
-        implementingOrg.each do |impOrg|
-            impOrg["participating_organisations"].select{|imp| imp["role"]["code"]=="4" }.each do |i|
-                if i["narratives"].length > 0 then 
-                    implementingOrgsList << i["narratives"][0]["text"]
-                end        
+        implementingOrg.select{|imp| imp["role"]["code"]=="4" }.each do |i|
+            if i["narratives"].length > 0 then 
+                implementingOrgsList << i["narratives"][0]["text"]
             end
         end
         implementingOrgsList = implementingOrgsList.uniq.sort
