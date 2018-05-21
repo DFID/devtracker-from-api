@@ -176,6 +176,54 @@ module ProjectHelpers
         countriesList
     end
 
+    def dfid_complete_country_list_region_wise_sorted
+        countryWithRegions = Oj.load(File.read('data/all-region-sorted-countries.json'))
+        countryHash = {}
+        countryWithRegions.each do |data|
+            if data['region'] != ''
+                tempString = data['alpha-2'].to_s
+                countryHash[tempString] = {}
+                countryHash[tempString]['name'] = data['name']
+                countryHash[tempString]['region'] = data['region']
+                countryHash[tempString]['activeProjects'] = 0
+            end
+        end
+        # if !countryHash.has_key?("TA")
+        #     countryHash['TA'] = {}
+        #     countryHash['TA']['name'] = "Tristan da Cunha"
+        #     countryHash['TA']['region'] = "Africa"
+        #     countryHash['TA']['activeProjects'] = 0
+        # end
+        staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
+        current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2"
+        countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
+        countriesList = countriesList['results']
+        countriesList.each do |country|
+            tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["recipient_country"]["code"]}
+            if tempCountryDetails.length>0
+                 country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
+             end
+            tempCode = country['recipient_country']['code'].to_s
+            if countryHash.has_key?(tempCode)
+                countryHash[tempCode]['activeProjects'] = country['count']
+                countryHash[tempCode]['name'] = country["recipient_country"]["name"]
+            end
+        end
+        sortedCountries = {}
+        countryHash.each do |country|
+            tempRegion = country[1]['region'].to_s
+            if !sortedCountries.has_key?(tempRegion)
+                sortedCountries[tempRegion] = {}
+            end
+            sortedCountries[tempRegion][country[0]] = {}
+            sortedCountries[tempRegion][country[0]]['name'] = country[1]['name']
+            sortedCountries[tempRegion][country[0]]['activeProjects'] = country[1]['activeProjects']
+        end
+        sortedCountries
+    end
+
     def dfid_country_map_data
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
@@ -207,7 +255,6 @@ module ProjectHelpers
             #OIPA V3.1
             projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
             projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
-            puts project["recipient_country"]["name"]
         end
 
         # Map the input data structure so that it matches the required input for Tilestream

@@ -658,7 +658,8 @@ get '/location/country/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	dfid_country_map_data,
-			:dfid_complete_country_list => 	dfid_complete_country_list,
+			#:dfid_complete_country_list => 	dfid_complete_country_list,
+			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted,
 			:dfid_total_country_budget => total_country_budget_location
 		}
 end
