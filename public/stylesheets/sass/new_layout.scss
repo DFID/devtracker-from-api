@@ -490,9 +490,9 @@ Location page country list
 #country-list {
     .two, .row .two {
         @media screen and (min-width:767px) {
-            width:  18%;  
+            /*width:  18%;*/  
         }
-}
+    }
         .two, .row .two,
         .three, .row .three{
         h4 {

@@ -55,15 +55,30 @@
 
 <div class="row">
   <div id="country-list">
+    <!-- <div class="one columns">
+    </div> -->
     <% dfid_complete_country_list.each do |key,data|%>
-      <div class="two columns">
-        <h4><%= key %></h4>
-        <% data.each do |item| %>
-          <%if item[1]['activeProjects'].to_i > 0 %>
-            <a href="/countries/<%= item[0] %>"><%= item[1]["name"]%></a>
+      <%if key == 'Asia' || key == 'Africa'%>
+        <div class="three columns">
+          <h4><%= key %></h4>
+          <% data.each do |item| %>
+            <%if item[1]['activeProjects'].to_i > 0 %>
+              <a href="/countries/<%= item[0] %>"><%= item[1]["name"]%></a>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% else %>
+        <div class="two columns">
+          <h4><%= key %></h4>
+          <% data.each do |item| %>
+            <%if item[1]['activeProjects'].to_i > 0 %>
+              <a href="/countries/<%= item[0] %>"><%= item[1]["name"]%></a>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
+    <!-- <div class="one columns">
+    </div> -->
   </div>
 </div> 

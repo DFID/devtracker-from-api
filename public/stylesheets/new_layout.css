@@ -380,7 +380,7 @@ Location page country list
 ---------------------------------------------------------*/
 @media screen and (min-width: 767px) {
   #country-list .two, #country-list .row .two {
-    width: 18%; } }
+    /*width:  18%;*/ } }
 #country-list .two h4, #country-list .row .two h4,
 #country-list .three h4, #country-list .row .three h4 {
   display: block;
