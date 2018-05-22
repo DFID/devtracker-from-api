@@ -83,6 +83,7 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% participatingOrgList = participatingOrgList.sort_by{|key| key} %>
                     <%participatingOrgList.each { |participatingOrgType, participatingOrgData| %>
                         <% if participatingOrgType != nil && participatingOrgData.length > 0%>
                             <tr>
@@ -95,7 +96,7 @@
                                             Name not available
                                         <% end %>
                                         <% if index != participatingOrgData.size - 1 %>
-                                            , 
+                                            ¦ 
                                         <% end %>
                                     <% } %>
                                 </td>

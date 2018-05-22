@@ -94,6 +94,37 @@ layout: cw_landing
 </div>
 
 <div class="row top-5s">
+    <div class="four columns" id="top-5-sectors">
+        <%#= what_we_do  %>
+        <%if !what_we_do.nil?  %>
+           <div class="top-five-header">        
+                <span class="top-five-title">Top 10 Things We Do</span>
+                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
+                <aside id="moreinfo2" class="more-info">            
+                        <div class="more-info-content">
+                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's classifications.
+                         </div>
+                </aside>
+            </div> 
+            <div id="top5Sectors"></div>     
+        <%end%>
+        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+    </div>
+    <div class="four columns" id="top-5-countries">
+        <div class="top-five-header">        
+            <span class="top-five-title">Top 10 Places We Work</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 10 places we work"/></a>
+            <aside id="moreinfo1" class="more-info">            
+                    <div class="more-info-content">
+                        The countries where most money has been identified as being spent. 
+                    </div>
+            </aside>
+        </div>
+        <div id="top5Countries"></div>
+        <ol>
+        </ol>
+        <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+    </div>
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
@@ -101,7 +132,7 @@ layout: cw_landing
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        UK ODA by Government Department in 2017*
+                        UK ODA by Government Department [FY17]
                     </div>
             </aside>
         </div>
@@ -127,39 +158,6 @@ layout: cw_landing
         <%end%>
         <!-- <p>Source: <a target="_BLANK" href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/478834/ODA_strategy_final_web_0905.pdf">UK Aid - Tackling Global Challenges in the National Interest</a></p> -->
     </div>
-    <div class="four columns" id="top-5-countries">
-        <div class="top-five-header">        
-            <span class="top-five-title">Top 10 Places We Work</span> 
-            <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 10 places we work"/></a>
-            <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                        The countries where most money has been identified as being spent. 
-                    </div>
-            </aside>
-        </div>
-        <div id="top5Countries"></div>
-        <ol>
-        </ol>
-        <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
-    </div>
-
-    <div class="four columns" id="top-5-sectors">
-        <%#= what_we_do  %>
-        <%if !what_we_do.nil?  %>
-           <div class="top-five-header">        
-                <span class="top-five-title">Top 10 Things We Do</span>
-                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
-                <aside id="moreinfo2" class="more-info">            
-                        <div class="more-info-content">
-                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's classifications.
-                         </div>
-                </aside>
-            </div> 
-            <div id="top5Sectors"></div>     
-        <%end%>
-        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
-    </div>
-
 </div>
 <script src="/javascripts/easyResponsiveTabs.js" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" href="/stylesheets/easy-responsive-tabs.css" >

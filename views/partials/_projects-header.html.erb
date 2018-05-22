@@ -48,8 +48,8 @@
                         <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
                     </ul>
                 </div>
-                <h1>
-                    <%= project['title']['narratives'][0]['text'] %> <small>[<%= project['iati_identifier'] %>]</small>
+                <h1 style="font-size:1.8em">
+                    <%= project['title']['narratives'][0]['text'] %>
                 </h1>
                 <h2 style="color: white">
                     <%= reporting_organisation(project) %>
@@ -105,5 +105,15 @@
             </div>
         </div>
         <% end %>
+    </div>
+</div>
+<div class="row">
+    <div class="twelve columns">
+        <%if !project['last_updated_datetime'].nil?%>
+        <p class="last-updated"><strong>Project Data Last Updated: <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></strong></p>
+        <% end %>
+        <%if !project['iati_identifier'].nil?%>
+            <p class="iati-id"><strong>IATI Identifier: <%= project['iati_identifier'] %></strong></p>
+        <% end %>    
     </div>
 </div>
