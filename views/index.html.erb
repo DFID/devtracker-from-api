@@ -17,6 +17,40 @@ layout: cw_landing
 </div>
     </div>
 
+<div style="margin-top: 0px; background: none" id="search-bar2">
+    <form id="mid-search-form" action="/search" method="GET">
+        <div class="row">
+            <div class="one columns"></div>
+            <div class="eleven columns" style="text-align: left">
+                <label for="query">
+                    <h3 style="line-height:1em; font-size: 1.5em">Search Projects</h3>
+                </label>
+            </div>
+            <div class="twelve columns">
+                <div class="row">
+                    <div class="one columns"></div>
+                    <div class="ten columns">
+                        <div class="row">
+                            <div class="twelve columns">
+                                <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
+                                <input id="front-search-submit" type="submit" value="Search">
+                            </div>
+                            <div class="twelve columns" style="text-align: left; display: none">
+                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                <input id="includeClosed" name="includeClosed" type="hidden" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="two columns">
+                        <input type="submit" value="Search" class="button">
+                    </div> -->
+                    <div class="one columns"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <nav>
     <div class="row" id="nav-entry">
         <div class="four columns col">
