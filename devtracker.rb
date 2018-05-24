@@ -72,7 +72,7 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-1, GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
+set :goverment_department_ids, 'GB-GOV-1, GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -130,12 +130,12 @@ get '/countries/:country_code/?' do |n|
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	relevantReportingOrgsFinal = []
 	relevantReportingOrgs["results"].each do |reportingOrg|
-		tempOgd = ogds.select{|key, hash| hash["identifiers"] == reportingOrg["reporting_organisation"]["organisation_identifier"]}
+		tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(reportingOrg["reporting_organisation"]["organisation_identifier"])}
 		tempOgd.each do |o|
 			relevantReportingOrgsFinal.push(o[1]["name"])
 		end
 	end
-	puts relevantReportingOrgsFinal
+	relevantReportingOrgsFinal = relevantReportingOrgsFinal.sort
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 

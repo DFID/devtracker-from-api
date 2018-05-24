@@ -6,6 +6,7 @@
 #map {
     width: 100%; 
     height: 545px;
+    margin-top: 5px;
 }
 
 .static-background {
@@ -704,7 +705,7 @@ g.c3-axis-y > g:last-child {
 }
 
 #top5Countries svg text {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 #top5Countries svg g:first-child {
@@ -712,7 +713,7 @@ g.c3-axis-y > g:last-child {
 }
 
 #top5Sectors svg text {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 #top5Sectors svg g:first-child {

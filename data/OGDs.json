@@ -36,7 +36,7 @@
 	},
 	"DH":
 	{
-		"identifiers":"GB-GOV-10",
+		"identifiers":"GB-10, GB-GOV-10",
 		"name": "Department of Health"
 	},
 	"PF":

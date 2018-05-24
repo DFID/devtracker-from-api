@@ -204,6 +204,8 @@ module ProjectHelpers
             tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["recipient_country"]["code"]}
             if tempCountryDetails.length>0
                  country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
+             elsif country["recipient_country"]["code"].to_s == 'VG'
+                country["recipient_country"]["name"] =  'Virgin Islands (British)'
              end
             tempCode = country['recipient_country']['code'].to_s
             if countryHash.has_key?(tempCode)

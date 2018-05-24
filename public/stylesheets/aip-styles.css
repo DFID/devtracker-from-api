@@ -160,7 +160,7 @@
 #search-bar2 #query {
   line-height: 1.2em;
   border-radius: 0px;
-  width: 89%;
+  width: 65%;
   border: 1px solid #000;
   display: inline-block;
   margin: 0;
@@ -518,6 +518,7 @@ Sector breakdown
   padding-top: 0; }
 
 .top-5s a {
+  font-size: 14px;
   display: block; }
 
 /* search result styles

@@ -38,7 +38,7 @@
 <div class="hero">
     <div id="page-title" class="row">
         <div class="twelve columns">
-            <div class="eight columns">
+            <div class="nine columns">
                 <div class="breadcrumb">
                     <ul>
                         <li><a href="/">Home</a></li>
@@ -48,14 +48,14 @@
                         <li title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
                     </ul>
                 </div>
-                <h1 style="font-size:1.8em">
+                <h2 style="color: white; font-size: 1.25em; clear: left; margin: 0px; padding-top: 20px">
+                    <%= reporting_organisation(project) %>
+                </h2>
+                <h1 style="font-size:1.5em">
                     <%= project['title']['narratives'][0]['text'] %>
                 </h1>
-                <h2 style="color: white">
-                    <%= reporting_organisation(project) %>
-                 </h2>
             </div>
-            <div class="four columns">
+            <div class="two columns">
                 <% if(is_dfid_project(project['iati_identifier'])) %>
                     <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
                 <%end%>
