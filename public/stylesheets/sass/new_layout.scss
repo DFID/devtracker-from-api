@@ -205,7 +205,7 @@ Breadcrumbs
      right: 0;
      &:nth-last-child(2) {
          top:10px;
-         right: 120px;
+         right: 15px;
          float: right!important;
          width: 76px!important;
     }
@@ -611,6 +611,7 @@ Random Fixes
 .country-info-container .country-info {
     padding: 14px 0;
     display: block;
+    font-size: 1.25em;
     @media screen and (min-width:768px) {
         padding: 0 0 14px;
     }

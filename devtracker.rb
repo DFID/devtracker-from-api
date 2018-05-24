@@ -127,6 +127,7 @@ get '/countries/:country_code/?' do |n|
 	 	}
 	end
 	relevantReportingOrgs = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}")
+	puts "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}"
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	relevantReportingOrgsFinal = []
 	relevantReportingOrgs["results"].each do |reportingOrg|

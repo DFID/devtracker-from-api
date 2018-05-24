@@ -168,7 +168,7 @@ Breadcrumbs
     right: 0; }
     #page-title img:nth-last-child(2) {
       top: 10px;
-      right: 120px;
+      right: 15px;
       float: right !important;
       width: 76px !important; }
     #page-title img:nth-last-child(3) {
@@ -290,7 +290,7 @@ Results bullet text style
   font-weight: bold; }
 
 #search-results h3 {
-  font-size: 1.5em; }
+  font-size: 1.25em; }
 
 /*-------------------------------------------------------
 info tooltip icon
@@ -486,7 +486,8 @@ Random Fixes
 
 .country-info-container .country-info {
   padding: 14px 0;
-  display: block; }
+  display: block;
+  font-size: 1.25em; }
   @media screen and (min-width: 768px) {
     .country-info-container .country-info {
       padding: 0 0 14px; } }

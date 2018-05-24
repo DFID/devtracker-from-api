@@ -6,7 +6,7 @@
 #map {
     width: 100%; 
     height: 545px;
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 .static-background {
@@ -289,7 +289,8 @@ ul.legend-list li div span{
 
 .more-info-title
 {
-  font-size: 27px;
+  /*font-size: 27px;*/
+  font-size: 1.25em;
   font-weight: bold;  
 }
 
