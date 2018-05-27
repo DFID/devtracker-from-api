@@ -262,6 +262,7 @@
                 window.maxBudget = <%= budgetHigherBound %>;
                 window.StartDate = '<%= actualStartDate %>';
                 window.EndDate = '<%= plannedEndDate %>';
+                window.reportingOrgs = "<%= settings.goverment_department_ids %>";
                 <% if defined? country %>
                     window.searchType = "C";
                     window.CountryCode = '<%= country[:code] %>';

@@ -77,8 +77,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1, GB-1,GB-GOV
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -188,7 +188,7 @@ get '/countries/:country_code/results/?' do |n|
 	country = get_country_code_name(n)
 	results = get_country_results(n)
 	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
+    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
   	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
 	erb :'countries/results', 
 		:layout => :'layouts/layout',
@@ -305,8 +305,8 @@ get '/regions/:region_code/?' do |n|
 	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter")
 	#regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
 	#oipa v3.1
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
+	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',

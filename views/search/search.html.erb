@@ -333,6 +333,7 @@
                     window.maxBudget = <%= budgetHigherBound %>;
                     window.StartDate = '<%= actualStartDate %>';
                     window.EndDate = '<%= plannedEndDate %>';
+                    window.reportingOrgs = "<%= settings.goverment_department_ids %>";
                     $('#mid-search-form').submit(function(){
                     $('.modal_free_text_search').show();
                     setTimeout(patience,10000);
