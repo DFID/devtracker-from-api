@@ -276,7 +276,7 @@ get '/regions' do
 	countryAllProjectFilters = get_static_filter_list()
 	region = {}
 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-	region[:code] = ""
+	region[:code] = "298,798,89,589,389,189,679,289,380"
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
