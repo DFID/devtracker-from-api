@@ -58,6 +58,12 @@ $(document).ready(function() {
             break;
         }
     };
+    function refreshLHSFilters(){
+        switch(window.searchType){
+            case 'C':
+                
+        }
+    };
     var returnedProjectCount = 0;
 
     /*The following click functions are to trigger the filters and orders*/
