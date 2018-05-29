@@ -58,10 +58,187 @@ $(document).ready(function() {
             break;
         }
     };
-    function refreshLHSFilters(){
+    function refreshLHSButtons(){
+        $('.document_type').click(function(){
+            var tmpDocumentTypeList = $('.document_type:checked').map(function(){return $(this).val()}).get().join();
+            $('#selected_document_type').val(tmpDocumentTypeList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+
+        $('.implementingOrg_type').click(function(){
+            var tmpDocumentTypeList = $('.implementingOrg_type:checked').map(function(){return $(this).val()}).get().join();
+            $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+
+        $('.sector').click(function(){
+            var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
+            $('#selected_sectors').val(tmpSectorList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+        //The following updates the result based on selected location country filter
+        $('.location_country').click(function(){
+            var tmpCountryList = $('.location_country:checked').map(function(){return $(this).val()}).get().join();
+            if (tmpCountryList.length == 0){
+                //tmpCountryList = 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK';
+            }
+            $('#locationCountryFilterStates').val(tmpCountryList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+
+        //The following updates the result based on selected location region filter
+        $('.location_region').click(function(){
+            var tmpRegionList = $('.location_region:checked').map(function(){return $(this).val()}).get().join();
+            $('#locationRegionFilterStates').val(tmpRegionList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+        $("#slider-vertical").slider({
+            orientation: "horizontal",
+            range: true,
+            min: 0,
+            max: window.maxBudget,
+            step : (Math.round(window.maxBudget / 100) * 100)/100,
+            values: [0,window.maxBudget],
+            slide: function( event, ui ) {
+                //$( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
+                //$( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas(ui.values[0])+'"> - <input id="budget_slider_end" value="£'+addCommas(ui.values[1])+'" style="color: black; width: 40%; font-size: 0.8em;">');
+                $('#budget_slider_start').val(addCommas('£'+ui.values[0]));
+                $('#budget_slider_end').val(addCommas('£'+ui.values[1]));
+            },
+            change: function(event, ui){
+                $('#budget_lower_bound').val(ui.values[0]);
+                $('#budget_higher_bound').val(ui.values[1]);
+                refreshOipaLink(window.searchType,0);
+                generateProjectListAjax(oipaLink);
+            }
+        });
+        //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
+        $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 35%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
+        $('#date-range').html('<input id="date_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 35%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
+        
+        $('#budget_higher_bound').val($( "#slider-vertical" ).slider( "values", 1 ));
+        
+        $('#budget_slider_update').click(function(){
+            $('#budget_lower_bound').val($('#budget_slider_start').val().trim().replace(/[^0-9]/g,""));
+            $('#budget_higher_bound').val($('#budget_slider_end').val().trim().replace(/[^0-9]/g,""));
+            budgetHigherBound = $('#budget_higher_bound').val();
+            budgetLowerBound = $('#budget_lower_bound').val();
+            refreshOipaLink(window.searchType,1);
+            console.log('link: '+oipaLink);
+            generateProjectListAjax(oipaLink);
+        });
+        StartDt = new Date (window.StartDate.slice(0,10));
+        EndDt = new Date (window.EndDate.slice(0,10));
+        $("#date-slider-vertical").slider({
+            orientation: "horizontal",
+            range:true,
+            min: Date.parse(StartDt),
+            max: Date.parse(EndDt),
+            step: 86400000,
+            values: [Date.parse(StartDt), Date.parse(EndDt)],
+            slide: function(event, ui){
+                var tempStartDt = new Date(ui.values[0]);
+                var tempEndDt = new Date(ui.values[1]);
+            //$('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
+            $('#date_slider_start').val(tempStartDt.customFormat("#DD# #MMM# #YYYY#"));
+            $('#date_slider_end').val(tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
+            },
+            change: function(event, ui){
+                $('#date-slider-disclaimer').show();
+                var tempStartDt = new Date(ui.values[0]);
+                var tempEndDt = new Date(ui.values[1]);
+                $('#date_lower_bound').val(tempStartDt.customFormat("#YYYY#-#MM#-#DD#"));
+                $('#date_higher_bound').val(tempEndDt.customFormat("#YYYY#-#MM#-#DD#"));
+                refreshOipaLink(window.searchType,0);
+                generateProjectListAjax(oipaLink);
+            }
+            /*change: function(event, ui){
+            //TO DO
+            }*/
+        });
+        //$('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
+        $('#date_slider_start').datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        $('#date_slider_end').datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        //$('#date_slider_start').datepicker("option","dateFormat","yy-mm-dd");
+        $('#date_slider_start').datepicker("option","dateFormat","dd M yy");
+        $('#date_slider_end').datepicker("option","dateFormat","dd M yy");
+        $('#date_slider_start').val(StartDt.customFormat("#DD# #MMM# #YYYY#"));
+        $('#date_slider_end').val(EndDt.customFormat("#DD# #MMM# #YYYY#"));
+        $('#date_slider_update').click(function(){
+            $('#date-slider-disclaimer').show();
+            var tempStartDate = new Date($('#date_slider_start').val());
+            var tempEndDate = new Date($('#date_slider_end').val());
+            $('#date_lower_bound').val(tempStartDate.customFormat("#YYYY#-#MM#-#DD#"));
+            $('#date_higher_bound').val(tempEndDate.customFormat("#YYYY#-#MM#-#DD#"));
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+        attachFilterExpColClickEvent();
+    };
+    function refreshLHSFilters(projectStatus){
+        $('#sector-filter').html('Refreshing sector filter');
+        $('#document-filter').html('Refreshing document type filter');
+        $('#organisation-filter').html('Refreshing organisation filter');
         switch(window.searchType){
             case 'C':
-                
+                var tempURL = '/getCountryFilters?countryCode='+window.CountryCode+'&projectStatus='+projectStatus;
+                $.getJSON(tempURL,{
+                    format: "json",
+                    async: false
+                }).done(function(msg){
+                    window.maxBudget = msg.output.project_budget_higher_bound;
+                    window.StartDate = msg.output.actualStartDate;
+                    window.EndDate = msg.output.plannedEndDate;
+                    //Populating sector filter
+                    if(msg.output.highLevelSectorList.length > 0){
+                        var tempSectors = '';
+                        $.each(msg.output.highLevelSectorList,function(i,val){
+                            tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
+                        });
+                        tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
+                        $('#sector-filter').html(tempSectors);
+                    }
+                    else{
+                        $('#sector-filter').hide();
+                    }
+                    //populating dcoument types filter
+                    if(msg.output.document_types.length > 0){
+                        var tempDocuments = '';
+                        $.each(msg.output.document_types,function(i,val){
+                            tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
+                        });
+                        tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
+                        $('#document-filter').html(tempDocuments);
+                    }
+                    else{
+                        $('#document-filter').hide();
+                    }
+                    //implementing org filters
+                    if(msg.output.implementingOrg_types.length > 0){
+                        var tempOrgs = '';
+                        $.each(msg.output.implementingOrg_types,function(i,val){
+                            tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
+                        });
+                        tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  />';
+                        $('#organisation-filter').html(tempOrgs);
+                    }
+                    else{
+                        $('#organisation-filter').hide();
+                    }
+                    refreshLHSButtons();
+                });
+            break;
         }
     };
     var returnedProjectCount = 0;
@@ -144,6 +321,7 @@ $(document).ready(function() {
         }
         refreshOipaLink(window.searchType,0);
         generateProjectListAjax(oipaLink);
+        refreshLHSFilters($('#activity_status_states').val());
     });
     
     $('.document_type').click(function(){

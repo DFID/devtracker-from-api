@@ -948,7 +948,8 @@ end
 get '/getCountryFilters/?' do
 	countryCode = sanitize_input(params['countryCode'],"p")
 	projectStatus = params['projectStatus']
-	
+	json :output => get_country_all_projects_data_json(countryCode, projectStatus)
+end
 
 #####################################################################
 #  CSV HANDLER
