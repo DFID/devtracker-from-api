@@ -1,72 +1,71 @@
 <!--
 published: "true"
 title: Development Tracker
-layout: landing
+layout: cw_landing
 
 -->
-
+<div class="hero hero-notabs">    
 <div class="row">
-    <div class="ten columns">
-        <h3 style="font-size: 1.8em; line-height: 2.5em;">Follow how the UK invests in developing countries</h3>
-        <p class="meta">The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Initiative</a> (IATI) open data standard.</p>
+    <div class="nine columns">
+        <h1>Follow How The UK Invests in Developing Countries</h1>
+        <p class="meta">The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Department for International Development (DFID), other government departments and partners.</p>
+        <div class="summary"><p>The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Department for International Development (DFID), other government departments and partners.</p></div>
     </div>
-    <div class="two columns" style="text-align:right;">
-    </div>
+    <div class="two columns" style="text-align:right; margin-top:10px;">
+           <img src="/images/UK_AID_logo-w.png">
+   </div>
 </div>
-<div class="row">
-    <div class="twelve columns">
-        <div class="summary"><p>The Development Tracker uses open data on international development published by the <a href="https://www.gov.uk">UK Government</a> and partners to show where the UK is investing in developing countries to implement the <a href="https://www.gov.uk/government/publications/uk-aid-tackling-global-challenges-in-the-national-interest">UK Aid Strategy</a>. The open data is taken from the <a href="http://iatistandard.org">International Aid Transparency Initiative</a> (IATI) open data standard.</p></div>
-        <div style="margin-top: 0px" id="search-bar">
-            <form id="mid-search-form" action="/search" method="GET">
+    </div>
+
+<div style="margin-top: 0px; background: none" id="search-bar2">
+    <form id="mid-search-form" action="/search" method="GET">
+        <div class="row">
+            <div class="twelve columns">
                 <div class="row">
-                    <div class="three columns">
-                        <label for="query">
-                            <h3 style="line-height:2em;">Search Projects</h3>
-                        </label>
+                    <div class="one columns">
                     </div>
-                    <div class="nine columns">
+                    <div class="ten columns">
                         <div class="row">
-                            <div class="eight columns">
-                                <div class="row">
-                                    <div class="twelve columns">
-                                        <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
-                                    </div>
-                                    <div class="twelve columns" style="text-align: left; display: none">
-                                        <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
-                                        <input id="includeClosed" name="includeClosed" type="hidden" value="0">
-                                    </div>
-                                </div>
+                            <div class="twelve columns">
+                                <h3 style="line-height:0.6em; font-size: 1.5em; float: left">Search Projects</h3>
+                                <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
+                                <input id="front-search-submit" type="submit" value="Search">
                             </div>
-                            <div class="four columns">
-                                <input type="submit" value="Search" class="button">
+                            <div class="twelve columns" style="text-align: left; display: none">
+                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                <input id="includeClosed" name="includeClosed" type="hidden" value="0">
                             </div>
                         </div>
                     </div>
+                    <!-- <div class="two columns">
+                        <input type="submit" value="Search" class="button">
+                    </div> -->
+                    <div class="one columns"></div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <nav>
     <div class="row" id="nav-entry">
         <div class="four columns col">
             <p>
-                <a id="location-link" href="/location/country" class="by-location">
+                <a id="sector-link" href="/sector" class="by-sector">
                     <span class="image-wrapper">
-                        <img src="/images/by-location.png" alt="Aid by Location">
+                        <img src="/images/by-sector.png" alt="Aid by Sector">
                     </span>
-                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Location</span>
+                    <span class="link-wrapper"><small>Explore AID BY</small> Sector</span>
                 </a>
             </p>
         </div>
         <div class="four columns col">
             <p>
-                <a id="sector-link" href="/sector" class="by-sector">
+                <a id="location-link" href="/location/country" class="by-location">
                     <span class="image-wrapper">
-                        <img src="/images/by-sector.png" alt="Aid by Sector">
+                        <img src="/images/by-location.png" alt="Aid by Location">
                     </span>
-                    <span class="link-wrapper"><small>Explore DFID AID BY</small> Sector</span>
+                    <span class="link-wrapper"><small>Explore AID BY</small> Location</span>
                 </a>
             </p>
         </div>
@@ -76,7 +75,7 @@ layout: landing
                     <span class="image-wrapper">
                         <img src="/images/by-department.png" alt="Aid by Departments">
                     </span>
-                    <span class="link-wrapper"><small>Explore aid by UK government</small> Organisation</span>
+                    <span class="link-wrapper"><small>Explore aid by UK government</small> Department</span>
                 </a>
             </p>
         </div>
@@ -86,43 +85,34 @@ layout: landing
 
 <div class="row">
     <div class="twelve columns">
-        <h3 class="section-group-title">KEY DFID INDICATORS</h3>
+        <h3 class="section-group-title">UK Government Priorities</h3>
     </div>
 </div>
 
 <div class="row top-5s">
-    
-    <div class="four columns" id="top-5-achiee">
-        <%if !what_we_achieve.nil?  %>
-        <div class="top-five-header">        
-            <span class="top-five-title">Top 5 things we achieve</span> 
-            <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
-            <aside id="moreinfo3" class="more-info">            
-                    <div class="more-info-content">
-                        Results achieved up to 2015/16 inclusive towards DFID commitments for the period 2011-16.
-                    </div>
-            </aside>
-        </div>
-        <ol>
-          <% what_we_achieve.each do |entry| %>
-          <li>
-            <%= entry['title'] %>
-            <em><span class="visually-hidden">Achieved</span><%= entry['value'] %></em>
-          </li>
-          <% end %>
-        </ol>
+    <div class="four columns" id="top-5-sectors">
+        <%#= what_we_do  %>
+        <%if !what_we_do.nil?  %>
+           <div class="top-five-header">        
+                <span class="top-five-title">Top 10 Things We Do</span>
+                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
+                <aside id="moreinfo2" class="more-info">            
+                        <div class="more-info-content">
+                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's classifications.
+                         </div>
+                </aside>
+            </div> 
+            <div id="top5Sectors"></div>     
         <%end%>
-        <p>Results achieved (up to 2015/16 inclusive) from <a href="https://www.gov.uk/government/publications/dfid-annual-report-and-accounts-2015-16">DFID Annual Report 2015-16</a></p>
+        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
     </div>
-
     <div class="four columns" id="top-5-countries">
         <div class="top-five-header">        
-            <span class="top-five-title">Top 10 places we work</span> 
+            <span class="top-five-title">Top 10 Places We Work</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink" target="1"><img src="/images/icon-information.png" alt="More information about the top 10 places we work"/></a>
             <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content">
-                        The countries where the most money has been identified as being
-                         spent solely in that country. 
+                        The countries where most money has been identified as being spent. 
                     </div>
             </aside>
         </div>
@@ -131,24 +121,39 @@ layout: landing
         </ol>
         <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
     </div>
-
-    <div class="four columns" id="top-5-sectors">
-        <%#= what_we_do  %>
-        <%if !what_we_do.nil?  %>
-           <div class="top-five-header">        
-                <span class="top-five-title">Top 10 things we do</span>
-                <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
-                <aside id="moreinfo2" class="more-info">            
-                        <div class="more-info-content">
-                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's (DAC) classifications. Amounts are calculated using the overall % allocated to the sector multiplied by this financial year's budget.
-                         </div>
-                </aside>
-            </div> 
-            <div id="top5Sectors"></div>     
+    <div class="four columns" id="top-5-achiee">
+        <%if !what_we_achieve.nil?  %>
+        <div class="top-five-header">        
+            <span class="top-five-title">Top 10 Departments</span> 
+            <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
+            <aside id="moreinfo3" class="more-info">            
+                    <div class="more-info-content">
+                        <a style="color: white" href="https://www.gov.uk/government/statistics/statistics-on-international-development-2017" target="_BLANK">Statistics on International Development 2017</a>
+                    </div>
+            </aside>
+        </div>
+        <table class="transactions-table oda-table" style="width:100%; font-size: 1.0em; margin-bottom: 25px">
+          <tbody>
+            <!-- <thead>
+              <th></th>
+              <th style="border-left: 1px solid rgb(218, 218, 218)">£m</th>
+            </thead> -->
+            <% odas.each do |oda| %>
+              <tr style="border-bottom: none">
+                <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>"><%= oda[1][0]["name"] %></a></td>
+                <% if oda[1][0]["value"] >= 0 %>
+                  <td style="padding-bottom: 0px; text-align: right; font-size: 14px"><span>£<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</span>
+                  <!-- <td style="border-left: 1px solid rgb(218, 218, 218)"><%#= ((oda[1][0]["value"].to_f / totalOdaValue.to_f)*100.0).round(1) %>%</td> -->
+                <%else%>
+                  <td">~</td>
+                <%end%>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
         <%end%>
-        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+        <p>UK Government Department Spend [FY17]</p>
     </div>
-
 </div>
 <script src="/javascripts/easyResponsiveTabs.js" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" href="/stylesheets/easy-responsive-tabs.css" >

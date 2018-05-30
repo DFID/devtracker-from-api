@@ -72,6 +72,7 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
+set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1, GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -88,13 +89,16 @@ get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
   	top5countries = get_top_5_countries()
+  	odas = Oj.load(File.read('data/odas.json'))
+  	odas = odas.first(10)
   	settings.devtracker_page_title = ''
  	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
  			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
- 			what_we_achieve: top5results 	
+ 			what_we_achieve: top5results,
+ 			odas: odas
  		}
 end
 
@@ -109,7 +113,7 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation=GB-GOV-1&page_size=1")
+	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation=#{settings.goverment_department_ids}&page_size=1")
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
@@ -118,11 +122,20 @@ get '/countries/:country_code/?' do |n|
     		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
 			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 			#oipa v3.1
-			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
+			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
-
+	relevantReportingOrgs = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}")
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	relevantReportingOrgsFinal = []
+	relevantReportingOrgs["results"].each do |reportingOrg|
+		tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(reportingOrg["reporting_organisation"]["organisation_identifier"])}
+		tempOgd.each do |o|
+			relevantReportingOrgsFinal.push(o[1]["name"])
+		end
+	end
+	relevantReportingOrgsFinal = relevantReportingOrgsFinal.sort
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
@@ -134,7 +147,8 @@ get '/countries/:country_code/?' do |n|
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
- 			activityCount: tempActivityCount['count']
+ 			activityCount: tempActivityCount['count'],
+ 			relevantReportingOrgs: relevantReportingOrgsFinal
  		}
 end
 
@@ -168,25 +182,6 @@ get '/countries/:country_code/projects/?' do |n|
 		 			
 end
 
-#Country Results Page
-get '/countries/:country_code/results/?' do |n|		
-	n = sanitize_input(n,"p").upcase
-	country = get_country_code_name(n)
-	results = get_country_results(n)
-	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=GB-GOV-1&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
-  	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
-	erb :'countries/results', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		country: country,
-	 		totalProjects: totalProjects,
-	 		results: results,
-	 		resultsPillar: resultsPillar
-	 		}
-		 			
-end
 
 #####################################################################
 #  GLOBAL PAGES
@@ -262,7 +257,7 @@ get '/regions' do
 	countryAllProjectFilters = get_static_filter_list()
 	region = {}
 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-	region[:code] = ""
+	region[:code] = "298,798,89,589,389,189,679,289,380"
 	region[:name] = "All"
 	getRegionProjects = get_region_projects(region[:code])
   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
@@ -291,8 +286,8 @@ get '/regions/:region_code/?' do |n|
 	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter")
 	#regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&recipient_region=#{n}")
 	#oipa v3.1
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
+	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
@@ -340,6 +335,8 @@ get '/projects/:proj_id/?' do |n|
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
+  	participatingOrgList = get_participating_organisations(project)
+
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
@@ -366,7 +363,8 @@ get '/projects/:proj_id/?' do |n|
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
- 			projectSectorGraphData: projectSectorGraphData
+ 			projectSectorGraphData: projectSectorGraphData,
+ 			participatingOrgList: participatingOrgList
  		}
 end
 
@@ -526,6 +524,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorJsonData.each do |sdata|
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
+	sectorData['categoryCode'] = ""
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
@@ -640,7 +639,8 @@ get '/location/country/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	dfid_country_map_data,
-			:dfid_complete_country_list => 	dfid_complete_country_list,
+			#:dfid_complete_country_list => 	dfid_complete_country_list,
+			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
 			:dfid_total_country_budget => total_country_budget_location
 		}
 end
@@ -942,6 +942,63 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	tempTransactions
 end
 
+get '/department/:dept_id/?' do
+	dept_id = sanitize_input(params[:dept_id],"a")
+	puts dept_id
+	# if dept_id == 'DFID'
+	# 	redirect '/'
+	# end
+	if dept_id == 'abs'
+		redirect '/sector'
+	end
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	deptIdentifier = ''
+	if ogds.has_key?(dept_id)
+		deptIdentifier = ogds[dept_id]["identifiers"]
+	else
+		redirect '/department'
+	end
+	if deptIdentifier == ''
+		redirect '/department'
+	end
+	if(deptIdentifier != 'x')
+		projectData = get_ogd_all_projects_data(deptIdentifier)
+	else
+		projectData = {}
+		projectData['projects'] = {}
+		projectData['projects']['count'] = 0
+ 		projectData['projects']['results'] = ''
+ 		projectData['results'] = ''
+ 		projectData['highLevelSectorList'] = ''
+ 		projectData['project_budget_higher_bound'] = ''
+ 		projectData['countryAllProjectFilters'] = ''
+ 		projectData['actualStartDate'] = ''
+ 		projectData['plannedEndDate'] = ''
+ 		projectData['document_types'] = ''
+ 		projectData['implementingOrg_types'] = ''
+	end
+  	settings.devtracker_page_title = ogds[dept_id]["name"]
+	erb :'other-govt-departments/other_govt_departments',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		ogd_title: settings.devtracker_page_title,
+		ogd: deptIdentifier,
+ 		total_projects: projectData['projects']['count'],
+ 		projects: projectData['projects']['results'],
+ 		results: projectData['results'],
+ 		highLevelSectorList: projectData['highLevelSectorList'],
+ 		budgetHigherBound: projectData['project_budget_higher_bound'],
+ 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+ 		actualStartDate: projectData['actualStartDate'],
+ 		plannedEndDate: projectData['plannedEndDate'],
+ 		documentTypes: projectData['document_types'],
+ 		implementingOrgTypes: projectData['implementingOrg_types'],
+ 		projectCount: projectData['projects']['count'],
+ 		deptName: ogds[dept_id]["name"]
+	}
+end
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################
@@ -949,7 +1006,15 @@ end
 
 get '/department' do
   	settings.devtracker_page_title = 'Aid by Department Page'
-	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+  	odas = Oj.load(File.read('data/odas.json'))
+  	totalOdaValue = 0
+  	odas.each do |oda|
+  		if oda[1][0]["value"] >= 0
+  			totalOdaValue = totalOdaValue + oda[1][0]["value"]
+  		end
+  	end
+  	puts totalOdaValue
+	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
 end
 
 get '/about/?' do
@@ -967,41 +1032,41 @@ get '/faq/?' do
 	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
-get '/feedback/?' do
-  	settings.devtracker_page_title = 'Feedback Page'
-	erb :'feedback/index', :layout => :'layouts/layout_forms',
-	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey,
-		oipa_api_url: settings.oipa_api_url
-	}
-end 
+# get '/feedback/?' do
+#   	settings.devtracker_page_title = 'Feedback Page'
+# 	erb :'feedback/index', :layout => :'layouts/layout_forms',
+# 	:locals => {
+# 		googlePublicKey: settings.google_recaptcha_publicKey,
+# 		oipa_api_url: settings.oipa_api_url
+# 	}
+# end 
 
 get '/whats-new/?' do
   	settings.devtracker_page_title = "What's New Page"
 	erb :'about/whats-new', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end 
 
-post '/feedback/index' do
-  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
-	if status == true
-		Pony.mail({
-			:from => "devtracker-feedback@dfid.gov.uk",
-		    :to => "devtracker-feedback@dfid.gov.uk",
-		    :subject => "DevTracker Feedback",
-		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
-		    :via => :smtp,
-		    :via_options => {
-		    	:address              => '127.0.0.1',
-		     	:port                 => '25',
-		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
-		    }
-		})
-		redirect '/'
-	else
-		puts "Failed to send email."
-		redirect '/'
-	end
-end
+# post '/feedback/index' do
+#   	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
+# 	if status == true
+# 		Pony.mail({
+# 			:from => "devtracker-feedback@dfid.gov.uk",
+# 		    :to => "devtracker-feedback@dfid.gov.uk",
+# 		    :subject => "DevTracker Feedback",
+# 		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
+# 		    :via => :smtp,
+# 		    :via_options => {
+# 		    	:address              => '127.0.0.1',
+# 		     	:port                 => '25',
+# 		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
+# 		    }
+# 		})
+# 		redirect '/'
+# 	else
+# 		puts "Failed to send email."
+# 		redirect '/'
+# 	end
+# end
 
 get '/fraud/?' do
   	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"

@@ -17,6 +17,7 @@ $(document).ready(function() {
     chart2
     .width(320)
     .height(420)
+    //.height(280)
     .x(d3.scale.ordinal())
     .elasticX(true)
     .dimension(dimentions)

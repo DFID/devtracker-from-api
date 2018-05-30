@@ -1,7 +1,7 @@
-
-<%= erb :'partials/_location-title-bar'%>
-<%= erb :'partials/_location-tabs', :locals => { :active => "country" } %>
-
+<div class="hero" style="margin-bottom: 0px">
+  <%= erb :'partials/_location-title-bar'%>
+  <%= erb :'partials/_location-tabs', :locals => { :active => "country" } %>
+</div>
 <!--[if lte IE 8]>
     <div class="row">
       <div class="disclaimer grey">
@@ -28,7 +28,7 @@
                 <div id="map" role="presentation">
                   <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
                     <img src="/images/country-map-legend.png" style="Map Legend"/>
-                    <h3>Current Projects: Total Project Budget for <%=current_financial_year%></h3>
+                    <!-- <h3>Current Projects: Total Project Budget for <%#=current_financial_year%></h3> -->
                   </div>
                 </div>
 
@@ -40,15 +40,37 @@
         </div>
 <!--[if lte IE 8]></div><![endif]-->
 
-<div class="row">
+<!-- <div class="row">
   <div class="twelve columns">
     <h2 class="section-group-title">Countries with Active Projects</h2>
   </div>
-</div>
-<div class="row">
+</div> -->
+<!-- <div class="row">
   <div id="country-list" class="twelve columns">
-    <% dfid_complete_country_list.each do |country| %>
-      <a href="/countries/<%=country["recipient_country"]["code"]%>"><%= country["recipient_country"]["name"] %></a> | 
-    <% end %>    
+    <%# dfid_complete_country_list.each do |country| %>
+      <a href="/countries/<%#=country["recipient_country"]["code"]%>"><%#= country["recipient_country"]["name"] %></a> | 
+    <%# end %>    
+  </div>
+</div> --> 
+
+<div class="row">
+  <div id="country-list">
+    <!-- <div class="one columns">
+    </div> -->
+    <% dfid_complete_country_list.each do |key,data|%>
+      <%if key == 'Oceania'%>
+      <% else %>
+        <div class="three columns">
+          <h4><%= key %></h4>
+          <% data.each do |item| %>
+            <%if item[1]['activeProjects'].to_i > 0 %>
+              <a href="/countries/<%= item[0] %>"><%= item[1]["name"]%></a>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+    <!-- <div class="one columns">
+    </div> -->
   </div>
 </div> 

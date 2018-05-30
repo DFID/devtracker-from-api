@@ -75,7 +75,7 @@ Returns a Hash 'searchedData' with the following keys:
 			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
-		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
+		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' country data. 
@@ -89,7 +89,7 @@ Returns a Hash 'searchedData' with the following keys:
 			end
 		end
 		# This json call is pulling the total budget list based on the 'recipient_regions' string previously created
-		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_region&aggregations=value&recipient_region="+recipient_regions
+		oipa_selected_regions_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_region&aggregations=value&recipient_region="+recipient_regions
 		regions_project_budget = JSON.parse_nil(oipa_selected_regions_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' region data.
@@ -171,14 +171,14 @@ Returns a Hash 'searchedData' with the following keys:
 		#	end
 		#end
 		#This code is created for generating the left hand side document type filter list
-		oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=GB-GOV-1&q=#{query}&activity_status="+activityStatusList
+		oipa_document_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&q=#{query}&activity_status="+activityStatusList
 		document_type_list = JSON.parse(oipa_document_type_list)
 		searchedData['document_types'] = document_type_list['results']
 		searchedData['document_types'] = searchedData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
 
 		#Implementing org type filters
 		participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
-		oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=GB-GOV-1&q=#{query}&hierarchy=1&activity_status="+activityStatusList
+		oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&q=#{query}&hierarchy=1&activity_status="+activityStatusList
 		implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
 		searchedData['implementingOrg_types'] = implementingOrg_type_list['results']
 		searchedData['implementingOrg_types'].each do |implementingOrgs|

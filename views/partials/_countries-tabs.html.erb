@@ -22,9 +22,6 @@
                             <%if project_count !=0 %>
                                 <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/countries/<%= country[:code] %>/projects">Active Projects (<%=project_count%>)</a></li>
                             <%end%>
-                            <%if results_count > 0 %>
-                            <li <%= active=="results" ? "class='active'" : ""%>><a id='Results' href="/countries/<%= country[:code] %>/results">Results</a></li>
-                            <% end %>
                         </ul>
                     </nav>
                 </div>  

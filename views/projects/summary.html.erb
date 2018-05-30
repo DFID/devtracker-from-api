@@ -25,7 +25,7 @@
         <div id="time-progress" style="height: 150px;" class="progress"></div>
         
          <div class="more-info-container">  
-            <span class="more-info-title">Funding</span> 
+            <span class="more-info-title">Project Spend</span> 
             <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
             <aside id="moreinfo2" class="more-info">            
                     <div class="more-info-content">
@@ -50,27 +50,67 @@
                  <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
             </div>
         <![endif]-->
-        <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
-        <% if (implementingOrgs.length>0)  %>
+        <%# implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+        <% if participatingOrgList == nil %>
+            <% implementingOrgs=get_implementing_orgs(project['id'])%>
+            <% if (implementingOrgs.length>0)  %>
 
-            <div class="more-info-container">  
-                <span class="more-info-title">Implementing Organisation(s)</span> 
+                <div class="more-info-container">  
+                    <span class="more-info-title">Implementing Organisation(s)</span> 
+                    <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
+                    <aside id="moreinfo4" class="more-info">            
+                            <div class="more-info-content">
+                                These organisations have received funding disbursements from this DFID IATI activity.
+                            </div>
+                    </aside>
+                </div>
+
+                <div id="implementing-organisations">
+                    <ul>
+                        <% implementingOrgs.each {|implementingOrg| %>
+                        <li>
+                           <%= implementingOrg %>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
+            <% end %>
+        <% end %>
+         <% if participatingOrgList != nil %>
+            <div style="border-top: 1px solid #ddd; padding-top: 20px" class="more-info-container">  
+                <span class="more-info-title">Participating Organisation(s)</span> 
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
                 <aside id="moreinfo4" class="more-info">            
                         <div class="more-info-content">
-                            These organisations have received funding disbursements from this DFID IATI activity.
+                            Accountable: Organisation responsible for oversight of the activity.<br/>Extending: Organisation that manages the budget on behalf of the funding organisation.<br/>Funding: Organisation which provides funds.<br/>Implementing: Organisations implementing the activity.
                         </div>
                 </aside>
             </div>
-
-            <div id="implementing-organisations">
-                <ul>
-                    <% implementingOrgs.each {|implementingOrg| %>
-                    <li>
-                       <%= implementingOrg %>
-                    </li>
+            <div class="more-info-container">
+                <table>
+                  <tbody>
+                    <% participatingOrgList = participatingOrgList.sort_by{|key| key} %>
+                    <%participatingOrgList.each { |participatingOrgType, participatingOrgData| %>
+                        <% if participatingOrgType != nil && participatingOrgData.length > 0%>
+                            <tr>
+                                <td><b><%= participatingOrgType %>:</b></td>
+                                <td>
+                                    <% participatingOrgData.each_with_index { |org, index| %>
+                                        <% begin %>
+                                            <a target="_BLANK" href="/search?query=<%= org['narratives'][0]['text']%>&includeClosed=0"><%= org['narratives'][0]['text']%></a>
+                                        <% rescue %>
+                                            Name not available
+                                        <% end %>
+                                        <% if index != participatingOrgData.size - 1 %>
+                                            ¦ 
+                                        <% end %>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% end %>
                     <% } %>
-                </ul>
+                  </tbody>
+                </table>
             </div>
         <% end %>
     </div>
@@ -78,9 +118,8 @@
 
     <div class="six columns" role="presentation">
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
-        <div class="project-country-title"> 
-          <strong>Benefitting country/region</strong>: <%= countryOrRegion[:label] %>
-          
+        <div style="margin-top: 15px" class="project-country-title"> 
+          <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
            <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content more-info-limit-size">
@@ -130,14 +169,9 @@
 
 <div class="row">
     <div class="six columns">
-        <div class="more-info-container">  
-                <span class="more-info-title">Sector groups as a percentage of project budget</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink5" target="5"><img src="/images/icon-information.png" alt="More information about project sector groups" class="more-info-link-middle"/></a>
-                <aside id="moreinfo5" class="more-info">            
-                        <div class="more-info-content">
-                            A project can have up to 8 sectors, which are displayed with percentage allocations that total up to 100%.  They are consistent with the Development Assistance Committee's (DAC) classifications.
-                        </div>
-                </aside>
+        <div class="country-info-container">  
+            <span class="country-info">Sectors</span> 
+                <p>Sectors groups as a percentage of country budgets according to the Development Assistance Committee's classifications.</p>
         </div>
         <div class="row">
             <div class="twelve columns">
@@ -147,14 +181,9 @@
     </div>
 
     <div class="six columns">
-        <div class="more-info-container">  
-                <span class="more-info-title">Project budget vs actual spend</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink6" target="6"><img src="/images/icon-information.png" alt="More information about project budget vs actual spend" class="more-info-link-middle"/></a>
-                <aside id="moreinfo6" class="more-info">            
-                        <div class="more-info-content">
-                           A comparison of forecast spend and the total amount of money spent on the project to date.  Some budgets may not be shown if projects are in an active procurement phase.
-                        </div>
-                </aside>
+        <div class="country-info-container">  
+                <span class="country-info">Budget</span> 
+                <p>A comparison of forecast spend and the total amount of money spent on the project to date.</p>
         </div>
         <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
 
@@ -233,7 +262,8 @@
                 labels: false,
                 groups: [
                     <%= projectSectorGraphData[1] %>
-                ]
+                ],
+                order: 'asc'
             },
             tooltop: {
                 grouped: false
