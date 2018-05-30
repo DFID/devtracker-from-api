@@ -10,7 +10,7 @@ MIXINS
 Global Stuff
 ---------------------------------*/
 #global-header form#search input.button {
-  background: #3abaa8;
+  background: #00823b;
   border-radius: 0;
   top: 0;
   box-shadow: none;
@@ -20,6 +20,8 @@ Global Stuff
     #global-header form#search input.button {
       display: inline-block;
       width: 20%; } }
+  #global-header form#search input.button:hover {
+    background: #00692f; }
 #global-header form#search #site-search-text {
   border: 0;
   border-radius: 0;

@@ -168,13 +168,13 @@
   height: 40px;
   /*border-left: 1px solid black;
   border-top: 1px solid black;*/
-  padding: 15px;
+  padding: 0 15px;
 }
 
 #front-search-submit {
   height: 40px;
   border: none;
-  background: #3ABAA8;
+  background: #00823b;
   color: white;
   padding: 10px 20px;
   font-weight: bold;
@@ -182,11 +182,24 @@
   margin-left: 10px;
 }
 
+#front-search-submit:hover {
+  background: #00692f;
+}
+
 #search-bar input.button {
   display: inline-block;
   width: 6em;
   font-size: 1.2em;
-  padding: 5px 0; }
+  padding: 5px 0;
+  background: #00823b;
+  top: 0px;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+#search-bar input.button:hover {
+  background: #00692f;
+}
 
 @media screen and (max-width: 667px) {
   /* hide the search at the top till we sort it out */

@@ -24,7 +24,7 @@ Global Stuff
 #global-header { 
     form#search {
     input.button {
-        background: #3abaa8;
+        background: #00823b;
         border-radius: 0;
         top: 0;
         box-shadow: none;
@@ -33,6 +33,9 @@ Global Stuff
         @media screen and (max-width:768px) {
             display: inline-block;
             width: 20%;
+        }
+        &:hover {
+            background: #00692f;
         }
 }
     #site-search-text {

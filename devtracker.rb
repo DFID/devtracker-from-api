@@ -54,13 +54,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -77,8 +77,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1, GB-1,GB-GOV
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, true
-set :show_exceptions, true
+set :raise_errors, false
+set :show_exceptions, false
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -182,25 +182,6 @@ get '/countries/:country_code/projects/?' do |n|
 		 			
 end
 
-#Country Results Page
-get '/countries/:country_code/results/?' do |n|		
-	n = sanitize_input(n,"p").upcase
-	country = get_country_code_name(n)
-	results = get_country_results(n)
-	resultsPillar = results_pillar_wise_indicators(n,results)
-    totalProjects = get_total_project(RestClient.get settings.oipa_api_url + "activities/?reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{n}&format=json&fields=activity_status&page_size=250&activity_status=2")
-  	settings.devtracker_page_title = 'Country '+country[:name]+' Results Page'
-	erb :'countries/results', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		country: country,
-	 		totalProjects: totalProjects,
-	 		results: results,
-	 		resultsPillar: resultsPillar
-	 		}
-		 			
-end
 
 #####################################################################
 #  GLOBAL PAGES
@@ -1061,41 +1042,41 @@ get '/faq/?' do
 	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
 end 
 
-get '/feedback/?' do
-  	settings.devtracker_page_title = 'Feedback Page'
-	erb :'feedback/index', :layout => :'layouts/layout_forms',
-	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey,
-		oipa_api_url: settings.oipa_api_url
-	}
-end 
+# get '/feedback/?' do
+#   	settings.devtracker_page_title = 'Feedback Page'
+# 	erb :'feedback/index', :layout => :'layouts/layout_forms',
+# 	:locals => {
+# 		googlePublicKey: settings.google_recaptcha_publicKey,
+# 		oipa_api_url: settings.oipa_api_url
+# 	}
+# end 
 
 get '/whats-new/?' do
   	settings.devtracker_page_title = "What's New Page"
 	erb :'about/whats-new', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end 
 
-post '/feedback/index' do
-  	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
-	if status == true
-		Pony.mail({
-			:from => "devtracker-feedback@dfid.gov.uk",
-		    :to => "devtracker-feedback@dfid.gov.uk",
-		    :subject => "DevTracker Feedback",
-		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
-		    :via => :smtp,
-		    :via_options => {
-		    	:address              => '127.0.0.1',
-		     	:port                 => '25',
-		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
-		    }
-		})
-		redirect '/'
-	else
-		puts "Failed to send email."
-		redirect '/'
-	end
-end
+# post '/feedback/index' do
+#   	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
+# 	if status == true
+# 		Pony.mail({
+# 			:from => "devtracker-feedback@dfid.gov.uk",
+# 		    :to => "devtracker-feedback@dfid.gov.uk",
+# 		    :subject => "DevTracker Feedback",
+# 		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
+# 		    :via => :smtp,
+# 		    :via_options => {
+# 		    	:address              => '127.0.0.1',
+# 		     	:port                 => '25',
+# 		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
+# 		    }
+# 		})
+# 		redirect '/'
+# 	else
+# 		puts "Failed to send email."
+# 		redirect '/'
+# 	end
+# end
 
 get '/fraud/?' do
   	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
