@@ -932,6 +932,18 @@ get '/getCountryFilters/?' do
 	json :output => get_country_all_projects_data_json(countryCode, projectStatus)
 end
 
+get '/getSectorFilters' do
+	json :output => get_sector_projects_json(params['sectorCode'], params['projectStatus'])
+end
+
+get '/getFTSFilters' do
+	json :output => generate_searched_data(sanitize_input(params['query'],"a"), params['projectStatus'])
+end
+
+get '/getOGDFilters' do
+	json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
+end
+
 #####################################################################
 #  CSV HANDLER
 #####################################################################
