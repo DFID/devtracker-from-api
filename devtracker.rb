@@ -126,16 +126,16 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
-	relevantReportingOrgs = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}")
+	#relevantReportingOrgs = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?group_by=reporting_organisation&recipient_country=#{n}&aggregations=count&format=json&reporting_organisation=#{settings.goverment_department_ids}")
 	ogds = Oj.load(File.read('data/OGDs.json'))
-	relevantReportingOrgsFinal = []
-	relevantReportingOrgs["results"].each do |reportingOrg|
-		tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(reportingOrg["reporting_organisation"]["organisation_identifier"])}
-		tempOgd.each do |o|
-			relevantReportingOrgsFinal.push(o[1]["name"])
-		end
-	end
-	relevantReportingOrgsFinal = relevantReportingOrgsFinal.sort
+	#relevantReportingOrgsFinal = []
+	# relevantReportingOrgs["results"].each do |reportingOrg|
+	# 	tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(reportingOrg["reporting_organisation"]["organisation_identifier"])}
+	# 	tempOgd.each do |o|
+	# 		relevantReportingOrgsFinal.push(o[1]["name"])
+	# 	end
+	# end
+	# relevantReportingOrgsFinal = relevantReportingOrgsFinal.sort
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
@@ -147,8 +147,8 @@ get '/countries/:country_code/?' do |n|
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
- 			activityCount: tempActivityCount['count'],
- 			relevantReportingOrgs: relevantReportingOrgsFinal
+ 			activityCount: tempActivityCount['count']
+ 			#relevantReportingOrgs: relevantReportingOrgsFinal
  		}
 end
 
