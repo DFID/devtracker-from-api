@@ -324,22 +324,30 @@ module CountryHelpers
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
     end
-    allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
-    allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
-    tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
-    if (tempStartDate.nil?)
-      tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+    begin
+      allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=2"
+      allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
+      tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+      if (tempStartDate.nil?)
+        tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+      end
+      allProjectsData['actualStartDate'] = tempStartDate
+      allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['iso_date']
+    rescue
+      allProjectsData['actualStartDate'] = '1990-01-01T00:00:00'
     end
-    allProjectsData['actualStartDate'] = tempStartDate
-    allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['iso_date']
 
     #unless allProjectsData['actualStartDate']['results'][0].nil? 
     #  allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
     #end
-    allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
-    allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
-    allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
-    allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
+    begin
+      allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + "activities?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&ordering=-planned_end_date&end_date_isnull=False&activity_status=2"
+      allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
+      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
+      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
+    rescue
+      allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
+    end
     #unless allProjectsData['plannedEndDate']['results'][0].nil?
     #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
     #end
