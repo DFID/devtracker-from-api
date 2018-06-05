@@ -187,15 +187,17 @@ $(document).ready(function() {
         attachFilterExpColClickEvent();
     };
     function refreshLHSFilters(projectStatus){
-        $('#sector-filter').html('Refreshing sector filter');
-        $('#document-filter').html('Refreshing document type filter');
-        $('#organisation-filter').html('Refreshing organisation filter');
-        if(window.searchType == 'C' || window.searchType == 'F' || window.searchType == 'O'){
+        $('#sector-filter').html('Refreshing sector filter<input type="hidden" id="selected_sectors" value=""  />');
+        $('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
+        $('#organisation-filter').html('Refreshing organisation filter<input type="hidden" id="selected_implementingOrg_type" value=""  />');
+        if(window.searchType != 'S'){
                 var tempURL = '';
                 if(window.searchType == 'C')
                     tempURL = '/getCountryFilters?countryCode='+window.CountryCode+'&projectStatus='+projectStatus;
                 else if (window.searchType == 'F')
                     tempURL = '/getFTSFilters?query='+window.searchQuery+'&projectStatus='+projectStatus;
+                else if (window.searchType == 'R')
+                    tempURL = '/getRegionFilters?regionCode='+window.RegionCode+'&projectStatus='+projectStatus;
                 else
                     tempURL = '/getOGDFilters?ogd='+window.ogd_code+'&projectStatus='+projectStatus;
                 $.getJSON(tempURL,{
@@ -414,8 +416,11 @@ $(document).ready(function() {
             $('#activity_status_states').val('1,2,3,4,5');
         }
         refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-        refreshLHSFilters($('#activity_status_states').val());
+        $.when(refreshLHSFilters($('#activity_status_states').val())).done(function(){
+            generateProjectListAjax(oipaLink);
+        });
+        //generateProjectListAjax(oipaLink);
+        //refreshLHSFilters($('#activity_status_states').val());
     });
     
     $('.document_type').click(function(){
