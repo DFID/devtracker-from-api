@@ -263,8 +263,8 @@ $(document).ready(function() {
                 window.maxBudget = msg.output.project_budget_higher_bound;
                 window.StartDate = msg.output.actualStartDate;
                 window.EndDate = msg.output.plannedEndDate;
-                $('#sector-region-filter').html('Refreshing..');
-                $('#sector-country-filter').html('Refreshing..');
+                $('#sector-region-filter').html('Refreshing..<input type="hidden" id="locationRegionFilterStates" value=""  />');
+                $('#sector-country-filter').html('Refreshing..<input type="hidden" id="locationCountryFilterStates" value=""  />');
                 //Populating country location filters
                 if(msg.output.LocationCountries.length > 0){
                     $('#sector-country-filter').show();
