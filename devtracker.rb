@@ -72,7 +72,7 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1, GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
+set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -920,6 +920,32 @@ get '/currency/?' do
   	currency = sanitize_input(params['currency'],"a")
   	returnCurrency = Money.new(amount.to_f*100,currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	json :output => returnCurrency
+end
+
+#####################################################################
+#  LHS Filters API
+#####################################################################
+
+get '/getCountryFilters/?' do
+	countryCode = sanitize_input(params['countryCode'],"p")
+	projectStatus = params['projectStatus']
+	json :output => get_country_all_projects_data_json(countryCode, projectStatus)
+end
+
+get '/getSectorFilters' do
+	json :output => get_sector_projects_json(params['sectorCode'], params['projectStatus'])
+end
+
+get '/getFTSFilters' do
+	json :output => generate_searched_data(sanitize_input(params['query'],"a"), params['projectStatus'])
+end
+
+get '/getOGDFilters' do
+	json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
+end
+
+get '/getRegionFilters' do
+	json :output => get_region_projects_json(params['regionCode'], params['projectStatus'])
 end
 
 #####################################################################
