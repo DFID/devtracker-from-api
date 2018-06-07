@@ -31,7 +31,6 @@ Returns a Hash 'ogdData' with the following keys:
 
 	def get_ogd_all_projects_data(ogdCode)
     allProjectsData = {}
-    allProjectsData['countryAllProjectFilters'] = get_static_filter_list()
 
     oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=#{ogdCode}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=2&ordering=-activity_plus_child_budget_value"
     allProjectsData['projects']= JSON.parse(oipa_project_list)
@@ -102,6 +101,7 @@ Returns a Hash 'ogdData' with the following keys:
 
     oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=#{ogdCode}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{projectStatus}&ordering=-activity_plus_child_budget_value"
     allProjectsData['projects']= JSON.parse(oipa_project_list)
+    ######---000---000----
     sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{ogdCode}&activity_status=#{projectStatus}"
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
 

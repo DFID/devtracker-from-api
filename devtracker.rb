@@ -54,13 +54,13 @@ include RecaptchaHelper
 include OGDHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -77,8 +77,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -156,28 +156,28 @@ end
 get '/countries/:country_code/projects/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	projectData = ''
-	projectData = get_country_all_projects_data(n)
+	#projectData = get_country_all_projects_data(n)
+	projectData = generate_project_page_data(generate_api_list('C',n,"2"))
+	country = get_country_code_name(n)
 #	 Benchmark.bm(7) do |x|
 #	 	x.report("Loading Time: ") {projectData = get_country_all_projects_data_para(n)}
 #	end
 	#projectData = get_country_all_projects_data_para(n)
-  	settings.devtracker_page_title = 'Country ' + projectData['country'][:name] + ' Projects Page'
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Projects Page'
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-	 		country: projectData['country'],
+	 		country: country,
 	 		total_projects: projectData['projects']['count'],
 	 		projects: projectData['projects']['results'],
-	 		results: projectData['results'],
 	 		highLevelSectorList: projectData['highLevelSectorList'],
 	 		budgetHigherBound: projectData['project_budget_higher_bound'],
-	 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
+	 		countryAllProjectFilters: get_static_filter_list(),
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types'],
-	 		projectCount: projectData['projects']['count']
+	 		implementingOrgTypes: projectData['implementingOrg_types']
 	 	}
 		 			
 end
@@ -209,8 +209,7 @@ get '/global' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			projectCount: getRegionProjects['projects']['count']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}
 end
 
@@ -244,8 +243,7 @@ get '/global/:global_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			projectCount: getRegionProjects['projects']['count']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -320,8 +318,7 @@ get '/regions/:region_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			projectCount: getRegionProjects['projects']['count']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
 		}	 			
 end
 
@@ -528,21 +525,25 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
+  	locationCountryFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationCountryFilters = locationCountryFilters['results'].sort_by {|key| key["recipient_country"]["name"]}
+  	locationRegionFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationRegionFilters = locationRegionFilters['results'].sort_by {|key| key["recipient_region"]["name"]}
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
  			sectorData: sectorData,
+ 			locationCountryFilters: locationCountryFilters,
+ 			locationRegionFilters: locationRegionFilters,
+ 			countryAllProjectFilters: countryAllProjectFilters,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions'],
  			documentTypes: getSectorProjects['document_types'],
  			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
@@ -574,21 +575,25 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	sectorData['sectorName'] = ""
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+  	locationCountryFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationCountryFilters = locationCountryFilters['results'].sort_by {|key| key["recipient_country"]["name"]}
+  	locationRegionFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationRegionFilters = locationRegionFilters['results'].sort_by {|key| key["recipient_region"]["name"]}
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  			sectorData: sectorData,
+ 			locationCountryFilters: locationCountryFilters,
+ 			locationRegionFilters: locationRegionFilters,
+ 			countryAllProjectFilters: countryAllProjectFilters,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions'],
  			documentTypes: getSectorProjects['document_types'],
  			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}	
@@ -605,23 +610,26 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
 	sectorData['sectorName'] = sectorJsonData["Name"]
 	getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-
   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
+  	locationCountryFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationCountryFilters = locationCountryFilters['results'].sort_by {|key| key["recipient_country"]["name"]}
+  	locationRegionFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}")
+  	locationRegionFilters = locationRegionFilters['results'].sort_by {|key| key["recipient_region"]["name"]}
   	erb :'sector/projects', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  			sectorData: sectorData,
+ 			locationCountryFilters: locationCountryFilters,
+ 			locationRegionFilters: locationRegionFilters,
+ 			countryAllProjectFilters: countryAllProjectFilters,
  			total_projects: getSectorProjects['projects']['count'],
 	 		projects: getSectorProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			locationCountryFilters: getSectorProjects['LocationCountries'],
- 			locationRegionFilters: getSectorProjects['LocationRegions'],
  			documentTypes: getSectorProjects['document_types'],
  			implementingOrgTypes: getSectorProjects['implementingOrg_types']
  		}		
@@ -683,229 +691,26 @@ get '/search/?' do
 		activityStatusList = '1,2'
 	end
 	puts activityStatusList
-	results = generate_searched_data(query,activityStatusList);
+	results = generate_searched_data(query,activityStatusList)
+	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
 	:locals => {
 		oipa_api_url: settings.oipa_api_url,
+		:query => query,
+		includeClosed: includeClosed,
+		dfidCountryBudgets: didYouMeanData['dfidCountryBudgets'],
+		dfidRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		countryAllProjectFilters: countryAllProjectFilters,
 		projects: results['projects'],
 		project_count: results['project_count'],
-		:query => query,
-		countryAllProjectFilters: countryAllProjectFilters,
 		budgetHigherBound: results['project_budget_higher_bound'],
 		highLevelSectorList: results['highLevelSectorList'],
-		dfidCountryBudgets: results['dfidCountryBudgets'],
-		dfidRegionBudgets: results['dfidRegionBudgets'],
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
  		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types'],
- 		includeClosed: includeClosed
-	}
-end
-
-#####################################################################
-#  OTHER GOVERNMENT DEPARTMENTS
-#####################################################################
-
-#Foreign and Commonwealth Office
-get '/foreign-and-commonwealth-office' do
-	ogdCode = 'GB-3,GB-GOV-3'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Foreign and Commonwealth Office Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Department for Work and Pensions
-get '/department-for-work-and-pensions' do
-	ogdCode = 'GB-9'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Department for Work and Pensions Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Ministry of Defence
-get '/ministry-of-defence' do
-	ogdCode = 'GB-GOV-8'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Ministry of Defence Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Department of Energy and Climate Change
-get '/department-of-energy-and-climate-change' do
-	ogdCode = 'GB-GOV-4'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Department of Energy and Climate Change Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Home Office
-get '/home-office' do
-	ogdCode = 'GB-6'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Home Office Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Department for Environment Food and Rural Affairs
-get '/department-for-environment-food-and-rural-affairs' do
-	ogdCode = 'GB-7,GB-GOV-7'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Department for Environment Food and Rural Affairs Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Department of Health
-get '/department-of-health' do
-	ogdCode = 'GB-10'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Department of Health Projects Page'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
-	}
-end
-
-#Medical Research Council - (This link does not work at the moment)
-get '/medical-research-council' do
-	ogdCode = 'GB-COH-RC000346'
-	projectData = get_ogd_all_projects_data(ogdCode)
-  	settings.devtracker_page_title = 'Medical Research Council'
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: ogdCode,
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		results: projectData['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count']
+ 		implementingOrgTypes: results['implementingOrg_types']
 	}
 end
 
@@ -997,7 +802,6 @@ get '/department/:dept_id/?' do
  		projectData['results'] = ''
  		projectData['highLevelSectorList'] = ''
  		projectData['project_budget_higher_bound'] = ''
- 		projectData['countryAllProjectFilters'] = ''
  		projectData['actualStartDate'] = ''
  		projectData['plannedEndDate'] = ''
  		projectData['document_types'] = ''
@@ -1010,18 +814,16 @@ get '/department/:dept_id/?' do
 		oipa_api_url: settings.oipa_api_url,
 		ogd_title: settings.devtracker_page_title,
 		ogd: deptIdentifier,
+		deptName: ogds[dept_id]["name"],
+		countryAllProjectFilters: get_static_filter_list(),
  		total_projects: projectData['projects']['count'],
  		projects: projectData['projects']['results'],
- 		results: projectData['results'],
  		highLevelSectorList: projectData['highLevelSectorList'],
  		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		countryAllProjectFilters: projectData['countryAllProjectFilters'],
  		actualStartDate: projectData['actualStartDate'],
  		plannedEndDate: projectData['plannedEndDate'],
  		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		projectCount: projectData['projects']['count'],
- 		deptName: ogds[dept_id]["name"]
+ 		implementingOrgTypes: projectData['implementingOrg_types']
 	}
 end
 

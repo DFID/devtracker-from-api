@@ -15,7 +15,7 @@
         </div>
     </div>
 </div>
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects], :results_count => results.length } %>
+<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects] } %>
 </div>
 <div class="row">
     <div class="eight columns summary">

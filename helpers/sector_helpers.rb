@@ -161,9 +161,9 @@ module SectorHelpers
 			results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
 			#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}")
 			##results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}&activity_status=2")
-			results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}")
+			#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}")
 			##results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}&activity_status=2")
-			results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}")
+			#results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}")
 			results['project_budget_higher_bound'] = 0
 			results['actualStartDate'] = '1990-01-01T00:00:00' 
 			results['plannedEndDate'] = '2000-01-01T00:00:00'
@@ -221,8 +221,6 @@ module SectorHelpers
 			   		end
 				end
 			end
-			results['LocationCountries'] = results['LocationCountries']['results']
-			results['LocationCountries'] = results['LocationCountries'].sort_by {|key| key["recipient_country"]["name"]}
 			results['LocationRegions'] = results['LocationRegions']['results']
 			results['LocationRegions'] = results['LocationRegions'].sort_by {|key| key["recipient_region"]["name"]}
 			results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
@@ -232,8 +230,8 @@ module SectorHelpers
 			sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_sector=#{n}&activity_status=2"
 			results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
 			#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{n}")
-			results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}&activity_status=2")
-			results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}&activity_status=2")
+			#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{n}&activity_status=2")
+			#results['LocationRegions'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{n}&activity_status=2")
 			results['project_budget_higher_bound'] = 0
 			results['actualStartDate'] = '1990-01-01T00:00:00' 
 			results['plannedEndDate'] = '2000-01-01T00:00:00'
@@ -287,10 +285,10 @@ module SectorHelpers
 			   		end
 				end
 			end
-			results['LocationCountries'] = results['LocationCountries']['results']
-			results['LocationCountries'] = results['LocationCountries'].sort_by {|key| key["recipient_country"]["name"]}
-			results['LocationRegions'] = results['LocationRegions']['results']
-			results['LocationRegions'] = results['LocationRegions'].sort_by {|key| key["recipient_region"]["name"]}
+			# results['LocationCountries'] = results['LocationCountries']['results']
+			# results['LocationCountries'] = results['LocationCountries'].sort_by {|key| key["recipient_country"]["name"]}
+			# results['LocationRegions'] = results['LocationRegions']['results']
+			# results['LocationRegions'] = results['LocationRegions'].sort_by {|key| key["recipient_region"]["name"]}
 			results['highLevelSectorList'] = results['highLevelSectorList'].sort_by {|key| key}
 	    	results['document_types'] = results['document_types'].sort_by {|key| key["document_link_category"]["name"]}
 	    	results['implementingOrg_types'] = results['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq{|key| key["participating_organisation_ref"]}
@@ -304,6 +302,7 @@ module SectorHelpers
 		results = {}
 		if projects['results'][0].nil?
 			##sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=GB-GOV-1&related_activity_sector=#{n}&activity_status=#{projectStatus}"
+			######---000---000----
 			sectorValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_sector=#{sectorCode}"
 			results['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
 			#results['LocationCountries'] = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=GB-GOV-1&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&related_activity_sector=#{sectorCode}")

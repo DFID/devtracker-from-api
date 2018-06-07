@@ -34,11 +34,8 @@ Returns a Hash 'searchedData' with the following keys:
 - plannedEndDate (ISO Date)				-	This returns the planned end date for the returned project list which is needed to set the 
 											ending bound of the left hand side date range slider filter.
 =end
-
-	def generate_searched_data(query,activityStatusList)
-		#Initiating a blank hash that will eventually store all the necessary data for populating the search result page
-		activityStatusList = activityStatusList
-		searchedData = {}
+	
+	def generate_did_you_mean_data(query,activityStatusList)
 		dfidCountriesInfo = JSON.parse(File.read('data/dfidCountries.json')) # Stores all the DFID relevant country codes and names by parsing the relevant json file
 		dfidRegionsInfo = JSON.parse(File.read('data/dfidRegions.json')) # Stores all the DFID relevant region codes and names by parsing the relevant json file
 		dfidCountriesResults = '' # Initiated an empty variable that will later store only the search query specific DFID country data
@@ -56,35 +53,35 @@ Returns a Hash 'searchedData' with the following keys:
 		# be needed to be shown for the 'Did you mean' part.
 		recipient_regions = ''
 		# Initiating two empty hashes which will be used to store the search query specific country and region information (code, name and budget).
-		searchedData['dfidCountryBudgets'] = {}
-		searchedData['dfidRegionBudgets'] = {}
-		# Initiating the project budget higher bound. This will remain 0 if no budget is found or is empty.
-		searchedData['project_budget_higher_bound'] = 0
+		didYouMeanData = {}
+		didYouMeanData['dfidCountryBudgets'] = {}
+		didYouMeanData['dfidRegionBudgets'] = {}
 		# The following loop goes through the previously search specific country data hash and does the following.
 		dfidCountriesResults.each do |results|
 			recipient_countries.concat(results["code"] + ',');	# This is storing the country codes using ',' in a single string.
-			searchedData['dfidCountryBudgets'][results["code"]] = {} # Created empty hash and the country code is used as the key
-			searchedData['dfidCountryBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the country specific budget value.
-			searchedData['dfidCountryBudgets'][results["code"]][1] = results["name"] # Storing the country name
+			didYouMeanData['dfidCountryBudgets'][results["code"]] = {} # Created empty hash and the country code is used as the key
+			didYouMeanData['dfidCountryBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the country specific budget value.
+			didYouMeanData['dfidCountryBudgets'][results["code"]][1] = results["name"] # Storing the country name
 		end
 		# The following loop goes through the previously search specific country data hash and does the following.
 		dfidRegionsResults.each do |results|
 			recipient_regions.concat(results["code"] + ','); # This is storing the region codes using ',' in a single string.
-			searchedData['dfidRegionBudgets'][results["code"]] = {} # Created empty hash and the region code is used as the key
-			searchedData['dfidRegionBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the region specific budget value.
-			searchedData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
+			didYouMeanData['dfidRegionBudgets'][results["code"]] = {} # Created empty hash and the region code is used as the key
+			didYouMeanData['dfidRegionBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the region specific budget value.
+			didYouMeanData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
+
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
 		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID country list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' country data. 
-		unless searchedData['dfidCountryBudgets'].empty?
+		unless didYouMeanData['dfidCountryBudgets'].empty?
 			# Goes through each country specific budget data and checks if there's a budget value for it. If there's one, then converts the budget value
 			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the country specific budget value
 			countries_project_budget['results'].each do |budgets|
 				unless budgets['recipient_country']['code'].nil?
-					searchedData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					didYouMeanData['dfidCountryBudgets'][budgets['recipient_country']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
 				end
 			end
 		end
@@ -93,15 +90,24 @@ Returns a Hash 'searchedData' with the following keys:
 		regions_project_budget = JSON.parse_nil(oipa_selected_regions_budget) # Parsed the returned json data and storing it as a hash
 		# This check is necessary to make sure if there really exists a DFID region list matching with the search query else won't try to 
 		# parse and store budget data for the 'Did you mean' region data.
-		unless searchedData['dfidRegionBudgets'].empty?
+		unless didYouMeanData['dfidRegionBudgets'].empty?
 			# Goes through each region specific budget data and checks if there's a budget value for it. If there's one, then converts the budget value
 			# into GBP with thousand seperators and stores them in the previously initiated placeholder for the region specific budget value.
 			regions_project_budget['results'].each do |budgets|
 				unless budgets['recipient_region']['code'].nil?
-					searchedData['dfidRegionBudgets'][budgets['recipient_region']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
+					didYouMeanData['dfidRegionBudgets'][budgets['recipient_region']['code']][0] = Money.new(budgets['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)
 				end
 			end
 		end
+		didYouMeanData
+	end
+	
+	def generate_searched_data(query,activityStatusList)
+		#Initiating a blank hash that will eventually store all the necessary data for populating the search result page
+		activityStatusList = activityStatusList
+		searchedData = {}
+		# Initiating the project budget higher bound. This will remain 0 if no budget is found or is empty.
+		searchedData['project_budget_higher_bound'] = 0
 		# Sample Api call - http://&fields=activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation
 		# The following api call returns the projects list based on the search query. The result is returned with data sorted
 		# by budget value so that we can get the budget higher bound from a single api call.
