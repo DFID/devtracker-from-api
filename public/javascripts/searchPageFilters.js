@@ -422,144 +422,14 @@ $(document).ready(function() {
         //generateProjectListAjax(oipaLink);
         //refreshLHSFilters($('#activity_status_states').val());
     });
+    refreshLHSButtons();
     
-    $('.document_type').click(function(){
-        var tmpDocumentTypeList = $('.document_type:checked').map(function(){return $(this).val()}).get().join();
-        $('#selected_document_type').val(tmpDocumentTypeList);
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
-
-    $('.implementingOrg_type').click(function(){
-        var tmpDocumentTypeList = $('.implementingOrg_type:checked').map(function(){return $(this).val()}).get().join();
-        $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
-
-    $('.sector').click(function(){
-        var tmpSectorList = $('.sector:checked').map(function(){return $(this).val()}).get().join();
-        $('#selected_sectors').val(tmpSectorList);
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
-
-    //The following updates the result based on selected location country filter
-    $('.location_country').click(function(){
-        var tmpCountryList = $('.location_country:checked').map(function(){return $(this).val()}).get().join();
-        if (tmpCountryList.length == 0){
-            //tmpCountryList = 'CM,GH,KE,LS,MW,MZ,NG,RW,SL,ZA,UG,TZ,ZM,IN,BD,PK,BS,DM,JM,VU,LK';
-        }
-        $('#locationCountryFilterStates').val(tmpCountryList);
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
-
-    //The following updates the result based on selected location region filter
-    $('.location_region').click(function(){
-        var tmpRegionList = $('.location_region:checked').map(function(){return $(this).val()}).get().join();
-        $('#locationRegionFilterStates').val(tmpRegionList);
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
-
-    //<input style="color: black; width: 40%; font-size: 0.8em;" value="£0"> - <input value="£417,999,994" style="color: black; width: 40%; font-size: 0.8em;">
-
-    $("#slider-vertical").slider({
-        orientation: "horizontal",
-        range: true,
-        min: 0,
-        max: window.maxBudget,
-        step : (Math.round(window.maxBudget / 100) * 100)/100,
-        values: [0,window.maxBudget],
-        slide: function( event, ui ) {
-            //$( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
-            //$( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas(ui.values[0])+'"> - <input id="budget_slider_end" value="£'+addCommas(ui.values[1])+'" style="color: black; width: 40%; font-size: 0.8em;">');
-            $('#budget_slider_start').val(addCommas('£'+ui.values[0]));
-            $('#budget_slider_end').val(addCommas('£'+ui.values[1]));
-        },
-        change: function(event, ui){
-            $('#budget_lower_bound').val(ui.values[0]);
-            $('#budget_higher_bound').val(ui.values[1]);
-            refreshOipaLink(window.searchType,0);
-            generateProjectListAjax(oipaLink);
-        }
-    });
-    //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
-    $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 35%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
-    $('#date-range').html('<input id="date_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 35%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
-    
-    $('#budget_higher_bound').val($( "#slider-vertical" ).slider( "values", 1 ));
-    
-    $('#budget_slider_update').click(function(){
-        $('#budget_lower_bound').val($('#budget_slider_start').val().trim().replace(/[^0-9]/g,""));
-        $('#budget_higher_bound').val($('#budget_slider_end').val().trim().replace(/[^0-9]/g,""));
-        budgetHigherBound = $('#budget_higher_bound').val();
-        budgetLowerBound = $('#budget_lower_bound').val();
-        refreshOipaLink(window.searchType,1);
-        console.log('link: '+oipaLink);
-        generateProjectListAjax(oipaLink);
-    });
-
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
             $(this).css('border', "none");
         });
     }
 
-
-    StartDt = new Date (window.StartDate.slice(0,10));
-    EndDt = new Date (window.EndDate.slice(0,10));
-    $("#date-slider-vertical").slider({
-        orientation: "horizontal",
-        range:true,
-        min: Date.parse(StartDt),
-        max: Date.parse(EndDt),
-        step: 86400000,
-        values: [Date.parse(StartDt), Date.parse(EndDt)],
-        slide: function(event, ui){
-            var tempStartDt = new Date(ui.values[0]);
-            var tempEndDt = new Date(ui.values[1]);
-        //$('#date-range').html(tempStartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
-        $('#date_slider_start').val(tempStartDt.customFormat("#DD# #MMM# #YYYY#"));
-        $('#date_slider_end').val(tempEndDt.customFormat("#DD# #MMM# #YYYY#"));
-        },
-        change: function(event, ui){
-            $('#date-slider-disclaimer').show();
-            var tempStartDt = new Date(ui.values[0]);
-            var tempEndDt = new Date(ui.values[1]);
-            $('#date_lower_bound').val(tempStartDt.customFormat("#YYYY#-#MM#-#DD#"));
-            $('#date_higher_bound').val(tempEndDt.customFormat("#YYYY#-#MM#-#DD#"));
-            refreshOipaLink(window.searchType,0);
-            generateProjectListAjax(oipaLink);
-        }
-        /*change: function(event, ui){
-        //TO DO
-        }*/
-    });
-    //$('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
-    $('#date_slider_start').datepicker({
-        changeMonth: true,
-        changeYear: true
-    });
-    $('#date_slider_end').datepicker({
-        changeMonth: true,
-        changeYear: true
-    });
-    //$('#date_slider_start').datepicker("option","dateFormat","yy-mm-dd");
-    $('#date_slider_start').datepicker("option","dateFormat","dd M yy");
-    $('#date_slider_end').datepicker("option","dateFormat","dd M yy");
-    $('#date_slider_start').val(StartDt.customFormat("#DD# #MMM# #YYYY#"));
-    $('#date_slider_end').val(EndDt.customFormat("#DD# #MMM# #YYYY#"));
-    $('#date_slider_update').click(function(){
-        $('#date-slider-disclaimer').show();
-        var tempStartDate = new Date($('#date_slider_start').val());
-        var tempEndDate = new Date($('#date_slider_end').val());
-        $('#date_lower_bound').val(tempStartDate.customFormat("#YYYY#-#MM#-#DD#"));
-        $('#date_higher_bound').val(tempEndDate.customFormat("#YYYY#-#MM#-#DD#"));
-        refreshOipaLink(window.searchType,0);
-        generateProjectListAjax(oipaLink);
-    });
     /*refreshPagination function reloads the pagination information to accommodate with the updated api call*/
     function refreshPagination(projectCount){
         $('.light-pagination').pagination({
