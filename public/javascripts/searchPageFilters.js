@@ -422,13 +422,13 @@ $(document).ready(function() {
         //generateProjectListAjax(oipaLink);
         //refreshLHSFilters($('#activity_status_states').val());
     });
-    refreshLHSButtons();
-    
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
             $(this).css('border', "none");
         });
-    }
+    };
+    refreshLHSButtons();
+    attachFilterExpColClickEvent();
 
     /*refreshPagination function reloads the pagination information to accommodate with the updated api call*/
     function refreshPagination(projectCount){
@@ -536,7 +536,7 @@ $(document).ready(function() {
             });
             $(this).before(temp_response);
         });
-    }
+    };
 
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
@@ -632,7 +632,7 @@ $(document).ready(function() {
             //$('#showResults').text(error.toSource());
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         });
-    }
+    };
 
     /*This method attaches the +/- sign to the relevant filter expansion label*/
     attachFilterExpColClickEvent();
