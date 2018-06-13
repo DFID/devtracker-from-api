@@ -306,10 +306,11 @@ module CommonHelpers
     begin
       allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + apiList[3]
       allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
-      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3'}.first
+      allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
     rescue
-      allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
+      #allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
+      allProjectsData['plannedEndDate'] = Date.today
     end
     #unless allProjectsData['plannedEndDate']['results'][0].nil?
     #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']

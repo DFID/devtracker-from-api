@@ -635,7 +635,6 @@ $(document).ready(function() {
     };
 
     /*This method attaches the +/- sign to the relevant filter expansion label*/
-    attachFilterExpColClickEvent();
     function attachFilterExpColClickEvent(){
        $('.proj-filter-exp-collapse-sign').click(function(){
     
@@ -711,7 +710,8 @@ $(document).ready(function() {
        });
        $('#status-filter').children('.proj-filter-exp-collapse-text').click();
     }
-
+    attachFilterExpColClickEvent();
+    $('#status-filter').children('.proj-filter-exp-collapse-text').click();
     /*addCommas function is used to properly separate */
     function addCommas(num,type) {
         switch (type){
