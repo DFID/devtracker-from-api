@@ -276,6 +276,7 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
+    puts apiList[0]
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
