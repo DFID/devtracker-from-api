@@ -11,7 +11,7 @@ O -> Other Govt Departments
 $(document).ready(function() {
     refreshPagination(window.project_count);
     var oipaLink = '';
-
+    var oipaLink2 = '';
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
@@ -24,6 +24,7 @@ $(document).ready(function() {
             break;
         case 'F':
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&reporting_organisation='+window.reportingOrgs+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            console.log(oipaLink);
             break;
         case 'S':
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -415,12 +416,26 @@ $(document).ready(function() {
         else{
             $('#activity_status_states').val('1,2,3,4,5');
         }
+        switch (window.searchType){
+        case 'C':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
+            break;
+        case 'F':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&reporting_organisation='+window.reportingOrgs+'&document_link_category=&participating_organisation=';
+            break;
+        case 'S':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            break;
+        case 'R':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_recipient_region=&document_link_category=&participating_organisation=';
+            break;
+        case 'O':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
+            break;
+    }
         refreshOipaLink(window.searchType,0);
-        $.when(refreshLHSFilters($('#activity_status_states').val())).done(function(){
-            generateProjectListAjax(oipaLink);
-        });
-        //generateProjectListAjax(oipaLink);
-        //refreshLHSFilters($('#activity_status_states').val());
+        generateProjectListAjax(oipaLink2);
+        refreshLHSFilters($('#activity_status_states').val());
     });
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
@@ -438,6 +453,7 @@ $(document).ready(function() {
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
                 pagedOipaLink = oipaLink + '&page='+ pageNumber;
+                $('.modal').show();
                 $.getJSON(pagedOipaLink,{
                     format: "json"
                 }).done(function(json){
@@ -513,6 +529,9 @@ $(document).ready(function() {
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
                     console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+                })
+                .complete(function(){
+                    $('.modal').hide();
                 });
             }
         });
@@ -541,6 +560,7 @@ $(document).ready(function() {
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
+        $('.modal').show();
         $.getJSON(oipaLink,{
             format: "json",
             async: false,
@@ -631,6 +651,9 @@ $(document).ready(function() {
         .fail(function(error){
             //$('#showResults').text(error.toSource());
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+        })
+        .complete(function(){
+            $('.modal').hide();
         });
     };
 
@@ -727,12 +750,12 @@ $(document).ready(function() {
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
-    $( document ).ajaxStart(function() {
-        $('.modal').show();
-    });
-    $( document ).ajaxStop(function() {
-        $('.modal').hide();
-    });
+    // $( document ).ajaxStart(function() {
+    //     $('.modal').show();
+    // });
+    // $( document ).ajaxStop(function() {
+    //     $('.modal').hide();
+    // });
     function isEmpty(val){
         return (val === undefined || val == null || val.length <= 0) ? true : false;
     }
