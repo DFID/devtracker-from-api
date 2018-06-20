@@ -86,8 +86,10 @@ $(document).ready(function() {
 
         } else if (countryName && countryCode) {  
             
-            if (countryBounds[countryCode][2] != null)
+            if (countryBounds[countryCode][2] != null){
                 zoomFactor = countryBounds[countryCode][2];
+                console.log(zoomFactor);
+                }
                 else zoomFactor = 6;
 
             map = new L.Map('countryMap', {
@@ -122,8 +124,7 @@ $(document).ready(function() {
         // create the geopoints if any are defined
         if(map) {
             //alert("start processing datapoints");
-            var url = window.baseUrl + "activities/?format=json&reporting_organisation="+window.reportingOrgs+"&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
-
+            var url = window.baseUrl + "activities/?format=json&reporting_organisation="+window.reportingOrgs+"&hierarchy=1&recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
             $.getJSON(url, function (iati) {
             $('.modal_map_markers').show();
             //set up markerCluster
@@ -142,7 +143,7 @@ $(document).ready(function() {
                     }
 
                     return new L.DivIcon({ html: '<div class="marker cluster ' + additional + '">' + count+ '</div>' });
-                } 
+                }
             });
 
             markers.on('clusterclick', function (a) {
@@ -172,21 +173,31 @@ $(document).ready(function() {
                     var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
                     //console.log(iatiIdentifier);
-                    
+                    var tempBreaker = 0;
                     //iterate over each location
                     d.locations.forEach(function (p) {
-                        var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
-                        var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
-                        //console.log(p.point.point.longitude,p.point.point.latitude);
-                        
-                        //create popup text
-                        var locationName = p.name[0].narratives[0].text;
-                        marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
-                        
-                        //marker.bindPopup(buildClusterPopupHtml(marker.options))
-                        
-                        //add to the map layer
-                        markers.addLayer(marker);
+                        try{
+                            //if(tempBreaker == 0 && (p.administrative[0].code == countryCode || p.name[0].narratives[0].text)){
+                            if(tempBreaker == 0 && (p.name[0].narratives[0].text.includes(countryName) || p.description[0].narratives[0].text.includes(countryName))){
+                                var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
+                                var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
+                                //console.log(p.point.point.longitude,p.point.point.latitude);
+                                
+                                //create popup text
+                                var locationName = p.name[0].narratives[0].text;
+                                marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
+                                
+                                //marker.bindPopup(buildClusterPopupHtml(marker.options))
+                                
+                                //add to the map layer
+                                markers.addLayer(marker);
+                                tempBreaker = tempBreaker + 1;
+                            }
+                        }
+                        catch(e){
+                            //console.log(iatiIdentifier);
+                            //console.log("variable doesn't exist");
+                        }
                     });
                 });
 
