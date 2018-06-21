@@ -134,8 +134,11 @@ module CountryHelpers
       #oipa v2.2
       #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
       #oipa v3.1
-      totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
-      
+      totalDfidBudget = 0
+      currentTotalDFIDBudget['results'].each do |budget|
+        totalDfidBudget = totalDfidBudget + budget['value'].to_i
+      end
+      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
       projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
 
     
