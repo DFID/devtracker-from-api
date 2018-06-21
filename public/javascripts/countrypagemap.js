@@ -3,6 +3,9 @@ $(document).ready(function() {
         function calculateBrightness(country, max){
             return d3.rgb("#79A9D6").brighter(-(country.budget/max)*3).toString()
         };
+        //The following method is created based on Ray casting algorithm
+        //Source: https://github.com/substack/point-in-polygon
+        //Source: https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
         function isMarkerInsidePolygon(marker, poly) {
             var polyPoints = poly.getLatLngs();
             var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
@@ -60,14 +63,7 @@ $(document).ready(function() {
         var countryName = $("#countryName").val();
         var countryCode = $("#countryCode").val();
         var projectType = $("#projectType").val();
-        //TODO - get some logic to determine project type
-        //projectType = "country";
-        //countryCode = "BD";
-        //countryName = "Bangladesh";
         var map;
-     
-     // TODO Remove alert
-     //   alert("country map" + projectType);
 
         var osmHOT = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
                                   maxZoom: 10,
@@ -99,10 +95,6 @@ $(document).ready(function() {
                 zoom: 1,
                 layers: [mapBox]
             });
-
-            //map.addLayer(new L.Google('ROADMAP'));
-
-
         } else if (countryName && countryCode) {  
             
             if (countryBounds[countryCode][2] != null){
@@ -116,8 +108,6 @@ $(document).ready(function() {
                 zoom: zoomFactor,  
                 layers: [mapBox]
             });
-            //map.addLayer(new L.Google('ROADMAP'));
-
         } else if (countryCode) {
             var bounds = regionBounds[countryCode];
             var boundary = new L.LatLngBounds(
@@ -129,7 +119,6 @@ $(document).ready(function() {
                 {
                     layers: [mapBox]
                 });
-            //map.addLayer(new L.Google('ROADMAP'))
             map.fitBounds(boundary);
             map.panInsideBounds(boundary);
         } else {
@@ -162,7 +151,6 @@ $(document).ready(function() {
             fillColor: '#204B63',//"#204B63",
             fillOpacity: 0.4
         });
-
         multiPolygon.addTo(map);
 
         // create the geopoints if any are defined
@@ -197,12 +185,9 @@ $(document).ready(function() {
                 var clusterLocations = [];
                 for(var i = 0; i < a.layer._markers.length; i++) {
                     clusterLocations.push(a.layer._markers[i].options);
-                    //console.log(a.layer._markers[i].options);
-                    //console.log(clusterLocations);
                 }
                 
                 var html = buildClusterPopupHtml(clusterLocations)
-                //console.log(html);
                 var popup = L.popup()
                              .setLatLng(a.layer._latlng)
                              .setContent(html)
