@@ -1,6 +1,25 @@
 $(document).ready(function() {
     (function(global, undefined){
-
+        //The following method is created based on Ray casting algorithm
+        //Source: https://github.com/substack/point-in-polygon
+        //Source: https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
+        function isMarkerInsidePolygon(marker, poly) {
+            var polyPoints = poly.getLatLngs();
+            var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+            var inside = false;
+            for(var a = 0; a < polyPoints.length; a++){
+                for (var i = 0, j = polyPoints[a].length - 1; i < polyPoints[a].length; j = i++) {
+                    var xi = polyPoints[a][i].lat, yi = polyPoints[a][i].lng;
+                    var xj = polyPoints[a][j].lat, yj = polyPoints[a][j].lng;
+                    var intersect = ((yi > y) != (yj > y))
+                        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                    if (intersect){
+                        inside = !inside;
+                    }
+                }
+            }
+            return inside;
+        };
          //helpers for the markers
         function markerOptions(id,title) {
             var geojsonMarkerOptionsStuff = {
@@ -41,14 +60,7 @@ $(document).ready(function() {
         var countryName = $("#countryName").val();
         var countryCode = $("#countryCode").val();
         var projectType = $("#projectType").val();
-        //TODO - get some logic to determine project type
-        //projectType = "country";
-        //countryCode = "BD";
-        //countryName = "Bangladesh";
         var map;
-     
-     // TODO Remove alert
-     //   alert("country map" + projectType);
 
         var osmHOT = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
                                   maxZoom: 10,
@@ -80,14 +92,12 @@ $(document).ready(function() {
                 zoom: 1,
                 layers: [mapBox]
             });
-
-            //map.addLayer(new L.Google('ROADMAP'));
-
-
         } else if (countryName && countryCode) {  
             
-            if (countryBounds[countryCode][2] != null)
+            if (countryBounds[countryCode][2] != null){
                 zoomFactor = countryBounds[countryCode][2];
+                console.log(zoomFactor);
+                }
                 else zoomFactor = 6;
 
             map = new L.Map('countryMap', {
@@ -95,8 +105,6 @@ $(document).ready(function() {
                 zoom: zoomFactor,  
                 layers: [mapBox]
             });
-            //map.addLayer(new L.Google('ROADMAP'));
-
         } else if (countryCode) {
             var bounds = regionBounds[countryCode];
             var boundary = new L.LatLngBounds(
@@ -108,7 +116,6 @@ $(document).ready(function() {
                 {
                     layers: [mapBox]
                 });
-            //map.addLayer(new L.Google('ROADMAP'))
             map.fitBounds(boundary);
             map.panInsideBounds(boundary);
         } else {
@@ -118,12 +125,35 @@ $(document).ready(function() {
 
         //get country locations from OIPA API
 
+        //Draw a polygon on the map to bound the exact country position
+        var multiVertices = new Array();
+        for (var countryPolygonesDefArrayIndex=0; countryPolygonesDefArrayIndex<polygonsData[countryCode].length; countryPolygonesDefArrayIndex++) {
+            var countryPolygoneDefString = polygonsData[countryCode][countryPolygonesDefArrayIndex];
+            var verticesDefArray = countryPolygoneDefString.split(" ");
+            var vertices = new Array();
+            for (var vertexDefStringIndex=0; vertexDefStringIndex<verticesDefArray.length; vertexDefStringIndex++) {
+                var vertexDefString = verticesDefArray[vertexDefStringIndex].split(",");
+                var longitude=vertexDefString[0];
+                var latitude=vertexDefString[1];
+                var latLng=new L.LatLng(latitude,longitude);
+                vertices[vertices.length]=latLng;
+            }
+            multiVertices[multiVertices.length]=vertices;
+        }
+        var multiPolygon = L.multiPolygon(multiVertices,{
+            stroke: true, /* draws the border when true */
+            color: 'red', /* border color */
+            weight: 1, /* stroke width in pixels */
+            fill:true,
+            fillColor: '#204B63',//"#204B63",
+            fillOpacity: 0.4
+        });
+        multiPolygon.addTo(map);
 
         // create the geopoints if any are defined
         if(map) {
             //alert("start processing datapoints");
-            var url = window.baseUrl + "activities/?format=json&reporting_organisation="+window.reportingOrgs+"&hierarchy=1&related_activity_recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
-
+            var url = window.baseUrl + "activities/?format=json&reporting_organisation="+window.reportingOrgs+"&hierarchy=1&recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
             $.getJSON(url, function (iati) {
             $('.modal_map_markers').show();
             //set up markerCluster
@@ -142,7 +172,7 @@ $(document).ready(function() {
                     }
 
                     return new L.DivIcon({ html: '<div class="marker cluster ' + additional + '">' + count+ '</div>' });
-                } 
+                }
             });
 
             markers.on('clusterclick', function (a) {
@@ -152,12 +182,9 @@ $(document).ready(function() {
                 var clusterLocations = [];
                 for(var i = 0; i < a.layer._markers.length; i++) {
                     clusterLocations.push(a.layer._markers[i].options);
-                    //console.log(a.layer._markers[i].options);
-                    //console.log(clusterLocations);
                 }
                 
                 var html = buildClusterPopupHtml(clusterLocations)
-                //console.log(html);
                 var popup = L.popup()
                              .setLatLng(a.layer._latlng)
                              .setContent(html)
@@ -171,22 +198,25 @@ $(document).ready(function() {
                     var iatiIdentifier = d.iati_identifier;
                     var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
-                    //console.log(iatiIdentifier);
-                    
                     //iterate over each location
                     d.locations.forEach(function (p) {
-                        var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
-                        var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
-                        //console.log(p.point.point.longitude,p.point.point.latitude);
-                        
-                        //create popup text
-                        var locationName = p.name[0].narratives[0].text;
-                        marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
-                        
-                        //marker.bindPopup(buildClusterPopupHtml(marker.options))
-                        
-                        //add to the map layer
-                        markers.addLayer(marker);
+                        try{
+                            var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
+                            var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
+                            //create popup text
+                            var locationName = p.name[0].narratives[0].text;
+                            marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
+                            //if(tempBreaker == 0 && (p.administrative[0].code == countryCode || p.name[0].narratives[0].text)){
+                            //if(tempBreaker == 0 && (p.name[0].narratives[0].text.includes(countryName) || p.description[0].narratives[0].text.includes(countryName))){
+                                if(isMarkerInsidePolygon(marker,multiPolygon)){
+                                //add to the map layer
+                                markers.addLayer(marker);
+                            }
+                        }
+                        catch(e){
+                            console.log(iatiIdentifier);
+                            console.log("variable doesn't exist");
+                        }
                     });
                 });
 
