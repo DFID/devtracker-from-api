@@ -1,6 +1,25 @@
 $(document).ready(function() {
     (function(global, undefined){
-
+        function calculateBrightness(country, max){
+            return d3.rgb("#79A9D6").brighter(-(country.budget/max)*3).toString()
+        };
+        function isMarkerInsidePolygon(marker, poly) {
+            var polyPoints = poly.getLatLngs();
+            var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+            var inside = false;
+            for(var a = 0; a < polyPoints.length; a++){
+                for (var i = 0, j = polyPoints[a].length - 1; i < polyPoints[a].length; j = i++) {
+                    var xi = polyPoints[a][i].lat, yi = polyPoints[a][i].lng;
+                    var xj = polyPoints[a][j].lat, yj = polyPoints[a][j].lng;
+                    var intersect = ((yi > y) != (yj > y))
+                        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                    if (intersect){
+                        inside = !inside;
+                    }
+                }
+            }
+            return inside;
+        };
          //helpers for the markers
         function markerOptions(id,title) {
             var geojsonMarkerOptionsStuff = {
@@ -120,6 +139,31 @@ $(document).ready(function() {
 
         //get country locations from OIPA API
 
+        //Draw a polygon on the map to bound the exact country position
+        var multiVertices = new Array();
+        for (var countryPolygonesDefArrayIndex=0; countryPolygonesDefArrayIndex<polygonsData[countryCode].length; countryPolygonesDefArrayIndex++) {
+            var countryPolygoneDefString = polygonsData[countryCode][countryPolygonesDefArrayIndex];
+            var verticesDefArray = countryPolygoneDefString.split(" ");
+            var vertices = new Array();
+            for (var vertexDefStringIndex=0; vertexDefStringIndex<verticesDefArray.length; vertexDefStringIndex++) {
+                var vertexDefString = verticesDefArray[vertexDefStringIndex].split(",");
+                var longitude=vertexDefString[0];
+                var latitude=vertexDefString[1];
+                var latLng=new L.LatLng(latitude,longitude);
+                vertices[vertices.length]=latLng;
+            }
+            multiVertices[multiVertices.length]=vertices;
+        }
+        var multiPolygon = L.multiPolygon(multiVertices,{
+            stroke: true, /* draws the border when true */
+            color: 'red', /* border color */
+            weight: 1, /* stroke width in pixels */
+            fill:true,
+            fillColor: '#204B63',//"#204B63",
+            fillOpacity: 0.4
+        });
+
+        multiPolygon.addTo(map);
 
         // create the geopoints if any are defined
         if(map) {
@@ -172,31 +216,24 @@ $(document).ready(function() {
                     var iatiIdentifier = d.iati_identifier;
                     var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
-                    //console.log(iatiIdentifier);
-                    var tempBreaker = 0;
                     //iterate over each location
                     d.locations.forEach(function (p) {
                         try{
+                            var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
+                            var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
+                            //create popup text
+                            var locationName = p.name[0].narratives[0].text;
+                            marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
                             //if(tempBreaker == 0 && (p.administrative[0].code == countryCode || p.name[0].narratives[0].text)){
-                            if(tempBreaker == 0 && (p.name[0].narratives[0].text.includes(countryName) || p.description[0].narratives[0].text.includes(countryName))){
-                                var latlng = L.latLng(p.point.pos.latitude,p.point.pos.longitude);
-                                var marker = new L.circleMarker(latlng, markerOptions(iatiIdentifier,title));
-                                //console.log(p.point.point.longitude,p.point.point.latitude);
-                                
-                                //create popup text
-                                var locationName = p.name[0].narratives[0].text;
-                                marker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + iatiIdentifier + ")</a>" + "<br />" + locationName);
-                                
-                                //marker.bindPopup(buildClusterPopupHtml(marker.options))
-                                
+                            //if(tempBreaker == 0 && (p.name[0].narratives[0].text.includes(countryName) || p.description[0].narratives[0].text.includes(countryName))){
+                                if(isMarkerInsidePolygon(marker,multiPolygon)){
                                 //add to the map layer
                                 markers.addLayer(marker);
-                                tempBreaker = tempBreaker + 1;
                             }
                         }
                         catch(e){
-                            //console.log(iatiIdentifier);
-                            //console.log("variable doesn't exist");
+                            console.log(iatiIdentifier);
+                            console.log("variable doesn't exist");
                         }
                     });
                 });
