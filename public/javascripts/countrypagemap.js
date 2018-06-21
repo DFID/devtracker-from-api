@@ -1,8 +1,5 @@
 $(document).ready(function() {
     (function(global, undefined){
-        function calculateBrightness(country, max){
-            return d3.rgb("#79A9D6").brighter(-(country.budget/max)*3).toString()
-        };
         //The following method is created based on Ray casting algorithm
         //Source: https://github.com/substack/point-in-polygon
         //Source: https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
