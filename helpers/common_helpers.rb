@@ -276,7 +276,6 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
-    puts apiList[0]
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
@@ -339,5 +338,101 @@ module CommonHelpers
     allProjectsData['document_types'] = allProjectsData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
     allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
     return allProjectsData
+  end
+
+  #######################################
+  ## Methods for returning LHS filters ##
+  #######################################
+
+  #Return projects and budget higher bound information
+  def generateProjectListWithBudgetHiBound(apiLink)
+    allProjectsData = {}
+    oipa_project_list = RestClient.get settings.oipa_api_url + apiLink
+    allProjectsData['projects']= JSON.parse(oipa_project_list)
+    allProjectsData['project_budget_higher_bound'] = 0
+    unless allProjectsData['projects']['results'][0].nil?
+      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
+    end
+    allProjectsData
+  end
+
+  #Return budget higher bound information
+  def generateBudgetHiBound(apiLink)
+    oipa_project_list = RestClient.get settings.oipa_api_url + apiLink
+    oipa_project_list = JSON.parse(oipa_project_list)
+    project_budget_higher_bound = 0
+    unless oipa_project_list['results'][0].nil?
+      project_budget_higher_bound = oipa_project_list['results'][0]['aggregations']['activity_children']['budget_value']
+    end
+    project_budget_higher_bound
+  end
+
+  #Return High Level sector List
+  def generateSectorList(apiLink)
+    sectorValuesJSON = RestClient.get settings.oipa_api_url + apiLink
+    highLevelSectorList = high_level_sector_list_filter(sectorValuesJSON)
+    highLevelSectorList = highLevelSectorList.sort_by {|key| key}
+    highLevelSectorList
+  end
+
+  #Returns project start date
+  def generateProjectStartDate(apiLink)
+    startDate = '1990-01-01T00:00:00'
+    begin
+      startDate = RestClient.get settings.oipa_api_url + apiLink
+      startDate = JSON.parse(startDate['actualStartDate'])
+      tempStartDate = startDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+      if (tempStartDate.nil?)
+        tempStartDate = startDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+      end
+      startDate = tempStartDate
+      startDate = allProjectsData['actualStartDate']['iso_date']
+    rescue
+      startDate = '1990-01-01T00:00:00'
+    end
+    startDate
+  end
+  
+  #Returns project end date
+  def generateProjectEndDate(apiLink)
+    endDate = '2000-01-01T00:00:00'
+    begin
+      endDate = RestClient.get settings.oipa_api_url + apiLink
+      endDate = JSON.parse(endDate['plannedEndDate'])
+      endDate = endDate['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
+      endDate = endDate['plannedEndDate']['iso_date']
+    rescue
+      endDate = Date.today
+    end
+    endDate
+  end
+  
+  #Return Document Type List
+  def generateDocumentTypeList(apiLink)
+    oipa_document_type_list = RestClient.get settings.oipa_api_url + apiLink
+    document_type_list = JSON.parse(oipa_document_type_list)
+    document_type_list = document_type_list['results']
+    document_type_list = document_type_list.sort_by {|key| key["document_link_category"]["name"]}
+    document_type_list
+  end
+
+  #Return Implementing Org List
+  def generateImplOrgList(apiLink)
+    participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+    oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiLink
+    implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
+    implementingOrg_type_list = implementingOrg_type_list['results']
+    implementingOrg_type_list.each do |implementingOrgs|
+      if implementingOrgs['participating_organisation'].length < 1
+        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
+        if tempImplmentingOrgData.nil?
+          implementingOrgs['participating_organisation_ref'] = 'na'
+          implementingOrgs['participating_organisation'] = 'na'
+        else
+          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
+        end
+      end
+    end
+    implementingOrg_type_list = implementingOrg_type_list.sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
   end
 end

@@ -75,8 +75,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -770,6 +770,92 @@ get '/getOGDFilters' do
 	#json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
 	projectData['countryAllProjectFilters'] = get_static_filter_list()
 	json :output => projectData
+end
+
+#Returns the designated API list based on an active project page type - Not needed
+get '/getapiurls' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	json :output => generate_api_list(apiType,apiParams,projectStatus)
+end
+
+############################################################
+## Methods for returning LHS filters - Parallel API calls ##
+############################################################
+
+#Returns the project list and the budget higher bound
+get '/getProjectListWithBudgetHi' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateProjectListWithBudgetHiBound(apiList[0])
+end
+
+#Returns the budget higher bound
+get '/getBudgetHi' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateBudgetHiBound(apiList[0])
+end
+
+#Returns the Sector List for LHS
+get '/getHiLvlSectorList' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateSectorList(apiList[1])
+end
+
+#Returns the LHS start date
+get '/getStartDate' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateProjectStartDate(apiList[2])
+end
+
+#Returns the LHS end date
+get '/getEndDate' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateProjectEndDate(apiList[3])
+end
+
+#Returns the LHS Document List
+get '/getDocumentTypeList' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateDocumentTypeList(apiList[4])
+end
+
+#Returns the LHS Implementing Org List
+get '/getImplOrgList' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	json :output => generateImplOrgList(apiList[5])
+end
+
+#Returns the LHS Filters (Sector Page Specific)
+get '/getSectorSpecificFilters' do
+	sectorCode = params['sectorCode']
+	projectStatus = params['projectStatus']
+	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
+	sectorData = {}
+	sectorData["LocationCountries"] = locationFilterData["locationCountryFilters"]
+	sectorData["LocationRegions"] = locationFilterData["locationRegionFilters"]
+	json :output => sectorData
 end
 
 #####################################################################
