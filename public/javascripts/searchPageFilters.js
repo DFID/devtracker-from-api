@@ -634,10 +634,6 @@ $(document).ready(function() {
                 else{
                     validResults['description'] = "";
                 }
-                //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+validResults['total_plus_child_budget_currency_value']+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span class="budget">Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
@@ -657,22 +653,6 @@ $(document).ready(function() {
     /*This method attaches the +/- sign to the relevant filter expansion label*/
     function attachFilterExpColClickEvent(){
        $('.proj-filter-exp-collapse-sign').click(function(){
-    
-         /*if($(this).text() == '+'){
-            $(this).text('-');
-            $(this).parent().find("div[name=countries]").show();
-            $(this).parent().find("div[name=regions]").show();
-            $(this).parent().find("ul").show();
-            $(this).parent().find(".mContent").show();
-         }
-         else{
-            $(this).text('+');
-            $(this).parent().find("div[name=countries]").hide();
-            $(this).parent().find("div[name=regions]").hide();
-            $(this).parent().find("ul").hide();
-            $(this).parent().find(".mContent").hide();
-         }*/
-
          if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
             $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
             //$(this).text('-');
@@ -694,22 +674,6 @@ $(document).ready(function() {
        $('.proj-filter-exp-collapse-text').click(function(){
     
           $(this).parent().find('.proj-filter-exp-collapse-sign').each(function(){
-    
-             /*if($(this).text() == '+'){
-                 $(this).text('-');
-                 $(this).parent().find("div[name=countries]").show('slow');
-                 $(this).parent().find("div[name=regions]").show('slow');
-                 $(this).parent().find("ul").show('slow');
-                 $(this).parent().find(".mContent").show('slow');
-              }
-              else{
-                 $(this).text('+');
-                 $(this).parent().find("div[name=countries]").hide('slow');
-                 $(this).parent().find("div[name=regions]").hide('slow');
-                 $(this).parent().find("ul").hide('slow');
-                 $(this).parent().find(".mContent").hide('slow');
-              }*/
-
             if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
                 $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
                 //$(this).text('-');
@@ -728,7 +692,7 @@ $(document).ready(function() {
              }
           });
        });
-       $('#status-filter').children('.proj-filter-exp-collapse-text').click();
+       //$('#status-filter').children('.proj-filter-exp-collapse-text').click();
     }
     attachFilterExpColClickEvent();
     $('#status-filter').children('.proj-filter-exp-collapse-text').click();
