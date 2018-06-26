@@ -381,17 +381,14 @@ module CommonHelpers
   def generateProjectStartDate(apiLink)
     startDate = '1990-01-01T00:00:00'
     begin
+      puts apiLink
       tempStartDate = RestClient.get settings.oipa_api_url + apiLink
-      tempStartDate = JSON.parse(tempStartDate['actualStartDate'])
-      puts '==============='
-      puts '==============='
-      puts '==============='
-      puts startDate
-      tempStartDate = tempStartDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+      tempStartDate = JSON.parse(tempStartDate)
+      tempStartDate = tempStartDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
       if (tempStartDate.nil?)
-        tempStartDate = tempStartDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+        tempStartDate = tempStartDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
       end
-      startDate = tempStartDate['actualStartDate']['iso_date']
+      startDate = tempStartDate['iso_date']
     rescue
       startDate = '1990-01-01T00:00:00'
     end
@@ -403,9 +400,9 @@ module CommonHelpers
     endDate = '2000-01-01T00:00:00'
     begin
       tempEndDate = RestClient.get settings.oipa_api_url + apiLink
-      tempEndDate = JSON.parse(tempEndDate['plannedEndDate'])
-      tempEndDate = tempEndDate['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
-      endDate = tempEndDate['plannedEndDate']['iso_date']
+      tempEndDate = JSON.parse(tempEndDate)
+      tempEndDate = tempEndDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
+      endDate = tempEndDate['iso_date']
     rescue
       endDate = Date.today
     end
