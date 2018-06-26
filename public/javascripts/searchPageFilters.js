@@ -523,7 +523,6 @@ $(document).ready(function() {
                         var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         $('#showResults').append(tempString);
                     });
-                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
@@ -531,6 +530,7 @@ $(document).ready(function() {
                 })
                 .complete(function(){
                     $('.modal').hide();
+                    generateBudgetValues();
                 });
             }
         });
@@ -543,6 +543,7 @@ $(document).ready(function() {
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
             var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
             var temp_response = '';
+            $(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
             $.ajax({
                 method: "GET",
                 async: false,
@@ -552,6 +553,7 @@ $(document).ready(function() {
                 //console.log("saved: " + msg.output);
                 temp_response = msg.output;
             });
+            $(this).parent().children('.remove_loader').remove();
             $(this).before(temp_response);
         });
     };
@@ -641,7 +643,6 @@ $(document).ready(function() {
             });
             // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
             // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
-            generateBudgetValues();
         })
         .fail(function(error){
             //$('#showResults').text(error.toSource());
@@ -649,6 +650,7 @@ $(document).ready(function() {
         })
         .complete(function(){
             $('.modal').hide();
+            generateBudgetValues();
         });
     };
 
