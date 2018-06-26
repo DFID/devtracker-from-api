@@ -381,14 +381,17 @@ module CommonHelpers
   def generateProjectStartDate(apiLink)
     startDate = '1990-01-01T00:00:00'
     begin
-      startDate = RestClient.get settings.oipa_api_url + apiLink
-      startDate = JSON.parse(startDate['actualStartDate'])
-      tempStartDate = startDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
+      tempStartDate = RestClient.get settings.oipa_api_url + apiLink
+      tempStartDate = JSON.parse(tempStartDate['actualStartDate'])
+      puts '==============='
+      puts '==============='
+      puts '==============='
+      puts startDate
+      tempStartDate = tempStartDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
       if (tempStartDate.nil?)
-        tempStartDate = startDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
+        tempStartDate = tempStartDate['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '1'}.first
       end
-      startDate = tempStartDate
-      startDate = allProjectsData['actualStartDate']['iso_date']
+      startDate = tempStartDate['actualStartDate']['iso_date']
     rescue
       startDate = '1990-01-01T00:00:00'
     end
@@ -399,10 +402,10 @@ module CommonHelpers
   def generateProjectEndDate(apiLink)
     endDate = '2000-01-01T00:00:00'
     begin
-      endDate = RestClient.get settings.oipa_api_url + apiLink
-      endDate = JSON.parse(endDate['plannedEndDate'])
-      endDate = endDate['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
-      endDate = endDate['plannedEndDate']['iso_date']
+      tempEndDate = RestClient.get settings.oipa_api_url + apiLink
+      tempEndDate = JSON.parse(tempEndDate['plannedEndDate'])
+      tempEndDate = tempEndDate['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
+      endDate = tempEndDate['plannedEndDate']['iso_date']
     rescue
       endDate = Date.today
     end
