@@ -539,6 +539,7 @@ $(document).ready(function() {
     };
 
     function generateBudgetValues(){
+        $('.modal').hide();
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
             var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
