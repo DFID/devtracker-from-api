@@ -680,7 +680,7 @@ get '/search/?' do
 		activityStatusList = '1,2,3,4'
 	else
 		includeClosed = 0
-		activityStatusList = '1,2'
+		activityStatusList = '2'
 	end
 	puts activityStatusList
 	#results = generate_searched_data(query,activityStatusList)
