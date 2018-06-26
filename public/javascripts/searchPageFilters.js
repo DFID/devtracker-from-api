@@ -263,6 +263,8 @@ $(document).ready(function() {
         $('#sector-filter').html('Refreshing sector filter<input type="hidden" id="selected_sectors" value=""  />');
         $('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
         $('#organisation-filter').html('Refreshing organisation filter<input type="hidden" id="selected_implementingOrg_type" value=""  />');
+        $('#budget-slider-filter').html('Refreshing..');
+        $('#date-slider-filter').html('Refreshing..');
         $('#sector-filter').show();
         $('#document-filter').show();
         $('#organisation-filter').show();
