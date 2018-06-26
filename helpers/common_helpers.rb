@@ -247,13 +247,14 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
     elsif (listType == 'F')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB")
+      #apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB")
+      apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation=#{settings.goverment_department_ids}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{listParams}&reporting_organisation_startswith=GB&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{listParams}&reporting_organisation=#{settings.goverment_department_ids}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}&reporting_organisation=#{settings.goverment_department_ids}")
       # Planned End Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&hierarchy=1&q=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}&reporting_organisation=#{settings.goverment_department_ids}")
       # Document List API call
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&q=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
@@ -276,6 +277,7 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
+    puts apiList[0]
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
