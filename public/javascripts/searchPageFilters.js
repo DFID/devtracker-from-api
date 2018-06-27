@@ -546,12 +546,11 @@ $(document).ready(function() {
     };
 
     function generateBudgetValues(){
-        $('.modal').hide();
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
             var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
             var temp_response = '';
-            $(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
+            //$(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
             $.ajax({
                 method: "GET",
                 async: false,
@@ -561,7 +560,7 @@ $(document).ready(function() {
                 //console.log("saved: " + msg.output);
                 temp_response = msg.output;
             });
-            $(this).parent().children('.remove_loader').remove();
+            //$(this).parent().children('.remove_loader').remove();
             $(this).before(temp_response);
         });
     };
