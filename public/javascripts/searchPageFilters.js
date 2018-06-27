@@ -537,8 +537,8 @@ $(document).ready(function() {
                 })
                 .complete(function(){
                     //$('.modal').hide();
-                    generateBudgetValues();
                 });
+                generateBudgetValues();
             }
         });
         // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
@@ -665,8 +665,8 @@ $(document).ready(function() {
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         })
         .complete(function(){
-            generateBudgetValues();
         });
+        generateBudgetValues();
     };
 
     function hideLoader(blocker){
