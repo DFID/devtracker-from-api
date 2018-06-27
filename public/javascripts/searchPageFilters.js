@@ -452,10 +452,16 @@ $(document).ready(function() {
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
                 pagedOipaLink = oipaLink + '&page='+ pageNumber;
-                $('.modal').show();
+                //$('.modal').show();
+                $('#showResults').animate({opacity: 0.4},500,function(){
+                    $('.modal').show();
+                });
                 $.getJSON(pagedOipaLink,{
                     format: "json"
                 }).done(function(json){
+                    $('#showResults').animate({opacity: 1},500,function(){
+                        $('.modal').hide();
+                    });
                     if(window.searchType == 'F'){
                         $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
                     }
@@ -521,16 +527,16 @@ $(document).ready(function() {
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
                         //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        //$('.modal').hide();
                         $('#showResults').append(tempString);
                     });
-                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
                     console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
                 })
                 .complete(function(){
-                    $('.modal').hide();
+                    generateBudgetValues();
                 });
             }
         });
@@ -541,30 +547,45 @@ $(document).ready(function() {
     function generateBudgetValues(){
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
-            var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
-            var temp_response = '';
-            $.ajax({
-                method: "GET",
-                async: false,
-                url: "/currency",
-                data: {amount: temp_amount, currency: temp_currency},
-            }).done(function(msg){
-                //console.log("saved: " + msg.output);
-                temp_response = msg.output;
-            });
-            $(this).before(temp_response);
+            $(this).before('£' + addCommas(temp_amount));
         });
     };
+
+    // Backup of old code for emergency Fallback.
+    // function generateBudgetValues(){
+    //     $('.tpcbcv').each(function(){
+    //         var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
+    //         var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
+    //         var temp_response = '';
+    //         //$(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
+    //         $.ajax({
+    //             method: "GET",
+    //             async: false,
+    //             url: "/currency",
+    //             data: {amount: temp_amount, currency: temp_currency},
+    //         }).done(function(msg){
+    //             //console.log("saved: " + msg.output);
+    //             temp_response = msg.output;
+    //         });
+    //         //$(this).parent().children('.remove_loader').remove();
+    //         $(this).before(temp_response);
+    //     });
+    // };
 
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
-        $('.modal').show();
+        $('#showResults').animate({opacity: 0.4},500,function(){
+            $('.modal').show();
+        });
         $.getJSON(oipaLink,{
             format: "json",
             async: false,
         })
         .done(function(json){
+            $('#showResults').animate({opacity: 1},500,function(){
+                $('.modal').hide();
+            });
             if(window.searchType == 'F'){
                 $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
             }
@@ -573,20 +594,14 @@ $(document).ready(function() {
             }
             //$('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
             returnedProjectCount = json.count;
-            refreshPagination(json.count);
+            // Moved the refreshPagination execution to a later state as part of code optimisation
+            //refreshPagination(json.count);
             if (!isEmpty(json.next)){
                 var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of '+returnedProjectCount+'</div>';
                 $('#showResults').append(tmpStr);
             }
             else{
                 var tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
-                /*var tmpStr = "";
-                if(typeof window.searchQuery !== 'undefined'){
-                    tmpStr = '<div class="search-result"><p style="padding-top:.33em">Your search - <em>'+window.searchQuery+'</em> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p><ul style="margin:0 0 2em;margin-left:1.3em"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul></div>';
-                }
-                else{
-                    tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
-                }*/
                 $('#showResults').append(tmpStr);
             }
             $.each(json.results,function(i,result){
@@ -639,16 +654,13 @@ $(document).ready(function() {
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
-            // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
-            // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
-            generateBudgetValues();
+            refreshPagination(json.count);
         })
         .fail(function(error){
-            //$('#showResults').text(error.toSource());
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         })
         .complete(function(){
-            $('.modal').hide();
+            generateBudgetValues();
         });
     };
 
