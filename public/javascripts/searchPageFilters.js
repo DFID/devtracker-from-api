@@ -577,7 +577,8 @@ $(document).ready(function() {
             }
             //$('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
             returnedProjectCount = json.count;
-            refreshPagination(json.count);
+            // Testing optimisation
+            //refreshPagination(json.count);
             if (!isEmpty(json.next)){
                 var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of '+returnedProjectCount+'</div>';
                 $('#showResults').append(tmpStr);
@@ -641,9 +642,10 @@ $(document).ready(function() {
                     validResults['description'] = "";
                 }
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                $('.modal').hide();
                 $('#showResults').append(tempString);
+                hideLoader(i);
             });
+            refreshPagination(json.count);
             // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
             // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
         })
@@ -652,10 +654,15 @@ $(document).ready(function() {
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         })
         .complete(function(){
-            $('.modal').hide();
             generateBudgetValues();
         });
     };
+
+    function hideLoader(blocker){
+        if(blocker==0){
+            $('.modal').hide();
+        }
+    }
 
     /*This method attaches the +/- sign to the relevant filter expansion label*/
     function attachFilterExpColClickEvent(){
