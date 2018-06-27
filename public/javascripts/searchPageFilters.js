@@ -452,10 +452,16 @@ $(document).ready(function() {
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
                 pagedOipaLink = oipaLink + '&page='+ pageNumber;
-                $('.modal').show();
+                //$('.modal').show();
+                $('#showResults').animate({opacity: 0.4},500,function(){
+                    $('.modal').show();
+                });
                 $.getJSON(pagedOipaLink,{
                     format: "json"
                 }).done(function(json){
+                    $('#showResults').animate({opacity: 1},500,function(){
+                        $('.modal').hide();
+                    });
                     if(window.searchType == 'F'){
                         $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
                     }
@@ -530,7 +536,7 @@ $(document).ready(function() {
                     console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
                 })
                 .complete(function(){
-                    $('.modal').hide();
+                    //$('.modal').hide();
                     generateBudgetValues();
                 });
             }
@@ -563,12 +569,17 @@ $(document).ready(function() {
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
-        $('.modal').show();
+        $('#showResults').animate({opacity: 0.4},500,function(){
+            $('.modal').show();
+        });
         $.getJSON(oipaLink,{
             format: "json",
             async: false,
         })
         .done(function(json){
+            $('#showResults').animate({opacity: 1},500,function(){
+                $('.modal').hide();
+            });
             if(window.searchType == 'F'){
                 $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
             }
@@ -643,7 +654,7 @@ $(document).ready(function() {
                 }
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
-                hideLoader(i);
+                //hideLoader(i);
             });
             refreshPagination(json.count);
             // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
