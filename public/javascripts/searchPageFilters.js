@@ -530,14 +530,13 @@ $(document).ready(function() {
                         $('.modal').hide();
                         $('#showResults').append(tempString);
                     });
-                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
                     console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
                 })
                 .complete(function(){
-                    //$('.modal').hide();
+                    generateBudgetValues();
                 });
             }
         });
@@ -548,22 +547,30 @@ $(document).ready(function() {
     function generateBudgetValues(){
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
-            var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
-            var temp_response = '';
-            //$(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
-            $.ajax({
-                method: "GET",
-                async: false,
-                url: "/currency",
-                data: {amount: temp_amount, currency: temp_currency},
-            }).done(function(msg){
-                //console.log("saved: " + msg.output);
-                temp_response = msg.output;
-            });
-            //$(this).parent().children('.remove_loader').remove();
-            $(this).before(temp_response);
+            $(this).before('£' + addCommas(temp_amount));
         });
     };
+
+    // Backup of old code for emergency Fallback.
+    // function generateBudgetValues(){
+    //     $('.tpcbcv').each(function(){
+    //         var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
+    //         var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
+    //         var temp_response = '';
+    //         //$(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
+    //         $.ajax({
+    //             method: "GET",
+    //             async: false,
+    //             url: "/currency",
+    //             data: {amount: temp_amount, currency: temp_currency},
+    //         }).done(function(msg){
+    //             //console.log("saved: " + msg.output);
+    //             temp_response = msg.output;
+    //         });
+    //         //$(this).parent().children('.remove_loader').remove();
+    //         $(this).before(temp_response);
+    //     });
+    // };
 
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
@@ -664,8 +671,8 @@ $(document).ready(function() {
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
         })
         .complete(function(){
+            generateBudgetValues();
         });
-        generateBudgetValues();
     };
 
     function hideLoader(blocker){
