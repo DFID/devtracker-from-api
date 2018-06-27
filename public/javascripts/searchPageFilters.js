@@ -530,6 +530,7 @@ $(document).ready(function() {
                         $('.modal').hide();
                         $('#showResults').append(tempString);
                     });
+                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
@@ -538,7 +539,6 @@ $(document).ready(function() {
                 .complete(function(){
                     //$('.modal').hide();
                 });
-                generateBudgetValues();
             }
         });
         // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
