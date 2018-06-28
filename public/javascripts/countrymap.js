@@ -143,7 +143,7 @@
                          .openOn(map);
          }
         });
-
+        var markerArray = [];
         for(var i = 0; i < locations.length; i++){
             var location = locations[i];
             //console.log(location.point.point.latitude);
@@ -170,6 +170,13 @@
                         break;
                 }
                 markers.addLayer(marker);
+                markerArray.push(marker);
+                if(projectType == "global"){
+                    if(i==locations.length-1){
+                        var group3 = L.featureGroup(markerArray);
+                        map.fitBounds(group3.getBounds());
+                    }
+                }
             }
             catch(e){
                 latlng = new L.LatLng(0,0);   
