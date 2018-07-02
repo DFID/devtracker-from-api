@@ -389,7 +389,7 @@ module CountryHelpers
         end
       end
 
-      highLevelSectorListData = high_level_sector_list( RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country=#{n}", "all_sectors", "High Level Code (L1)", "High Level Sector Description")    
+      #highLevelSectorListData = high_level_sector_list( RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"", "all_sectors", "High Level Code (L1)", "High Level Sector Description")    
 
       returnObject = {
             :activeProjectDeptWise      => activeProjectDeptWise,
