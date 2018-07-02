@@ -344,4 +344,58 @@ module CountryHelpers
     end
     tempHash
   end
+
+  def get_country_dept_wise_stats(countryCode)
+      countryAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
+
+      countryProjectData = JSON.parse(countryAPI)
+      projectData = countryProjectData['results']
+      ogds = Oj.load(File.read('data/OGDs.json'))
+
+      activeProjectDeptWise = projectData.select {|project| project['activity_status']['code']=="2" }.to_a.group_by { |b| b["reporting_organisations"][0]["ref"]
+      }.map { |id, bs|
+        {
+                "id"    => id,
+                "dept"  => "",
+                "count" => bs.inject(0) { |v, b| v + 1 },
+            }
+        }.sort_by{ |k| k["count"]}.reverse
+      totalActiveProjectCount=projectData.select {|project| project['activity_status']['code']=="2" }.length
+        
+      activeProjectDeptWise.each do |activeProjectDept|
+        tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(activeProjectDept["id"])}
+        tempOgd.each do |o|
+          #relevantReportingOrgsFinal.push(o[1]["name"])
+          activeProjectDept["dept"] = o[1]["name"]
+        end
+      end        
+
+      closeProjectDeptWise = projectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.to_a.group_by { |b| b["reporting_organisations"][0]["ref"]
+      }.map { |id, bs|
+        {
+                "id"    => id,
+                "dept"  => "",
+                "count" => bs.inject(0) { |v, b| v + 1 },
+            }
+        }.sort_by{ |k| k["count"]}.reverse
+
+      totalClosedProjectCount=projectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.length
+
+      closeProjectDeptWise.each do |closeProjectDept|
+        tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(closeProjectDept["id"])}
+        tempOgd.each do |o|
+          #relevantReportingOrgsFinal.push(o[1]["name"])
+          closeProjectDept["dept"] = o[1]["name"]
+        end
+      end
+
+      highLevelSectorListData = high_level_sector_list( RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country=#{n}", "all_sectors", "High Level Code (L1)", "High Level Sector Description")    
+
+      returnObject = {
+            :activeProjectDeptWise      => activeProjectDeptWise,
+            :totalActiveProjectCount    => totalActiveProjectCount,
+            :closeProjectDeptWise       => closeProjectDeptWise,
+            :totalClosedProjectCount    => totalClosedProjectCount
+            }  
+  end
 end
