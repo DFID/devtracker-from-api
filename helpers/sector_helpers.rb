@@ -40,6 +40,7 @@ module SectorHelpers
 		      end
 	end	
 
+
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
   		sectorValues  = JSON.parse(apiUrl)
@@ -160,5 +161,14 @@ module SectorHelpers
   		data['locationCountryFilters'] = locationCountryFilters
   		data['locationRegionFilters'] = locationRegionFilters
   		data
+	 end
+
+	 def get_hash_data_with_high_level_sector_name(hashData)
+	 	highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+	 	hashData.each do |result|
+	 		result["higherSectorName"] = highLevelSector.select{|k| k["Code (L3)"].to_s==result["sectorId"]}.map{|x| x["High Level Sector Description"]}[0]
+	 	end
+
+	 	return hashData
 	 end
 end
