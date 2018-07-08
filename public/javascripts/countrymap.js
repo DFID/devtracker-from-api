@@ -175,6 +175,9 @@
                     if(i==locations.length-1){
                         var group3 = L.featureGroup(markerArray);
                         map.fitBounds(group3.getBounds());
+                        if(map.getZoom() > 12){
+                            map.setZoom(map.getZoom() - 9);
+                        }
                     }
                 }
             }
