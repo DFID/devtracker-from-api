@@ -11,7 +11,7 @@ O -> Other Govt Departments
 $(document).ready(function() {
     refreshPagination(window.project_count);
     var oipaLink = '';
-
+    var oipaLink2 = '';
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
@@ -24,6 +24,7 @@ $(document).ready(function() {
             break;
         case 'F':
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&reporting_organisation='+window.reportingOrgs+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            console.log(oipaLink);
             break;
         case 'S':
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -105,8 +106,6 @@ $(document).ready(function() {
             step : (Math.round(window.maxBudget / 100) * 100)/100,
             values: [0,window.maxBudget],
             slide: function( event, ui ) {
-                //$( "#amount" ).html( "£" + addCommas(ui.values[0]) + " - £" + addCommas(ui.values[1]) );
-                //$( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 40%; font-size: 0.8em;" value="£'+addCommas(ui.values[0])+'"> - <input id="budget_slider_end" value="£'+addCommas(ui.values[1])+'" style="color: black; width: 40%; font-size: 0.8em;">');
                 $('#budget_slider_start').val(addCommas('£'+ui.values[0]));
                 $('#budget_slider_end').val(addCommas('£'+ui.values[1]));
             },
@@ -117,7 +116,6 @@ $(document).ready(function() {
                 generateProjectListAjax(oipaLink);
             }
         });
-        //$( "#amount" ).html( "£" + addCommas($( "#slider-vertical" ).slider( "values", 0 )) + " - £" + addCommas($( "#slider-vertical" ).slider( "values", 1 )) );
         $( "#amount" ).html('<input id="budget_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 0 ))+'"> - <input id="budget_slider_end" value="£'+addCommas($( "#slider-vertical" ).slider( "values", 1 ))+'" style="color: black; width: 35%; font-size: 0.8em;"><button id="budget_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
         $('#date-range').html('<input id="date_slider_start" style="color: black; width: 35%; font-size: 0.8em;" value=""> - <input id="date_slider_end" value="" style="color: black; width: 35%; font-size: 0.8em;"><button id="date_slider_update" style="font-size: 0.8em; padding: 0px; margin: 0px 0px 0px 5px; width: 13%; height: 25px;">Go</button>');
         
@@ -161,7 +159,6 @@ $(document).ready(function() {
             //TO DO
             }*/
         });
-        //$('#date-range').html(StartDt.customFormat("#DD# #MMM# #YYYY#") + ' - ' + EndDt.customFormat("#DD# #MMM# #YYYY#"));
         $('#date_slider_start').datepicker({
             changeMonth: true,
             changeYear: true
@@ -186,153 +183,155 @@ $(document).ready(function() {
         });
         attachFilterExpColClickEvent();
     };
-    function refreshLHSFilters(projectStatus){
+    //Methods for generating the LHS filters
+    //Sector filter
+    function populateSectorFilters(sectorList){
+        if(sectorList.length > 0){
+            $('#sector-filter').show();
+            var tempSectors = '';
+            $.each(sectorList,function(i,val){
+                tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
+            });
+            tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
+            $('#sector-filter').html(tempSectors);
+        }
+        else{
+            $('#sector-filter').hide();
+        }
+    }
+    //Document type filter
+    function populateDocumentTypeFilters(documentTypes){
+        if(documentTypes.length > 0){
+            $('#document-filter').show();
+            var tempDocuments = '';
+            $.each(documentTypes,function(i,val){
+                tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
+            });
+            tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
+            $('#document-filter').html(tempDocuments);
+        }
+        else{
+            $('#document-filter').hide();
+        }
+    }
+    //Implementing org filters
+    function populateImplOrgFilters(orgList){
+        if(orgList.length > 0){
+            $('#organisation-filter').show();
+            var tempOrgs = '';
+            $.each(orgList,function(i,val){
+                tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
+            });
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  />';
+            $('#organisation-filter').html(tempOrgs);
+        }
+        else{
+            $('#organisation-filter').hide();
+        }
+    }
+    //Populating country location filters
+    function populateLocCountryFilters(countryList){
+        if(countryList.length > 0){
+            $('#sector-country-filter').show();
+            var tempCountryLocations = '';
+            $.each(countryList,function(i, val){
+                tempCountryLocations = tempCountryLocations + '<li><label for="location_country_'+val['recipient_country']['code']+'" title="'+val['recipient_country']['name']+'"><input id="location_country_'+val['recipient_country']['code']+'" type="checkbox" value="'+val['recipient_country']['code']+'" class="location_country" name="locationCountry">'+val['recipient_country']['name']+'</label></li>';
+            });
+            tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempCountryLocations + '</ul></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
+            $('#sector-country-filter').html(tempCountryLocations);
+        }
+        else{
+            $('#sector-country-filter').hide();
+        }
+    }
+    //Populating region location filters
+    function populateLocRegionFilters(regionList){
+        if(regionList.length > 0){
+            $('#sector-region-filter').show();
+            var tempRegionLocations = '';
+            $.each(regionList,function(i, val){
+                tempRegionLocations = tempRegionLocations + '<li><label for="location_region_'+val['recipient_region']['code']+'" title="'+val['recipient_region']['name']+'"><input id="location_region_'+val['recipient_region']['code']+'" type="checkbox" value="'+ val['recipient_region']['code']+'" class="location_region" name="locationRegion">'+val['recipient_region']['name']+'</label></li>';
+            });
+            tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempRegionLocations + '</ul></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
+            $('#sector-region-filter').html(tempRegionLocations);
+        }
+        else{
+            $('#sector-region-filter').hide();
+        }
+    }
+    function refreshLHSFiltersv2(projectStatus){
         $('#sector-filter').html('Refreshing sector filter<input type="hidden" id="selected_sectors" value=""  />');
         $('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
         $('#organisation-filter').html('Refreshing organisation filter<input type="hidden" id="selected_implementingOrg_type" value=""  />');
+        $('#budget-slider-filter').html('Refreshing..');
+        $('#date-slider-filter').html('Refreshing..');
+        $('#sector-filter').show();
+        $('#document-filter').show();
+        $('#organisation-filter').show();
         if(window.searchType != 'S'){
-                var tempURL = '';
-                if(window.searchType == 'C')
-                    tempURL = '/getCountryFilters?countryCode='+window.CountryCode+'&projectStatus='+projectStatus;
-                else if (window.searchType == 'F')
-                    tempURL = '/getFTSFilters?query='+window.searchQuery+'&projectStatus='+projectStatus;
-                else if (window.searchType == 'R')
-                    tempURL = '/getRegionFilters?regionCode='+window.RegionCode+'&projectStatus='+projectStatus;
-                else
-                    tempURL = '/getOGDFilters?ogd='+window.ogd_code+'&projectStatus='+projectStatus;
-                $.getJSON(tempURL,{
-                    format: "json",
-                    async: false
-                }).done(function(msg){
-                    window.maxBudget = msg.output.project_budget_higher_bound;
-                    window.StartDate = msg.output.actualStartDate;
-                    window.EndDate = msg.output.plannedEndDate;
-                    //Populating location filters
-                    //TO-DO
-                    //Populating sector filter
-                    if(msg.output.highLevelSectorList.length > 0){
-                        $('#sector-filter').show();
-                        var tempSectors = '';
-                        $.each(msg.output.highLevelSectorList,function(i,val){
-                            tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
-                        });
-                        tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
-                        $('#sector-filter').html(tempSectors);
-                    }
-                    else{
-                        $('#sector-filter').hide();
-                    }
-                    //populating dcoument types filter
-                    if(msg.output.document_types.length > 0){
-                        $('#document-filter').show();
-                        var tempDocuments = '';
-                        $.each(msg.output.document_types,function(i,val){
-                            tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
-                        });
-                        tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
-                        $('#document-filter').html(tempDocuments);
-                    }
-                    else{
-                        $('#document-filter').hide();
-                    }
-                    //implementing org filters
-                    if(msg.output.implementingOrg_types.length > 0){
-                        $('#organisation-filter').show();
-                        var tempOrgs = '';
-                        $.each(msg.output.implementingOrg_types,function(i,val){
-                            tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
-                        });
-                        tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  />';
-                        $('#organisation-filter').html(tempOrgs);
-                    }
-                    else{
-                        $('#organisation-filter').hide();
-                    }
-                    //Budget and date sliders
-                    $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
-                    $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
-                    refreshLHSButtons();
-                });
-        }
-        else if(window.searchType == 'S'){
-            var tempURL = '/getSectorFilters?sectorCode='+window.SectorCode+'&projectStatus='+projectStatus;
-            $.getJSON(tempURL,{
-                format: "json",
-                async: false
-            }).done(function(msg){
-                window.maxBudget = msg.output.project_budget_higher_bound;
-                window.StartDate = msg.output.actualStartDate;
-                window.EndDate = msg.output.plannedEndDate;
-                $('#sector-region-filter').html('Refreshing..<input type="hidden" id="locationRegionFilterStates" value=""  />');
-                $('#sector-country-filter').html('Refreshing..<input type="hidden" id="locationCountryFilterStates" value=""  />');
-                //Populating country location filters
-                if(msg.output.LocationCountries.length > 0){
-                    $('#sector-country-filter').show();
-                    var tempCountryLocations = '';
-                    $.each(msg.output.LocationCountries,function(i, val){
-                        tempCountryLocations = tempCountryLocations + '<li><label for="location_country_'+val['recipient_country']['code']+'" title="'+val['recipient_country']['name']+'"><input id="location_country_'+val['recipient_country']['code']+'" type="checkbox" value="'+val['recipient_country']['code']+'" class="location_country" name="locationCountry">'+val['recipient_country']['name']+'</label></li>';
-                    });
-                    tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempCountryLocations + '</ul></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
-                    $('#sector-country-filter').html(tempCountryLocations);
-                }
-                else{
-                    $('#sector-country-filter').hide();
-                }
-                //Populating region location filters
-                if(msg.output.LocationRegions.length > 0){
-                    $('#sector-region-filter').show();
-                    var tempRegionLocations = '';
-                    $.each(msg.output.LocationRegions,function(i, val){
-                        tempRegionLocations = tempRegionLocations + '<li><label for="location_region_'+val['recipient_region']['code']+'" title="'+val['recipient_region']['name']+'"><input id="location_region_'+val['recipient_region']['code']+'" type="checkbox" value="'+ val['recipient_region']['code']+'" class="location_region" name="locationRegion">'+val['recipient_region']['name']+'</label></li>';
-                    });
-                    tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempRegionLocations + '</ul></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
-                    $('#sector-region-filter').html(tempRegionLocations);
-                }
-                else{
-                    $('#sector-region-filter').hide();
-                }
+            var apiType = window.searchType;
+            var apiParams = '';
+            var projectStatus = projectStatus;
+            //Prepare the API call parameters
+            if(window.searchType == 'C')
+                apiParams = window.CountryCode;
+            else if (window.searchType == 'F')
+                apiParams = window.searchQuery;
+            else if (window.searchType == 'R')
+                apiParams = window.RegionCode;
+            else
+                apiParams = window.ogd_code;
+            //Prepare the API parameters in one single string
+            var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
+            // Start making the parallel api calls
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList){
+                window.maxBudget = projectnBudgetData[0].output;
+                window.StartDate = startDate[0].output;
+                window.EndDate = endDate[0].output;
                 //Populating sector filter
-                if(msg.output.highLevelSectorList.length > 0){
-                    $('#sector-filter').show();
-                    var tempSectors = '';
-                    $.each(msg.output.highLevelSectorList,function(i,val){
-                        tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
-                    });
-                    tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
-                    $('#sector-filter').html(tempSectors);
-                }
-                else{
-                    $('#sector-filter').hide();
-                }
+                populateSectorFilters(sectorData[0].output);
                 //populating dcoument types filter
-                if(msg.output.document_types.length > 0){
-                    $('#document-filter').show();
-                    var tempDocuments = '';
-                    $.each(msg.output.document_types,function(i,val){
-                        tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
-                    });
-                    tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
-                    $('#document-filter').html(tempDocuments);
-                }
-                else{
-                    $('#document-filter').hide();
-                }
+                populateDocumentTypeFilters(documentTypeList[0].output);
                 //implementing org filters
-                if(msg.output.implementingOrg_types.length > 0){
-                    $('#organisation-filter').show();
-                    var tempOrgs = '';
-                    $.each(msg.output.implementingOrg_types,function(i,val){
-                        tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
-                    });
-                    tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  />';
-                    $('#organisation-filter').html(tempOrgs);
-                }
-                else{
-                    $('#organisation-filter').hide();
-                }
+                populateImplOrgFilters(implOrgList[0].output);
                 //Budget and date sliders
                 $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
                 $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
+                $('.activity_status').removeAttr('disabled');
+                refreshLHSButtons();
+            });
+        }
+        else if(window.searchType == 'S'){
+            $('#sector-region-filter').html('Refreshing..<input type="hidden" id="locationRegionFilterStates" value=""  />');
+            $('#sector-country-filter').html('Refreshing..<input type="hidden" id="locationCountryFilterStates" value=""  />');
+            $('#sector-region-filter').show();
+            $('#sector-country-filter').show();
+            var apiType = window.searchType;
+            var apiParams = window.SectorCode;
+            var projectStatus = projectStatus;
+            //Prepare the API parameters in one single string
+            var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
+            // Start making the parallel api calls
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString),$.getJSON('/getSectorSpecificFilters?sectorCode='+apiParams+'&projectStatus='+projectStatus))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,sectorLocFilters){
+                window.maxBudget = projectnBudgetData[0].output;
+                window.StartDate = startDate[0].output;
+                window.EndDate = endDate[0].output;
+                //Populating country location filters
+                populateLocCountryFilters(sectorLocFilters[0].output.LocationCountries);
+                //Populating region location filters
+                populateLocRegionFilters(sectorLocFilters[0].output.LocationRegions);
+                //Populating sector filter
+                populateSectorFilters(sectorData[0].output);
+                //populating dcoument types filter
+                populateDocumentTypeFilters(documentTypeList[0].output);
+                //implementing org filters
+                populateImplOrgFilters(implOrgList[0].output);
+                //Budget and date sliders
+                $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
+                $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
+                $('.activity_status').removeAttr('disabled');
                 refreshLHSButtons();
             });
         }
@@ -408,6 +407,7 @@ $(document).ready(function() {
     });
 
     $('.activity_status').click(function(){
+        $('.activity_status').attr('disabled','disabled');
         var tmpStatusList = $('.activity_status:checked').map(function(){return $(this).val()}).get().join();
         if(tmpStatusList.length > 0){
             $('#activity_status_states').val(tmpStatusList);
@@ -415,12 +415,26 @@ $(document).ready(function() {
         else{
             $('#activity_status_states').val('1,2,3,4,5');
         }
+        switch (window.searchType){
+        case 'C':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
+            break;
+        case 'F':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&reporting_organisation='+window.reportingOrgs+'&document_link_category=&participating_organisation=';
+            break;
+        case 'S':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_sector='+window.SectorCode + '&recipient_country=&recipient_region=&document_link_category=&participating_organisation=';
+            break;
+        case 'R':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_recipient_region=&document_link_category=&participating_organisation=';
+            break;
+        case 'O':
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
+            break;
+    }
         refreshOipaLink(window.searchType,0);
-        $.when(refreshLHSFilters($('#activity_status_states').val())).done(function(){
-            generateProjectListAjax(oipaLink);
-        });
-        //generateProjectListAjax(oipaLink);
-        //refreshLHSFilters($('#activity_status_states').val());
+        generateProjectListAjax(oipaLink2);
+        refreshLHSFiltersv2($('#activity_status_states').val());
     });
     function setDefaultBorder(){
         $(".sort-proj-sectors").each(function(){
@@ -438,9 +452,16 @@ $(document).ready(function() {
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
                 pagedOipaLink = oipaLink + '&page='+ pageNumber;
+                //$('.modal').show();
+                $('#showResults').animate({opacity: 0.4},500,function(){
+                    $('.modal').show();
+                });
                 $.getJSON(pagedOipaLink,{
                     format: "json"
                 }).done(function(json){
+                    $('#showResults').animate({opacity: 1},500,function(){
+                        $('.modal').hide();
+                    });
                     if(window.searchType == 'F'){
                         $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
                     }
@@ -506,13 +527,16 @@ $(document).ready(function() {
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
                         //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                         var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        //$('.modal').hide();
                         $('#showResults').append(tempString);
                     });
-                    generateBudgetValues();
                 })
                 .fail(function(error){
                     $('#showResults').text(error.toSource());
                     console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+                })
+                .complete(function(){
+                    generateBudgetValues();
                 });
             }
         });
@@ -523,29 +547,45 @@ $(document).ready(function() {
     function generateBudgetValues(){
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
-            var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
-            var temp_response = '';
-            $.ajax({
-                method: "GET",
-                async: false,
-                url: "/currency",
-                data: {amount: temp_amount, currency: temp_currency},
-            }).done(function(msg){
-                //console.log("saved: " + msg.output);
-                temp_response = msg.output;
-            });
-            $(this).before(temp_response);
+            $(this).before('£' + addCommas(temp_amount));
         });
     };
+
+    // Backup of old code for emergency Fallback.
+    // function generateBudgetValues(){
+    //     $('.tpcbcv').each(function(){
+    //         var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
+    //         var temp_currency = $(this).children('.total_plus_child_budget_currency_value_cur').text();
+    //         var temp_response = '';
+    //         //$(this).parent().prepend('<span class="remove_loader">Loading total budget..</span>');
+    //         $.ajax({
+    //             method: "GET",
+    //             async: false,
+    //             url: "/currency",
+    //             data: {amount: temp_amount, currency: temp_currency},
+    //         }).done(function(msg){
+    //             //console.log("saved: " + msg.output);
+    //             temp_response = msg.output;
+    //         });
+    //         //$(this).parent().children('.remove_loader').remove();
+    //         $(this).before(temp_response);
+    //     });
+    // };
 
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
+        $('#showResults').animate({opacity: 0.4},500,function(){
+            $('.modal').show();
+        });
         $.getJSON(oipaLink,{
             format: "json",
             async: false,
         })
         .done(function(json){
+            $('#showResults').animate({opacity: 1},500,function(){
+                $('.modal').hide();
+            });
             if(window.searchType == 'F'){
                 $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
             }
@@ -554,20 +594,14 @@ $(document).ready(function() {
             }
             //$('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
             returnedProjectCount = json.count;
-            refreshPagination(json.count);
+            // Moved the refreshPagination execution to a later state as part of code optimisation
+            //refreshPagination(json.count);
             if (!isEmpty(json.next)){
                 var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of '+returnedProjectCount+'</div>';
                 $('#showResults').append(tmpStr);
             }
             else{
                 var tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
-                /*var tmpStr = "";
-                if(typeof window.searchQuery !== 'undefined'){
-                    tmpStr = '<div class="search-result"><p style="padding-top:.33em">Your search - <em>'+window.searchQuery+'</em> - did not match any documents.  </p><p style="margin-top:1em">Suggestions:</p><ul style="margin:0 0 2em;margin-left:1.3em"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul></div>';
-                }
-                else{
-                    tmpStr = '<div>Now showing projects '+returnedProjectCount+' of '+returnedProjectCount+'</div>';
-                }*/
                 $('#showResults').append(tmpStr);
             }
             $.each(json.results,function(i,result){
@@ -617,42 +651,22 @@ $(document).ready(function() {
                 else{
                     validResults['description'] = "";
                 }
-                //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+validResults['total_plus_child_budget_currency_value']+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span class="budget">Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 $('#showResults').append(tempString);
             });
-            // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
-            // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
-            generateBudgetValues();
+            refreshPagination(json.count);
         })
         .fail(function(error){
-            //$('#showResults').text(error.toSource());
             console.log("AJAX error in request: " + JSON.stringify(error, null, 2));
+        })
+        .complete(function(){
+            generateBudgetValues();
         });
     };
 
     /*This method attaches the +/- sign to the relevant filter expansion label*/
     function attachFilterExpColClickEvent(){
        $('.proj-filter-exp-collapse-sign').click(function(){
-    
-         /*if($(this).text() == '+'){
-            $(this).text('-');
-            $(this).parent().find("div[name=countries]").show();
-            $(this).parent().find("div[name=regions]").show();
-            $(this).parent().find("ul").show();
-            $(this).parent().find(".mContent").show();
-         }
-         else{
-            $(this).text('+');
-            $(this).parent().find("div[name=countries]").hide();
-            $(this).parent().find("div[name=regions]").hide();
-            $(this).parent().find("ul").hide();
-            $(this).parent().find(".mContent").hide();
-         }*/
-
          if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
             $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
             //$(this).text('-');
@@ -674,22 +688,6 @@ $(document).ready(function() {
        $('.proj-filter-exp-collapse-text').click(function(){
     
           $(this).parent().find('.proj-filter-exp-collapse-sign').each(function(){
-    
-             /*if($(this).text() == '+'){
-                 $(this).text('-');
-                 $(this).parent().find("div[name=countries]").show('slow');
-                 $(this).parent().find("div[name=regions]").show('slow');
-                 $(this).parent().find("ul").show('slow');
-                 $(this).parent().find(".mContent").show('slow');
-              }
-              else{
-                 $(this).text('+');
-                 $(this).parent().find("div[name=countries]").hide('slow');
-                 $(this).parent().find("div[name=regions]").hide('slow');
-                 $(this).parent().find("ul").hide('slow');
-                 $(this).parent().find(".mContent").hide('slow');
-              }*/
-
             if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
                 $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
                 //$(this).text('-');
@@ -708,7 +706,7 @@ $(document).ready(function() {
              }
           });
        });
-       $('#status-filter').children('.proj-filter-exp-collapse-text').click();
+       //$('#status-filter').children('.proj-filter-exp-collapse-text').click();
     }
     attachFilterExpColClickEvent();
     $('#status-filter').children('.proj-filter-exp-collapse-text').click();
@@ -727,12 +725,12 @@ $(document).ready(function() {
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
-    $( document ).ajaxStart(function() {
-        $('.modal').show();
-    });
-    $( document ).ajaxStop(function() {
-        $('.modal').hide();
-    });
+    // $( document ).ajaxStart(function() {
+    //     $('.modal').show();
+    // });
+    // $( document ).ajaxStop(function() {
+    //     $('.modal').hide();
+    // });
     function isEmpty(val){
         return (val === undefined || val == null || val.length <= 0) ? true : false;
     }
