@@ -258,28 +258,10 @@ module ProjectHelpers
             projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
             projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
         end
-
-        # Map the input data structure so that it matches the required input for Tilestream
-
-        # projectValuesMapInput = projectBudgetValues.map do |elem|
-        # {
-        #     elem["recipient_country"]["code"] => {
-        #          "country" => countriesList.find do |source|
-        #                           source["code"].to_s == elem["recipient_country"]["code"]
-        #                       end["name"],  
-        #          "id" => elem["recipient_country"]["code"],
-        #          "projects" => projectCountValues.find do |project|
-        #                            project["recipient_country"]["code"].to_s == elem["recipient_country"]["code"]
-        #                        end["count"],
-        #           "budget" => elem["budget"],
-        #          "flag" => '/images/flags/' + elem["recipient_country"]["code"].downcase + '.png'
-        #         }
-        # }
-        # end
-        # Edit the returned hash object so that the data is in the correct format (e.g. remove enclosing [])
-        #puts projectValuesMapInput
-        #projectValuesMapInput.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
-        projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},")
+        finalOutput = Array.new
+        finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
+        finalOutput.push(projectDataHash)
+        finalOutput
     end
 
     
