@@ -347,4 +347,140 @@ module CountryHelpers
     end
     tempHash
   end
+
+  def get_country_dept_wise_stats(countryCode)
+      countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
+      countryDeptSectorAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
+      countryDeptBudgetAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country="+countryCode+"&order_by=budget_period_start_year,budget_period_start_quarter"
+
+      countryDeptProjectData = JSON.parse(countryDeptProjectAPI)
+      deptProjectData = countryDeptProjectData['results']
+
+      countryDeptSectorData = JSON.parse(countryDeptSectorAPI)
+      deptSectorData = countryDeptSectorData['results']
+
+      countryDeptBudgetData = JSON.parse(countryDeptBudgetAPI)
+      deptBudgetData = countryDeptBudgetData['results']
+
+
+      ogds = Oj.load(File.read('data/OGDs.json'))
+
+      ####### Department Wise Active & Closed Project Count ###################
+
+      activeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="2" }.to_a.group_by { |b| b["reporting_organisations"][0]["narratives"][0]["text"]
+      }.map { |dept, bs|
+        {
+                #{}"id"    => id,
+                "dept"  => dept,
+                "count" => bs.inject(0) { |v, b| v + 1 },
+            }
+        }.sort_by{ |k| k["count"]}.reverse
+      totalActiveProjectCount=deptProjectData.select {|project| project['activity_status']['code']=="2" }.length
+        
+      # activeProjectDeptWise.each do |activeProjectDept|
+      #   tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(activeProjectDept["id"])}
+      #   tempOgd.each do |o|
+      #     #relevantReportingOrgsFinal.push(o[1]["name"])
+      #     activeProjectDept["dept"] = o[1]["name"]
+      #   end
+      # end        
+
+      closeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.to_a.group_by { |b| b["reporting_organisations"][0]["narratives"][0]["text"]
+      }.map { |dept, bs|
+        {
+                #{}"id"    => id,
+                "dept"  => dept,
+                "count" => bs.inject(0) { |v, b| v + 1 },
+            }
+        }.sort_by{ |k| k["count"]}.reverse
+
+      totalClosedProjectCount=deptProjectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.length
+
+      # closeProjectDeptWise.each do |closeProjectDept|
+      #   tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(closeProjectDept["id"])}
+      #   tempOgd.each do |o|
+      #     #relevantReportingOrgsFinal.push(o[1]["name"])
+      #     closeProjectDept["dept"] = o[1]["name"]
+      #   end
+      # end
+
+      ####### Department Wise Sector Wise Budget ###################
+
+      #highLevelSectorListData = high_level_sector_list( RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"", "all_sectors", "High Level Code (L1)", "High Level Sector Description")    
+      budgetSectorDeptList = deptSectorData.select {|sector| sector["value"].to_f!=0 }.to_a.map do |elem| 
+        {
+                "orgName"                => elem["reporting_organisation"]["primary_name"],
+                "sectorId"               => elem["sector"]["code"],
+                "higherLevelSectorName"       => "",
+                "budget"                 => elem["value"].to_i
+        }
+      end
+
+      budgetSectorDeptList = get_hash_data_with_high_level_sector_name(budgetSectorDeptList)
+
+      sumBudgetActiveSectorDeptWise = budgetSectorDeptList.group_by { |b| [b["orgName"],b["higherLevelSectorName"]]
+      }.map { |orgName, bs|
+        {
+                "orgName"           => orgName[0],
+                "higherLevelSectorName"  => orgName[1],
+                "budget"            => bs.inject(0) { |v, b| v + b["budget"] }
+            }
+        }
+        .sort_by{ |k| k["orgName"]}
+
+      sumBudgetActiveSector = sumBudgetActiveSectorDeptWise.group_by  { |b| b["higherLevelSectorName"]
+      }.map { |higherLevelSectorName, bs|
+        {
+                "higherLevelSectorName"  => higherLevelSectorName,
+                "budget"             => bs.inject(0) { |v, b| v + b["budget"] }
+            }
+        }
+        .sort_by{ |k| k["budget"]}.reverse
+
+      totalSectorBudget = 0
+      sumBudgetActiveSector.each do |sector|
+        totalSectorBudget = totalSectorBudget + sector['budget'].to_i
+      end  
+
+      distinctHigherSectorAnd5DacSectorIdList = budgetSectorDeptList.group_by { |b| [b["higherLevelSectorName"],b["sectorId"]]
+      }.map { |sector, bs|
+        {
+                "higherLevelSectorName"           => sector[0],
+                "5dacSectorId"                    => sector[1]
+            }
+        }
+
+      count5DacSectorHigherLevelWise = distinctHigherSectorAnd5DacSectorIdList.group_by { |b| b["higherLevelSectorName"]
+      }.map { |higherLevelSectorName, bs|
+        {
+                "higherLevelSectorName"    => higherLevelSectorName,
+                "count"                    => bs.inject(0) { |v, b| v + 1 }
+            }
+        }
+        .sort_by{ |k| k["count"]}.reverse  
+      
+      totalCount5DacSectorHigherLevelWise=0
+      count5DacSectorHigherLevelWise.each do |sector|
+        totalCount5DacSectorHigherLevelWise = totalCount5DacSectorHigherLevelWise + sector['count'].to_i
+      end
+
+      ####### Department Wise Budget Wise Budget ###################
+
+      currentFinancialYear = financial_year
+      sumYearWiseDeptBudget = get_actual_budget_per_dept_per_fy(deptBudgetData.select {|year| !year['value'].nil?}).select  {|year| year['fy']>= currentFinancialYear} 
+
+
+      returnObject = {
+            :activeProjectDeptWise         => activeProjectDeptWise,
+            :totalActiveProjectCount       => totalActiveProjectCount,
+            :closeProjectDeptWise          => closeProjectDeptWise,
+            :totalClosedProjectCount       => totalClosedProjectCount,
+            :sumBudgetActiveSector         => sumBudgetActiveSector,
+            :totalSectorBudget             => totalSectorBudget, 
+            :sumBudgetActiveSectorDeptWise => sumBudgetActiveSectorDeptWise,
+            :count5DacSectorHigherLevelWise=> count5DacSectorHigherLevelWise,
+            :totalCount5DacSectorHigherLevelWise => totalCount5DacSectorHigherLevelWise,
+            :sumYearWiseDeptBudget         => sumYearWiseDeptBudget  
+            }  
+  end
 end
