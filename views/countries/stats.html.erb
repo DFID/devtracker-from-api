@@ -35,7 +35,7 @@
               </tr>
             <% end %>
             <tr>
-                <td style="text-align:right;">Total:</td>
+                <td style="text-align:right;">Total </td>
                 <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalActiveProjectCount]%></td>
             </tr>
           </tbody>
@@ -59,7 +59,7 @@
               </tr>
             <% end %>
             <tr>
-                <td style="text-align:right;">Total:</td>
+                <td style="text-align:right;">Total </td>
                 <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalClosedProjectCount]%></td>
             </tr>
           </tbody>
@@ -77,18 +77,42 @@
             </thead>
             <% statsData[:sumBudgetActiveSector].each do |sector| %>
               <tr>
-                <td><%= sector["higherSectorName"] %></td>
+                <td><%= sector["higherLevelSectorName"] %></td>
                 <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['budget'])%></td>
               </tr>
             <% end %>
-            <!-- <tr>
-                <td style="text-align:right;">Total:</td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalClosedProjectCount]%></td>
-            </tr> -->
+            <tr>
+                <td style="text-align:right;">Total </td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(statsData[:totalSectorBudget])%></td>
+            </tr>
           </tbody>
         </table>
     </div>
 </div>
+<div class="row" style="margin-top: 20px">
+  <div class="twelve columns">
+        <h3 class="section-group-title">Total Sectors Count</h3>
+        <table class="transactions-table oda-table" style="width:100%">
+          <tbody>
+            <thead>
+              <th></th>
+              <th></th>
+            </thead>
+            <% statsData[:count5DacSectorHigherLevelWise].each do |sector| %>
+              <tr>
+                <td><%= sector["higherLevelSectorName"] %></td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['count'])%></td>
+              </tr>
+            <% end %>
+            <tr>
+                <td style="text-align:right;">Total </td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(statsData[:totalCount5DacSectorHigherLevelWise])%></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="row" style="margin-top: 20px">
   <div class="twelve columns">
         <h3 class="section-group-title">Sectors per Government Department (active)</h3>
@@ -100,16 +124,33 @@
             </thead>
             <% statsData[:sumBudgetActiveSectorDeptWise].each do |sector| %>
               <tr>
-                <td><%= sector["orgName"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= sector["higherSectorName"] %></td>
+                <td><%=sector["orgName"] %></td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= sector["higherLevelSectorName"] %></td>
                 <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['budget'])%></td>
               </tr>
             <% end %>
-            <!-- <tr>
-                <td style="text-align:right;">Total:</td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalClosedProjectCount]%></td>
-            </tr> -->
           </tbody>
         </table>
     </div>
 </div>  
+
+<div class="row" style="margin-top: 20px">
+  <div class="twelve columns">
+        <h3 class="section-group-title">Budget Totals</h3>
+        <table class="transactions-table oda-table" style="width:100%">
+          <tbody>
+            <thead>
+              <th></th>
+              <th></th>
+            </thead>
+            <% statsData[:sumYearWiseDeptBudget].each do |year| %>
+              <tr>
+                <td><%= financial_year_formatter(year['fy']) %></td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= year['dept'] %></td>
+                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(year['value'])%></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+    </div>
+</div>
