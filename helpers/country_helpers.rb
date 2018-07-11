@@ -366,7 +366,7 @@ module CountryHelpers
       ogds = Oj.load(File.read('data/OGDs.json'))
 
       ####### Department Wise Active & Closed Project Count ###################
-
+      deptProjectData = deptProjectData.select {|project| project['activity_status']!=nil}
       activeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="2" }.to_a.group_by { |b| b["reporting_organisations"][0]["narratives"][0]["text"]
       }.map { |dept, bs|
         {
