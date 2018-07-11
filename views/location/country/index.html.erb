@@ -68,7 +68,7 @@
         <%dfid_bottom_table_data.each do |key,val|%>
           <%if val["projects"] > 0 && val["budget"] > 0%>
             <tr>
-              <td><%= val['country']%></td>
+              <td><a href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
               <td><%= val['projects']%></td>
               <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
               <td>
