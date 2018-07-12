@@ -52,13 +52,13 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -662,6 +662,21 @@ get '/location/country/?' do
 			:dfid_country_map_data => 	map_data[0],
 			:dfid_bottom_table_data => map_data[1],
 			#:dfid_complete_country_list => 	dfid_complete_country_list,
+			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
+			:dfid_total_country_budget => total_country_budget_location
+		}
+end
+
+#Aid By Location Country Stats Page
+get '/location/locationStats/?' do
+  	settings.devtracker_page_title = 'Aid by Location Page'
+  	map_data = dfid_country_map_data()
+	erb :'location/country/location_stats', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			:dfid_country_map_data => 	map_data[0],
+			:dfid_bottom_table_data => map_data[1],
 			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
 			:dfid_total_country_budget => total_country_budget_location,
 			:sectorData => generateCountryData()
