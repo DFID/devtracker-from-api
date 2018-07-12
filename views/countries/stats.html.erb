@@ -21,136 +21,265 @@
 </div>
 <div class="row" style="margin-top: 20px">
     <div class="twelve columns">
-        <h3 class="section-group-title">Active Projects</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:activeProjectDeptWise].each do |activeProject| %>
-              <tr>
-                <td><%= activeProject["dept"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= activeProject["count"] %></td>
-              </tr>
-            <% end %>
+      <h3 class="section-group-title">Active Projects</h3>
+      <table id="dtActiveProjects" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Active Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:activeProjectDeptWise].each do |activeProject| %>
             <tr>
-                <td style="text-align:right;">Total </td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalActiveProjectCount]%></td>
+              <td><%= activeProject["dept"] %></td>
+              <td><%= activeProject["count"] %></td>
             </tr>
-          </tbody>
-        </table>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>
-
 <div class="row" style="margin-top: 20px">
     <div class="twelve columns">
-        <h3 class="section-group-title">Closed Projects</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:closeProjectDeptWise].each do |closeProject| %>
-              <tr>
-                <td><%= closeProject["dept"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= closeProject["count"] %></td>
-              </tr>
-            <% end %>
+      <h3 class="section-group-title">Closed Projects</h3>
+      <table id="dtClosedProjects" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Closed Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:closeProjectDeptWise].each do |closeProject| %>
             <tr>
-                <td style="text-align:right;">Total </td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%=statsData[:totalClosedProjectCount]%></td>
+              <td><%= closeProject["dept"] %></td>
+              <td><%= closeProject["count"] %></td>
             </tr>
-          </tbody>
-        </table>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>
 <div class="row" style="margin-top: 20px">
   <div class="twelve columns">
-        <h3 class="section-group-title">Total Sectors (active)</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:sumBudgetActiveSector].each do |sector| %>
-              <tr>
-                <td><%= sector["higherLevelSectorName"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['budget'])%></td>
-              </tr>
-            <% end %>
+      <h3 class="section-group-title">Total Sectors (active)</h3>
+      <table id="dtTotalSectorsActive" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>High Level Sector Name</th>
+            <th>Budget</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:sumBudgetActiveSector].each do |sector| %>
             <tr>
-                <td style="text-align:right;">Total </td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(statsData[:totalSectorBudget])%></td>
+              <td><%= sector["higherLevelSectorName"] %></td>
+              <td><%= Money.new(sector['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
-          </tbody>
-        </table>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>
 <div class="row" style="margin-top: 20px">
   <div class="twelve columns">
-        <h3 class="section-group-title">Total Sectors Count</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:count5DacSectorHigherLevelWise].each do |sector| %>
-              <tr>
-                <td><%= sector["higherLevelSectorName"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['count'])%></td>
-              </tr>
-            <% end %>
+      <h3 class="section-group-title">Total Sectors Count</h3>
+      <table id="dtSectorCount" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>High Level Sector Name</th>
+            <th>Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:count5DacSectorHigherLevelWise].each do |sector| %>
             <tr>
-                <td style="text-align:right;">Total </td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(statsData[:totalCount5DacSectorHigherLevelWise])%></td>
+              <td><%= sector["higherLevelSectorName"] %></td>
+              <td><%= sector['count'] %></td>
             </tr>
-          </tbody>
-        </table>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>
 
 <div class="row" style="margin-top: 20px">
   <div class="twelve columns">
-        <h3 class="section-group-title">Sectors per Government Department (active)</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:sumBudgetActiveSectorDeptWise].each do |sector| %>
-              <tr>
-                <td><%=sector["orgName"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= sector["higherLevelSectorName"] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(sector['budget'])%></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <h3 class="section-group-title">Sectors per Government Department (active)</h3>
+      <table id="dtSectPerGovDeptActive" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>High Level Sector Name</th>
+            <th>Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:sumBudgetActiveSectorDeptWise].each do |sector| %>
+            <tr>
+              <td><%=sector["orgName"] %></td>
+              <td><%= sector["higherLevelSectorName"] %></td>
+              <td><%= Money.new(sector['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th colspan="2" style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>  
 
 <div class="row" style="margin-top: 20px">
   <div class="twelve columns">
-        <h3 class="section-group-title">Budget Totals</h3>
-        <table class="transactions-table oda-table" style="width:100%">
-          <tbody>
-            <thead>
-              <th></th>
-              <th></th>
-            </thead>
-            <% statsData[:sumYearWiseDeptBudget].each do |year| %>
-              <tr>
-                <td><%= financial_year_formatter(year['fy']) %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= year['dept'] %></td>
-                <td style="border-left: 1px solid rgb(218, 218, 218)"><%= convert_numbers_to_human_readable_format(year['value'])%></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <h3 class="section-group-title">Budget Totals</h3>
+      <table id="dtbudgetTotal" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>FY</th>
+            <th>Department</th>
+            <th>Budget</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% statsData[:sumYearWiseDeptBudget].each do |year| %>
+            <tr>
+              <td><%= financial_year_formatter(year['fy']) %></td>
+              <td><%= year['dept'] %></td>
+              <td><%= Money.new(year['value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th colspan="2" style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<script type="text/javascript">
+  $(document).ready(function() {
+    function addCommas(nStr){
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    $('#dtActiveProjects').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+        total = api.column(1).data().reduce(function(a, b){
+          return parseInt(a) + parseInt(b);
+        }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html(total);
+      }
+    });
+    $('#dtClosedProjects').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+        total = api.column(1).data().reduce(function(a, b){
+          return parseInt(a) + parseInt(b);
+        }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html(total);
+      }
+    });
+    $('#dtSectorCount').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+        total = api.column(1).data().reduce(function(a, b){
+          return parseInt(a) + parseInt(b);
+        }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html(total);
+      }
+    });
+    $('#dtTotalSectorsActive').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+         total = api.column(1).data().reduce(function(a, b){
+           return parseInt(a) + parseInt(b.replace(/\D/g,''));
+         }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html('£'+addCommas(total));
+      }
+    });
+    $('#dtSectPerGovDeptActive').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+         total = api.column(2).data().reduce(function(a, b){
+           return parseInt(a) + parseInt(b.replace(/\D/g,''));
+         }, 0);
+        //Update footer data
+        $(api.column(2).footer()).html('£'+addCommas(total));
+      }
+    });
+    $('#dtbudgetTotal').DataTable({
+      "info": false,
+      "paging": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+         total = api.column(2).data().reduce(function(a, b){
+           return parseInt(a) + parseInt(b.replace(/\D/g,''));
+         }, 0);
+        //Update footer data
+        $(api.column(2).footer()).html('£'+addCommas(total));
+      }
+    });
+  });
+</script>
