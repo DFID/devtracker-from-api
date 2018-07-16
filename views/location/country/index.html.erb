@@ -45,28 +45,28 @@
     <h2 class="section-group-title">Countries with Active Projects</h2>
   </div>
 </div> -->
-<!-- <div class="row">
-  <div id="country-list" class="twelve columns">
-    <%# dfid_complete_country_list.each do |country| %>
-      <a href="/countries/<%#=country["recipient_country"]["code"]%>"><%#= country["recipient_country"]["name"] %></a> | 
-    <%# end %>    
-  </div>
-</div> --> 
-
 <div class="row">
-  <div id="country-list">
-    <% dfid_complete_country_list.each do |key,data|%>
-      <%if key == 'Oceania'%>
-      <% else %>
-        <div class="three columns">
-          <h4><%= key %></h4>
-          <% data.each do |item| %>
-            <%if item[1]['activeProjects'].to_i > 0 %>
-              <a href="/countries/<%= item[0] %>"><%= item[1]["name"]%></a>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
+  <div id="country-list" class="twelve columns">
+    <% dfid_complete_country_list.each do |country| %>
+      <a href="/countries/<%=country["recipient_country"]["code"]%>"><%= country["recipient_country"]["name"] %></a> | 
     <% end %>
   </div>
 </div>
+
+<!-- <div class="row">
+  <div id="country-list">
+    <%# dfid_complete_country_list.each do |key,data|%>
+      <%#if key == 'Oceania'%>
+      <%# else %>
+        <div class="three columns">
+          <h4><%#= key %></h4>
+          <%# data.each do |item| %>
+            <%#if item[1]['activeProjects'].to_i > 0 %>
+              <a href="/countries/<%#= item[0] %>"><%#= item[1]["name"]%></a>
+            <%# end %>
+          <%# end %>
+        </div>
+      <%# end %>
+    <%# end %>
+  </div>
+</div> -->
