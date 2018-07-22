@@ -942,3 +942,13 @@ padding: 9px 0px;
   height: auto;
   padding: 2px;
 }
+
+.locStatRepOrgTableHolder {
+  display: none;
+  position: absolute;
+}
+
+.showRepOrgList {
+  color: blue;
+  cursor: pointer;
+}

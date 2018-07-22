@@ -14,6 +14,7 @@
               <th>Projects Active</th>
               <th>Project Budget</th>
               <th>Top Sector</th>
+              <th>UK Government Departments (Count)</th>
           </tr>
       </thead>
       <tbody>
@@ -28,6 +29,29 @@
                 <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(3) %>%)
               <%end%>
             </td>
+            <td>
+              <% if reportingOrgData.key?(key) %>
+                <span class="showRepOrgList">
+                  <%= reportingOrgData[key].count %>
+                </span>
+                <div class="locStatRepOrgTableHolder">
+                  <table class="repOrgTable" class="display" style="width: 100%">
+                    <thead>
+                      <tr>
+                        <th>UK Government Department Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%reportingOrgData[key].each do |item|%>
+                        <tr>
+                          <td><%= returnDepartmentName(item)%></td>
+                        </tr>
+                      <%end%>  
+                    </tbody>
+                  </table>
+                </div>
+              <%end%>
+            </td>
             </tr>
           <%end%>
         <%end%>
@@ -40,10 +64,28 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 <script type="text/javascript">
   $(document).ready(function() {
-      $('#dataTable').DataTable({
-        "info":     false,
-        "paging": false
-      });
-      $('#dataTable').show();
-  } );
+    $('#dataTable').DataTable({
+      "info":     false,
+      "paging": false
+    });
+    $('#dataTable').show();
+    $('.repOrgTable').DataTable({
+      "info":     false,
+      "paging": false,
+      "searching": false
+    });
+    $('.showRepOrgList').hover(function(){
+      $('.locStatRepOrgTableHolder').hide();
+      var countPosition = $(this).offset();
+      console.log(countPosition);
+      var styles = {
+        top: countPosition.top - 420,
+        left: countPosition.left - 450,
+        display: "inline-table"
+      };
+      $(this).parent().children('.locStatRepOrgTableHolder').css(styles);
+    },function(){
+      $('.locStatRepOrgTableHolder').hide();
+    });
+  });
 </script>

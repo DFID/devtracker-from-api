@@ -322,6 +322,7 @@ module CommonHelpers
 
     #Implementing org type filters
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+    puts apiList[5]
     oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
@@ -472,5 +473,31 @@ module CommonHelpers
       countryHash[key[0]] = key[1].sort_by{ |x, y| -y["budget"] }
     end
     countryHash
+  end
+
+  #Provide a list of dependent reporting organisations grouped by country code
+  def generateReportingOrgsCountryWise()
+    oipa_reporting_orgs = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2"
+    oipa_reporting_orgs = Oj.load(oipa_reporting_orgs)
+    oipa_reporting_orgs = oipa_reporting_orgs['results']
+    countryHash = {}
+    oipa_reporting_orgs.each do |result|
+      if !countryHash.key?(result['recipient_country']['code'])
+        countryHash[result['recipient_country']['code']] = Array.new
+        countryHash[result['recipient_country']['code']].push(result['reporting_organisation']['organisation_identifier'])
+      else
+        if !countryHash[result['recipient_country']['code']].include?(result['reporting_organisation']['organisation_identifier'])
+          countryHash[result['recipient_country']['code']].push(result['reporting_organisation']['organisation_identifier'])
+        end
+      end
+    end
+    countryHash
+  end
+
+  #Return OGD name based on OGD code
+  def returnDepartmentName(deptCode)
+    ogds = Oj.load(File.read('data/OGDs.json'))
+    tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
+    tempOgd.values[0]['name']
   end
 end

@@ -661,7 +661,8 @@ get '/location/locationStats/?' do
 			:dfid_bottom_table_data => map_data[1],
 			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
 			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData()
+			:sectorData => generateCountryData(),
+			:reportingOrgData => generateReportingOrgsCountryWise()
 		}
 end
 
