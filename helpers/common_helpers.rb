@@ -242,17 +242,17 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'R')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_recipient_region=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'S')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_sector=#{listParams}")
