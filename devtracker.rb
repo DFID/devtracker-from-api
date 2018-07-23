@@ -685,7 +685,7 @@ get '/location/regionStats/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
+			:dfid_regional_projects_data => dfid_regional_projects_data("regionAll"),
 			:sectorData => generateRegionData(),
 			:reportingOrgData => generateReportingOrgsRegionWise(),
 			:activeProjectList => generateActiveProjectsRegionWise()
