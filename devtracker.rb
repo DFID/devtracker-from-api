@@ -669,7 +669,7 @@ end
 
 #Aid By Location Country Stats Page
 get '/location/locationStats/?' do
-  	settings.devtracker_page_title = 'Aid by Location Page'
+  	settings.devtracker_page_title = 'Aid by Location Country Stats Page'
   	map_data = dfid_country_map_data()
 	erb :'location/country/location_stats', 
 		:layout => :'layouts/layout',
@@ -691,7 +691,22 @@ get '/location/regional/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_regional_projects_data => dfid_regional_projects_data("region")			
+			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
+			:generateRegionData => generateRegionData()	
+		}
+end
+
+#Aid By Location regional Stats Page
+get '/location/regionStats/?' do
+  	settings.devtracker_page_title = 'Aid by Location Region Stats Page'
+	erb :'location/regional/region_stats', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
+			:sectorData => generateRegionData(),
+			:reportingOrgData => generateReportingOrgsRegionWise(),
+			:activeProjectList => generateActiveProjectsRegionWise()
 		}
 end
 

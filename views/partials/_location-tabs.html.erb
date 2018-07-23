@@ -2,19 +2,20 @@
     <div class="twelve columns">
         <div class="tab-bar-container">
             <div class="row">
-                <div class="projects-nav seven columns">
+                <div class="projects-nav eight columns">
                     <p>Project Level</p>
                     <nav>
                         <ul class="tab-bar">
                             <li <%= active=="country" ? "class='active'" : ""%>><a href="/location/country">Current <span>Projects</span></a></li>
                             <li <%= active=="locationStats" ? "class='active'" : ""%>><a href="/location/locationStats">Location <span>Stats</span></a></li>
                             <li <%= active=="regional" ? "class='active'" : ""%>><a href="/location/regional">Regional <span>Projects</span></a></li>
+                            <li <%= active=="regionStats" ? "class='active'" : ""%>><a href="/location/regionStats">Regional <span>Stats</span></a></li>
                             <li <%= active=="global" ? "class='active'" : ""%>><a href="/location/global">Global <span>Projects</span></a></li>
                         </ul>
                     </nav>
                 </div>          
 
-                <div class="button-row five columns">
+                <div class="button-row four columns">
                     <span>
                         <a id='Subscribe' href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new" title="Subscribe to receive updates on countries by email" class="button inform">&#9993; Subscribe</a>
                     </span>
