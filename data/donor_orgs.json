@@ -1,0 +1,34 @@
+{
+	"GB-GOV-1":
+	{
+		"name": "UK-DFID"
+	},
+	"GB-1":
+	{
+		"name": "UK-DFID (Projects with GB-1 as identifier)"
+	},
+	"XI-IATI-EC_ECHO":
+	{
+		"name": "EC-ECHO"
+	},
+	"SE-0":
+	{
+		"name": "Sweden-Sida"
+	},
+	"XM-DAC-7":
+	{
+		"name": "Netherlands-MFA"
+	},
+	"XI-IATI-EC_DEVCO":
+	{
+		"name": "EC-DEVCO"
+	},
+	"XM-DAC-2-10":
+	{
+		"name": "Belgium-DGD"
+	},
+	"DE-1":
+	{
+		"name": "Germany-BMZ-GIZ"
+	}
+}

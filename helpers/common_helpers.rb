@@ -459,7 +459,6 @@ module CommonHelpers
     end
     implementingOrg_type_list = implementingOrg_type_list.sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
   end
-
   #Serve the aid by location country page table data
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
@@ -520,5 +519,11 @@ module CommonHelpers
     ogds = Oj.load(File.read('data/OGDs.json'))
     tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
     tempOgd.values[0]['name']
+  end
+  # Returns the donor name based on the donor id
+  def returnDonorName(donorId)
+    donorData = Oj.load(File.read('data/donor_orgs.json'))
+    donorData = donorData.select{|key| key == donorId.to_s}.first
+    donorData[1]['name']
   end
 end
