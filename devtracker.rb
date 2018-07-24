@@ -198,7 +198,7 @@ end
 #donor Stats Page
 get '/countries/:country_code/donor_stats/?' do |n|
 	n = sanitize_input(n,"p").upcase
-	statsData = ''
+	donors = Oj.load(File.read('data/donor_orgs.json'))
 	activeClosedProjectList = get_country_donor_wise_projects(n)
 	country = get_country_details(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Donor Stats Page'
@@ -207,7 +207,8 @@ get '/countries/:country_code/donor_stats/?' do |n|
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		country: country,
-	 		activeClosedProjectList: activeClosedProjectList
+	 		activeClosedProjectList: activeClosedProjectList,
+	 		donors: donors
 	 	}
 end
 

@@ -32,19 +32,24 @@
           </tr>
         </thead>
         <tbody>
-          <% activeClosedProjectList.each do |key,val| %>
+          <%donors.each do |donor, donorData|%>
             <tr>
-              <%puts key%>
-              <td><%= returnDonorName(key.to_s)%></td>
-              <%if val["active_projects"] > 0 %>
-                <td><span style="color: green">Yes</span></td>
+              <td><%= donorData['name']%></td>
+              <%if activeClosedProjectList.key?(donor)%>
+                <%if activeClosedProjectList[donor]["active_projects"] > 0 %>
+                  <td><span style="color: green">Yes</span></td>
+                <%else%>
+                  <td><span style="color: red">No</span></td>
+                <%end%>
+                <td><%= activeClosedProjectList[donor]["active_projects"] %></td>
+                <td><%= activeClosedProjectList[donor]["closed_projects"] %></td>
               <%else%>
                 <td><span style="color: red">No</span></td>
+                <td>0</td>
+                <td>0</td>
               <%end%>
-              <td><%= val["active_projects"] %></td>
-              <td><%= val["closed_projects"] %></td>
             </tr>
-          <% end %>
+          <%end%>
         </tbody>
         <!-- <tfoot>
             <tr>
