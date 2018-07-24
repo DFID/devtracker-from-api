@@ -23,6 +23,7 @@
                                 <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/countries/<%= country[:code] %>/projects">Active Projects (<%=project_count%>)</a></li>
                             <%end%>
                             <li <%= active=="stats" ? "class='active'" : ""%>><a id='Stats' href="/countries/<%= country[:code] %>/stats">Country Stats</a></li>
+                            <li <%= active=="donorStats" ? "class='active'" : ""%>><a id='DonorStats' href="/countries/<%= country[:code] %>/donor_stats">Donor Stats</a></li>
                         </ul>
                     </nav>
                 </div>  

@@ -348,7 +348,48 @@ module CountryHelpers
     tempHash
   end
 
+  #Returns project list for the donor organisations
+  def get_country_donor_wise_projects(countryCode)
+    oipaAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&participating_organisation=#{settings.donor_org_ids}&fields=activity_status,participating_organisations,activity_plus_child_aggregation,aggregations&page_size=700"
+    parsedJSONData = Oj.load(oipaAPI)
+    totalProjectList = parsedJSONData['results']
+    # Remove any project that has an empty activity status
+    totalProjectList = totalProjectList.select{|project| project['activity_status']!=nil}
+    # Create a hash for storing active and closed project list based on the funding organisations.
+    donors = {}
+    # The following static value is assigned to handle an edge case as there are two identifiers present for DFID
+    donors['GB-GOV-1'] = {}
+    donors['GB-GOV-1']['active_projects'] = 0
+    donors['GB-GOV-1']['closed_projects'] = 0
+    # Iterate through the returned json list, pull participating orgs and push them inside the donors hash.
+    totalProjectList.each do |project|
+      project['participating_organisations'] = project['participating_organisations'].select{|org| org['role']['code'] == '1' }
+      project['participating_organisations'].each do |donorOrg|
+        if !donors.key?(donorOrg['ref']) && donorOrg['ref'] != 'GB-1'
+          donors[donorOrg['ref']] = {}
+          donors[donorOrg['ref']]['active_projects'] = 0
+          donors[donorOrg['ref']]['closed_projects'] = 0
+        end
+        if project['activity_status']['code'] == '2'
+          if donorOrg['ref'] == 'GB-1'
+            donors['GB-GOV-1']['active_projects'] = donors['GB-GOV-1']['active_projects'] + 1
+          else
+            donors[donorOrg['ref']]['active_projects'] = donors[donorOrg['ref']]['active_projects'] + 1
+          end
+        elsif project['activity_status']['code'] == '3' || project['activity_status']['code'] == '4'
+          if donorOrg['ref'] == 'GB-1'
+            donors['GB-GOV-1']['closed_projects'] = donors['GB-GOV-1']['closed_projects'] + 1
+          else
+            donors[donorOrg['ref']]['closed_projects'] = donors[donorOrg['ref']]['closed_projects'] + 1
+          end
+        end
+      end
+    end
+    donors = donors.select{|key| settings.donor_org_ids.split(",").include?(key)}
+  end
+
   def get_country_dept_wise_stats(countryCode)
+      puts get_country_donor_wise_projects(countryCode)
       countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
       countryDeptSectorAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
       countryDeptBudgetAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country="+countryCode+"&order_by=budget_period_start_year,budget_period_start_quarter"

@@ -458,4 +458,10 @@ module CommonHelpers
     end
     implementingOrg_type_list = implementingOrg_type_list.sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
   end
+
+  def returnDonorName(donorId)
+    donorData = Oj.load(File.read('data/donor_orgs.json'))
+    donorData = donorData.select{|key| key == donorId.to_s}.first
+    donorData[1]['name']
+  end
 end
