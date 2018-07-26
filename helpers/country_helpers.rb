@@ -388,9 +388,51 @@ module CountryHelpers
     donors = donors.select{|key| settings.donor_org_ids.split(",").include?(key)}
   end
 
+  # Returns donor wise sector, project and budget data for a country
+  def get_sect_proj_budg_data_for_donors(countryCode)
+    oipaAPI = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.donor_org_ids}&order_by=-value&group_by=sector,reporting_organisation&aggregations=value,activity_count&format=json&recipient_country="+countryCode
+    parsedJSONData = Oj.load(oipaAPI)
+    parsedJSONData = parsedJSONData['results']
+    # Replace the sector codes and names with their high level counter parts
+    parsedJSONData.each do |data|
+      if !data['sector'].nil?
+        tempHighLevelSectorInfo = get_high_lvl_sect_details(data['sector']['code'].to_s)
+        if !tempHighLevelSectorInfo[0].nil?
+          data['sector']['code'] = tempHighLevelSectorInfo[0]['High Level Code (L1)'].to_s
+          data['sector']['name'] = tempHighLevelSectorInfo[0]['High Level Sector Description'].to_s
+        else
+          data['sector']['code'] = '999999'
+          data['sector']['name'] = 'DAC 5 sector code not in system'
+        end
+      end
+    end
+    # Sort data based on reporting organisations
+    parsedJSONData = parsedJSONData.group_by{|data| data['reporting_organisation']['organisation_identifier']}
+    # Sum up the sector values and project counts and put them in a hash table
+    dataHash = {}
+    parsedJSONData.each do |key, val|
+      dataHash[key] = {}
+      val.each do |item|
+        if item['value'] == 'null' || item['value'].nil?
+          item['value'] = 0
+        end
+        if !dataHash[key].key?(item['sector']['code'].to_s)
+          dataHash[key][item['sector']['code'].to_s] = {}
+          dataHash[key][item['sector']['code'].to_s]['name'] = item['sector']['name']
+          dataHash[key][item['sector']['code'].to_s]['sectorCount'] = 1
+          dataHash[key][item['sector']['code'].to_s]['budget'] = item['value']
+        else
+          dataHash[key][item['sector']['code'].to_s]['sectorCount'] = dataHash[key][item['sector']['code'].to_s]['sectorCount'] + 1
+          dataHash[key][item['sector']['code'].to_s]['budget'] = dataHash[key][item['sector']['code'].to_s]['budget'] + item['value']
+        end
+      end
+    end
+    dataHash
+  end
+
   def get_country_dept_wise_stats(countryCode)
-      puts get_country_donor_wise_projects(countryCode)
       countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
+      puts "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
       countryDeptSectorAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
       countryDeptBudgetAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country="+countryCode+"&order_by=budget_period_start_year,budget_period_start_quarter"
 

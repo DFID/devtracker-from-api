@@ -210,7 +210,8 @@ get '/countries/:country_code/donor_stats/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
 	 		country: country,
 	 		activeClosedProjectList: activeClosedProjectList,
-	 		donors: donors
+	 		donors: donors,
+	 		:donorSectorData => get_sect_proj_budg_data_for_donors(n)
 	 	}
 end
 
@@ -754,11 +755,9 @@ get '/search/?' do
 		includeClosed = 0
 		activityStatusList = '2'
 	end
-	puts activityStatusList
 	#results = generate_searched_data(query,activityStatusList)
 	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
 	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
-	puts results['projects']['count']
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
