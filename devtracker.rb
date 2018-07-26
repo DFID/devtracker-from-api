@@ -122,6 +122,7 @@ get '/countries/:country_code/?' do |n|
 			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 			#oipa v3.1
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+			puts "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
@@ -208,7 +209,8 @@ get '/countries/:country_code/donor_stats/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
 	 		country: country,
 	 		activeClosedProjectList: activeClosedProjectList,
-	 		donors: donors
+	 		donors: donors,
+	 		:donorSectorData => get_sect_proj_budg_data_for_donors(n)
 	 	}
 end
 
@@ -718,11 +720,9 @@ get '/search/?' do
 		includeClosed = 0
 		activityStatusList = '2'
 	end
-	puts activityStatusList
 	#results = generate_searched_data(query,activityStatusList)
 	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
 	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
-	puts results['projects']['count']
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
