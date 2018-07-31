@@ -269,6 +269,7 @@ module CommonHelpers
     elsif (listType == 'F')
       # Total project list API call
       #apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB")
+      puts "activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation=#{settings.goverment_department_ids}"
       apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation=#{settings.goverment_department_ids}")
       # Sector values JSON API call
       apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&q=#{listParams}&reporting_organisation=#{settings.goverment_department_ids}&activity_status=#{activityStatus}")
