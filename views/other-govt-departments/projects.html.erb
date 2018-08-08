@@ -1,0 +1,23 @@
+<div class="hero">
+    <div id="page-title" class="row">
+        <div class="twelve columns">
+            <!-- <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people"> -->
+            <div>
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/department">Aid by Department</a></li>
+                        <li><%= ogd_title %></li>
+                    </ul>
+                </div>
+                <h1>
+                    <%= ogd_title %>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+<%= erb :'partials/_departments-tabs', :locals => { :active => "projects", :dept => dept, :project_count => dept[:totalActiveProjectCount] } %>
+</div>
+
+<%= erb :'partials/_project_list_dept', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :ogd_code => dept[:identifier], :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes, :deptName => dept[:name]} %>

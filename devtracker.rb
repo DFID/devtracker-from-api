@@ -37,6 +37,7 @@ require_relative 'helpers/search_helper.rb'
 require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
+require_relative 'helpers/department_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -50,6 +51,7 @@ include SearchHelper
 include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
+include DepartmentHelpers
 
 # Developer Machine: set global settings
 set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
@@ -896,25 +898,84 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	tempTransactions
 end
 
+#####################################################################
+#  DEPARTMENT PAGES
+#####################################################################
+
+#Department Summary Page
+
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
 	puts dept_id
+	dept = ''
+	
+	# if dept_id == 'DFID'
+	# 	redirect '/'
+	# end
+	
+	if dept_id == 'abs'
+		redirect '/sector'
+	end
+	
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	
+	#deptIdentifier = ''
+	
+	if ogds.has_key?(dept_id)
+		dept = get_department_details(dept_id)
+		deptIdentifier = dept[:identifier]
+	else
+		redirect '/department'
+	end
+	
+	if deptIdentifier == ''
+		redirect '/department'
+	end
+
+	#tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation="+deptIdentifier+"&page_size=1")
+
+	
+  	settings.devtracker_page_title = dept[:name]
+	
+	erb :'other-govt-departments/other_govt_departments',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		ogd_title: settings.devtracker_page_title,
+		#ogd: deptIdentifier,
+		#deptName: ogds[dept_id]["name"],
+		dept: dept
+	}
+end
+
+#Department Project Page 
+
+get '/department/:dept_id/projects/?' do
+	dept_id = sanitize_input(params[:dept_id],"a")
+	puts dept_id
+	dept = ''
 	# if dept_id == 'DFID'
 	# 	redirect '/'
 	# end
 	if dept_id == 'abs'
 		redirect '/sector'
 	end
+	
 	ogds = Oj.load(File.read('data/OGDs.json'))
+	
 	deptIdentifier = ''
+	
 	if ogds.has_key?(dept_id)
-		deptIdentifier = ogds[dept_id]["identifiers"]
+		dept = get_department_details(dept_id)
+		deptIdentifier = dept["identifier"]
 	else
 		redirect '/department'
 	end
+	
 	if deptIdentifier == ''
 		redirect '/department'
 	end
+	
 	if(deptIdentifier != 'x')
 		#projectData = get_ogd_all_projects_data(deptIdentifier)
 		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
@@ -931,14 +992,17 @@ get '/department/:dept_id/?' do
  		projectData['document_types'] = ''
  		projectData['implementingOrg_types'] = ''
 	end
-  	settings.devtracker_page_title = ogds[dept_id]["name"]
-	erb :'other-govt-departments/other_govt_departments',
+  	
+  	settings.devtracker_page_title = dept["name"]
+
+	erb :'other-govt-departments/projects',
 	:layout => :'layouts/layout',
 	:locals => {
 		oipa_api_url: settings.oipa_api_url,
 		ogd_title: settings.devtracker_page_title,
 		ogd: deptIdentifier,
 		deptName: ogds[dept_id]["name"],
+		dept: dept,
 		countryAllProjectFilters: get_static_filter_list(),
  		total_projects: projectData['projects']['count'],
  		projects: projectData['projects']['results'],

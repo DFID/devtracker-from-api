@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="twelve columns">
+        <div class="tab-bar-container">
+            <div class="row">
+
+  
+                 <div class="button-row six columns">
+                    
+                </div>  
+              
+                <div class="projects-nav six columns">
+                    <nav>
+                        <ul class="tab-bar">
+                            <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/department/<%= dept[:code] %>">Summary</a></li>
+                            <%if project_count !=0 %>
+                                <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/department/<%= dept[:code] %>/projects">Active Projects (<%=project_count%>)</a></li>
+                            <%end%>
+                        </ul>
+                    </nav>
+                </div>  
+
+            </div>
+        </div>
+    </div>
+</div>

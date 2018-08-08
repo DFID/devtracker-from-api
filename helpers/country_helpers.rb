@@ -348,6 +348,8 @@ module CountryHelpers
     tempHash
   end
 
+  
+
   def get_country_dept_wise_stats(countryCode)
       countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
       countryDeptSectorAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
@@ -464,7 +466,7 @@ module CountryHelpers
         totalCount5DacSectorHigherLevelWise = totalCount5DacSectorHigherLevelWise + sector['count'].to_i
       end
 
-      ####### Department Wise Budget Wise Budget ###################
+      ####### Department Wise Year Wise Budget ###################
 
       currentFinancialYear = financial_year
       sumYearWiseDeptBudget = get_actual_budget_per_dept_per_fy(deptBudgetData.select {|year| !year['value'].nil?}).select  {|year| year['fy']>= currentFinancialYear} 

@@ -16,6 +16,227 @@
             </div>
         </div>
     </div>
+<%= erb :'partials/_departments-tabs', :locals => { :active => "summary", :dept => dept, :project_count => dept[:totalActiveProjectCount] } %>
 </div>
 
-<%= erb :'partials/_project_list_dept', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :ogd_code => ogd, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes, :deptName => deptName} %>
+<div class="row">
+    <!-- <div class="four columns country-flag">
+        <img src="/images/cdc.png">
+    </div>-->
+    <div class="three columns">
+        <div class="logo fco">
+          <h1>
+            <span class="organisation-logo uk-gov-logo organisation-logo-stacked-single-identity organisation-logo-stacked-single-identity-large">
+              <span>Foreign &amp;<br>Commonwealth <br>Office</span>
+            </span>
+          </h1>
+        </div>
+        <span data-dept="FCO" class="ogd-title">Foreign and Commonwealth Office</span>
+      </div>
+    <div class="eight columns summary">
+        <h2 class="visually-hidden">Summary</h2>
+        <% if dept[:description].length > 0%>
+            <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify">
+                <%= markdown_to_html(dept[:description])%>
+                <%if dept[:description].length > 500%>
+                    <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
+                        <div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Read more about <%= dept[:name] %></div>
+                    </div>
+                <%else%>
+                    <div class="description-overlay" style="display: none">
+                        <div class="description-expander">Read more about <%= dept[:name] %></div>
+                    </div>
+                <%end%>
+                <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
+            </div>
+        <%else%>
+            <div class="country-description" style="height: 235px; overflow: hidden; text-align: center; margin-top: 112px;">
+                Description Not Available.
+            </div>
+        <%end%>
+        <% if dept[:description].length > 0%>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var curHeight = $('.country-description').height();
+                    $('.country-description').css('height', 'auto');
+                    var autoHeight = $('.country-description').height();
+                    $('.country-description').height(curHeight);
+                    // $('div.description').expander({
+                    //     slicePoint    : 300,
+                    //     expandSpeed   : 0,
+                    //     collapseSpeed : 0,
+                    //     expandText    : 'Read more about <%#= country[:name] %>' 
+                    // });
+                    $('.description-expander').click(function(){
+                        $('.country-description').animate({
+                            height: autoHeight
+                        },1000,function(){
+                            $('.description-collapse').fadeIn();
+                        });
+                        $(this).parent().fadeOut('slow');
+                    });
+
+                    $('.description-collapse').click(function(){
+                        $(this).hide();
+                        $('.description-overlay').fadeIn('slow');
+                        $('.country-description').animate({
+                            height: curHeight
+                        },1000);
+                    });
+                });
+            </script>
+        <%end%>
+    </div>
+    
+</div>
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"><hr></div>
+    <div class="four columns"></div>
+</div>
+<div style="margin: 15px auto" class="row">
+    <div class="four columns"></div>
+    <div class="four columns"></div>
+    <div class="four columns"></div>
+</div>
+<div id="topActiveProject" style="margin-top: 25px" class="row">
+    <div class="six columns">
+        <div class="mi-style" style="text-align: center">
+            <span></span>
+            <h3><%= dept[:totalActiveProjectCount]%></h3>
+            <p>Number of Active Projects</p>
+        </div>
+    </div>
+    <div class="six columns">
+        <div class="mi-style" style="text-align: center">
+            <span></span>
+            <h3>
+                <%if dept[:totalCurrentActiveProjectBudget] == 0 %>
+                N/A
+                <%else%>
+                <%= convert_numbers_to_human_readable_format(dept[:totalCurrentActiveProjectBudget])%>
+                <%end%>
+            </h3>
+            <p>Total Spend for Active Projects (<%= current_financial_year %>)</p>
+        </div>
+    </div>
+</div>
+<div id="topCLoseProject" style="margin-top: 25px" class="row">
+    <div class="six columns">
+        <div class="mi-style" style="text-align: center">
+            <span></span>
+            <h3><%= dept[:totalCloseProjectCount]%></h3>
+            <p>Number of Closed Projects</p>
+        </div>
+    </div>
+    <div class="six columns">
+        <div class="mi-style" style="text-align: center">
+            <span></span>
+            <h3><%= convert_numbers_to_human_readable_format(dept[:totalCloseProjectBudget])%></h3>
+            <p>Total Spend for Closed Projects (All Financial Year)</p>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 20px">
+    <div class="twelve columns">
+      <h3 class="section-group-title">List of Countries with Active Projects</h3>
+      <table id="dtCountry" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Country</th>
+            <th>Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% dept[:countrywiseActiveProjectCount].each do |activeProject| %>
+            <tr>
+              <td><%= activeProject["recipient_country"]["name"] %></td>
+              <td><%= activeProject["count"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
+    </div>
+</div>
+<div class="row" style="margin-top: 20px">
+    <div class="twelve columns">
+      <h3 class="section-group-title">Sector</h3>
+      <table id="dtSector" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% dept[:sumBudgetActiveSector].each do |sector| %>
+            <tr>
+              <td><%= sector["higherLevelSectorName"] %></td>
+              <td><%= Money.new(sector['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot>
+      </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<script type="text/javascript">
+  $(document).ready(function() {
+    function addCommas(nStr){
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    $('#dtCountry').DataTable({
+      "info": false,
+      "paging": true,
+      "searching": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+        total = api.column(1).data().reduce(function(a, b){
+          return parseInt(a) + parseInt(b);
+        }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html(total);
+      }
+    });
+
+    $('#dtSector').DataTable({
+      "info": false,
+      "paging": true,
+      "searching": false,
+      "footerCallback": function(row, data, start, end, display){
+        var api = this.api(), data;
+        //calculate the total
+         total = api.column(1).data().reduce(function(a, b){
+           return parseInt(a) + parseInt(b.replace(/\D/g,''));
+         }, 0);
+        //Update footer data
+        $(api.column(1).footer()).html('£'+addCommas(total));
+      }
+    });
+    
+  });
+</script>
