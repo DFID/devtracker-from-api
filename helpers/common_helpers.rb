@@ -208,7 +208,7 @@ module CommonHelpers
     apiList = Array.new
     if(listType == 'C')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
       # Sector values JSON API call
       apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
