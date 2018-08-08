@@ -47,20 +47,35 @@ module SectorHelpers
   		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
 
         #Create a data structure to map each DAC 5 sector code to a high level sector code          
-        highLevelSectorBudget = sectorValues.map do |elem| 
-	       {  
-	       	   :code 		 => highLevelSector.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[codeType], # "High Level Code (L1)"  High Level Sector Description"  
-			   :name 		 => highLevelSector.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[sectorDescription], #"High Level Sector Description"
-               #oipa v2.2
-               #:budget       => elem["budget"]
-               #oipa v3.1
-               :budget       => elem["value"].to_i                       			           			                          
-	       } 
-	     end
+        highLevelSectorBudget = Array.new
+        sectorValues.each do |value|
+        	tempVal = {}
+        	tempCode = highLevelSector.select{|data| data["Code (L3)"].to_s == value["sector"]["code"]}
+        	if tempCode.nil? || tempCode.length == 0
+        		tempVal[:code] = 999999
+        		tempVal[:name] = 'Not in sector Hierarchy'
+        		tempVal[:budget] = value['value']
+        	else
+        		tempVal[:code] = tempCode[0]['High Level Code (L1)']
+        		tempVal[:name] = tempCode[0]['High Level Sector Description']
+        		tempVal[:budget] = value['value']
+        	end
+        	highLevelSectorBudget.push(tempVal)
+        end
+      #   highLevelSectorBudget = sectorValues.map do |elem| 
+	     #   {  
+	     #   	   :code 		 => highLevelSector.find do |source|
+      #                    			source["Code (L3)"].to_s == elem["sector"]["code"]
+      #                 			end[codeType], # "High Level Code (L1)"  High Level Sector Description"  
+			   # :name 		 => highLevelSector.find do |source|
+      #                    			source["Code (L3)"].to_s == elem["sector"]["code"]
+      #                 			end[sectorDescription], #"High Level Sector Description"
+      #          #oipa v2.2
+      #          #:budget       => elem["budget"]
+      #          #oipa v3.1
+      #          :budget       => elem["value"].to_i                       			           			                          
+	     #   } 
+	     # end
 
 	    #Aggregate the budget for each high level sector code (i.e. remove duplicate sector codes from the data structure and aggregate the budgets)
 	   	highLevelSectorBudgetAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
