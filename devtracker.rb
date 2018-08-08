@@ -122,9 +122,7 @@ get '/countries/:country_code/?' do |n|
     		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
 			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 			#oipa v3.1
-			puts "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			puts "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
@@ -150,7 +148,6 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount['count']
- 			#relevantReportingOrgs: relevantReportingOrgsFinal
  		}
 end
 
@@ -316,6 +313,7 @@ end
 # Region summary page
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
+	puts settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"
     region = get_region_details(n)
     #oipa v2.2
 	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_region=#{n}&order_by=year,quarter")
@@ -562,6 +560,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData['categoryCode'] = ""
 	sectorData['sectorName'] = ""
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+	puts settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}&activity_status="
+	puts settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorData['sectorCode']}&activity_status="
 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
 	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
@@ -674,6 +674,10 @@ end
 #Aid By Location Page
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
+  	firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+    current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+    current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
   	map_data = dfid_country_map_data()
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
@@ -932,6 +936,12 @@ end
 
 get '/getAidByLocCountryData' do
 	json :output => generateCountryData()
+end
+
+
+get '/getAllTheAPICalls' do
+	arrayOfCalls = Array.new
+	arrayOfCalls.push('')
 end
 
 #####################################################################

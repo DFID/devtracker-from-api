@@ -50,7 +50,8 @@ module ProjectHelpers
     end
 
     def get_participating_organisations(project)
-        if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+        puts project
+        if(is_hmg_project(project['reporting_organisation']['ref']))
             participatingOrgs = {}
             participatingOrgs['Funding'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
             participatingOrgs['Accountable'] = project['participating_organisations'].select{|org| org['role']['code'] == '2'}
@@ -138,8 +139,7 @@ module ProjectHelpers
         transactions = transactionsJSON['results'].select {|transaction| !transaction['transaction_type'].nil? }
     end
 
-    def get_project_yearwise_budget(projectId)
-        
+    def get_project_yearwise_budget(projectId)        
         if is_dfid_project(projectId) then
             #oipa v2.2
             #oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"

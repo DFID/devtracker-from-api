@@ -299,7 +299,12 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
-    puts apiList[0]
+    puts settings.oipa_api_url + apiList[0]
+    puts settings.oipa_api_url + apiList[1]
+    puts settings.oipa_api_url + apiList[2]
+    puts settings.oipa_api_url + apiList[3]
+    puts settings.oipa_api_url + apiList[4]
+    puts settings.oipa_api_url + apiList[5]
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
@@ -344,7 +349,6 @@ module CommonHelpers
 
     #Implementing org type filters
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
-    puts apiList[5]
     oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']

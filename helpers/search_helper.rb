@@ -70,7 +70,6 @@ Returns a Hash 'searchedData' with the following keys:
 			didYouMeanData['dfidRegionBudgets'][results["code"]][0] = 0 # Initiating the placeholder for the region specific budget value.
 			didYouMeanData['dfidRegionBudgets'][results["code"]][1] = results["name"] # Storing the region name
 		end
-
 		# This json call is pulling the total budget list based on the 'recipient_countries' string previously created
 		oipa_total_project_budget = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&activity_status="+activityStatusList+"&group_by=recipient_country&aggregations=value&recipient_country="+recipient_countries
 		countries_project_budget = JSON.parse_nil(oipa_total_project_budget) # Parsed the returned json data and storing it as a hash
