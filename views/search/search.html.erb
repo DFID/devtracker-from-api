@@ -102,7 +102,7 @@
                         <h3>    
                             <%unless project['iati_identifier'].nil? %>
                                 <a href="/projects/<%= sanitize_input(project['iati_identifier'],"id") %>">
-                                <%unless project['title']['narratives'].nil? %>
+                                <%unless project['title']['narratives'].nil? || project['title']['narratives'].length == 0 %>
                                     <%unless project['title']['narratives'][0]['text'].nil? %>
                                         <%=project['title']['narratives'][0]['text']%>
                                     <%end%>
@@ -111,7 +111,7 @@
                             <%end%>
                         </h3>
                         <span>Reporting Organisation: <em>
-                            <%unless project['reporting_organisations'].empty? %>
+                            <%unless project['reporting_organisation'].empty? %>
                                 <%unless project['reporting_organisations'][0]['narratives'].empty? %>
                                     <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
                                 <%end%>

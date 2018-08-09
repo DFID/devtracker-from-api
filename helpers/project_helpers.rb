@@ -248,6 +248,10 @@ module ProjectHelpers
             tempCountry = countriesList.find do |source|
                 source["code"].to_s == project["recipient_country"]["code"]
             end
+            if tempCountry.nil?
+                tempCountry = {}
+                tempCountry['name'] = 'Country name not in list.'
+            end
             projectDataHash[project["recipient_country"]["code"]] = {}
             projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
             projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
