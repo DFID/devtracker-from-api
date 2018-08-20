@@ -979,7 +979,8 @@ get '/department/:dept_id/projects/?' do
 	
 	if(deptIdentifier != 'x')
 		#projectData = get_ogd_all_projects_data(deptIdentifier)
-		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
+		projectData = generate_project_page_data(generate_api_list
+			('O',deptIdentifier,"2"))
 	else
 		projectData = {}
 		projectData['projects'] = {}
