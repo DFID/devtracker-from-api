@@ -171,4 +171,11 @@ module SectorHelpers
 
 	 	return hashData
 	 end
+
+	 # Returns high level sector data
+	 def get_high_lvl_sect_details(dac5Code)
+	 	highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+	 	highLevelSector = highLevelSector.select{|data| data["Code (L3)"].to_s == dac5Code}
+	 	highLevelSector
+	 end
 end

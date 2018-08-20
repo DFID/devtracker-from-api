@@ -944,7 +944,8 @@ get '/department/:dept_id/?' do
 		ogd_title: settings.devtracker_page_title,
 		#ogd: deptIdentifier,
 		#deptName: ogds[dept_id]["name"],
-		dept: dept
+		dept: dept,
+		deptSectorData: get_sect_proj_budg_data_for_department(deptIdentifier)
 	}
 end
 

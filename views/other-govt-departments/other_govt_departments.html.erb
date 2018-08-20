@@ -155,12 +155,12 @@
             </tr>
           <% end %>
         </tbody>
-        <tfoot>
+        <!-- <tfoot>
             <tr>
               <th style="text-align:right">Total:</th>
               <th style="padding-left: 10px"></th>
             </tr>
-        </tfoot>
+        </tfoot> -->
       </table>
     </div>
 </div>
@@ -171,23 +171,26 @@
         <thead>
           <tr>
             <th>Sector</th>
+            <th>Count</th>
             <th>Total</th>
           </tr>
         </thead>
         <tbody>
-          <% dept[:sumBudgetActiveSector].each do |sector| %>
+          <% deptSectorData[dept[:identifier].to_s].each do |sector| %>
             <tr>
-              <td><%= sector["higherLevelSectorName"] %></td>
-              <td><%= Money.new(sector['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+              <td><%= sector[1]["name"] %></td>
+              <td><%= sector[1]["sectorCount"] %></td>
+              <td><%= Money.new(sector[1]["budget"].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
             </tr>
           <% end %>
         </tbody>
-        <tfoot>
+        <!-- <tfoot>
             <tr>
               <th style="text-align:right">Total:</th>
               <th style="padding-left: 10px"></th>
+              <th style="padding-left: 10px"></th>
             </tr>
-        </tfoot>
+        </tfoot> -->
       </table>
     </div>
 </div>
@@ -211,31 +214,13 @@
     $('#dtCountry').DataTable({
       "info": false,
       "paging": true,
-      "searching": false,
-      "footerCallback": function(row, data, start, end, display){
-        var api = this.api(), data;
-        //calculate the total
-        total = api.column(1).data().reduce(function(a, b){
-          return parseInt(a) + parseInt(b);
-        }, 0);
-        //Update footer data
-        $(api.column(1).footer()).html(total);
-      }
+      "searching": false
     });
 
     $('#dtSector').DataTable({
       "info": false,
       "paging": true,
-      "searching": false,
-      "footerCallback": function(row, data, start, end, display){
-        var api = this.api(), data;
-        //calculate the total
-         total = api.column(1).data().reduce(function(a, b){
-           return parseInt(a) + parseInt(b.replace(/\D/g,''));
-         }, 0);
-        //Update footer data
-        $(api.column(1).footer()).html('£'+addCommas(total));
-      }
+      "searching": false
     });
     
   });
