@@ -27,8 +27,6 @@ module DepartmentHelpers
 
     countrywiseActiveProjectCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation="+deptIdentifier+"&group_by=recipient_country&aggregations=count&activity_status=2")
 
-    puts countrywiseActiveProjectCount["results"][1].hash    
-
   	returnObject = {
             :code => deptCode,
             :name => departmentInfo[deptCode]["name"],
@@ -65,7 +63,6 @@ module DepartmentHelpers
     
     # Sort data based on reporting organisations
     parsedJSONData = parsedJSONData.group_by{|data| data['reporting_organisation']['organisation_identifier']}
-    puts parsedJSONData
     # Sum up the sector values and project counts and put them in a hash table
     dataHash = {}
     parsedJSONData.each do |key, val|

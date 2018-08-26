@@ -906,7 +906,6 @@ end
 
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
-	puts dept_id
 	dept = ''
 	
 	# if dept_id == 'DFID'
