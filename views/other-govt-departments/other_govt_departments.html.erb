@@ -164,6 +164,7 @@
       </table>
     </div>
 </div>
+
 <div class="row" style="margin-top: 20px">
     <div class="twelve columns">
       <h3 class="section-group-title">Sector</h3>
@@ -181,6 +182,47 @@
               <td><%= sector[1]["name"] %></td>
               <td><%= sector[1]["sectorCount"] %></td>
               <td><%= Money.new(sector[1]["budget"].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <!-- <tfoot>
+            <tr>
+              <th style="text-align:right">Total:</th>
+              <th style="padding-left: 10px"></th>
+              <th style="padding-left: 10px"></th>
+            </tr>
+        </tfoot> -->
+      </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 20px">
+    <div class="twelve columns">
+      <h3 class="section-group-title">Country Wise Active/Closed Project List</h3>
+      <table id="dtActiveClosedProjects" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Country Name</th>
+            <th>Active Projects</th>
+            <th>Closed Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% deptProjectsData[:countryCodeList].each do |countryCode| %>
+            <tr>
+                <% if deptProjectsData[:activeProjectsData].has_key? (countryCode) %>
+                    <td><%= deptProjectsData[:activeProjectsData][countryCode][0]['recipient_countries'][0]['country']['name']%></td>
+                    <td><%= deptProjectsData[:activeProjectsData][countryCode].length%></td>
+                    <%if deptProjectsData[:closedProjectsData].has_key? (countryCode)%>
+                        <td><%= deptProjectsData[:closedProjectsData][countryCode].length%></td>
+                    <%else%>
+                        <td>0</td>
+                    <%end%>
+                <%else%>
+                    <td><%= deptProjectsData[:closedProjectsData][countryCode][0]['recipient_countries'][0]['country']['name']%></td>
+                    <td>0</td>
+                    <td><%= deptProjectsData[:closedProjectsData][countryCode].length%></td>
+                <%end%>
             </tr>
           <% end %>
         </tbody>
@@ -219,6 +261,12 @@
     });
 
     jQuery('#dtSector').DataTable({
+      "info": false,
+      "paging": true,
+      "searching": false
+    });
+
+    jQuery('#dtActiveClosedProjects').DataTable({
       "info": false,
       "paging": true,
       "searching": false

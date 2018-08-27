@@ -932,8 +932,6 @@ get '/department/:dept_id/?' do
 	end
 
 	#tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation="+deptIdentifier+"&page_size=1")
-
-	
   	settings.devtracker_page_title = dept[:name]
 	
 	erb :'other-govt-departments/other_govt_departments',
@@ -944,7 +942,8 @@ get '/department/:dept_id/?' do
 		#ogd: deptIdentifier,
 		#deptName: ogds[dept_id]["name"],
 		dept: dept,
-		deptSectorData: get_sect_proj_budg_data_for_department(deptIdentifier)
+		deptSectorData: get_sect_proj_budg_data_for_department(deptIdentifier),
+		deptProjectsData: get_department_country_wise_active_closed_projects(deptIdentifier)
 	}
 end
 

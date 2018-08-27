@@ -83,7 +83,52 @@ module DepartmentHelpers
       end
     end
     dataHash
-    
   end
 
+  def get_department_country_wise_active_closed_projects(deptCode)
+    # Returns active projects list
+    puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation="+deptCode+"&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&page_size=500"
+    activeProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&reporting_organisation="+deptCode+"&fields=recipient_countries,activity_status&activity_status=2&page_size=400"
+    parsedJSONData = Oj.load(activeProjects)
+    activeProjectData = parsedJSONData['results']
+    activeProjectCount = parsedJSONData['count']
+    pageCount = (activeProjectCount.to_f/400).ceil
+    rounds = 2
+    while rounds <= pageCount
+      activeProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&reporting_organisation="+deptCode+"&fields=recipient_countries,activity_status&activity_status=2&page_size=400&page="+rounds.to_s
+      parsedJSONData = Oj.load(activeProjects)
+      parsedJSONData = parsedJSONData['results']
+      activeProjectData.concat parsedJSONData
+      rounds += 1
+    end
+    # Returns closed projects list
+    closedProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&reporting_organisation="+deptCode+"&fields=recipient_countries,activity_status&activity_status=3,4&page_size=400"
+    parsedJSONData = Oj.load(closedProjects)
+    closedProjectsData = parsedJSONData['results']
+    closedProjectsCount = parsedJSONData['count']
+    pageCount = (closedProjectsCount.to_f/400).ceil
+    rounds = 2
+    while rounds <= pageCount
+      closedProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&reporting_organisation="+deptCode+"&fields=recipient_countries,activity_status&activity_status=3,4&page_size=400&page="+rounds.to_s
+      parsedJSONData = Oj.load(closedProjects)
+      parsedJSONData = parsedJSONData['results']
+      closedProjectsData.concat parsedJSONData
+      rounds += 1
+    end
+    # Remove empty recipient country data
+    activeProjectData = activeProjectData.select{|data| data['recipient_countries'].length > 0}
+    closedProjectsData = closedProjectsData.select{|data| data['recipient_countries'].length > 0}
+    # Group the data using recipient country codes
+    activeProjectsCountryWise = activeProjectData.group_by{|data| data['recipient_countries'][0]['country']['code']}
+    closedProjectsCountryWise = closedProjectsData.group_by{|data| data['recipient_countries'][0]['country']['code']}
+    # Pull a list of keys from both the active and closed project hashes from above
+    activeProjectListKeys = activeProjectsCountryWise.keys
+    closedProjectListKeys = closedProjectsCountryWise.keys
+    finalCountryCodeList = (activeProjectListKeys + closedProjectListKeys).uniq
+    returnObject = {
+      :countryCodeList => finalCountryCodeList,
+      :activeProjectsData => activeProjectsCountryWise,
+      :closedProjectsData => closedProjectsCountryWise
+    }
+  end
 end
