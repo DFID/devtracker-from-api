@@ -966,7 +966,7 @@ get '/department/:dept_id/projects/?' do
 	
 	if ogds.has_key?(dept_id)
 		dept = get_department_details(dept_id)
-		deptIdentifier = dept["identifier"]
+		deptIdentifier = dept[:identifier]
 	else
 		redirect '/department'
 	end
@@ -992,7 +992,7 @@ get '/department/:dept_id/projects/?' do
  		projectData['implementingOrg_types'] = ''
 	end
   	
-  	settings.devtracker_page_title = dept["name"]
+  	settings.devtracker_page_title = dept[:name]
 
 	erb :'other-govt-departments/projects',
 	:layout => :'layouts/layout',
