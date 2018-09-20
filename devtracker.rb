@@ -52,13 +52,13 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -75,8 +75,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -858,6 +858,43 @@ get '/getSectorSpecificFilters' do
 	json :output => sectorData
 end
 
+# FTS API call wrapper
+
+get '/getFTSResponse' do
+	searchQuery = params['searchQuery']
+	activity_status = params['activity_status']
+	ordering = params['ordering']
+	budgetLowerBound = params['budgetLowerBound']
+	budgetHigherBound = params['budgetHigherBound']
+	actual_start_date_gte = params['actual_start_date_gte']
+	planned_end_date_lte = params['planned_end_date_lte']
+	sector = params['sector']
+	document_link_category = params['document_link_category']
+	participating_organisation = params['participating_organisation']
+	if params['page'] != nil && params['page'] != ''
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
+	else
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
+	end
+	jsonResponse = Oj.load(jsonResponse)
+	jsonResponse['results'].each do |r|
+		r['aggregations']['totalBudget'] = Money.new(r['aggregations']['activity_children']['budget_value'].to_f*100, 
+                                    if r['aggregations']['activity_children']['budget_currency'].nil?  
+                                        if r['aggregations']['activity_children']['incoming_funds_currency'].nil?
+                                            if r['aggregations']['activity_children']['expenditure_currency'].nil?
+                                                'GBP'
+                                            else
+                                                r['aggregations']['activity_children']['expenditure_currency']
+                                            end
+                                        else
+                                            r['aggregations']['activity_children']['incoming_funds_currency']
+                                        end
+                                    else r['aggregations']['activity_children']['budget_currency'] 
+                                    end
+                                        ).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	end
+	json :output => jsonResponse
+end
 #####################################################################
 #  CSV HANDLER
 #####################################################################
