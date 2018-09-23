@@ -65,7 +65,7 @@
             <div class="nine columns push-three" id="search-results">
                 <div class="row">
                     <div class="five columns">
-                        <b>Sort results by:</b> Title<span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span> Budget<span class="sortProjBudg sort-proj-sectors" style="display:inline;">▼</span> <!-- Temporarily deactivating the sort by date option because of inconsistent data. --><!-- Start Date --><span class="sortProjSDate sort-proj-sectors" style="display:none;">▼</span>
+                        <b>Sort results by:</b> Title<span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span> <span class="sortProjBudg sort-proj-sectors" style="display:none;">▼</span> <!-- Temporarily deactivating the sort by date option because of inconsistent data. --><!-- Start Date --><span class="sortProjSDate sort-proj-sectors" style="display:none;">▼</span>
                         <input type="hidden" class="sort_results_type" value="-activity_plus_child_budget_value"  />
                     </div>
                     <div class="seven columns">
@@ -301,7 +301,7 @@
                     <%else%>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
                     <%end%>
-                    <div id='budget-slider-filter' class="filter-header" style="margin-left: 5px;">
+                    <div id='budget-slider-filter' class="filter-header" style="margin-left: 5px; display: none">
                         <div name="budget" style="margin-bottom: 10px">
                             <h3>Budget Value</h3>
                             <input type="hidden" id="budget_lower_bound" value="0"  />
