@@ -25,7 +25,7 @@ title: Development Tracker
        </div>  
        <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
-         <div class="<%= project['aggregations']['activity_children']['budget_value'].to_f.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%=  Money.new(project['aggregations']['activity_children']['budget_value'].to_f.round(0)*100, if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
+         <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%=  Money.new(totalProjectBudget.round(0)*100, if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
 
            end%><a href="/downloadCSV/<%= project['id']%>/0" style="margin-left: 5px" class="api-link button">CSV</a></div>
        </div>        
