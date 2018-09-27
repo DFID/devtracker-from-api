@@ -107,16 +107,18 @@
         <% end %>
     </div>
 </div>
-<%if listOfEmptyIdentifiers > 0 || listOfUnReportedIdentifiers > 0%>
-    <div class="row">
-        <div class="twelve columns">
-            <div id="disclaimer" class="disclaimer grey">
-                <div style="margin-top: 0px; padding: 0.3em 0.0em 0em;" class="ui-state-highlight ui-corner-all">
-                    <p style="margin-bottom: 0px; line-height: 1; font-size: 1em"><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><b><%= listOfEmptyIdentifiers%></b> partner(s) do not have their organisation identifiers mentioned in this project activity and <b><%= listOfUnReportedIdentifiers%></b> out of <b><%= totalPartners %></b> partner(s) have not yet linked back to this activity. The number of organisations that hasn't linked back can vary as some or all the relevant partners mentioned in the root activity do not have the organisation identifiers mentioned. In some cases, the identifiers are wrongly placed. <a href="#listOfImplementingOrgs" style="color: blue">Jump to details</a></p>
+<% if defined? listOfEmptyIdentifiers %>
+    <%if listOfEmptyIdentifiers > 0 || listOfUnReportedIdentifiers > 0%>
+        <div class="row">
+            <div class="twelve columns">
+                <div id="disclaimer" class="disclaimer grey">
+                    <div style="margin-top: 0px; padding: 0.3em 0.0em 0em;" class="ui-state-highlight ui-corner-all">
+                        <p style="margin-bottom: 0px; line-height: 1; font-size: 1em"><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><b><%= listOfEmptyIdentifiers%></b> partner(s) do not have their organisation identifiers mentioned in this project activity and <b><%= listOfUnReportedIdentifiers%></b> out of <b><%= totalPartners %></b> partner(s) have not yet linked back to this activity. The number of organisations that hasn't linked back can vary as some or all the relevant partners mentioned in the root activity do not have the organisation identifiers mentioned. In some cases, the identifiers are wrongly placed. <a href="#listOfImplementingOrgs" style="color: blue">Jump to details</a></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <%end%>
 <%end%>
 <div class="row">
     <div class="twelve columns">
