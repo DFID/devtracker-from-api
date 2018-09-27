@@ -1,4 +1,4 @@
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :listOfEmptyIdentifiers=> listOfEmptyIdentifiers, :listOfUnReportedIdentifiers => listOfUnReportedIdentifiers, :totalPartners => listOfImplementingOrgs.count, :active => "summary"} %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -107,6 +107,35 @@
                                 </td>
                             </tr>
                         <% end %>
+                    <% } %>
+                  </tbody>
+                </table>
+            </div>
+        <% end %>
+        <%if listOfImplementingOrgs != nil %>
+            <div style="border-top: 1px solid #ddd; padding-top: 20px" class="more-info-container" id="listOfImplementingOrgs">  
+                <span class="more-info-title">Partner Detail(s)</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about partner organisation(s)" class="more-info-link-middle"/></a>
+                <aside id="moreinfo4" class="more-info">            
+                        <div class="more-info-content">
+                            Partner organisation details
+                        </div>
+                </aside>
+            </div>
+            <div class="more-info-container">
+                <table>
+                  <tbody>
+                    <thead>
+                        <th style="font-size: 1em">Partner(s)</th>
+                        <th style="font-size: 1em">IATI Identifier</th>
+                        <th style="font-size: 1em">Reported activity count</th>
+                    </thead>
+                    <%listOfImplementingOrgs.each { |org| %>
+                            <tr>
+                                <td><b><%= org['narratives'][0]['text'] %></b></td>
+                                <td><%= org['ref'] %></td>
+                                <td><%= org['hasReportedActivities']%></td>
+                            </tr>
                     <% } %>
                   </tbody>
                 </table>

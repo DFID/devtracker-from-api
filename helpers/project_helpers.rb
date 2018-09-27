@@ -65,7 +65,6 @@ module ProjectHelpers
     def get_document_links_local(projectId)
         local_documents = JSON.parse(File.read('data/document_inclusion_list.json'))
         matched_local_documents = local_documents.select{|p| p['projectid'] == projectId}
-        puts matched_local_documents
         matched_local_documents
     end
 
@@ -73,7 +72,6 @@ module ProjectHelpers
         project_documents = projectJson['document_links']
         static_projects = JSON.parse(File.read('data/document_exclusion_list.json'))
         static_projects = static_projects.select{ |p| p['project'] == projectId }
-        puts static_projects
         if static_projects.length > 0
             project_documents.delete_if do |pd|
                 flag = 0
@@ -316,11 +314,8 @@ module ProjectHelpers
             implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         else
             #implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&id=#{projectId}&fields=participating_organisations"
-            puts "activities/#{projectId}/?format=json"
             implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         end
-        puts implementingOrgsDetailsJSON
-        puts '--------------------------'
         implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)
         implementingOrg=implementingOrgsDetails['participating_organisations']
 

@@ -261,6 +261,7 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'O')
       # Total project list API call
+      puts 'activities/?hierarchy=1&format=json&reporting_organisation=#{listParams}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value'
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{listParams}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value")
       # Sector values JSON API call
       apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{listParams}&activity_status=#{activityStatus}")
