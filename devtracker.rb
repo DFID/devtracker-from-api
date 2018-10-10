@@ -54,7 +54,7 @@ include RecaptchaHelper
 # Developer Machine: set global settings
 set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
+set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
@@ -368,6 +368,46 @@ get '/projects/:proj_id/?' do |n|
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_count(n)
 	
+	#partner data check
+	fundedProjectsData = get_funded_project_details(n)
+
+	#check who is not publishing data
+	participatingOrgList2 = project['participating_organisations']
+	listOfImplementingOrgs = participatingOrgList2.select{|org| org['role']['code'] == "4"}
+	listOfImplementingOrgsWithRefs = listOfImplementingOrgs.select{|org| org['ref'] != ''}
+	listOfImplementingOrgsWithoutRefs = listOfImplementingOrgs.select{|org| org['ref'] == ''}
+	#listOfImplementingOrgsWithRefs.uniq {|o| o['narratives'][0]['text']}
+	puts listOfImplementingOrgsWithRefs
+	listOfImplementingOrgsWithRefs.uniq{|o| o['ref']}
+	listOfImplementingOrgsWithRefs.each do |org|
+		tempOrgIdentifier = org['ref']
+		if tempOrgIdentifier == 'GB-COH-4887855'
+			puts 'GB-COH-4887855'
+		end
+		#if ref is not empty
+		tempProjects = fundedProjectsData['results'].select{|org| org['reporting_organisations'][0]['ref'].to_s == tempOrgIdentifier}
+		if !tempProjects.nil?
+			org['hasReportedActivities'] = tempProjects.count
+			org['reportedActivityDetails'] = {}
+			org['reportedActivityDetails'] = tempProjects
+		else
+			org['hasReportedActivities'] = 0
+		end
+	end
+	listOfImplementingOrgsWithoutRefs.each do |org|
+		tempOrgDesc = org['narratives'][0]['text']
+		tempProjects = fundedProjectsData['results'].select{|org| org['reporting_organisations'][0]['narratives'][0]['text'].include? tempOrgDesc}
+		if !tempProjects.nil?
+			org['hasReportedActivities'] = tempProjects.count
+			org['reportedActivityDetails'] = {}
+			org['reportedActivityDetails'] = tempProjects
+		else
+			org['hasReportedActivities'] = 0
+		end
+	end
+	finalList = listOfImplementingOrgsWithRefs + listOfImplementingOrgsWithoutRefs
+	listOfEmptyIdentifiers = listOfImplementingOrgsWithoutRefs.count
+	listOfUnReportedIdentifiers = finalList.select{|org| org['hasReportedActivities'] == 0}.count
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -379,7 +419,10 @@ get '/projects/:proj_id/?' do |n|
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
- 			participatingOrgList: participatingOrgList
+ 			participatingOrgList: participatingOrgList,
+ 			listOfImplementingOrgs: finalList,
+ 			listOfEmptyIdentifiers: listOfEmptyIdentifiers,
+ 			listOfUnReportedIdentifiers: listOfUnReportedIdentifiers
  		}
 end
 
@@ -485,6 +528,26 @@ get '/projects/:proj_id/partners/?' do |n|
 	# get the funded projects from the API
 	fundedProjectsData = get_funded_project_details(n)
 
+	#check who is not publishing data
+	participatingOrgList = project['participating_organisations']
+	listOfImplementingOrgs = participatingOrgList.select{|org| org['role']['code'] == "4"}
+	listOfImplementingOrgs.each do |org|
+		tempString = org['narratives'][0]['text']
+		#if ref is not empty
+		if org['ref'] != ''
+			tempProjects = fundedProjectsData['results'].select{|org| org['reporting_organisations'][0]['ref'] == org['ref']}
+		else
+			#tempProjects = fundedProjectsData['results'].select{|org| org['reporting_organisations'][0]['narratives'][0]['text'] == org['narratives'][0]['text']}
+			tempProjects = fundedProjectsData['results'].select{|org| org['reporting_organisations'][0]['narratives'][0]['text'].include? tempString}
+		end
+		if !tempProjects.nil?
+			org['hasReportedActivities'] = tempProjects.count
+			org['reportedActivityDetails'] = {}
+			org['reportedActivityDetails'] = tempProjects
+		else
+			org['hasReportedActivities'] = 0
+		end
+	end
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
