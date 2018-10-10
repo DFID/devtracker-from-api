@@ -1,4 +1,4 @@
-module FiltersHelper
+ module FiltersHelper
 
 	def high_level_sector_list_filter(apiUrl)
   		sectorValues  = Oj.load(apiUrl)

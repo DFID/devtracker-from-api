@@ -23,7 +23,8 @@ $(document).ready(function() {
             oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
         case 'F':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&reporting_organisation='+window.reportingOrgs+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            //oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&budgetLowerBound='+budgetLowerBound+'&budgetHigherBound='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             console.log(oipaLink);
             break;
         case 'S':
@@ -46,7 +47,8 @@ $(document).ready(function() {
                 oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'F':
-                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&reporting_organisation='+window.reportingOrgs+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+                //oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&reporting_organisation='+window.reportingOrgs+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+                oipaLink = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&budgetLowerBound='+budgetLowerBound+'&budgetHigherBound='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'S':
                 oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -420,7 +422,8 @@ $(document).ready(function() {
             oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
             break;
         case 'F':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&reporting_organisation='+window.reportingOrgs+'&document_link_category=&participating_organisation=';
+            //oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&reporting_organisation='+window.reportingOrgs+'&document_link_category=&participating_organisation=';
+            oipaLink2 = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&budgetLowerBound=&budgetHigherBound=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
             break;
         case 'S':
             oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_sector='+window.SectorCode + '&recipient_country=&recipient_region=&document_link_category=&participating_organisation=';
@@ -464,6 +467,7 @@ $(document).ready(function() {
                     });
                     if(window.searchType == 'F'){
                         $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
+                        json = json.output;
                     }
                     else{
                         $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
@@ -526,7 +530,13 @@ $(document).ready(function() {
                         }
                         //validResults['description'] = !isEmpty(result.description[0].narratives[0]) ? result.description[0].narratives[0].text : "";
                         //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+' <small>['+ validResults['iati_identifier'] +']</small></a></h3><span class="budget">Budget: <em> '+addCommas(validResults['total_plus_child_budget_value'],'B')+'</em></span><span>Status: <em>'+validResults['activity_status']+'</em></span><span>Reporting Org: <em>'+validResults['reporting_organisations']+'</em></span><p class="description">'+validResults['description']+'</p></div>';
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        if(window.searchType == 'F'){
+                            console.log(result.aggregations.totalBudget);
+                            var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.aggregations.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        }
+                        else{
+                            var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        }
                         //$('.modal').hide();
                         $('#showResults').append(tempString);
                     });
@@ -547,7 +557,12 @@ $(document).ready(function() {
     function generateBudgetValues(){
         $('.tpcbcv').each(function(){
             var temp_amount = $(this).children('.total_plus_child_budget_currency_value_amount').text();
-            $(this).before('£' + addCommas(temp_amount));
+            if(window.searchType == 'F'){
+                $(this).before(temp_amount);
+            }
+            else{
+                $(this).before('£' + addCommas(temp_amount));
+            }
         });
     };
 
@@ -575,6 +590,7 @@ $(document).ready(function() {
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
+        console.log(oipaLink);
         $('#showResults').animate({opacity: 0.4},500,function(){
             $('.modal').show();
         });
@@ -588,10 +604,12 @@ $(document).ready(function() {
             });
             if(window.searchType == 'F'){
                 $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
+                json = json.output;
             }
             else{
                 $('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 10px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
             }
+
             //$('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');
             returnedProjectCount = json.count;
             // Moved the refreshPagination execution to a later state as part of code optimisation
@@ -651,7 +669,13 @@ $(document).ready(function() {
                 else{
                     validResults['description'] = "";
                 }
-                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                if(window.searchType == 'F'){
+                    console.log(result.aggregations.totalBudget);
+                    var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.aggregations.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                }
+                else{
+                    var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['id']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                }
                 $('#showResults').append(tempString);
             });
             refreshPagination(json.count);
