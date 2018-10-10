@@ -87,57 +87,62 @@
         for (var countryDataIndex in countriesData) {
             var countryData=countriesData[countryDataIndex];
             if (countryData.budget>0){
-                var multiVertices = new Array();
-                for (var countryPolygonesDefArrayIndex=0; countryPolygonesDefArrayIndex<polygonsData[countryData.id].length; countryPolygonesDefArrayIndex++) {
-                    var countryPolygoneDefString = polygonsData[countryData.id][countryPolygonesDefArrayIndex];
-                    var verticesDefArray = countryPolygoneDefString.split(" ");
-                    var vertices = new Array();
-                    for (var vertexDefStringIndex=0; vertexDefStringIndex<verticesDefArray.length; vertexDefStringIndex++) {
-                        var vertexDefString = verticesDefArray[vertexDefStringIndex].split(",");
-                        var longitude=vertexDefString[0];
-                        var latitude=vertexDefString[1];
-                        var latLng=new L.LatLng(latitude,longitude);
-                        vertices[vertices.length]=latLng;
-                    }
-                    multiVertices[multiVertices.length]=vertices;
+                if(polygonsData[countryData.id] == undefined){
+                    console.log(countryData.country);
                 }
-                var multiPolygon = L.multiPolygon(multiVertices,{
-                    stroke: true, /* draws the border when true */
-                    color: '#ffffff', /* border color */
-                    weight: 1, /* stroke width in pixels */
-                    fill:true,
-                    fillColor: calculateBrightness(countryData, maxBudget),//"#204B63",
-                    fillOpacity: 1//calculateOpacity(countryData, maxBudget)
-                });
+                else{
+                    var multiVertices = new Array();
+                    for (var countryPolygonesDefArrayIndex=0; countryPolygonesDefArrayIndex<polygonsData[countryData.id].length; countryPolygonesDefArrayIndex++) {
+                        var countryPolygoneDefString = polygonsData[countryData.id][countryPolygonesDefArrayIndex];
+                        var verticesDefArray = countryPolygoneDefString.split(" ");
+                        var vertices = new Array();
+                        for (var vertexDefStringIndex=0; vertexDefStringIndex<verticesDefArray.length; vertexDefStringIndex++) {
+                            var vertexDefString = verticesDefArray[vertexDefStringIndex].split(",");
+                            var longitude=vertexDefString[0];
+                            var latitude=vertexDefString[1];
+                            var latLng=new L.LatLng(latitude,longitude);
+                            vertices[vertices.length]=latLng;
+                        }
+                        multiVertices[multiVertices.length]=vertices;
+                    }
+                    var multiPolygon = L.multiPolygon(multiVertices,{
+                        stroke: true, /* draws the border when true */
+                        color: '#ffffff', /* border color */
+                        weight: 1, /* stroke width in pixels */
+                        fill:true,
+                        fillColor: calculateBrightness(countryData, maxBudget),//"#204B63",
+                        fillOpacity: 1//calculateOpacity(countryData, maxBudget)
+                    });
 
-                multiPolygon.addTo(map); /* finally addes the polygon to the map */
+                    multiPolygon.addTo(map); /* finally addes the polygon to the map */
 
-                /* polygon events: click (popup), mouseover, mouseout */
-                multiPolygon.bindPopup(getPopupHTML(countryData), { minWidth: 400 }); // this option seams to doesn't work
-                /* paint the country red on mouseover */
-                multiPolygon.on("mouseover", function(countryData){
-                    return(function(e){
-                        this.setStyle({
-                            fillColor: "#333"
-                        });
+                    /* polygon events: click (popup), mouseover, mouseout */
+                    multiPolygon.bindPopup(getPopupHTML(countryData), { minWidth: 400 }); // this option seams to doesn't work
+                    /* paint the country red on mouseover */
+                    multiPolygon.on("mouseover", function(countryData){
+                        return(function(e){
+                            this.setStyle({
+                                fillColor: "#333"
+                            });
 
-                        countryhover
-                            .setLatLng(e.latlng)
-                            .setContent(countryData.country)
-                            .openOn(map);
+                            countryhover
+                                .setLatLng(e.latlng)
+                                .setContent(countryData.country)
+                                .openOn(map);
 
-                        $(countryhover._wrapper).addClass("quickpop")
-                    })
-                }(countryData),multiPolygon);
+                            $(countryhover._wrapper).addClass("quickpop")
+                        })
+                    }(countryData),multiPolygon);
 
-                /* re-paint the country with its heat color on mouse out */
-                multiPolygon.on("mouseout", function(countryData){
-                    return(function(e){
-                        this.setStyle({
-                            fillColor: calculateBrightness(countryData, maxBudget)
-                        });
-                    })
-                }(countryData),multiPolygon);
+                    /* re-paint the country with its heat color on mouse out */
+                    multiPolygon.on("mouseout", function(countryData){
+                        return(function(e){
+                            this.setStyle({
+                                fillColor: calculateBrightness(countryData, maxBudget)
+                            });
+                        })
+                    }(countryData),multiPolygon);
+                }
             }
 
             map.on('zoomend', function(e) {

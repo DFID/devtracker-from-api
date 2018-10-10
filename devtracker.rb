@@ -876,6 +876,43 @@ get '/getSectorSpecificFilters' do
 	json :output => sectorData
 end
 
+# FTS API call wrapper
+
+get '/getFTSResponse' do
+	searchQuery = params['searchQuery']
+	activity_status = params['activity_status']
+	ordering = params['ordering']
+	budgetLowerBound = params['budgetLowerBound']
+	budgetHigherBound = params['budgetHigherBound']
+	actual_start_date_gte = params['actual_start_date_gte']
+	planned_end_date_lte = params['planned_end_date_lte']
+	sector = params['sector']
+	document_link_category = params['document_link_category']
+	participating_organisation = params['participating_organisation']
+	if params['page'] != nil && params['page'] != ''
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
+	else
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
+	end
+	jsonResponse = Oj.load(jsonResponse)
+	jsonResponse['results'].each do |r|
+		r['aggregations']['totalBudget'] = Money.new(r['aggregations']['activity_children']['budget_value'].to_f*100, 
+                                    if r['aggregations']['activity_children']['budget_currency'].nil?  
+                                        if r['aggregations']['activity_children']['incoming_funds_currency'].nil?
+                                            if r['aggregations']['activity_children']['expenditure_currency'].nil?
+                                                'GBP'
+                                            else
+                                                r['aggregations']['activity_children']['expenditure_currency']
+                                            end
+                                        else
+                                            r['aggregations']['activity_children']['incoming_funds_currency']
+                                        end
+                                    else r['aggregations']['activity_children']['budget_currency'] 
+                                    end
+                                        ).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	end
+	json :output => jsonResponse
+end
 #####################################################################
 #  CSV HANDLER
 #####################################################################
