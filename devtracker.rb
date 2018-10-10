@@ -178,6 +178,24 @@ get '/countries/:country_code/projects/?' do |n|
 		 			
 end
 
+#Country Stats Page
+get '/countries/:country_code/stats/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	statsData = ''
+	#projectData = get_country_all_projects_data(n)
+	statsData = get_country_dept_wise_stats(n)
+	country = get_country_details(n)
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Stats Page'
+	erb :'countries/stats', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	 		country: country,
+	 		statsData: statsData
+	 	}
+		 			
+end
+
 
 #####################################################################
 #  GLOBAL PAGES

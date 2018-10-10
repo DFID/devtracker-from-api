@@ -100,6 +100,27 @@ module CommonHelpers
         }
   end
 
+  def get_actual_budget_per_dept_per_fy(yearWiseDeptBudgets)      
+      yearWiseDeptBudgets.to_a.group_by { |b| 
+          # we want to group them by the first day of 
+          # the financial year. This allows for calculations
+          [if  b["budget_period_start_quarter"]==1 then
+                    b["budget_period_start_year"]-1
+                else
+                    b["budget_period_start_year"]
+                end,
+                b["reporting_organisation"]["primary_name"]]
+          #first_day_of_financial_year(date)
+        }.map { |fy, bs| 
+            # then we sum up all the values for that financial year
+            {
+                "fy"    => fy[0],
+                "dept"  => fy[1],
+                "value" => bs.inject(0) { |v, b| v + b["value"] },
+            }
+        }.sort_by{ |k| k["fy"]}
+  end
+
   def get_spend_budget_per_fy(yearWiseBudgets,type)      
       yearWiseBudgets.to_a.group_by { |b| 
           # we want to group them by the first day of 
