@@ -120,9 +120,7 @@ get '/countries/:country_code/?' do |n|
     		#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&recipient_country=#{n}&order_by=year,quarter")
 			#countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&order_by=-budget&group_by=sector&aggregations=budget&format=json&related_activity_recipient_country=#{n}")
 			#oipa v3.1
-			puts "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			puts "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
@@ -174,24 +172,6 @@ get '/countries/:country_code/projects/?' do |n|
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
 	 		implementingOrgTypes: projectData['implementingOrg_types']
-	 	}
-		 			
-end
-
-#Country Stats Page
-get '/countries/:country_code/stats/?' do |n|
-	n = sanitize_input(n,"p").upcase
-	statsData = ''
-	#projectData = get_country_all_projects_data(n)
-	statsData = get_country_dept_wise_stats(n)
-	country = get_country_details(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Stats Page'
-	erb :'countries/stats', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		country: country,
-	 		statsData: statsData
 	 	}
 		 			
 end
@@ -879,10 +859,6 @@ get '/getSectorSpecificFilters' do
 	sectorData["LocationCountries"] = locationFilterData["locationCountryFilters"]
 	sectorData["LocationRegions"] = locationFilterData["locationRegionFilters"]
 	json :output => sectorData
-end
-
-get '/getAidByLocCountryData' do
-	json :output => generateCountryData()
 end
 
 # FTS API call wrapper
