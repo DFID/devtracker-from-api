@@ -661,28 +661,28 @@ get '/location/country/?' do
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	map_data[0],
 			:dfid_bottom_table_data => map_data[1],
-			:dfid_complete_country_list => 	dfid_complete_country_list,
-			#:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
-			:dfid_total_country_budget => total_country_budget_location
+			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
+			:dfid_total_country_budget => total_country_budget_location,
+			:sectorData => generateCountryData()
 		}
 end
 
 #Aid By Location Country Stats Page
-get '/location/locationStats/?' do
-  	settings.devtracker_page_title = 'Aid by Location Country Stats Page'
-  	map_data = dfid_country_map_data()
-	erb :'location/country/location_stats', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-			:dfid_country_map_data => 	map_data[0],
-			:dfid_bottom_table_data => map_data[1],
-			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
-			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData(),
-			:reportingOrgData => generateReportingOrgsCountryWise()
-		}
-end
+# get '/location/locationStats/?' do
+#   	settings.devtracker_page_title = 'Aid by Location Country Stats Page'
+#   	map_data = dfid_country_map_data()
+# 	erb :'location/country/location_stats', 
+# 		:layout => :'layouts/layout',
+# 		:locals => {
+# 			oipa_api_url: settings.oipa_api_url,
+# 			:dfid_country_map_data => 	map_data[0],
+# 			:dfid_bottom_table_data => map_data[1],
+# 			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
+# 			:dfid_total_country_budget => total_country_budget_location,
+# 			:sectorData => generateCountryData(),
+# 			:reportingOrgData => generateReportingOrgsCountryWise()
+# 		}
+# end
 
 # Aid by Region Page
 get '/location/regional/?' do 
@@ -697,18 +697,18 @@ get '/location/regional/?' do
 end
 
 #Aid By Location regional Stats Page
-get '/location/regionStats/?' do
-  	settings.devtracker_page_title = 'Aid by Location Region Stats Page'
-	erb :'location/regional/region_stats', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-			:dfid_regional_projects_data => dfid_regional_projects_data("regionAll"),
-			:sectorData => generateRegionData(),
-			:reportingOrgData => generateReportingOrgsRegionWise(),
-			:activeProjectList => generateActiveProjectsRegionWise()
-		}
-end
+# get '/location/regionStats/?' do
+#   	settings.devtracker_page_title = 'Aid by Location Region Stats Page'
+# 	erb :'location/regional/region_stats', 
+# 		:layout => :'layouts/layout',
+# 		:locals => {
+# 			oipa_api_url: settings.oipa_api_url,
+# 			:dfid_regional_projects_data => dfid_regional_projects_data("regionAll"),
+# 			:sectorData => generateRegionData(),
+# 			:reportingOrgData => generateReportingOrgsRegionWise(),
+# 			:activeProjectList => generateActiveProjectsRegionWise()
+# 		}
+# end
 
 # Aid by Global Page
 get '/location/global/?' do
