@@ -41,35 +41,34 @@
 <!--[if lte IE 8]></div><![endif]-->
 
 
-<div style="margin-top: 10px" class="row">
-  <h2 class="section-group-title">Location Stats Page</h2>
-</div>
 <div class="row">
-  <div id="country-list">
-    <table id="dataTable" class="display" style="width: 100%; display: none">
-      <thead>
-          <tr>
-              <th>Country</th>
-              <th>Project Budget</th>
-              <th>Top Sector</th>
-          </tr>
-      </thead>
-      <tbody>
-        <%dfid_bottom_table_data.each do |key,val|%>
-          <%if val["projects"] > 0 && val["budget"] > 0%>
+  <div class="twelve columns">
+    <div id="country-list">
+      <table id="dataTable" class="display" style="width: 100%; display: none">
+        <thead>
             <tr>
-              <td><img class="flag" alt="Country Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
-              <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-              <td>
-              <% if sectorData.key?(key) %>
-                <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(3) %>%)
-              <%end%>
-            </td>
+                <th>Country</th>
+                <th>Project Budget</th>
+                <th>Top Sector</th>
             </tr>
+        </thead>
+        <tbody>
+          <%dfid_bottom_table_data.each do |key,val|%>
+            <%if val["projects"] > 0 && val["budget"] > 0%>
+              <tr>
+                <td><img class="flag" alt="Country Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
+                <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
+                <td>
+                <% if sectorData.key?(key) %>
+                  <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(3) %>%)
+                <%end%>
+              </td>
+              </tr>
+            <%end%>
           <%end%>
-        <%end%>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
@@ -78,8 +77,9 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('#dataTable').DataTable({
-      "info":     false,
-      "paging": false
+      "info": false,
+      "paging": false,
+      "searching": false
     });
     $('#dataTable').show();
     $('.repOrgTable').DataTable({
