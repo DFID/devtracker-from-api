@@ -53,7 +53,7 @@
             </tr>
         </thead>
         <tbody>
-          <%dfid_bottom_table_data.each do |key,val|%>
+          <%dfid_country_stats_data.each do |key,val|%>
             <%if val["projects"] > 0 && val["budget"] > 0%>
               <tr>
                 <td><img class="flag" alt="Country Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
