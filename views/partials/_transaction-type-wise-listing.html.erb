@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="twelve columns transactions">
+  <div class="twelve columns transactions" style="margin-top: 15px">
     <%if !transactionsList.nil? && transactionsList.length > 0 %>
      <div class="section-group-title trans-header-container">
           <div class="trans-header-left">
@@ -27,45 +27,64 @@
               <%end%>
            </div>        
       </div> 
-      <table class="transactions-table" style="width:100%">
-        <tbody>
+      <table class="transactions-tablev2 display" style="width:100%; display: none">
+        <thead>
           <tr>
-            <th><%= "Activity Description" %></th>
-            <%if transactionTypeTitle == 'Incoming Funds' %>
-            <th width="15%">Provider</th>
+            <%if transactionTypeTitle != 'Disbursements' %>
+              <th><%= "Activity Description" %></th>
             <%end%>
-            <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitment'  %>
-              <th width="15%"><%= fifthcolumn%></th>
+            <%if transactionTypeTitle == 'Incoming Funds' %>
+            <th>Provider</th>
+            <%end%>
+            <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments'  %>
+              <th><%= fifthcolumn%></th>
+            <%end%>
+            <%if transactionTypeTitle == 'Disbursements' %>
+              <th><%= "Organisation Type" %></th>
             <%end%>
             <%if transactionTypeTitle != 'Incoming Funds' %>
-            <th width="15%">Activity ID</th>
+            <th>IATI Activity ID</th>
             <%end%>
-            <th width="15%">Date</th>
-            <th width="15%" style="text-align:right;">Value</th>
+            <th>Date</th>
+            <th>Value</th>
           </tr>
+        </thead>
+        <tbody>
           <% transactionsList.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction| %>
             <tr>
-              <%if transactionTypeTitle == 'Commitment' %>
+              <%if transactionTypeTitle == 'Commitments' %>
                 <% h2Activities = get_h2_project_details(project['id'])%>
                 <td><%= get_h2Activity_title(h2Activities,transaction['activity']['id']) %></td>
+              <%elsif transactionTypeTitle == 'Disbursements' %>
               <%else%>
                 <td><%= if !transaction['description'].nil? then transaction['description']['narratives'][0]['text'] else "" end %></td>
               <%end%>
-              <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitment'  %>
-                <td width="15%"><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
+              <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments'  %>
+                <td><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
+              <%end%>
+              <%if transactionTypeTitle == 'Disbursements' %>
+                <%if !transaction['receiver_organisation'].nil? %>
+                  <%if !transaction['receiver_organisation']['type'].nil? %>
+                    <td><%= transaction['receiver_organisation']['type'] %></td>
+                  <%else%>
+                    <td>N/A</td>  
+                  <%end%>
+                <%else%>
+                  <td>N/A</td>
+                <%end%>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' %> 
-                <td width="15%"><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
+                <td><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
               <%end%>
               <%if transactionTypeTitle == 'Incoming Funds' %>
-              <td width="30%"><%= 
+              <td><%= 
               if transaction['provider_organisation'].nil? then '' 
                 else if transaction['provider_organisation']['narratives'][0].nil? then '' 
                 else transaction['provider_organisation']['narratives'][0]['text'] end + 
               if transaction['provider_organisation']['provider_activity_id'].nil? then '' else " (" + transaction['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
               <%end%>
-              <td width="15%"><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
-              <td width="15%" class="<%= transaction['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
+              <td><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
+              <td class="<%= transaction['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
               <%begin%>
                 <%= Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 <%rescue
@@ -78,3 +97,19 @@
     <% end %>
   </div>
 </div>
+
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    jq3('.transactions-tablev2').DataTable({
+      retrieve: true,
+      "info": false,
+      "paging": false,
+      "searching": false
+    });
+    jq3('.transactions-tablev2').show();
+  })
+</script>

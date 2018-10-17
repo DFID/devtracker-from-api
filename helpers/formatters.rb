@@ -55,6 +55,11 @@ module Formatters
     "FY#{y.to_s[2..3]}/#{(y+1).to_s[2..3]}"
   end
 
+  def financial_year_formatterv2(y)
+    #expecting a year as a 4-digit string
+    "April #{y} - March #{(y+1)}"
+  end
+
    def financial_year_formatter_from_fulldate(d)
     #expecting a full date string
     date = if(d.kind_of?(String)) then
