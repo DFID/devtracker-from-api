@@ -931,3 +931,24 @@ border-top: 1px solid #ddd;
 .more-info-container table tbody tr td {
 padding: 9px 0px;
 }
+
+.dataTables_length select {
+  width: auto;
+}
+
+.dataTables_filter input {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 2px;
+}
+
+.locStatRepOrgTableHolder {
+  display: none;
+  position: absolute;
+}
+
+.showRepOrgList {
+  color: blue;
+  cursor: pointer;
+}

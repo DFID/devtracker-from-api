@@ -100,6 +100,27 @@ module CommonHelpers
         }
   end
 
+  def get_actual_budget_per_dept_per_fy(yearWiseDeptBudgets)      
+      yearWiseDeptBudgets.to_a.group_by { |b| 
+          # we want to group them by the first day of 
+          # the financial year. This allows for calculations
+          [if  b["budget_period_start_quarter"]==1 then
+                    b["budget_period_start_year"]-1
+                else
+                    b["budget_period_start_year"]
+                end,
+                b["reporting_organisation"]["primary_name"]]
+          #first_day_of_financial_year(date)
+        }.map { |fy, bs| 
+            # then we sum up all the values for that financial year
+            {
+                "fy"    => fy[0],
+                "dept"  => fy[1],
+                "value" => bs.inject(0) { |v, b| v + b["value"] },
+            }
+        }.sort_by{ |k| k["fy"]}
+  end
+
   def get_spend_budget_per_fy(yearWiseBudgets,type)      
       yearWiseBudgets.to_a.group_by { |b| 
           # we want to group them by the first day of 
@@ -221,17 +242,17 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'R')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_recipient_region=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&related_activity_recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'S')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_sector=#{listParams}")
@@ -322,6 +343,7 @@ module CommonHelpers
 
     #Implementing org type filters
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+    puts apiList[5]
     oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
@@ -436,5 +458,67 @@ module CommonHelpers
       end
     end
     implementingOrg_type_list = implementingOrg_type_list.sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
+  end
+
+  #Serve the aid by location country page table data
+  def generateCountryData()
+    current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+    current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+    sectorBudgets = Oj.load(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}")
+    sectorHierarchies = Oj.load(File.read('data/sectorHierarchies.json'))
+    sectorBudgets = sectorBudgets["results"]
+    sectorBudgets = sectorBudgets.group_by{|key| key["recipient_country"]["code"]}
+    sectorBudgets.each do |countryData|
+      sectorBudgets[countryData[0]].each do |countryLevelSectorData|
+        tempDAC5Code = countryLevelSectorData['sector']['code']
+        pullHighLevelSectorData = sectorHierarchies.select{|key| key["Code (L3)"] == tempDAC5Code.to_i}.first
+        countryLevelSectorData['sector']['code'] = pullHighLevelSectorData["High Level Code (L1)"]
+        countryLevelSectorData['sector']['name'] = pullHighLevelSectorData["High Level Sector Description"]
+      end
+    end
+    countryHash = {}
+    sectorBudgets.each do |countryData|
+      countryHash[countryData[0]] = {}
+      sectorBudgets[countryData[0]].each do |countryLevelSectorData|
+        if !countryHash[countryData[0]].key?(countryLevelSectorData['sector']['name'])
+          countryHash[countryData[0]][countryLevelSectorData['sector']['name']] = {}
+          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['code'] = countryLevelSectorData['sector']['code']
+          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['name'] = countryLevelSectorData['sector']['name']
+          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryLevelSectorData['value'].to_i
+        else
+          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'].to_i + countryLevelSectorData['value'].to_i
+        end
+      end
+    end
+    countryHash.each do |key|
+      countryHash[key[0]] = key[1].sort_by{ |x, y| -y["budget"] }
+    end
+    countryHash
+  end
+
+  #Provide a list of dependent reporting organisations grouped by country code
+  def generateReportingOrgsCountryWise()
+    oipa_reporting_orgs = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2"
+    oipa_reporting_orgs = Oj.load(oipa_reporting_orgs)
+    oipa_reporting_orgs = oipa_reporting_orgs['results']
+    countryHash = {}
+    oipa_reporting_orgs.each do |result|
+      if !countryHash.key?(result['recipient_country']['code'])
+        countryHash[result['recipient_country']['code']] = Array.new
+        countryHash[result['recipient_country']['code']].push(result['reporting_organisation']['organisation_identifier'])
+      else
+        if !countryHash[result['recipient_country']['code']].include?(result['reporting_organisation']['organisation_identifier'])
+          countryHash[result['recipient_country']['code']].push(result['reporting_organisation']['organisation_identifier'])
+        end
+      end
+    end
+    countryHash
+  end
+
+  #Return OGD name based on OGD code
+  def returnDepartmentName(deptCode)
+    ogds = Oj.load(File.read('data/OGDs.json'))
+    tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
+    tempOgd.values[0]['name']
   end
 end
