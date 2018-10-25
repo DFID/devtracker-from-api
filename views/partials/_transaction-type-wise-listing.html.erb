@@ -67,7 +67,8 @@
                   <%if !transaction['receiver_organisation']['type'].nil? %>
                     <td><%= transaction['receiver_organisation']['type'] %></td>
                   <%else%>
-                    <td>N/A</td>  
+                    <%tempOrg = project['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
+                    <td><%if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''%><%= tempOrg[0]['type']['name']%><%else%><%= "N/A" %><%end%></td>  
                   <%end%>
                 <%else%>
                   <td>N/A</td>
@@ -83,7 +84,7 @@
                 else transaction['provider_organisation']['narratives'][0]['text'] end + 
               if transaction['provider_organisation']['provider_activity_id'].nil? then '' else " (" + transaction['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
               <%end%>
-              <td><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
+              <td data-order="<%= Date.parse(transaction['transaction_date']).strftime("%Q")%>"><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
               <td class="<%= transaction['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
               <%begin%>
                 <%= Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>

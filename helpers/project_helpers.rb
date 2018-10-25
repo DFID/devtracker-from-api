@@ -18,6 +18,7 @@ module ProjectHelpers
     end
 
     def get_h1_project_details(projectId)
+        puts settings.oipa_api_url + "activities/#{projectId}/?format=json"
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
