@@ -96,7 +96,8 @@ get '/' do  #homepage
  			top_5_countries: top5countries, 
  			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results,
- 			odas: odas
+ 			odas: odas,,
+ 			oipa_api_url: settings.oipa_api_url
  		}
 end
 
