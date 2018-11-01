@@ -240,6 +240,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      # This is to return data sorted according to actual start date
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
     elsif (listType == 'R')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
@@ -308,6 +310,11 @@ module CommonHelpers
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
+    end
+    # This part is for sorting the returned data based on actual start date. For now, this is applicable for country projects page only.
+    if (apiList[0].include? "recipient_country")
+      oipa_project_list = RestClient.get settings.oipa_api_url + apiList[6]
+      allProjectsData['projects']= JSON.parse(oipa_project_list)
     end
     begin
       allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + apiList[2]
