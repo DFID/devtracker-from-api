@@ -18,6 +18,7 @@ module ProjectHelpers
     end
 
     def get_h1_project_details(projectId)
+        puts settings.oipa_api_url + "activities/#{projectId}/?format=json"
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
@@ -126,6 +127,7 @@ module ProjectHelpers
             #oipa v2.2
             #oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipa v3.1
+            puts settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
             #oipa v2.2

@@ -52,7 +52,7 @@ module CommonHelpers
 
       elsif (type=="P") then
         finYearWiseBudgets.each { |item| 
-          item['fy'] = financial_year_formatter(item['fy']) 
+          item['fy'] = financial_year_formatterv2(item['fy']) 
         }
                   	          
       end

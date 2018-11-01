@@ -75,8 +75,8 @@ set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -96,7 +96,8 @@ get '/' do  #homepage
  			top_5_countries: top5countries, 
  			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
  			what_we_achieve: top5results,
- 			odas: odas
+ 			odas: odas,
+ 			oipa_api_url: settings.oipa_api_url
  		}
 end
 
