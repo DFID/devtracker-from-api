@@ -9,9 +9,30 @@
         <div class="nine columns push-three" id="search-results">
             <div class="row">
                 <div class="six columns">
-                    <b>Sort results by:</b> Title <span id="sortProjTitle" class="sort-proj-sectors" style="display:inline;">▲</span> Budget <span id="sortProjBudg" class="sort-proj-sectors" style="display:inline;">▼</span> <!-- Temporarily deactivating the sort by date option because of inconsistent data. --><!-- Start Date --><span class="sortProjSDate sort-proj-sectors" style="display:none;">▼</span>
-                    <input type="hidden" class="sort_results_type" value="-activity_plus_child_budget_value"  />
-                    <input type="hidden" id="sort_results_type" value="-activity_plus_child_budget_value"  />
+                    <b>Sort results by:</b>
+                    &nbsp;
+                    <% if defined? country %>
+                        Start Date
+                        <span class="sortProjSDate sort-proj-sectors" style="display:inline;">▲</span>
+                        &nbsp;
+                        Title
+                        <span class="sortProjTitle sort-proj-sectors" style="display:inline;">▼</span>
+                        &nbsp;
+                    <%else%>
+                        Title
+                        <span class="sortProjTitle sort-proj-sectors" style="display:inline;">▲</span>
+                        &nbsp;
+                    <%end%>
+                    Budget
+                    <span class="sortProjBudg sort-proj-sectors" style="display:inline;">▼</span>
+                    &nbsp;
+                    <!-- Temporarily deactivating the sort by date option because of inconsistent data. --><!-- Start Date -->
+                    <!-- <span class="sortProjSDate sort-proj-sectors" style="display:none;">▼</span> -->
+                    <%if  defined? country%>
+                        <input type="hidden" class="sort_results_type" value="actual_start_date"  />
+                    <%else%>
+                        <input type="hidden" class="sort_results_type" value="-activity_plus_child_budget_value"  />
+                    <%end%>
                 </div>
                 <div class="six columns">
                     <div class="light-pagination"></div>
