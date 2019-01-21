@@ -52,13 +52,13 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -928,6 +928,7 @@ get '/department/:dept_id/?' do
 	if dept_id == 'abs'
 		redirect '/sector'
 	end
+	allActivityStatusProjectsCount = 0
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	deptIdentifier = ''
 	if ogds.has_key?(dept_id)
@@ -941,6 +942,10 @@ get '/department/:dept_id/?' do
 	if(deptIdentifier != 'x')
 		#projectData = get_ogd_all_projects_data(deptIdentifier)
 		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
+		if projectData['projects']['count'] == 0
+			allActivityStatusProjects = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation=#{deptIdentifier}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4&ordering=-activity_plus_child_budget_value")
+			allActivityStatusProjectsCount = allActivityStatusProjects['count']
+		end
 	else
 		projectData = {}
 		projectData['projects'] = {}
@@ -970,7 +975,8 @@ get '/department/:dept_id/?' do
  		actualStartDate: projectData['actualStartDate'],
  		plannedEndDate: projectData['plannedEndDate'],
  		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types']
+ 		implementingOrgTypes: projectData['implementingOrg_types'],
+ 		allProjectsCount: allActivityStatusProjectsCount
 	}
 end
 
