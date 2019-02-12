@@ -24,14 +24,14 @@ module ProjectHelpers
         #project['local_document_links'] = get_document_links_local(projectId)
         project
     end
-
+    
     def get_funded_by_organisations(project)
         #if(is_dfid_project(project['id']))
-            if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+            if(is_hmg_project(project['reporting_organisation']['ref']))
                 fundingOrgs = {}
                 fundingOrgs['orgList'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
                 if(fundingOrgs['orgList'].length > 0)
-                    checkIfFundingOrgMatchesWithReportingOrg = fundingOrgs['orgList'].select{|org| org['ref'] == project['reporting_organisations'][0]['ref']}
+                    checkIfFundingOrgMatchesWithReportingOrg = fundingOrgs['orgList'].select{|org| org['ref'] == project['reporting_organisation']['ref']}
                     if(checkIfFundingOrgMatchesWithReportingOrg.length == 1 && fundingOrgs['orgList'].length == 1)
                         fundingOrgs['fundingType'] = 'Do nothing'
                     elsif (checkIfFundingOrgMatchesWithReportingOrg.length == 0 && fundingOrgs['orgList'].length > 0)
@@ -50,7 +50,7 @@ module ProjectHelpers
     end
 
     def get_participating_organisations(project)
-        if(is_hmg_project(project['reporting_organisations'][0]['ref']))
+        if(is_hmg_project(project['reporting_organisation']['ref']))
             participatingOrgs = {}
             participatingOrgs['Funding'] = project['participating_organisations'].select{|org| org['role']['code'] == '1'}
             participatingOrgs['Accountable'] = project['participating_organisations'].select{|org| org['role']['code'] == '2'}
@@ -106,6 +106,7 @@ module ProjectHelpers
     end
 
     def get_funded_project_count(projectId)
+        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&fields=url"
         oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&fields=url"
         project = JSON.parse(oipa)
         project = project['count']
@@ -126,6 +127,7 @@ module ProjectHelpers
             #oipa v2.2
             #oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipa v3.1
+            puts settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
             #oipa v2.2
@@ -232,10 +234,11 @@ module ProjectHelpers
         #OIPA V2.2
         #oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,budget&order_by=recipient_country"
         #OIPA V3.1
-        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
+        puts "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
+        oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
-        oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2"
+        oipaCountryProjectCountJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2"
         projectValues = JSON.parse(oipaCountryProjectCountJSON)
         projectCountValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
@@ -248,15 +251,18 @@ module ProjectHelpers
             tempCountry = countriesList.find do |source|
                 source["code"].to_s == project["recipient_country"]["code"]
             end
-            projectDataHash[project["recipient_country"]["code"]] = {}
-            projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
-            projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
-            projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
+            begin
+                projectDataHash[project["recipient_country"]["code"]] = {}
+                projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
+                projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
+                projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
             #OIPA V2.2
             #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
             #OIPA V3.1
-            projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
-            projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
+                projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
+                projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
+            rescue
+            end
         end
         finalOutput = Array.new
         finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
@@ -286,9 +292,9 @@ module ProjectHelpers
 
     def reporting_organisation(project)
         begin
-            organisation = project['reporting_organisations'][0]['narratives'][0]['text']
+            organisation = project['reporting_organisation']['narratives'][0]['text']
         rescue
-            organisation = project['reporting_organisations'][0]['type']['name']
+            organisation = project['reporting_organisation']['type']['name']
         end
     end
 
