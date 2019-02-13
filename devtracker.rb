@@ -63,7 +63,7 @@ set :oipa_api_url, 'https://dfid.oipa.nl/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
-
+Money.locale_backend = :i18n
 
 #####################################################################
 #  Common Variable Assingment
@@ -466,7 +466,8 @@ get '/projects/:proj_id/partners/?' do |n|
 
 	# get the funded projects from the API
 	fundedProjectsData = get_funded_project_details(n)
-
+	puts fundedProjectsData['results'][0]['reporting_organisation']['narratives']
+	puts '----'
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',

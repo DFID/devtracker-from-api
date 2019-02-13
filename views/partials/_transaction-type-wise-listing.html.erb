@@ -85,7 +85,7 @@
                 <%end%>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' %> 
-                <td><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
+                <td><%= is_dfid_project(transaction['activity']['iati_identifier']) ? transaction['activity']['iati_identifier'] : ''  %></td>
               <%end%>
               <%if transactionTypeTitle == 'Incoming Funds' %>
               <td><%= 

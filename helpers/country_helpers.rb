@@ -183,11 +183,19 @@ module CountryHelpers
       
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
       data = countryOrRegionData['results']
-
+      data.each do |d|
+        begin
+          d['recipient_countries'].delete('id')
+        rescue
+        end
+        begin
+          d['recipient_regions'][0].delete('id')
+        rescue
+        end
+      end
       #iterate through the array
       countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
       regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
-
       #project type logic
       if(!countries.empty?) then 
         numberOfCountries = countries.count

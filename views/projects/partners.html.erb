@@ -16,7 +16,7 @@
                     <% fundingProjectDetailsCurrency= get_funding_project(project['iati_identifier'])%>
                     <div class="row">        
                       <div class="four columns summary">
-                          <h4><%= fundingProjectDetails['reporting_organisations'][0]['narratives'][0]['text'] %></h4>         
+                          <h4><%= fundingProjectDetails['reporting_organisation']['narratives'][0]['text'] %></h4>         
                       </div>
                       <div class="eight columns">
                           <ul>
@@ -43,7 +43,7 @@
   <% if fundedProjectsCount > 0 then %>
       <div class="row">
           <div class="twelve columns results-info">                 
-              <% if is_dfid_project(project['id']) then %>
+              <% if is_dfid_project(project['iati_identifier']) then %>
                 <h3 class="section-group-title">Partner Projects</h3>
               <%else%>
                  <h3 class="section-group-title">Funded Projects</h3>
@@ -51,12 +51,15 @@
                 <% fundedProjects.each do |fundedProject| %>
                   <div class="row">
                       <div class="four columns summary">
-                          <h4><%= if fundedProject['reporting_organisations'][0]['narratives'].length==0 then '' else fundedProject['reporting_organisations'][0]['narratives'][0]['text'] end %></h4>
+                          <h4><%= begin 
+                            fundedProject['reporting_organisation']['narratives'][0]['text'] 
+                            rescue 
+                              end%></h4>
                       </div>
                       <div class="eight columns">
                           <ul>
                              <%# TODO - deal with the situation where we have multiple languages %>
-                             <li><a href="/projects/<%=fundedProject['id']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                             <li><a href="/projects/<%=fundedProject['iati_identifier']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
                                <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
                                <span>
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
@@ -67,7 +70,7 @@
                                       end %>    
                                 </span>
 
-                                <% if is_dfid_project(project['id']) then %>
+                                <% if is_dfid_project(project['iati_identifier']) then %>
                                    <span>
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
                                        DFID Funding:

@@ -118,7 +118,8 @@ module ProjectHelpers
     end
 
     def get_funded_project_details(projectId)
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisations,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
+        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
         fundedProjectsData = JSON.parse(fundedProjectsAPI)
     end
 
@@ -127,7 +128,6 @@ module ProjectHelpers
             #oipa v2.2
             #oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipa v3.1
-            puts settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
         else
             #oipa v2.2
@@ -146,7 +146,7 @@ module ProjectHelpers
             #oipa v2.2
             #oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&group_by=budget_per_quarter&aggregations=budget&related_activity_id=#{projectId}&order_by=year,quarter"
             #oipa v3.1
-            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&related_activity_id=#{projectId}&order_by=budget_period_start_year,budget_period_start_quarter"
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&related_activity_id=#{projectId}&order_by=budget_period_start_year,budget_period_start_quarter"
         else
             #oipa v2.2
             #oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=budget_per_quarter&aggregations=budget&id=#{projectId}&order_by=year,quarter"
@@ -408,10 +408,15 @@ module ProjectHelpers
                 #disbursementJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=disbursement"
                 #expenditureJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&related_activity_id=#{projectId}&group_by=transactions_per_quarter&aggregations=expenditure"
                 #oipa v3.1
-                actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
-                disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
-                expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
-                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
+                puts '---00----'
+                puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
+                puts settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
+                puts settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                puts settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
+                actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             else
                 #oipa v2.2
                 #actualBudgetJSON = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&id=#{projectId}&group_by=budget_per_quarter&aggregations=budget"
