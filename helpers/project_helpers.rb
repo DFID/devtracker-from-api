@@ -113,6 +113,7 @@ module ProjectHelpers
     end
 
     def get_funding_project_details(projectId)
+        puts settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" 
         fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" 
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
     end
