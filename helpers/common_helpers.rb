@@ -512,7 +512,7 @@ module CommonHelpers
 
   #Provide a list of dependent reporting organisations grouped by country code
   def generateReportingOrgsCountryWise()
-    oipa_reporting_orgs = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2"
+    oipa_reporting_orgs = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2"
     oipa_reporting_orgs = Oj.load(oipa_reporting_orgs)
     oipa_reporting_orgs = oipa_reporting_orgs['results']
     countryHash = {}

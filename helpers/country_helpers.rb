@@ -68,7 +68,6 @@ module CountryHelpers
 
       countriesInfo = JSON.parse(File.read('data/countries.json'))
       puts settings.goverment_department_ids
-      #top5countriesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json"
       top5countriesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json"
       top5countries = JSON.parse(top5countriesJSON)
 
@@ -103,9 +102,6 @@ module CountryHelpers
       countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
       
-      #oipa v2.2
-      #currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=budget&recipient_country=#{countryCode}")
-      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&reporting_organisation=GB-GOV-1&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=budget")
       #oipa v3.1
       currentTotalCountryBudget= get_current_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}")
       currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value")
@@ -185,7 +181,7 @@ module CountryHelpers
       data = countryOrRegionData['results']
       data.each do |d|
         begin
-          d['recipient_countries'].delete('id')
+          d['recipient_countries'][0].delete('id')
         rescue
         end
         begin
@@ -324,8 +320,6 @@ module CountryHelpers
   def total_country_budget_location
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-    #oipa 2.2
-    #totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "activities/aggregations/?reporting_organisation=GB-GOV-1&group_by=recipient_country&aggregations=budget&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-budget&format=json"
     #oipa 3.1
     totalCountryBudgetLocation = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value"
     totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
@@ -356,7 +350,7 @@ module CountryHelpers
   end
 
   def get_country_dept_wise_stats(countryCode)
-      countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisations,activity_plus_child_aggregation,aggregations&page_size=500"
+      countryDeptProjectAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&hierarchy=1&recipient_country="+countryCode+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&fields=activity_status,reporting_organisation,activity_plus_child_aggregation,aggregations&page_size=500"
       countryDeptSectorAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"&page_size=500"
       countryDeptBudgetAPI  = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country="+countryCode+"&order_by=budget_period_start_year,budget_period_start_quarter"
 
@@ -374,7 +368,7 @@ module CountryHelpers
 
       ####### Department Wise Active & Closed Project Count ###################
       deptProjectData = deptProjectData.select {|project| project['activity_status']!=nil}
-      activeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="2" }.to_a.group_by { |b| b["reporting_organisations"][0]["narratives"][0]["text"]
+      activeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="2" }.to_a.group_by { |b| b["reporting_organisation"]["narratives"][0]["text"]
       }.map { |dept, bs|
         {
                 #{}"id"    => id,
@@ -392,7 +386,7 @@ module CountryHelpers
       #   end
       # end        
 
-      closeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.to_a.group_by { |b| b["reporting_organisations"][0]["narratives"][0]["text"]
+      closeProjectDeptWise = deptProjectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.to_a.group_by { |b| b["reporting_organisation"]["narratives"][0]["text"]
       }.map { |dept, bs|
         {
                 #{}"id"    => id,
@@ -403,17 +397,6 @@ module CountryHelpers
 
       totalClosedProjectCount=deptProjectData.select {|project| project['activity_status']['code']=="3" || project['activity_status']['code']=="4" }.length
 
-      # closeProjectDeptWise.each do |closeProjectDept|
-      #   tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(closeProjectDept["id"])}
-      #   tempOgd.each do |o|
-      #     #relevantReportingOrgsFinal.push(o[1]["name"])
-      #     closeProjectDept["dept"] = o[1]["name"]
-      #   end
-      # end
-
-      ####### Department Wise Sector Wise Budget ###################
-
-      #highLevelSectorListData = high_level_sector_list( RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation=#{settings.goverment_department_ids}&activity_status=2&group_by=sector,reporting_organisation&aggregations=value&recipient_country="+countryCode+"", "all_sectors", "High Level Code (L1)", "High Level Sector Description")    
       budgetSectorDeptList = deptSectorData.select {|sector| sector["value"].to_f!=0 }.to_a.map do |elem| 
         {
                 "orgName"                => elem["reporting_organisation"]["primary_name"],
