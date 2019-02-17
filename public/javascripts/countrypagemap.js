@@ -154,6 +154,7 @@ $(document).ready(function() {
         if(map) {
             //alert("start processing datapoints");
             var url = window.baseUrl + "activities/?format=json&reporting_organisation_identifier="+window.reportingOrgs+"&hierarchy=1&recipient_country=" + countryCode + "&fields=title,iati_identifier,locations&page_size=500&activity_status=2";
+            console.log(url);
             $.getJSON(url, function (iati) {
             $('.modal_map_markers').show();
             //set up markerCluster
