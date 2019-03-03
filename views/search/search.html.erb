@@ -103,9 +103,11 @@
                             <%unless project['iati_identifier'].nil? %>
                                 <a href="/projects/<%= sanitize_input(project['iati_identifier'],"id") %>">
                                 <%unless project['title']['narratives'].nil? %>
-                                    <%unless project['title']['narratives'][0]['text'].nil? %>
-                                        <%=project['title']['narratives'][0]['text']%>
-                                    <%end%>
+                                        <%begin%>
+                                            <%=project['title']['narratives'][0]['text']%>
+                                        <%rescue%>
+                                            Project Title Unavailable
+                                        <%end%>
                                 <%end%>
                                 </a>
                             <%end%>
