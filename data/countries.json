@@ -305,7 +305,7 @@
   },
   {
     "code": "BS",
-    "name": "Bahamas",
+    "name": "The Bahamas",
     "description": "",
     "Region": "Latin America & Caribbean",
     "iso3c": "BHS",
@@ -2224,7 +2224,7 @@
   },
   {
     "code": "KP",
-    "name": "Korea (North)",
+    "name": "North Korea",
     "description": "",
     "Region": "",
     "iso3c": "",
@@ -2243,7 +2243,7 @@
   },
   {
     "code": "KR",
-    "name": "Korea (South)",
+    "name": "South Korea",
     "description": "",
     "Region": "East Asia & Pacific",
     "iso3c": "KOR",
@@ -2490,7 +2490,7 @@
   },
   {
     "code": "MK",
-    "name": "Macedonia",
+    "name": "North Macedonia",
     "description": "",
     "Region": "Europe & Central Asia",
     "iso3c": "MKD",
@@ -4067,7 +4067,7 @@
   },
   {
     "code": "SZ",
-    "name": "Swaziland",
+    "name": "Eswatini",
     "description": "",
     "Region": "Sub-Saharan Africa",
     "iso3c": "SWZ",
