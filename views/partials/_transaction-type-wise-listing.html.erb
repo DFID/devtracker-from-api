@@ -78,7 +78,8 @@
                     <td><%= transaction['receiver_organisation']['type']['name'] %></td>
                   <%else%>
                     <%tempOrg = project['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
-                    <td><%if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''%><%= tempOrg[0]['type']['name']%><%else%><%= "N/A" %><%end%></td>  
+                    <td><%begin%>
+                      <%if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''%><%= tempOrg[0]['type']['name']%><%else%><%= "N/A" %><%end%><%rescue%><%= "N/A" %><%end%></td>  
                   <%end%>
                 <%else%>
                   <td>N/A</td>
