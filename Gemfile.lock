@@ -1,13 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionview (5.2.0)
-      activesupport (= 5.2.0)
+    actionview (5.2.2.1)
+      activesupport (= 5.2.2.1)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activesupport (5.2.0)
+    activesupport (5.2.2.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -16,7 +16,7 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     backports (3.11.3)
     builder (3.2.3)
-    concurrent-ruby (1.0.5)
+    concurrent-ruby (1.1.5)
     cookiejar (0.3.3)
     coveralls (0.8.22)
       json (>= 1.8, < 3)
@@ -39,7 +39,7 @@ GEM
       eventmachine (>= 1.0.0.beta.4)
     em-synchrony (1.0.6)
       eventmachine (>= 1.0.0.beta.1)
-    erubi (1.7.1)
+    erubi (1.8.0)
     eventmachine (1.2.7)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -58,15 +58,15 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_mime (1.0.0)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
     money (6.11.3)
       i18n (>= 0.6.4, < 1.1)
     multi_json (1.13.1)
     mustermann (1.0.2)
     netrc (0.11.0)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.9.1)
+      mini_portile2 (~> 2.4.0)
     oj (3.6.3)
     pony (1.12)
       mail (>= 2.0)
@@ -151,4 +151,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.16.1
+   1.17.1
