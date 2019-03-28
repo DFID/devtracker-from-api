@@ -57,7 +57,7 @@
                     <%= Money.new(region[:regionBudget].to_f.round(0)*100, region[:regionBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 </strong></span>
             </li>
-            <li class="fact-item">
+            <!-- <li class="fact-item">
                 Project budget as % of DFID budget
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink7" target="7">
                     <img src="/images/icon-information.png" alt="More information about the total project budget"/>
@@ -68,7 +68,7 @@
                     </div>
                 </aside>
                 <span><strong><%= region[:projectBudgetPercentToDfidBudget] %>%</strong></span>
-            </li>
+            </li> -->
             <li class="fact-item">
                 Active Projects
                 <span><strong><%= region[:totalProjects] || "&nbsp;" %></strong></span>
