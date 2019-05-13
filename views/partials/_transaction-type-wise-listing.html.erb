@@ -54,7 +54,7 @@
             <tr>
               <%if transactionTypeTitle == 'Commitments' %>
                 <% h2Activities = get_h2_project_details(project['id'])%>
-                <td><%= get_h2Activity_title(h2Activities,transaction['activity']['id']) %></td>
+                <td><%= transaction['activity']['title']['narratives'][0]['text'] %></td>
               <%elsif transactionTypeTitle == 'Disbursements' %>
               <%else%>
                 <td><%= if !transaction['description'].nil? then transaction['description']['narratives'][0]['text'] else "" end %></td>
@@ -86,7 +86,7 @@
                 <%end%>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' %> 
-                <td><%= is_dfid_project(transaction['activity']['id']) ? transaction['activity']['id'] : ''  %></td>
+                <td><%= is_dfid_project(transaction['activity']['iati_identifier']) ? transaction['activity']['iati_identifier'] : ''  %></td>
               <%end%>
               <%if transactionTypeTitle == 'Incoming Funds' %>
               <td><%= 
