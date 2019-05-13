@@ -113,9 +113,9 @@
                             <%end%>
                         </h3>
                         <span>Reporting Organisation: <em>
-                            <%unless project['reporting_organisations'].empty? %>
-                                <%unless project['reporting_organisations'][0]['narratives'].empty? %>
-                                    <%= project['reporting_organisations'][0]['narratives'][0]['text']%>
+                            <%unless project['reporting_organisation'].empty? %>
+                                <%unless project['reporting_organisation']['narratives'].empty? %>
+                                    <%= project['reporting_organisation']['narratives'][0]['text']%>
                                 <%end%>
                             <%end%>
                         </em></span>

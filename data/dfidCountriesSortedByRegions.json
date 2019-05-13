@@ -1,0 +1,317 @@
+{
+	"Africa":
+	{
+		"BI":
+		{
+			"name": "Burundi",
+			"projects": 0
+		},
+		"BW":
+		{
+			"name": "Botswana",
+			"projects": 0
+		},
+		"CD":
+		{
+			"name": "Congo (Democratic Republic)",
+			"projects": 0
+		},
+		"CF":
+		{
+			"name": "Central African Republic",
+			"projects": 0
+		},
+		"CG":
+		{
+			"name": "Congo",
+			"projects": 0
+		},
+		"CM":
+		{
+			"name": "Cameroon",
+			"projects": 0
+		},
+		"GM":
+		{
+			"name": "Gambia, The",
+			"projects": 0
+		},
+		"GH":
+		{
+			"name": "Ghana",
+			"projects": 0
+		},
+		"KE":
+		{
+			"name": "Kenya",
+			"projects": 0
+		},
+		"LS":
+		{
+			"name": "Lesotho",
+			"projects": 0
+		},
+		"MW":
+		{
+			"name": "Malawi",
+			"projects": 0
+		},
+		"MU":
+		{
+			"name": "Mauritius",
+			"projects": 0
+		},
+		"MZ":
+		{
+			"name": "Mozambique",
+			"projects": 0
+		},
+		"NA":
+		{
+			"name": "Namibia",
+			"projects": 0
+		},
+		"NG":
+		{
+			"name": "Nigeria",
+			"projects": 0
+		},
+		"RW":
+		{
+			"name": "Rwanda",
+			"projects": 0
+		},
+		"SC":
+		{
+			"name": "Seychelles",
+			"projects": 0
+		},
+		"SL":
+		{
+			"name": "Sierra Leone",
+			"projects": 0
+		},
+		"ZA":
+		{
+			"name": "South Africa",
+			"projects": 0
+		},
+		"SZ":
+		{
+			"name": "Swaziland",
+			"projects": 0
+		},
+		"UG":
+		{
+			"name": "Uganda",
+			"projects": 0
+		},
+		"TZ":
+		{
+			"name": "United Republic of Tanzania",
+			"projects": 0
+		},
+		"ZM":
+		{
+			"name": "Zambia",
+			"projects": 0
+		}
+	},
+	"East Asia and Pacific":
+	{
+		"AU":
+		{
+			"name": "Australia",
+			"projects": 0
+		},
+		"FJ":
+		{
+			"name": "Fiji",
+			"projects": 0
+		},
+		"ID":
+		{
+			"name": "Indonesia",
+			"projects": 0
+		},
+		"KI":
+		{
+			"name": "Kiribati",
+			"projects": 0
+		},
+		"NZ":
+		{
+			"name": "New Zealand",
+			"projects": 0
+		},
+		"PG":
+		{
+			"name": "Papua New Guinea",
+			"projects": 0
+		},
+		"WS":
+		{
+			"name": "Samoa",
+			"projects": 0
+		},
+		"SB":
+		{
+			"name": "Solomon Islands",
+			"projects": 0
+		},
+		"TO":
+		{
+			"name": "Tonga",
+			"projects": 0
+		},
+		"TV":
+		{
+			"name": "Tuvalu",
+			"projects": 0
+		},
+		"VU":
+		{
+			"name": "Vanuatu",
+			"projects": 0
+		}
+	},
+	"Europe and Central Asia":
+	{
+		"CY":
+		{
+			"name": "Cyprus",
+			"projects": 0
+		},
+		"GE":
+		{
+			"name": "Georgia",
+			"projects": 0
+		},
+		"MT":
+		{
+			"name": "Malta",
+			"projects": 0
+		},
+		"GB":
+		{
+			"name": "United Kingdom",
+			"projects": 0
+		}
+	},
+	"Latin America and Caribbean":
+	{
+		"AG":
+		{
+			"name": "Antigua and Barbuda",
+			"projects": 0
+		},
+		"BS":
+		{
+			"name": "Bahamas, The",
+			"projects": 0
+		},
+		"BB":
+		{
+			"name": "Barbados",
+			"projects": 0
+		},
+		"BZ":
+		{
+			"name": "Belize",
+			"projects": 0
+		},
+		"CA":
+		{
+			"name": "Canada",
+			"projects": 0
+		},
+		"DM":
+		{
+			"name": "Dominica",
+			"projects": 0
+		},
+		"ET":
+		{
+			"name": "Ethiopia",
+			"projects": 0
+		},
+		"GD":
+		{
+			"name": "Grenada",
+			"projects": 0
+		},
+		"GY":
+		{
+			"name": "Guyana",
+			"projects": 0
+		},
+		"JM":
+		{
+			"name": "Jamaica",
+			"projects": 0
+		},
+		"LC":
+		{
+			"name": "Saint Lucia",
+			"projects": 0
+		},
+		"KN":
+		{
+			"name": "St Kitts and Nevis",
+			"projects": 0
+		},
+		"VC":
+		{
+			"name": "St Vincent and The Grenadines",
+			"projects": 0
+		},
+		"TT":
+		{
+			"name": "Trinidad and Tobago",
+			"projects": 0
+		}
+	},
+	"South Asia":
+	{
+		"AF":
+		{
+			"name": "Afghanistan",
+			"projects": 0
+		},
+		"BD":
+		{
+			"name": "Bangladesh",
+			"projects": 0
+		},
+		"BN":
+		{
+			"name": "Brunei Darussalam",
+			"projects": 0
+		},
+		"IN":
+		{
+			"name": "India",
+			"projects": 0
+		},
+		"MY":
+		{
+			"name": "Malaysia",
+			"projects": 0
+		},
+		"PK":
+		{
+			"name": "Pakistan",
+			"projects": 0
+		},
+		"SG":
+		{
+			"name": "Singapore",
+			"projects": 0
+		},
+		"LK":
+		{
+			"name": "Sri Lanka",
+			"projects": 0
+		}
+	}
+}
