@@ -119,8 +119,8 @@ module ProjectHelpers
     end
 
     def get_funded_project_details(projectId)
-        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations&ordering=title"
+        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
+        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectId}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
         fundedProjectsData = JSON.parse(fundedProjectsAPI)
     end
 

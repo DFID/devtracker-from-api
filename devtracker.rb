@@ -71,7 +71,7 @@ Money.locale_backend = :i18n
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-1,GB-GOV-1'
+set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -1037,43 +1037,7 @@ end
 # 	end
 # end
 
-get '/fraud/?' do
-  	settings.devtracker_page_title = "Reporting fraud or corrupt practices Page"
-	erb :'fraud/index', :layout => :'layouts/layout_forms',
-	:locals => {
-		googlePublicKey: settings.google_recaptcha_publicKey,
-		oipa_api_url: settings.oipa_api_url
-	}
-end  
 
-post '/fraud/index' do
-	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
-	if status == true
-		country = sanitize_input(params[:country],"a")
-		project = sanitize_input(params[:project],"a")
-		description = sanitize_input(params[:description],"a")
-		name = sanitize_input(params[:name],"a")
-		email = sanitize_input(params[:email],"e")
-		telno = sanitize_input(params[:telno],"t")
-	 	Pony.mail({
-			:from => "devtracker-feedback@dfid.gov.uk",
-		    :to => "reportingconcerns@dfid.gov.uk",
-		    :subject => "(Fraud Report): " + country + " - " + project,
-		    #:body => "<p>" + country + "</p>" + "<p>" + project + "</p>" + "<p>" + description + "</p>" + "<p>" + name + "</p>" + "<p>" + email + "</p>" + "<p>" + telno + "</p>",
-		    :body => "Country: " + country + "\n" + "Project: " + project + "\n" + "Description: \n" + description + "\n \nContact Information: \n" + "Name: " + name + "\n" + "Email: " + email + "\n" + "Telephone Number: " + telno,
-		    :via => :smtp,
-		    :via_options => {
-		    	:address              => '127.0.0.1',
-		     	:port                 => '25',
-		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
-		    }
-	    })
-	    redirect '/'
-	else
-		puts "Failed to send email."
-		redirect '/'
-	end
-end
 
 #####################################################################
 #  RSS FEED
