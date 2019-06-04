@@ -20,7 +20,7 @@
                       </div>
                       <div class="eight columns">
                           <ul>
-                              <li><a href="/projects/<%=fundingProjectDetails['id']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
+                              <li><a href="/projects/<%=fundingProjectDetails['iati_identifier']%>"><%=fundingProjectDetails['title']['narratives'][0]['text']%></a><%=fundingProjectDetails['descriptions'][0]['narratives'][0]['text']%>
                                   <span>
                                      <%# If the default currency value is undefined do not show a value for the project%>
                                      <%=begin
