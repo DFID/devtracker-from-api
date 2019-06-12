@@ -134,7 +134,7 @@ module ProjectHelpers
             #oipa v2.2
             #oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipa v3.1
-            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
+            oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=800&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
         end
 
         transactionsJSON = JSON.parse(oipaTransactionsJSON)
@@ -148,7 +148,7 @@ module ProjectHelpers
             oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&related_activity_id=#{projectId}&order_by=budget_period_start_year,budget_period_start_quarter"
         else
             #oipa v3.1
-            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&group_by=budget_period_start_quarter&aggregations=value&activity_id=#{projectId}&order_by=budget_period_start_year,budget_period_start_quarter"
+            oipaYearWiseBudgets=RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&group_by=budget_period_start_quarter&aggregations=value&iati_identifier=#{projectId}&order_by=budget_period_start_year,budget_period_start_quarter"
         end
 
         yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
@@ -403,9 +403,9 @@ module ProjectHelpers
             else
                 #oipa v3.1
                 actualBudgetJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=budget_period_start_quarter&aggregations=value"
-                disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
-                expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
-                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&activity_id=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
+                disbursementJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&iati_identifier=#{projectId}&group_by=transaction_date_quarter&aggregations=disbursement"
+                expenditureJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&iati_identifier=#{projectId}&group_by=transaction_date_quarter&aggregations=expenditure"
+                purchaseOfEquityJSON = RestClient.get settings.oipa_api_url + "transactions/aggregations/?format=json&iati_identifier=#{projectId}&group_by=transaction_date_quarter&aggregations=purchase_of_equity"
             end
 
             actualBudget = JSON.parse(actualBudgetJSON)
