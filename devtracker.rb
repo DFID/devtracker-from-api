@@ -671,11 +671,9 @@ get '/search/?' do
 		includeClosed = 0
 		activityStatusList = '2'
 	end
-	puts activityStatusList
 	#results = generate_searched_data(query,activityStatusList)
 	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
 	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
-	puts results['projects']['count']
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
@@ -861,9 +859,6 @@ get '/getFTSResponse' do
 	document_link_category = params['document_link_category']
 	participating_organisation = params['participating_organisation']
 	if params['page'] != nil && params['page'] != ''
-		puts '----0000------'
-		puts settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page']
-		puts '----0000------'
 		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
 	else
 		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
@@ -909,7 +904,6 @@ end
 
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
-	puts dept_id
 	# if dept_id == 'DFID'
 	# 	redirect '/'
 	# end
@@ -982,7 +976,6 @@ get '/department' do
   			totalOdaValue = totalOdaValue + oda[1][0]["value"]
   		end
   	end
-  	puts totalOdaValue
 	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
 end
 
