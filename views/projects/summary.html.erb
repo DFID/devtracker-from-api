@@ -51,7 +51,7 @@
         <![endif]-->
         <%# implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
         <% if participatingOrgList == nil %>
-            <% implementingOrgs=get_implementing_orgs(project['id'])%>
+            <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
             <% if (implementingOrgs.length>0)  %>
 
                 <div class="more-info-container">  
@@ -291,7 +291,7 @@
                 }
             }
         });
-        <% budgetYearData = project_budget_per_fy(project['id']) %>
+        <% budgetYearData = project_budget_per_fy(project['iati_identifier']) %>
 
         <% if !budgetYearData.nil? then %>
             <% begin %>
@@ -388,7 +388,7 @@
 
     <div class="row">
         <div class="twelve columns download-link">
-            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['id'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
+            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
             <%if !project['last_updated_datetime'].nil?%>
                 <p>Project data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
             <% end %>
