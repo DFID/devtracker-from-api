@@ -88,5 +88,10 @@
 	{
 		"identifiers":"GB-GOV-2,GB-COH-03877777",
 		"name": "CDC Group PLC"
+	},
+	"DIT":
+	{
+		"identifiers":"GB-GOV-15",
+		"name": "Department for International Trade"
 	}
 }
