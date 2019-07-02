@@ -30,16 +30,16 @@
       <table class="transactions-tablev2 display" style="width:100%; display: none">
         <thead>
           <tr>
-            <%if transactionTypeTitle != 'Disbursements' %>
+            <%if transactionTypeTitle != 'Commitments' &&  transactionTypeTitle != 'Disbursements'%>
               <th><%= "Activity Description" %></th>
             <%end%>
             <%if transactionTypeTitle == 'Incoming Funds' %>
             <th>Provider</th>
             <%end%>
-            <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments'  %>
+            <%if transactionTypeTitle != 'Incoming Funds'  %>
               <th><%= fifthcolumn%></th>
             <%end%>
-            <%if transactionTypeTitle == 'Disbursements' %>
+            <%if transactionTypeTitle == 'Disbursements' ||  transactionTypeTitle == 'Commitments'%>
               <th><%= "Organisation Type" %></th>
             <%end%>
             <%if transactionTypeTitle != 'Incoming Funds' %>
@@ -52,17 +52,15 @@
         <tbody>
           <% transactionsList.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction| %>
             <tr>
-              <%if transactionTypeTitle == 'Commitments' %>
-                <% h2Activities = get_h2_project_details(project['id'])%>
-                <td><%= transaction['activity']['title']['narratives'][0]['text'] %></td>
-              <%elsif transactionTypeTitle == 'Disbursements' %>
+              <%if transactionTypeTitle == 'Commitments' %>                
+              <%elsif transactionTypeTitle == 'Disbursements'%>
               <%else%>
                 <td><%= if !transaction['description'].nil? then transaction['description']['narratives'][0]['text'] else "" end %></td>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments' && transactionTypeTitle != 'Disbursements'%>
                 <td><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
               <%end%>
-              <%if transactionTypeTitle == 'Disbursements' %>
+              <%if transactionTypeTitle == 'Disbursements' || transactionTypeTitle == 'Commitments' %>
                 <%if !transaction['receiver_organisation'].nil?%>
                   <%if !transaction['receiver_organisation']['ref'] != ''%>
                     <%tempOrg = project['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>

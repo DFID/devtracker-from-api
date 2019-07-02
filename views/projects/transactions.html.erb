@@ -53,12 +53,12 @@ title: Development Tracker
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/1"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :fifthcolumn=> 'Receiver Organisation', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/1"} %>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitments', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitments', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :fifthcolumn=> 'Receiver Organisation' ,:active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
