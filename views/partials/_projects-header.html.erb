@@ -71,12 +71,7 @@
                             <ul class="tab-bar">
                                 <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>">Summary</a></li>
                                 <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
-                                <% if(!is_dfid_project(project['iati_identifier']) && !(project['reporting_organisation']['ref'].to_s.include?"GB-GOV")) %>
-                                    <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
-                                <% end %>
-                                <% if(is_dfid_project(project['iati_identifier'])) %>
-                                    <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
-                                <% end %>
+                                <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/transactions">Transactions</a></li>
                                 <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                     <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
                                 <% end %>
