@@ -90,7 +90,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rest-open-uri (1.0.0)
-    rubygems-update (2.7.7)
+    rubygems-update (2.7.9)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
