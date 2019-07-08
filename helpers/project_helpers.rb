@@ -612,10 +612,11 @@ module ProjectHelpers
                 end
                 if !transaction['receiver_organisation'].nil?
                     if !transaction['receiver_organisation']['type'].nil?
-                        tempHash['Organisation Type'] = transaction['receiver_organisation']['type']
+                        tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
                     else
                         tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
-                        if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''
+                        puts tempOrg
+                        if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
                             tempHash['Organisation Type'] = tempOrg[0]['type']['name']
                         else
                             tempHash['Organisation Type'] = "N/A"    
@@ -624,8 +625,8 @@ module ProjectHelpers
                 else
                    tempHash['Organisation Type'] = "N/A" 
                 end
-                if is_dfid_project(transaction['activity']['id'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['id']
+                if is_dfid_project(transaction['activity']['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
@@ -639,10 +640,39 @@ module ProjectHelpers
             tempStorage = Array.new
             transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
                 tempHash = {}
-                h2Activities = get_h2_project_details(projID)
-                tempHash['Activity Description'] = get_h2Activity_title(h2Activities,transaction['activity']['id'])
-                if is_dfid_project(transaction['activity']['id'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['id']
+                project2 = get_h1_project_details(projID)
+                if !transaction['receiver_organisation'].nil?
+                    if !transaction['receiver_organisation']['ref'] != ''
+                        tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s} 
+                        if !tempOrg.nil? && tempOrg.length > 0
+                           tempHash['Receiver Organisation'] = tempOrg[0]['narratives'][0]['text']
+                        else
+                            tempHash['Receiver Organisation'] = "N/A"
+                        end
+                    else 
+                        tempHash['Receiver Organisation'] = "N/A" 
+                    end 
+                else
+                    tempHash['Receiver Organisation'] = "N/A"
+                end
+                if !transaction['receiver_organisation'].nil?
+                    if !transaction['receiver_organisation']['type'].nil?
+                        tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
+                    else
+                        tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
+                        puts tempOrg
+                        if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
+                            tempHash['Organisation Type'] = tempOrg[0]['type']['name']
+                        else
+                            tempHash['Organisation Type'] = "N/A"    
+                        end
+                   end
+                else
+                   tempHash['Organisation Type'] = "N/A" 
+                end
+                #tempHash['Activity Description'] = get_h2Activity_title(h2Activities,transaction['activity']['iati_identifier'])
+                if is_dfid_project(transaction['activity']['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
@@ -707,8 +737,8 @@ module ProjectHelpers
                 else
                     tempHash['Receiver Organisation'] = "N/A"
                 end
-                if is_dfid_project(transaction['activity']['id'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['id']
+                if is_dfid_project(transaction['activity']['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
