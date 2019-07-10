@@ -2,7 +2,21 @@
 
 <div class="row">
     <div class="twelve columns summary">
-        <p class="project-description"><%= project['descriptions'].length>0 ? project['descriptions'][0]['narratives'][0]['text'] : "" %></p>
+        <%project['descriptions'].sort_by{|item| item['type']['code']}.each do |description|%>
+            <%if description['type']['code'] == '1'%>
+                <b class="more-info-title">Description</b>
+                <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+            <%elsif description['type']['code'] == '2'%>
+                <b class="more-info-title">Objectives</b>
+                <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+            <%elsif description['type']['code'] == '3'%>
+                <b class="more-info-title">Target Groups</b>
+                <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+            <%elsif description['type']['code'] == '4'%>
+                <b class="more-info-title">Other</b>
+                <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+            <%end%> 
+        <%end%>
     </div>
 
 </div>
