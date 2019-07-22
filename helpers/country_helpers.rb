@@ -190,8 +190,10 @@ module CountryHelpers
         end
       end
       #iterate through the array
-      countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
-      regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+      #countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
+      #regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+      countries = data[0]['recipient_countries']
+      regions = data[0]['recipient_regions']
       #project type logic
       if(!countries.empty?) then 
         numberOfCountries = countries.count
