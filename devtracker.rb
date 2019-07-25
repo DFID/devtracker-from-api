@@ -56,10 +56,10 @@ include RecaptchaHelper
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -76,8 +76,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -458,7 +458,7 @@ get '/projects/:proj_id/partners/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
 			countryOrRegion: countryOrRegion, 			
- 			fundedProjects: fundedProjectsData['results'],
+ 			#fundedProjects: fundedProjectsData['results'],
  			fundedProjectsCount: fundedProjectsData['count'],
  			fundingProjects: fundingProjects,
  			fundingProjectsCount: fundingProjectsData['count']
@@ -882,6 +882,35 @@ get '/getFTSResponse' do
 	end
 	json :output => jsonResponse
 end
+
+get '/generateFundedProjects/:projectCode/?' do
+	page = (params[:start].to_i/params[:length].to_i)+1
+	fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{params[:projectCode]}&page_size=10&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{page}"
+	fundedProjectsData = JSON.parse(fundedProjectsAPI)
+	dataTables = {}
+	dataTables['recordsTotal'] = fundedProjectsData['count']
+	dataTables['recordsFiltered'] = fundedProjectsData['count']
+	dataTables['data'] = fundedProjectsData['results']
+	dataTables['data'].each do |item|
+		begin
+			item['totalProjectBudget'] = Money.new(item['aggregations']['activity_children']['budget_value'].to_f.round(0)*100,if item['aggregations']['activity_children']['budget_currency'].nil? then item['default_currency']['code'] else item['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+		rescue
+			item['totalProjectBudget'] = 'N/A'
+		end
+		if is_dfid_project(params[:projectCode])
+			begin
+				item['DFIDFunding'] = Money.new(item['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if item['aggregations']['activity_children']['incoming_funds_currency'].nil? then item['default_currency']['code'] else item['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+			rescue
+				item['DFIDFunding'] = 'N/A'
+			end
+		else
+			item['DFIDFunding'] = 'N/A'
+		end
+	end
+	json dataTables
+
+end
+
 #####################################################################
 #  CSV HANDLER
 #####################################################################
