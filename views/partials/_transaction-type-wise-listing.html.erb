@@ -20,7 +20,7 @@
                 <% totalTransactionValue=get_sum_transaction(transactionsList).to_f %>
                 <div class="<%= totalTransactionValue.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
                   <%begin%>
-                  <%= Money.new(totalTransactionValue.round(0)*100, project['aggregations']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                  <%= Money.new(totalTransactionValue.round(0)*100, project['activity_plus_child_aggregation']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                   <%rescue
                   end%><a href="<%= csvurl%>" class="api-link button">CSV</a>
                 </div>
