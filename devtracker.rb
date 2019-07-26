@@ -865,18 +865,18 @@ get '/getFTSResponse' do
 	end
 	jsonResponse = Oj.load(jsonResponse)
 	jsonResponse['results'].each do |r|
-		r['aggregations']['totalBudget'] = Money.new(r['aggregations']['activity_children']['budget_value'].to_f*100, 
-                                    if r['aggregations']['activity_children']['budget_currency'].nil?  
-                                        if r['aggregations']['activity_children']['incoming_funds_currency'].nil?
-                                            if r['aggregations']['activity_children']['expenditure_currency'].nil?
+		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100, 
+                                    if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
+                                        if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
+                                            if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
                                                 'GBP'
                                             else
-                                                r['aggregations']['activity_children']['expenditure_currency']
+                                                r['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
                                             end
                                         else
-                                            r['aggregations']['activity_children']['incoming_funds_currency']
+                                            r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency']
                                         end
-                                    else r['aggregations']['activity_children']['budget_currency'] 
+                                    else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
                                     end
                                         ).format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	end
