@@ -174,7 +174,7 @@ module CountryHelpers
       if is_dfid_project(projectId) then
          countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json&page_size=500"
       else
-         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
+         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
       end   
       
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
@@ -190,8 +190,10 @@ module CountryHelpers
         end
       end
       #iterate through the array
-      countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
-      regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+      #countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
+      #regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
+      countries = data[0]['recipient_countries']
+      regions = data[0]['recipient_regions']
       #project type logic
       if(!countries.empty?) then 
         numberOfCountries = countries.count

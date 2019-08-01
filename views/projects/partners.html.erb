@@ -65,7 +65,7 @@
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
                                    Total Project Budget:
                                    <%=begin       
-                                            Money.new(fundedProject['aggregations']['activity_children']['budget_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['budget_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                            Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
                                       rescue
                                       end %>    
                                 </span>
@@ -75,7 +75,7 @@
                                    <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
                                        DFID Funding:
                                        <%=begin       
-                                                Money.new(fundedProject['aggregations']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['aggregations']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['aggregations']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                                Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
                                           rescue
                                           end %>    
                                   </span> 

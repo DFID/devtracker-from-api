@@ -71,8 +71,8 @@ Money.locale_backend = :i18n
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-#set :goverment_department_ids, 'GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
-set :goverment_department_ids, 'GB-GOV-1,GB-1'
+set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
+
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -865,18 +865,18 @@ get '/getFTSResponse' do
 	end
 	jsonResponse = Oj.load(jsonResponse)
 	jsonResponse['results'].each do |r|
-		r['aggregations']['totalBudget'] = Money.new(r['aggregations']['activity_children']['budget_value'].to_f*100, 
-                                    if r['aggregations']['activity_children']['budget_currency'].nil?  
-                                        if r['aggregations']['activity_children']['incoming_funds_currency'].nil?
-                                            if r['aggregations']['activity_children']['expenditure_currency'].nil?
+		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100, 
+                                    if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
+                                        if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
+                                            if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
                                                 'GBP'
                                             else
-                                                r['aggregations']['activity_children']['expenditure_currency']
+                                                r['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
                                             end
                                         else
-                                            r['aggregations']['activity_children']['incoming_funds_currency']
+                                            r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency']
                                         end
-                                    else r['aggregations']['activity_children']['budget_currency'] 
+                                    else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
                                     end
                                         ).format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	end

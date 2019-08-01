@@ -24,9 +24,9 @@ title: Development Tracker
        </div>  
        <% totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f %>
        <div class="trans-header-right">
-         <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%=  Money.new(totalProjectBudget.round(0)*100, if project['aggregations']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['aggregations']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
+         <div class="<%= totalProjectBudget.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value"><%begin%><%=  Money.new(totalProjectBudget.round(0)*100, if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)%><%rescue
 
-           end%><a href="/downloadCSV/<%= project['id']%>/0" style="margin-left: 5px" class="api-link button">CSV</a></div>
+           end%><a href="/downloadCSV/<%= project['iati_identifier']%>/0" style="margin-left: 5px" class="api-link button">CSV</a></div>
        </div>        
     </div>
     <table class="transactions-tablev2 display" style="width:100%; display: none">
@@ -53,41 +53,42 @@ title: Development Tracker
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/1"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :fifthcolumn=> 'Receiver Organisation', :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/1"} %>
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   C O M M I T M E N T S   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitments', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/2"} %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitments', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :fifthcolumn=> 'Receiver Organisation' ,:active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/2"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   D I S B U R S E M E N T S   T A B L E                  %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursements', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :cssId => 'disbursements', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/3"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursements', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :cssId => 'disbursements', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/3"} %>
 
 
 <%# ------------------------------------------------------------------------ %>
 <%#                   E X P E N D I T U R E   T A B L E                      %>
 <%# ------------------------------------------------------------------------ %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :cssId => 'expenditures', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/4"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :cssId => 'expenditures', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/4"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   I N T E R E S T  R E P A Y M E N T   T A B L E                      %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :cssId => 'interestRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/5"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :cssId => 'interestRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/5"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   L O A N  R E P A Y M E N T   T A B L E                              %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :cssId => 'loanRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/6"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :cssId => 'loanRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/6"} %>
 
 <%# ------------------------------------------------------------------------------------- %>
 <%#                   P U R C H A S E  O F  E Q U I T Y    T A B L E                      %>
 <%# ------------------------------------------------------------------------------------- %>
 
-<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquities, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :cssId => 'purchaseEquities', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['id']+"/8"} %>
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquities, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :cssId => 'purchaseEquities', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/8"} %>

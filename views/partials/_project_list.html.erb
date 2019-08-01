@@ -75,9 +75,9 @@
                     <%unless project['activity_status']['name'].nil? %>
                     <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
                     <%end%>
-                    <%unless project['aggregations']['activity_children'].nil? || project['aggregations']['activity_children']['budget_value'].nil? %>
-                        <%if project['aggregations']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Total Budget: <em> <%= Money.new(project['aggregations']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                    <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
+                        <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
+                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%else%>
                             <span class="budget">Budget: <em>Not Provided</em></span>
                         <%end%>

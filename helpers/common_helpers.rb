@@ -316,7 +316,7 @@ module CommonHelpers
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
     allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
+      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['activity_children']['budget_value']
     end
     # This part is for sorting the returned data based on actual start date. For now, this is applicable for country projects page only.
     if (apiList[0].include? "recipient_country")
@@ -389,7 +389,7 @@ module CommonHelpers
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     allProjectsData['project_budget_higher_bound'] = 0
     unless allProjectsData['projects']['results'][0].nil?
-      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['aggregations']['activity_children']['budget_value']
+      allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['activity_children']['budget_value']
     end
     allProjectsData
   end
@@ -400,7 +400,7 @@ module CommonHelpers
     oipa_project_list = JSON.parse(oipa_project_list)
     project_budget_higher_bound = 0
     unless oipa_project_list['results'][0].nil?
-      project_budget_higher_bound = oipa_project_list['results'][0]['aggregations']['activity_children']['budget_value']
+      project_budget_higher_bound = oipa_project_list['results'][0]['activity_plus_child_aggregation']['activity_children']['budget_value']
     end
     project_budget_higher_bound
   end
