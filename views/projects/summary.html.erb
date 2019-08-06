@@ -142,6 +142,7 @@
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
         <div style="margin-top: 15px" class="project-country-title"> 
           <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
+          <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link button" style="position: absolute;right: 30px;">CSV</a>
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
            <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content more-info-limit-size">

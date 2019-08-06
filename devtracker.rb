@@ -902,6 +902,14 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	tempTransactions
 end
 
+get '/downloadLocationDataCSV/:proj_id?' do
+	projID = sanitize_input(params[:proj_id],"p")
+	locationData = location_data_for_csv(projID)
+	content_type 'text/csv'
+	attachment "Export-locations-"+projID+".csv"
+	locationData
+end
+
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
 	# if dept_id == 'DFID'
