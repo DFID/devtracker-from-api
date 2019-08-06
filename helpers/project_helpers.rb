@@ -590,6 +590,74 @@ module ProjectHelpers
         csv_string
     end
 
+    def location_data_for_csv(projectId)
+        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        project = JSON.parse(oipa)
+        #puts project['locations']
+        locationArray = Array.new
+        project['locations'].each do |location|
+            locationHash = {}
+            begin
+                locationHash['IATI Identifier'] = location['iati_identifier']
+            rescue
+                locationHash['IATI Identifier'] = 'N/A'
+            end
+            begin
+                locationHash['Activity Title'] = project['title']['narratives'][0]['text']
+            rescue
+                locationHash['Activity Title'] = 'N/A'
+            end
+            begin
+               locationHash['Location Reach'] = location['location_reach']['code'] 
+            rescue
+                locationHash['Location Reach'] = 'N/A'
+            end
+            begin
+               locationHash['Location Name'] = location['name']['narratives'][0]['text'] 
+            rescue
+                locationHash['Location Name'] = 'N/A'
+            end
+            begin
+                locationHash['Location Description'] = location['description']['narratives'][0]['text']
+            rescue
+                locationHash['Location Description'] = 'N/A'
+            end
+            begin
+                locationHash['Administrative Vocabulary'] = location['administrative'][0]['code']
+            rescue
+                locationHash['Administrative Vocabulary'] = 'N/A'
+            end
+            begin
+                locationHash['Latitude'] = location['point']['pos']['latitude']
+            rescue
+                locationHash['Latitude'] = 'N/A'
+            end
+            begin
+                locationHash['Longitude'] = location['point']['pos']['longitude']
+            rescue
+                locationHash['Longitude'] = 'N/A'
+            end
+            begin
+                locationHash['Exactness'] = location['exactness']['code']
+            rescue
+                locationHash['Exactness'] = 'N/A'
+            end
+            begin
+                locationHash['Location Class'] = location['location_class']['code']
+            rescue
+                locationHash['Location Class'] = 'N/A'
+            end
+            begin
+                locationHash['Feature Designation'] = location['feature_designation']['code']
+            rescue
+                locationHash['Feature Designation'] = 'N/A'
+            end
+            locationArray.push(locationHash)
+        end
+        locationData = hash_to_csv(locationArray)
+        locationData
+    end
+
     def transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
         if transactionType == '3'
             tempStorage = Array.new
