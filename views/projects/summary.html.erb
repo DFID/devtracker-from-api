@@ -154,7 +154,6 @@
         <div><%#= countryOrRegion %></div>
         <div><%#= countryOrRegion[:label] %></div>
         <div id="countryMap" class="countryMap"></div>
-
         <!--TODO - do some logic to get these  types-->
 
         <input type="hidden" id="countryName" value="<%= countryOrRegion[:name] %>">
@@ -183,6 +182,11 @@
 
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
+        </div>
+        <div class="locations">
+            <%project['locations'].each do |location|%>
+                <%=location['name']['narratives'][0]['text']%> - <%=location['description']['narratives'][0]['text']%>,
+            <%end%>
         </div>
     </div>
 

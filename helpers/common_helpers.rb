@@ -225,11 +225,25 @@ module CommonHelpers
     end
   end
 
+  def return_humanitarian_activities_for_country(countryCode)
+    countryCode = ''
+    oipa_project_list = RestClient.get settings.oipa_api_url + "activities/?hierarchy=1,2&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=500&fields=iati_identifier&activity_status=1,2,3,4,5&recipient_country=#{countryCode}&humanitarian=1"
+    oipa_project_list = JSON.parse(oipa_project_list)
+    oipa_project_list = oipa_project_list['results']
+    humProjects = Array.new()
+    oipa_project_list.each do |data|
+      #humProjects.push(data['iati_identifier'][0,data['iati_identifier'].length-4])
+      humProjects.push(data['iati_identifier'])
+    end
+    #humProjects = humProjects.uniq
+    humProjects
+  end
+
   def generate_api_list(listType,listParams,activityStatus)
     apiList = Array.new
     if(listType == 'C')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=activity_dates,descriptions,activity_status,iati_identifier,`url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
       # Sector values JSON API call
       apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
@@ -241,7 +255,7 @@ module CommonHelpers
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # This is to return data sorted according to actual start date
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
     elsif (listType == 'R')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")

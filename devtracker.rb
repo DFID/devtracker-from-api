@@ -161,7 +161,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types']
+	 		implementingOrgTypes: projectData['implementingOrg_types'],
+	 		humanitarianProjectList: return_humanitarian_activities_for_country(n)
 	 	}
 		 			
 end

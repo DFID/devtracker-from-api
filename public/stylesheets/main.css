@@ -956,3 +956,8 @@ padding: 9px 0px;
 .dt-buttons {
 
 }
+
+.bottom-table,
+.bottom-table em {
+  color: #a6a6a6 !important;
+}
