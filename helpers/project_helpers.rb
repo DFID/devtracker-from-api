@@ -654,7 +654,11 @@ module ProjectHelpers
             end
             locationArray.push(locationHash)
         end
-        locationData = hash_to_csv(locationArray)
+        if locationArray.length > 0
+            locationData = hash_to_csv(locationArray)
+        else
+            locationData = ''
+        end
         locationData
     end
 
