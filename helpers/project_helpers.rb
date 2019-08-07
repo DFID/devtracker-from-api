@@ -578,18 +578,6 @@ module ProjectHelpers
 
     #End TODO
 
-    def hash_to_csv(data)
-        #puts data
-        column_names = data.first.keys
-        csv_string = CSV.generate do |csv|
-            csv << column_names
-            data.each do |item|
-                csv << item.values
-            end
-        end
-        csv_string
-    end
-
     def location_data_for_csv(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
