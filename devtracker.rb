@@ -910,6 +910,14 @@ get '/downloadLocationDataCSV/:proj_id?' do
 	locationData
 end
 
+get '/downloadLocationDataCountriesCSV/:countryCode?' do
+	countryCode = sanitize_input(params[:countryCode],"p")
+	locationData = location_data_for_countries_csv(countryCode)
+	content_type 'text/csv'
+	attachment "Export-locations-"+countryCode+".csv"
+	locationData
+end
+
 get '/department/:dept_id/?' do
 	dept_id = sanitize_input(params[:dept_id],"a")
 	# if dept_id == 'DFID'

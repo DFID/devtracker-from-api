@@ -535,4 +535,16 @@ module CommonHelpers
     tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
     tempOgd.values[0]['name']
   end
+
+  def hash_to_csv(data)
+      #puts data
+      column_names = data.first.keys
+      csv_string = CSV.generate do |csv|
+          csv << column_names
+          data.each do |item|
+              csv << item.values
+          end
+      end
+      csv_string
+  end
 end
