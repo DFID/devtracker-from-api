@@ -477,7 +477,7 @@ module CountryHelpers
   end
 
   def location_data_for_countries_csv(countryCode)
-        oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=locations&page_size=500&activity_status=2"
+        oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=title,locations&page_size=500&activity_status=2"
         projects = JSON.parse(oipa)
         #puts project['locations']
         locationArray = Array.new
