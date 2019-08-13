@@ -12,6 +12,7 @@ $(document).ready(function() {
     refreshPagination(window.project_count);
     var oipaLink = '';
     var oipaLink2 = '';
+    var all_reporting_orgs = window.reportingOrgs;
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
@@ -71,6 +72,19 @@ $(document).ready(function() {
         $('.implementingOrg_type').click(function(){
             var tmpDocumentTypeList = $('.implementingOrg_type:checked').map(function(){return $(this).val()}).get().join();
             $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+
+        $('.reportingOrg_type').click(function(){
+            var tmpDocumentTypeList = $('.reportingOrg_type:checked').map(function(){return $(this).val()}).get().join();
+            $('#selected_reportingOrg_type').val(tmpDocumentTypeList);
+            if($('#selected_reportingOrg_type').val().length == 0){
+                window.reportingOrgs = all_reporting_orgs;
+            }
+            else{
+                window.reportingOrgs = $('#selected_reportingOrg_type').val();
+            }
             refreshOipaLink(window.searchType,0);
             generateProjectListAjax(oipaLink);
         });
@@ -230,6 +244,21 @@ $(document).ready(function() {
             $('#organisation-filter').hide();
         }
     }
+    //Reporting org filters
+    function populateReportingOrgFilters(orgList){
+        if(orgList.length > 0){
+            $('#reporting-organisation-filter').show();
+            var tempOrgs = '';
+            $.each(orgList,function(i,val){
+                tempOrgs = tempOrgs + '<li><label for="reportingOrg_type_'+val["organisation_identifier"]+'" title="'+val["organisaion_name"]+'"><input id="reportingOrg_type_'+val["organisation_identifier"]+'" type="checkbox" value="'+val["organisation_identifier"]+'" class="reportingOrg_type" name="reportingOrg_type">'+val["organisaion_name"]+'</label></li>';
+            });
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Goverment Department</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_reportingOrg_type" value=""  />';
+            $('#reporting-organisation-filter').html(tempOrgs);
+        }
+        else{
+            $('#reporting-organisation-filter').hide();
+        }
+    }
     //Populating country location filters
     function populateLocCountryFilters(countryList){
         if(countryList.length > 0){
@@ -264,6 +293,7 @@ $(document).ready(function() {
         $('#sector-filter').html('Refreshing sector filter<input type="hidden" id="selected_sectors" value=""  />');
         $('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
         $('#organisation-filter').html('Refreshing organisation filter<input type="hidden" id="selected_implementingOrg_type" value=""  />');
+        $('#reporting-organisation-filter').html('Refreshing Goverment Department filter<input type="hidden" id="selected_reportingOrg_type" value=""  />');
         $('#budget-slider-filter').html('Refreshing..');
         $('#date-slider-filter').html('Refreshing..');
         $('#sector-filter').show();
@@ -285,8 +315,8 @@ $(document).ready(function() {
             //Prepare the API parameters in one single string
             var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
             // Start making the parallel api calls
-            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString))
-            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList){
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString), $.getJSON('/getReportingOrgList?'+apiParamsString))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,reportingOrgList){
                 window.maxBudget = projectnBudgetData[0].output;
                 window.StartDate = startDate[0].output;
                 window.EndDate = endDate[0].output;
@@ -296,6 +326,9 @@ $(document).ready(function() {
                 populateDocumentTypeFilters(documentTypeList[0].output);
                 //implementing org filters
                 populateImplOrgFilters(implOrgList[0].output);
+                //reporting org filters
+                console.log(reportingOrgList[0])
+                populateReportingOrgFilters(reportingOrgList[0].output);
                 //Budget and date sliders
                 $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
                 $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
@@ -314,8 +347,8 @@ $(document).ready(function() {
             //Prepare the API parameters in one single string
             var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
             // Start making the parallel api calls
-            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString),$.getJSON('/getSectorSpecificFilters?sectorCode='+apiParams+'&projectStatus='+projectStatus))
-            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,sectorLocFilters){
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString),$.getJSON('/getSectorSpecificFilters?sectorCode='+apiParams+'&projectStatus='+projectStatus),$.getJSON('/getReportingOrgList?'+apiParamsString))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,sectorLocFilters,reportingOrgList){
                 window.maxBudget = projectnBudgetData[0].output;
                 window.StartDate = startDate[0].output;
                 window.EndDate = endDate[0].output;
@@ -329,6 +362,8 @@ $(document).ready(function() {
                 populateDocumentTypeFilters(documentTypeList[0].output);
                 //implementing org filters
                 populateImplOrgFilters(implOrgList[0].output);
+                //reporting org filters
+                populateReportingOrgFilters(reportingOrgList[0].output);
                 //Budget and date sliders
                 $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
                 $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');

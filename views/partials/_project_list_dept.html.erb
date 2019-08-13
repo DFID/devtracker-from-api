@@ -221,6 +221,29 @@
                 <%else%>
                     <input type="hidden" id="selected_document_type" value=""  />
                 <%end%>
+                <!-- Reporting org filter -->
+                <%if reportingOrgTypes.length > 0%>
+                    <div id='reporting-organisation-filter' class="filter-header" name="reportingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">
+                        <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div>
+                        <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                            <h3>Government Department</h3>
+                        </span>
+                        <div class="mContent">
+                            <ul style="display: none; margin: 5px;">
+                                <% reportingOrgTypes.each do |reportingOrgType| %>
+                                    <li>
+                                        <label for="reportingOrgType_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
+                                        <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
+                                        </label>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        </div>
+                        <input type="hidden" id="selected_reportingOrg_type" value=""  />
+                    </div>
+                <%else%>
+                    <input type="hidden" id="selected_reportingOrg_type" value=""  />
+                <%end%>
                 <!-- Implementing org filter -->
                 <%if implementingOrgTypes.length > 0 %>
                     <div id='organisation-filter' class="filter-header" name="implementingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">

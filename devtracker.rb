@@ -76,8 +76,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -161,7 +161,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types']
+	 		implementingOrgTypes: projectData['implementingOrg_types'],
+	 		reportingOrgTypes: projectData['reportingOrg_types']
 	 	}
 		 			
 end
@@ -194,7 +195,8 @@ get '/global' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}
 end
 
@@ -229,7 +231,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}	 			
 end
 
@@ -259,7 +262,8 @@ get '/regions' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}
 end
 
@@ -303,7 +307,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}	 			
 end
 
@@ -527,7 +532,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}	
 end
 
@@ -575,7 +581,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}	
 end
 
@@ -609,7 +616,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}		
 end
 
@@ -691,7 +699,8 @@ get '/search/?' do
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
  		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types']
+ 		implementingOrgTypes: results['implementingOrg_types'],
+ 		reportingOrgTypes: results['reportingOrg_types']
 	}
 end
 
@@ -834,6 +843,19 @@ get '/getImplOrgList' do
 	json :output => generateImplOrgList(apiList[5])
 end
 
+#Returns the LHS Reporting Org List
+get '/getReportingOrgList' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	if(apiType == 'C')
+		json :output => generateReportingOrgList(apiList[7])
+	else
+		json :output => generateReportingOrgList(apiList[6])
+	end
+end
+
 #Returns the LHS Filters (Sector Page Specific)
 get '/getSectorSpecificFilters' do
 	sectorCode = params['sectorCode']
@@ -974,7 +996,8 @@ get '/department/:dept_id/?' do
  		plannedEndDate: projectData['plannedEndDate'],
  		documentTypes: projectData['document_types'],
  		implementingOrgTypes: projectData['implementingOrg_types'],
- 		allProjectsCount: allActivityStatusProjectsCount
+ 		allProjectsCount: allActivityStatusProjectsCount,
+ 		reportingOrgTypes: projectData['reportingOrg_types']
 	}
 end
 

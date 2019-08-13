@@ -242,6 +242,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # This is to return data sorted according to actual start date
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
+      # Reporting Org List API call
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'R')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
@@ -255,6 +257,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      # Reporting Org List API call
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'S')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_sector=#{listParams}")
@@ -268,6 +272,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
+      # Reporting Org List API call
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
     elsif (listType == 'F')
       # Total project list API call
       #apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB")
@@ -282,6 +288,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&q=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      # Reporting Org List API call
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'O')
       # Total project list API call
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{listParams}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value")
@@ -295,6 +303,8 @@ module CommonHelpers
       apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      # Reporting Org List API call
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     end
   end
 
@@ -307,6 +317,8 @@ module CommonHelpers
     puts settings.oipa_api_url + apiList[3]
     puts settings.oipa_api_url + apiList[4]
     puts settings.oipa_api_url + apiList[5]
+    puts settings.oipa_api_url + apiList[6]
+    #puts settings.oipa_api_url + apiList[7]
     puts '-----'
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
@@ -372,10 +384,47 @@ module CommonHelpers
         end
       end
     end
+    
+    # Reporting org type filter preparation
+    if (apiList[0].include? "recipient_country")
+      reportingOrgList = RestClient.get settings.oipa_api_url + apiList[7]
+    else
+      reportingOrgList = RestClient.get settings.oipa_api_url + apiList[6]
+    end
+    reportingOrgList = JSON.parse(reportingOrgList)
+    reportingOrgList = reportingOrgList['results']
+    finalReportingOrgList = Array.new
+    reportingOrgList.each do |org|
+      tempHash = {}
+      tempDepartment = returnDepartmentName(org['reporting_organisation']['organisation_identifier'])
+      if(tempDepartment != 'N/A')
+        isItemExist = checkIfItemExist(finalReportingOrgList,'organisaion_name',tempDepartment)
+        if(isItemExist != -1)
+          finalReportingOrgList[isItemExist]['organisation_identifier'] = finalReportingOrgList[isItemExist]['organisation_identifier'] + ',' + org['reporting_organisation']['organisation_identifier']
+        else
+          tempHash['organisation_identifier'] = org['reporting_organisation']['organisation_identifier']
+          tempHash['organisaion_name'] = tempDepartment
+          finalReportingOrgList.push(tempHash)
+        end
+      end
+    end
+    # Dat sorting
     allProjectsData['highLevelSectorList'] = allProjectsData['highLevelSectorList'].sort_by {|key| key}
     allProjectsData['document_types'] = allProjectsData['document_types'].sort_by {|key| key["document_link_category"]["name"]}
     allProjectsData['implementingOrg_types'] = allProjectsData['implementingOrg_types'].sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
+    allProjectsData['reportingOrg_types'] = finalReportingOrgList.sort_by{|key| key['organisaion_name']}
     return allProjectsData
+  end
+
+  def checkIfItemExist(arr,k,itemToSearch)
+    searchedItem = -1
+    arr.each_index do |x|
+      if(arr[x][k].to_s == itemToSearch.to_s)
+        searchedItem = x
+        break
+      end
+    end
+    searchedItem
   end
 
   #######################################
@@ -474,6 +523,21 @@ module CommonHelpers
     implementingOrg_type_list = implementingOrg_type_list.sort_by {|key| key["participating_organisation"]}.uniq {|key| key["participating_organisation_ref"]}
   end
 
+  #Return Reporting Org List
+  def generateReportingOrgList(apiLink)
+    reportingOrgList = RestClient.get settings.oipa_api_url + apiLink
+    reportingOrgList = JSON.parse(reportingOrgList)
+    reportingOrgList = reportingOrgList['results']
+    finalReportingOrgList = Array.new
+    reportingOrgList.each do |org|
+      tempHash = {}
+      tempHash['organisation_identifier'] = org['reporting_organisation']['organisation_identifier']
+      tempHash['organisaion_name'] = returnDepartmentName(org['reporting_organisation']['organisation_identifier'])
+      finalReportingOrgList.push(tempHash)
+    end
+    finalList = finalReportingOrgList.sort_by{|key| key['organisaion_name']}
+  end  
+
   #Serve the aid by location country page table data
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
@@ -531,9 +595,14 @@ module CommonHelpers
 
   #Return OGD name based on OGD code
   def returnDepartmentName(deptCode)
-    ogds = Oj.load(File.read('data/OGDs.json'))
-    tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
-    tempOgd.values[0]['name']
+    begin
+      ogds = Oj.load(File.read('data/OGDs.json'))
+      tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
+      tempOgd.values[0]['name']
+    rescue
+      puts deptCode
+      'N/A'
+    end
   end
 
   def hash_to_csv(data)
