@@ -453,7 +453,7 @@ $(document).ready(function() {
         }
         switch (window.searchType){
         case 'C':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
             break;
         case 'F':
             oipaLink2 = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&budgetLowerBound=&budgetHigherBound=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
