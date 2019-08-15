@@ -134,7 +134,7 @@
                     <div id='reporting-organisation-filter' class="filter-header" name="reportingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">
                         <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                         <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h3>Government Department</h3>
+                            <h3>Government Departments</h3>
                         </span>
                         <div class="mContent">
                             <ul style="display: block; margin: 5px;">
@@ -245,13 +245,13 @@
                 <%end%>
                 <!-- Implementing org filter -->
                 <%if implementingOrgTypes.length > 0 %>
-                    <div id='organisation-filter' class="filter-header" name="implementingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">
+                    <div id='organisation-filter' class="filter-header" name="implementingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 0px 0px">
                         <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                         <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                            <h3>Organisations</h3>
+                            <h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: block; margin: 5px;">
+                            <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; height: 200px; margin: 5px;">
                                 <% implementingOrgTypes.each do |implementingOrgTypes| %>
                                     <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
                                         <li>
@@ -264,6 +264,7 @@
                             </ul>
                         </div>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
+                        <div class="description-overlay" style="position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>
                     </div>
                 <%else%>
                     <input type="hidden" id="selected_implementingOrg_type" value=""  />

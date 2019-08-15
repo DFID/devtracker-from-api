@@ -249,6 +249,10 @@ Results pagination make sit right
   -moz-box-shadow: none;
   box-shadow: none; }
 
+#search-results a{
+  font-weight: bold;
+}
+
 h1 span {
   display: block;
   color: rgba(255, 255, 255, 0.7);
@@ -289,7 +293,7 @@ Results bullet text style
 ---------------------------------------------------------*/
 #search-results span {
   font-size: 1em;
-  font-weight: bold; }
+  font-weight: normal; }
 
 #search-results h3 {
   font-size: 1.25em; }

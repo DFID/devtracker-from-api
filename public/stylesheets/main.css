@@ -961,3 +961,12 @@ padding: 9px 0px;
 .bottom-table em {
   /*color: #a6a6a6 !important;*/
 }
+
+.reporting-org {
+  color: #008270;
+}
+
+.implenting-orgs-container {
+  overflow: hidden;
+  min-height: 200px;
+}
