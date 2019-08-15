@@ -92,7 +92,7 @@
                     <div class="ui-state-highlight ui-corner-all">Default filter shows currently active projects. To see projects at other stages, use the status filters or select the checkbox to search for completed projects.</div>
                     <div>
                         Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
-                        <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                        <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                         <% else %>
                         <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
                         <%end%>
@@ -127,12 +127,12 @@
                         #to handle different budget aggregations for DFID and non-DFID projects
                         if is_dfid_project(project['iati_identifier']) then
                             unless project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
-                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%end
                         else
                             unless project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
                                 <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0%>
-                                    <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100, 
+                                    <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
                                     if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
                                         if project['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
                                             if project['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?

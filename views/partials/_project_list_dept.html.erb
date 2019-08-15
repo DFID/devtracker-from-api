@@ -45,7 +45,7 @@
                 <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                    <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
                     <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <span style="display:inline;"><%= project_count%></span>
                     <%end%>
@@ -78,7 +78,7 @@
                     <%end%>
                     <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
                         <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%else%>
                             <span class="budget">Total Budget: <em>Not Provided</em></span>
                         <%end%>
@@ -331,7 +331,7 @@
                 <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
-                    <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                    <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
                     <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <span style="display:inline;"><%= project_count%></span>
                     <%end%>
@@ -364,7 +364,7 @@
                     <%end%>
                     <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
                         <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%else%>
                             <span class="budget">Total Budget: <em>Not Provided</em></span>
                         <%end%>
