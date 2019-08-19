@@ -309,7 +309,7 @@
                                 <h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3>
                             </span>
                             <div class="mContent">
-                                <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; height: 600px; margin: 5px;">
+                                <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
                                     <% implementingOrgTypes.each do |implementingOrgTypes| %>
                                         <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
                                             <li>
@@ -322,7 +322,7 @@
                                 </ul>
                             </div>
                             <input type="hidden" id="selected_implementingOrg_type" value=""  />
-                            <div class="description-overlay" style="position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>
+                            <div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>
                         </div>
                     <%else%>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
@@ -352,6 +352,13 @@
             <script type='text/javascript'>
                 $(document).ready(function() {
                     //window.oipaApiUrl = "<%#= oipa_api_url %>";
+                    <%if implementingOrgTypes.length > 0 %>
+                        if($('.implenting-orgs').height() > 700){
+                            $('.implenting-orgs').height(700);
+                            $('.description-overlay').show();
+                        }
+                        $('.implenting-orgs').show();
+                    <%end%>
                     window.oipaApiUrl = window.baseUrl;
                     window.project_count = "<%= project_count %>";
                     window.searchQuery = "<%= query %>";
