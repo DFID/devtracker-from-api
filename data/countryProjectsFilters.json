@@ -3,15 +3,11 @@
 	[
 		{
 			"code":"2",
-			"name":"Implementation"
+			"name":"Active"
 		},
 		{
-			"code":"3",
-			"name":"Completion"
-		},
-		{
-			"code":"4",
-			"name":"Post-completion"
+			"code":"3,4",
+			"name":"Closed"
 		}
 	],
 	"sectors":

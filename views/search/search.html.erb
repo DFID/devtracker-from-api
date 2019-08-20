@@ -92,7 +92,7 @@
                     <div class="ui-state-highlight ui-corner-all">Default filter shows currently active projects. To see projects at other stages, use the status filters or select the checkbox to search for completed projects.</div>
                     <div>
                         Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
-                        <% if (project_count > 10) %><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of <%= project_count%>
+                        <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                         <% else %>
                         <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
                         <%end%>
@@ -127,12 +127,12 @@
                         #to handle different budget aggregations for DFID and non-DFID projects
                         if is_dfid_project(project['iati_identifier']) then
                             unless project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
-                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
                         <%end
                         else
                             unless project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
                                 <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0%>
-                                    <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100, 
+                                    <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
                                     if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
                                         if project['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
                                             if project['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
@@ -212,6 +212,29 @@
                             <input type="hidden" id="activity_status_states" value="2"  />
                         <%end%>
                     </div>
+                    <!-- Reporting org filter -->
+                    <%if reportingOrgTypes.length > 0%>
+                        <div id='reporting-organisation-filter' class="filter-header" name="reportingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">
+                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
+                            <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
+                                <h3>Government Departments</h3>
+                            </span>
+                            <div class="mContent">
+                                <ul style="display: block; margin: 5px;">
+                                    <% reportingOrgTypes.each do |reportingOrgType| %>
+                                        <li>
+                                            <label for="reportingOrgType_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
+                                            <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
+                                            </label>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            </div>
+                            <input type="hidden" id="selected_reportingOrg_type" value=""  />
+                        </div>
+                    <%else%>
+                        <input type="hidden" id="selected_reportingOrg_type" value=""  />
+                    <%end%>
                     <div name="locations" style="display: none">
                         <h3>Locations</h3>
                         <div style="margin-left:20px;" name="countries">
@@ -229,12 +252,12 @@
                     </div>
                     <%if highLevelSectorList.length > 0 %>
                         <div id='sector-filter' class="filter-header" name="sectors" style="background: none repeat scroll 0px 0px rgb(244, 244, 244);padding: 5px 0 5px 5px">
-                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div>
+                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                             <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                                 <h3>Sectors</h3>
                             </span>
                             <div class="mContent">
-                                <ul style="display: none; margin: 5px">
+                                <ul style="display: block; margin: 5px">
                                     <% highLevelSectorList.each do |highLevelSectorName| %>
                                         <li>
                                             <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
@@ -257,13 +280,13 @@
                         </span>
                     </div>
                     <%if documentTypes.length > 0 %>
-                        <div id='document-filter' class="filter-header" name="documents" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px">
-                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div>
+                        <div id='document-filter' class="filter-header" name="documents" style="background: none repeat scroll 0px 0px rgb(244, 244, 244); padding: 5px 0 5px 5px; display: none">
+                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                             <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
                                 <h3>Document Type</h3>
                             </span>
                             <div class="mContent">
-                                <ul style="display: none; margin: 5px">
+                                <ul style="display: block; margin: 5px">
                                     <% documentTypes.each do |documentTypes| %>
                                     <li>
                                         <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
@@ -280,13 +303,13 @@
                     <%end%>
                     <!-- Implementing org filter -->
                     <%if implementingOrgTypes.length > 0 %>
-                        <div id='organisation-filter' class="filter-header" name="implementingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244);padding: 5px 0 5px 5px">
-                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div>
+                        <div id='organisation-filter' class="filter-header" name="implementingOrgs" style="background: none repeat scroll 0px 0px rgb(244, 244, 244);padding: 5px 0 0px 0px">
+                            <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                             <span class="proj-filter-exp-collapse-text" style="cursor:pointer">
-                                <h3>Organisations</h3>
+                                <h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3>
                             </span>
                             <div class="mContent">
-                                <ul style="display: none; margin: 5px">
+                                <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
                                     <% implementingOrgTypes.each do |implementingOrgTypes| %>
                                         <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
                                             <li>
@@ -299,6 +322,7 @@
                                 </ul>
                             </div>
                             <input type="hidden" id="selected_implementingOrg_type" value=""  />
+                            <div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>
                         </div>
                     <%else%>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
@@ -328,6 +352,13 @@
             <script type='text/javascript'>
                 $(document).ready(function() {
                     //window.oipaApiUrl = "<%#= oipa_api_url %>";
+                    <%if implementingOrgTypes.length > 0 %>
+                        if($('.implenting-orgs').height() > 700){
+                            $('.implenting-orgs').height(700);
+                            $('.description-overlay').show();
+                        }
+                        $('.implenting-orgs').show();
+                    <%end%>
                     window.oipaApiUrl = window.baseUrl;
                     window.project_count = "<%= project_count %>";
                     window.searchQuery = "<%= query %>";

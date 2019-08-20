@@ -12,6 +12,7 @@ $(document).ready(function() {
     refreshPagination(window.project_count);
     var oipaLink = '';
     var oipaLink2 = '';
+    var all_reporting_orgs = window.reportingOrgs;
     // $('.search-result h3 a small[class^="GB-"]').parent().parent().parent().show();
     // $('.search-result h3 a small[class^="XM-DAC-12-"]').parent().parent().parent().show();
     // $('.search-result h3 a small').hasClass('GB-*').show();
@@ -20,7 +21,7 @@ $(document).ready(function() {
     var currencyLink = '/currency';
     switch (window.searchType){
         case 'C':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
         case 'F':
             //oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation,descriptions&q='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
@@ -28,13 +29,13 @@ $(document).ready(function() {
             console.log(oipaLink);
             break;
         case 'S':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
         case 'R':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_region='+window.RegionCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_region='+window.RegionCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
         case 'O':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
     }
     function refreshOipaLink(searchType,trigger){
@@ -44,19 +45,19 @@ $(document).ready(function() {
         }
         switch (window.searchType){
             case 'C':
-                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_country='+window.CountryCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'F':
                 oipaLink = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&budgetLowerBound='+budgetLowerBound+'&budgetHigherBound='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'S':
-                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&related_activity_sector='+window.SectorCode + '&recipient_country=' + $('#locationCountryFilterStates').val() + '&recipient_region=' + $('#locationRegionFilterStates').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'R':
-                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_region='+window.RegionCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+                oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&recipient_region='+window.RegionCode+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
                 break;
             case 'O':
-            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
+            oipaLink = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering='+$('.sort_results_type:first').val()+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+$('#date_lower_bound').val()+'&planned_end_date_lte='+$('#date_higher_bound').val()+'&sector='+$('#selected_sectors').val()+'&document_link_category='+$('#selected_document_type').val() +'&participating_organisation='+$('#selected_implementingOrg_type').val();
             break;
         }
     };
@@ -71,6 +72,19 @@ $(document).ready(function() {
         $('.implementingOrg_type').click(function(){
             var tmpDocumentTypeList = $('.implementingOrg_type:checked').map(function(){return $(this).val()}).get().join();
             $('#selected_implementingOrg_type').val(tmpDocumentTypeList);
+            refreshOipaLink(window.searchType,0);
+            generateProjectListAjax(oipaLink);
+        });
+
+        $('.reportingOrg_type').click(function(){
+            var tmpDocumentTypeList = $('.reportingOrg_type:checked').map(function(){return $(this).val()}).get().join();
+            $('#selected_reportingOrg_type').val(tmpDocumentTypeList);
+            if($('#selected_reportingOrg_type').val().length == 0){
+                window.reportingOrgs = all_reporting_orgs;
+            }
+            else{
+                window.reportingOrgs = $('#selected_reportingOrg_type').val();
+            }
             refreshOipaLink(window.searchType,0);
             generateProjectListAjax(oipaLink);
         });
@@ -193,7 +207,7 @@ $(document).ready(function() {
             $.each(sectorList,function(i,val){
                 tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
             });
-            tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
+            tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
             $('#sector-filter').html(tempSectors);
         }
         else{
@@ -203,12 +217,12 @@ $(document).ready(function() {
     //Document type filter
     function populateDocumentTypeFilters(documentTypes){
         if(documentTypes.length > 0){
-            $('#document-filter').show();
+            //$('#document-filter').show();
             var tempDocuments = '';
             $.each(documentTypes,function(i,val){
                 tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
             });
-            tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
+            tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
             $('#document-filter').html(tempDocuments);
         }
         else{
@@ -223,11 +237,32 @@ $(document).ready(function() {
             $.each(orgList,function(i,val){
                 tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
             });
-            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Organisations</h3></span><div class="mContent"><ul style="display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  />';
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3></span><div class="mContent"><ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  /><div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="display: none; text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>';
             $('#organisation-filter').html(tempOrgs);
+            console.log($('.implenting-orgs').height());
+            if($('.implenting-orgs').height() > 700){
+                $('.implenting-orgs').height(700);
+                $('.description-overlay').show();
+            }
+            $('.implenting-orgs').show();
         }
         else{
             $('#organisation-filter').hide();
+        }
+    }
+    //Reporting org filters
+    function populateReportingOrgFilters(orgList){
+        if(orgList.length > 0){
+            $('#reporting-organisation-filter').show();
+            var tempOrgs = '';
+            $.each(orgList,function(i,val){
+                tempOrgs = tempOrgs + '<li><label for="reportingOrg_type_'+val["organisation_identifier"]+'" title="'+val["organisaion_name"]+'"><input id="reportingOrg_type_'+val["organisation_identifier"]+'" type="checkbox" value="'+val["organisation_identifier"]+'" class="reportingOrg_type" name="reportingOrg_type">'+val["organisaion_name"]+'</label></li>';
+            });
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Goverment Departments</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_reportingOrg_type" value=""  />';
+            $('#reporting-organisation-filter').html(tempOrgs);
+        }
+        else{
+            $('#reporting-organisation-filter').hide();
         }
     }
     //Populating country location filters
@@ -238,7 +273,7 @@ $(document).ready(function() {
             $.each(countryList,function(i, val){
                 tempCountryLocations = tempCountryLocations + '<li><label for="location_country_'+val['recipient_country']['code']+'" title="'+val['recipient_country']['name']+'"><input id="location_country_'+val['recipient_country']['code']+'" type="checkbox" value="'+val['recipient_country']['code']+'" class="location_country" name="locationCountry">'+val['recipient_country']['name']+'</label></li>';
             });
-            tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempCountryLocations + '</ul></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
+            tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><ul style="display: block;margin: 5px;">' + tempCountryLocations + '</ul></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
             $('#sector-country-filter').html(tempCountryLocations);
         }
         else{
@@ -253,7 +288,7 @@ $(document).ready(function() {
             $.each(regionList,function(i, val){
                 tempRegionLocations = tempRegionLocations + '<li><label for="location_region_'+val['recipient_region']['code']+'" title="'+val['recipient_region']['name']+'"><input id="location_region_'+val['recipient_region']['code']+'" type="checkbox" value="'+ val['recipient_region']['code']+'" class="location_region" name="locationRegion">'+val['recipient_region']['name']+'</label></li>';
             });
-            tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-down"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><ul style="display: none;margin: 5px;">' + tempRegionLocations + '</ul></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
+            tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><ul style="display: block;margin: 5px;">' + tempRegionLocations + '</ul></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
             $('#sector-region-filter').html(tempRegionLocations);
         }
         else{
@@ -262,12 +297,13 @@ $(document).ready(function() {
     }
     function refreshLHSFiltersv2(projectStatus){
         $('#sector-filter').html('Refreshing sector filter<input type="hidden" id="selected_sectors" value=""  />');
-        $('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
+        //$('#document-filter').html('Refreshing document type filter<input type="hidden" id="selected_document_type" value=""  />');
         $('#organisation-filter').html('Refreshing organisation filter<input type="hidden" id="selected_implementingOrg_type" value=""  />');
+        $('#reporting-organisation-filter').html('Refreshing Goverment Department filter<input type="hidden" id="selected_reportingOrg_type" value=""  />');
         $('#budget-slider-filter').html('Refreshing..');
         $('#date-slider-filter').html('Refreshing..');
         $('#sector-filter').show();
-        $('#document-filter').show();
+        //$('#document-filter').show();
         $('#organisation-filter').show();
         if(window.searchType != 'S'){
             var apiType = window.searchType;
@@ -285,17 +321,21 @@ $(document).ready(function() {
             //Prepare the API parameters in one single string
             var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
             // Start making the parallel api calls
-            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString))
-            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList){
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString), $.getJSON('/getReportingOrgList?'+apiParamsString))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,reportingOrgList){
                 window.maxBudget = projectnBudgetData[0].output;
                 window.StartDate = startDate[0].output;
                 window.EndDate = endDate[0].output;
                 //Populating sector filter
                 populateSectorFilters(sectorData[0].output);
                 //populating dcoument types filter
-                populateDocumentTypeFilters(documentTypeList[0].output);
+                //populateDocumentTypeFilters(documentTypeList[0].output);
                 //implementing org filters
                 populateImplOrgFilters(implOrgList[0].output);
+                prepImplOrgExpander();
+                //reporting org filters
+                console.log(reportingOrgList[0])
+                populateReportingOrgFilters(reportingOrgList[0].output);
                 //Budget and date sliders
                 $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
                 $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
@@ -314,8 +354,8 @@ $(document).ready(function() {
             //Prepare the API parameters in one single string
             var apiParamsString = 'apiType='+apiType+'&apiParams='+apiParams+'&projectStatus='+projectStatus;
             // Start making the parallel api calls
-            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString),$.getJSON('/getSectorSpecificFilters?sectorCode='+apiParams+'&projectStatus='+projectStatus))
-            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,sectorLocFilters){
+            $.when($.getJSON('/getBudgetHi?'+apiParamsString),$.getJSON('/getHiLvlSectorList?'+apiParamsString),$.getJSON('/getStartDate?'+apiParamsString),$.getJSON('/getEndDate?'+apiParamsString),$.getJSON('/getDocumentTypeList?'+apiParamsString),$.getJSON('/getImplOrgList?'+apiParamsString),$.getJSON('/getSectorSpecificFilters?sectorCode='+apiParams+'&projectStatus='+projectStatus),$.getJSON('/getReportingOrgList?'+apiParamsString))
+            .done(function(projectnBudgetData,sectorData,startDate,endDate,documentTypeList,implOrgList,sectorLocFilters,reportingOrgList){
                 window.maxBudget = projectnBudgetData[0].output;
                 window.StartDate = startDate[0].output;
                 window.EndDate = endDate[0].output;
@@ -329,6 +369,9 @@ $(document).ready(function() {
                 populateDocumentTypeFilters(documentTypeList[0].output);
                 //implementing org filters
                 populateImplOrgFilters(implOrgList[0].output);
+                prepImplOrgExpander();
+                //reporting org filters
+                populateReportingOrgFilters(reportingOrgList[0].output);
                 //Budget and date sliders
                 $('#budget-slider-filter').html('<div name="budget" style="margin-bottom: 10px"><h3>Budget Value</h3><input type="hidden" id="budget_lower_bound" value="0"  /><input type="hidden" id="budget_higher_bound" value=""  /></div><span id="amount" style="border: 0; font-weight: bold"></span><div id="slider-vertical" style="height: 13px;width : 80%; margin-top: 10px"></div>');
                 $('#date-slider-filter').html('<div name="date" style="margin-top: 20px; margin-bottom: 10px;"><h3>Start and end date</h3><input type="hidden" id="date_lower_bound" value=""  /><input type="hidden" id="date_higher_bound" value=""  /></div><span id="date-range" style="border: 0; font-weight: bold;"></span><div id="date-slider-vertical" style="height: 13px;width : 80%; margin-top: 10px;"></div><div style="text-align: left; color: grey; margin-top: 15px; display: none" id="date-slider-disclaimer"><span style="margin-top: 4px; float: left; text-align: center; width: 186px;">Note: Projects without a valid end date have been removed from the filtered results.</span></div>');
@@ -418,19 +461,19 @@ $(document).ready(function() {
         }
         switch (window.searchType){
         case 'C':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_country='+window.CountryCode+'&document_link_category=&participating_organisation=';
             break;
         case 'F':
             oipaLink2 = '/getFTSResponse?searchQuery='+window.searchQuery+'&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&budgetLowerBound=&budgetHigherBound=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
             break;
         case 'S':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_sector='+window.SectorCode + '&recipient_country=&recipient_region=&document_link_category=&participating_organisation=';
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&related_activity_sector='+window.SectorCode + '&recipient_country=&recipient_region=&document_link_category=&participating_organisation=';
             break;
         case 'R':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_region=&document_link_category=&participating_organisation=';
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.reportingOrgs+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&recipient_region=&document_link_category=&participating_organisation=';
             break;
         case 'O':
-            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=10&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
+            oipaLink2 = window.oipaApiUrl + 'activities/?hierarchy=1&page_size=20&format=json&reporting_organisation_identifier='+window.ogd_code+'&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&activity_status='+$('#activity_status_states').val()+'&ordering=-activity_plus_child_budget_value&total_hierarchy_budget_gte=&total_hierarchy_budget_lte=&actual_start_date_gte=&planned_end_date_lte=&sector=&document_link_category=&participating_organisation=';
             break;
     }
         refreshOipaLink(window.searchType,0);
@@ -449,7 +492,7 @@ $(document).ready(function() {
     function refreshPagination(projectCount){
         $('.light-pagination').pagination({
             items: projectCount,
-            itemsOnPage: 10,
+            itemsOnPage: 20,
             cssStyle: 'compact-theme',
             onPageClick: function(pageNumber,event){
                 pagedOipaLink = oipaLink + '&page='+ pageNumber;
@@ -472,11 +515,11 @@ $(document).ready(function() {
                     }
                     
                     if (!isEmpty(json.next)){
-                        var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">'+(1+(10*(pageNumber-1)))+' - '+(10*pageNumber)+'</span> of '+projectCount+'</div>';
+                        var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">'+(1+(20*(pageNumber-1)))+' - '+(20*pageNumber)+'</span> of '+projectCount+'</div>';
                         $('#showResults').append(tmpStr);
                     }
                     else{
-                        var tmpStr = '<div>Now showing projects '+(1+(10*(pageNumber-1)))+' - '+projectCount+' of '+projectCount+'</div>';
+                        var tmpStr = '<div>Now showing projects '+(1+(20*(pageNumber-1)))+' - '+projectCount+' of '+projectCount+'</div>';
                         $('#showResults').append(tmpStr);
                     }
                     $.each(json.results,function(i,result){
@@ -535,6 +578,28 @@ $(document).ready(function() {
                                 validResults['title'] = 'Project Title Unavailable';
                             }
                             var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                        }
+                        else if (window.searchType == 'C'){
+                            var actualStartDate = '';
+                            var plannedStartDate = '';
+                            validResults['activity_dates'] = result.activity_dates;
+                            for(var i = 0; i < validResults['activity_dates'].length; i++){
+                                if(validResults['activity_dates'][i]['type']['code'] == 1){
+                                    plannedStartDate = new Date(validResults['activity_dates'][i]['iso_date']).customFormat('#DD#-#MM#-#YYYY#');
+                                }
+                                if(validResults['activity_dates'][i]['type']['code'] == 2){
+                                    actualStartDate = new Date(validResults['activity_dates'][i]['iso_date']).customFormat('#DD#-#MM#-#YYYY#');
+                                }
+                            }
+                            if(actualStartDate.length > 0){
+                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                            }
+                            else if(plannedStartDate.length > 0){
+                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                            }
+                            else{
+                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                            }                           
                         }
                         else{
                             var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
@@ -617,7 +682,7 @@ $(document).ready(function() {
             // Moved the refreshPagination execution to a later state as part of code optimisation
             //refreshPagination(json.count);
             if (!isEmpty(json.next)){
-                var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 10</span> of '+returnedProjectCount+'</div>';
+                var tmpStr = '<div>Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of '+returnedProjectCount+'</div>';
                 $('#showResults').append(tmpStr);
             }
             else{
@@ -675,6 +740,30 @@ $(document).ready(function() {
                 if(window.searchType == 'F'){
                     console.log(result.activity_plus_child_aggregation.totalBudget);
                     var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
+                }
+                else if (window.searchType == 'C'){
+                    var actualStartDate = '';
+                    var plannedStartDate = '';
+                    validResults['activity_dates'] = result.activity_dates;
+                    for(var i = 0; i < validResults['activity_dates'].length; i++){
+                        if(validResults['activity_dates'][i]['type']['code'] == 1){
+                            plannedStartDate = new Date(validResults['activity_dates'][i]['iso_date']).customFormat('#DD#-#MM#-#YYYY#');
+                        }
+                        if(validResults['activity_dates'][i]['type']['code'] == 2){
+                            actualStartDate = new Date(validResults['activity_dates'][i]['iso_date']).customFormat('#DD#-#MM#-#YYYY#');
+                        }
+                    }
+                    console.log('actual'+actualStartDate);
+                    console.log('planned'+plannedStartDate);
+                    if(actualStartDate.length > 0){
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                    }
+                    else if(plannedStartDate.length > 0){
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                    }
+                    else{
+                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                    }
                 }
                 else{
                     var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
@@ -761,4 +850,35 @@ $(document).ready(function() {
     function isEmpty(val){
         return (val === undefined || val == null || val.length <= 0) ? true : false;
     }
+
+    //This is for the expanding of the implementing org filter list
+    function prepImplOrgExpander(){
+        var curHeight = $('.implenting-orgs-container').height();
+        $('.implenting-orgs-container').css('height', 'auto');
+        var autoHeight = $('.implenting-orgs-container').height();
+        $('.implenting-orgs-container').height(curHeight);
+        // $('div.description').expander({
+        //     slicePoint    : 300,
+        //     expandSpeed   : 0,
+        //     collapseSpeed : 0,
+        //     expandText    : 'Read more about <%#= country[:name] %>' 
+        // });
+        $('.description-expander').click(function(){
+            $('.implenting-orgs-container').animate({
+                height: autoHeight
+            },1000,function(){
+                $('.description-collapse').fadeIn();
+            });
+            $(this).parent().fadeOut('slow');
+        });
+
+        $('.description-collapse').click(function(){
+            $(this).hide();
+            $('.description-overlay').fadeIn('slow');
+            $('.implenting-orgs-container').animate({
+                height: curHeight
+            },1000);
+        });   
+    }
+    prepImplOrgExpander();
 });

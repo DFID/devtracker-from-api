@@ -62,26 +62,13 @@
                             </a>
                         <%end%>
                     </h3>
-                    <span>Reporting Organisation:<em>
+                    <span class="reporting-org">
                         <%unless project['reporting_organisation'].empty? %>
                             <%unless project['reporting_organisation']['narratives'].empty? %>
                                 <%= project['reporting_organisation']['narratives'][0]['text']%>
                             <%end%>
                         <%end%>
-                    </em></span>
-                    <%unless project['iati_identifier'].nil? %>
-                    <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
-                    <%end%>
-                    <%unless project['activity_status']['name'].nil? %>
-                    <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <%end%>
-                    <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
-                        <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
-                        <%else%>
-                            <span class="budget">Budget: <em>Not Provided</em></span>
-                        <%end%>
-                    <%end%>
+                    </span>
                     <p class="description">
                         <%unless project['descriptions'].empty? %>
                             <%unless project['descriptions'][0]['narratives'].empty? %>
@@ -89,6 +76,46 @@
                             <%end%>
                         <%end%>
                     </p>
+                    <div class="bottom-table row">
+                        <div class="six columns">
+                            <%unless project['iati_identifier'].nil? %>
+                                <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
+                            <%end%>        
+                        </div>
+                        <div class="six columns">
+                            <%unless project['activity_status']['name'].nil? %>
+                                <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                            <%end%>  
+                        </div>
+                    </div>
+                    <div class="bottom-table row">
+                        <div class="six columns">
+                            <span>Start Date:
+                                <%begin%>
+                                    <%plannedStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 1}%>
+                                    <%actualStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 2}%>
+                                    <%if !actualStartD.nil? || actualStartD.length != 0%>
+                                        <em><%= DateTime.parse(actualStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                    <%elsif plannedStartD.nil? || plannedStartD.length != 0%>
+                                        <em><%= DateTime.parse(plannedStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                    <%else%>
+                                        <em>N/A</em>
+                                    <%end%>
+                                <%rescue%>
+                                    <em>N/A</em>
+                                <%end%>
+                            </span>
+                        </div>
+                        <div class="six columns">
+                            <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
+                                <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
+                                    <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                                <%else%>
+                                    <span class="budget">Budget: <em>Not Provided</em></span>
+                                <%end%>
+                            <%end%>  
+                        </div>
+                    </div>
                 </div>
                 <% end %>
             </div>
@@ -228,7 +255,7 @@
                             <h3>Document Type</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: block; margin: 5px;">
+                            <ul style="display: none; margin: 5px;">
                                 <% documentTypes.each do |documentTypes| %>
                                 <li>
                                     <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
@@ -262,6 +289,7 @@
                                     <%end%>
                                 <% end %>
                             </ul>
+                            <!-- <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div> -->
                         </div>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
                         <div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>

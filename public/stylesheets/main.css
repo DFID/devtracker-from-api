@@ -638,12 +638,12 @@ g.c3-axis-y > g:last-child {
 }
 
 .mContent {
-  display: none; 
+  /*display: none;*/ 
   margin-bottom: 15px; 
-  overflow-x: hidden; 
+  /*overflow-x: hidden; 
   overflow-y: scroll; 
   min-height: 10px;
-  max-height: 200px;
+  max-height: 200px;*/
   width: 100%;
 }
 
@@ -955,4 +955,18 @@ padding: 9px 0px;
 
 .dt-buttons {
 
+}
+
+.bottom-table,
+.bottom-table em {
+  /*color: #a6a6a6 !important;*/
+}
+
+.reporting-org {
+  color: #008270;
+}
+
+.implenting-orgs-container {
+  overflow: hidden;
+  min-height: 200px;
 }

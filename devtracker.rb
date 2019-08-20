@@ -71,7 +71,7 @@ Money.locale_backend = :i18n
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
+set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -161,7 +161,8 @@ get '/countries/:country_code/projects/?' do |n|
 	 		actualStartDate: projectData['actualStartDate'],
 	 		plannedEndDate: projectData['plannedEndDate'],
 	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types']
+	 		implementingOrgTypes: projectData['implementingOrg_types'],
+	 		reportingOrgTypes: projectData['reportingOrg_types']
 	 	}
 		 			
 end
@@ -194,7 +195,8 @@ get '/global' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}
 end
 
@@ -229,7 +231,8 @@ get '/global/:global_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}	 			
 end
 
@@ -259,7 +262,8 @@ get '/regions' do
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}
 end
 
@@ -303,7 +307,8 @@ get '/regions/:region_code/projects/?' do |n|
 	 		actualStartDate: getRegionProjects['actualStartDate'],
  			plannedEndDate: getRegionProjects['plannedEndDate'],
  			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types']
+ 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
 		}	 			
 end
 
@@ -527,7 +532,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}	
 end
 
@@ -575,7 +581,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}	
 end
 
@@ -609,7 +616,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	 		actualStartDate: getSectorProjects['actualStartDate'],
  			plannedEndDate: getSectorProjects['plannedEndDate'],
  			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types']
+ 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
+ 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}		
 end
 
@@ -691,7 +699,8 @@ get '/search/?' do
 		actualStartDate: results['actualStartDate'],
  		plannedEndDate: results['plannedEndDate'],
  		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types']
+ 		implementingOrgTypes: results['implementingOrg_types'],
+ 		reportingOrgTypes: results['reportingOrg_types']
 	}
 end
 
@@ -834,6 +843,19 @@ get '/getImplOrgList' do
 	json :output => generateImplOrgList(apiList[5])
 end
 
+#Returns the LHS Reporting Org List
+get '/getReportingOrgList' do
+	apiType = params['apiType']
+	apiParams = params['apiParams']
+	projectStatus = params['projectStatus']
+	apiList = generate_api_list(apiType,apiParams,projectStatus)
+	if(apiType == 'C')
+		json :output => generateReportingOrgList(apiList[7])
+	else
+		json :output => generateReportingOrgList(apiList[6])
+	end
+end
+
 #Returns the LHS Filters (Sector Page Specific)
 get '/getSectorSpecificFilters' do
 	sectorCode = params['sectorCode']
@@ -865,7 +887,7 @@ get '/getFTSResponse' do
 	end
 	jsonResponse = Oj.load(jsonResponse)
 	jsonResponse['results'].each do |r|
-		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f*100, 
+		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
                                     if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
                                         if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
                                             if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
@@ -878,7 +900,7 @@ get '/getFTSResponse' do
                                         end
                                     else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
                                     end
-                                        ).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                                        ).round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
 	end
 	json :output => jsonResponse
 end
@@ -956,6 +978,7 @@ get '/department/:dept_id/?' do
  		projectData['plannedEndDate'] = ''
  		projectData['document_types'] = ''
  		projectData['implementingOrg_types'] = ''
+ 		projectData['reportingOrg_types'] = ''
 	end
   	settings.devtracker_page_title = ogds[dept_id]["name"]
 	erb :'other-govt-departments/other_govt_departments',
@@ -974,7 +997,8 @@ get '/department/:dept_id/?' do
  		plannedEndDate: projectData['plannedEndDate'],
  		documentTypes: projectData['document_types'],
  		implementingOrgTypes: projectData['implementingOrg_types'],
- 		allProjectsCount: allActivityStatusProjectsCount
+ 		allProjectsCount: allActivityStatusProjectsCount,
+ 		reportingOrgTypes: projectData['reportingOrg_types']
 	}
 end
 
