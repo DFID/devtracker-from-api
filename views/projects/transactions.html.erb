@@ -50,6 +50,49 @@ title: Development Tracker
 </div>
 
 <%# ------------------------------------------------------------------------ %>
+<%#                   C O M P O N E N T S   T A B L E                        %>
+<%# ------------------------------------------------------------------------ %>
+<%if components.length > 0%>
+  <div class="row">
+    <div class="twelve columns transactions" style="margin-top: 15px">
+      <div class="section-group-title trans-header-container">
+        <div class="trans-header-left">
+          <span class="trans-type-title">Component Descriptions</span>
+          <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+             <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
+          </a> 
+          <aside id="moreinfo1" class="more-info">  
+                <div class="more-info-content trans-more-info-box-limiter">
+                  Description of related components.
+                </div>
+          </aside>
+         </div>        
+      </div>
+      <table class="transactions-tablev2 display" style="width:100%; display: none">
+        <thead>
+          <tr>
+            <th>IATI Activity ID</th>
+            <th>Component Title</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% components.each do |component| %>
+            <tr>
+              <td><%= component['activityID'] %></td>
+              <td><%= component['title'] %></td>
+              <td><%= component['startDate'] %></td>
+              <td><%= component['endDate'] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<%end%>
+
+<%# ------------------------------------------------------------------------ %>
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
 

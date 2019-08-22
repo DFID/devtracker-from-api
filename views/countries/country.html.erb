@@ -114,6 +114,16 @@
     </div>
     <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
 </div>
+<%if implementingOrgList.length > 0%>
+    <div style="margin-top: 8px" class="country-info-container row">
+        <div class="twelve columns">
+            <span style="font-weight: bold">Suppliers:</span>
+            <%implementingOrgList.each do |org|%>
+                <%=org['participating_organisation']%> (<%=org['count']%>) ¦
+            <%end%>
+        </div>
+    </div>
+<%end%>
 <div class="stuffs">
 <!-- Top six results -->
 <div id="topSixResults" style="margin-top: 25px" class="row">

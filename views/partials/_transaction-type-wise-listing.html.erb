@@ -119,6 +119,7 @@
 <script type="text/javascript">
   var jq3 = jQuery.noConflict(true);
   jq3(document).ready(function() {
+    // var component = jq3('#transactionsv3').DataTable();
     jq3('.transactions-tablev2').DataTable({
       retrieve: true,
       "info": false,
@@ -139,5 +140,6 @@
       }
     });
     jq3('.transactions-tablev2').show();
+    // jq3('#transactionsv3').show();
   })
 </script>
