@@ -664,6 +664,7 @@ module CommonHelpers
         components.push(componentData)
       end
     end
+    components = components.sort_by{|component| component['activityID'].to_s}
     components
   end
 end

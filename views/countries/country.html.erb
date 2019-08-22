@@ -117,10 +117,12 @@
 <%if implementingOrgList.length > 0%>
     <div style="margin-top: 8px" class="country-info-container row">
         <div class="twelve columns">
-            <span style="font-weight: bold">Suppliers:</span>
+            <span style="font-weight: bold;width: 100%;text-align: center;display: block;font-size: 1.7em;margin-bottom: 12px;">Implementing Partners (Beta)</span>
+            <span>
             <%implementingOrgList.each do |org|%>
                 <%=org['participating_organisation']%> (<%=org['count']%>) ¦
             <%end%>
+            </span>
         </div>
     </div>
 <%end%>
