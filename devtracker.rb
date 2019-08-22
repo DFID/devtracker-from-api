@@ -123,6 +123,13 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
+	begin
+		implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=1&activity_status=2&participating_organisation_role=4"
+		implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
+		implementingOrgList = implementingOrgList['results']
+	rescue
+		implementingOrgList = Array.new
+	end
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
@@ -135,7 +142,8 @@ get '/countries/:country_code/?' do |n|
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
- 			activityCount: tempActivityCount['count']
+ 			activityCount: tempActivityCount['count'],
+ 			implementingOrgList: implementingOrgList
  			#relevantReportingOrgs: relevantReportingOrgsFinal
  		}
 end
@@ -387,6 +395,7 @@ get '/projects/:proj_id/transactions/?' do |n|
 	n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
+	componentData = get_project_component_data(project)
 		
 	# get the transactions from the API
   	incomingFunds = get_transaction_details(n,"1")
@@ -437,7 +446,8 @@ get '/projects/:proj_id/transactions/?' do |n|
  			purchaseEquities: purchaseEquity,
  			projectYearWiseBudgets: projectYearWiseBudgets, 			
  			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount 
+ 			fundingProjectsCount: fundingProjectsCount,
+ 			components: componentData
  		}
 end
 
