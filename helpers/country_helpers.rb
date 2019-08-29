@@ -182,6 +182,10 @@ module CountryHelpers
       data.each do |d|
         begin
           d['recipient_countries'][0].delete('id')
+          #This is a special check in place because the API is returning a different name
+          if(d['recipient_countries'][0]['country']['code'].to_s == 'PS')
+            d['recipient_countries'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
+          end
         rescue
         end
         begin
