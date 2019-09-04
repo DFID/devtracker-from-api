@@ -56,10 +56,10 @@ include RecaptchaHelper
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
-set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+#set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -891,9 +891,9 @@ get '/getFTSResponse' do
 	document_link_category = params['document_link_category']
 	participating_organisation = params['participating_organisation']
 	if params['page'] != nil && params['page'] != ''
-		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
 	else
-		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
+		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=10&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
 	end
 	jsonResponse = Oj.load(jsonResponse)
 	jsonResponse['results'].each do |r|
