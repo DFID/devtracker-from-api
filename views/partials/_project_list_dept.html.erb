@@ -42,12 +42,12 @@
                 <div><div>Loading Data <br> Please Wait</div></div>
             </div>
             <div id="showResults">
-                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
+                <div class="ui-state-highlight ui-corner-all" style="padding: 10px">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
                 <div>
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
-                    <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <span style="display:inline;"><%= project_count%></span>
+                    <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
                     <%end%>
                 </div>
                 <% projects.each do |project| %>
@@ -63,26 +63,13 @@
                             </a>
                         <%end%>
                     </h3>
-                    <span>Reporting Organisation:<em>
+                    <span class="reporting-org">
                         <%unless project['reporting_organisation'].empty? %>
                             <%unless project['reporting_organisation']['narratives'].empty? %>
                                 <%= project['reporting_organisation']['narratives'][0]['text']%>
                             <%end%>
                         <%end%>
-                    </em></span>
-                    <%unless project['iati_identifier'].nil? %>
-                    <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
-                    <%end%>
-                    <%unless project['activity_status']['name'].nil? %>
-                    <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
-                    <%end%>
-                    <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
-                        <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
-                        <span class="budget">Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
-                        <%else%>
-                            <span class="budget">Total Budget: <em>Not Provided</em></span>
-                        <%end%>
-                    <%end%>
+                    </span>
                     <p class="description">
                         <%unless project['descriptions'].empty? %>
                             <%unless project['descriptions'][0]['narratives'].empty? %>
@@ -90,6 +77,46 @@
                             <%end%>
                         <%end%>
                     </p>
+                    <div class="bottom-table row">
+                        <div class="six columns">
+                            <%unless project['iati_identifier'].nil? %>
+                                <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
+                            <%end%>        
+                        </div>
+                        <div class="six columns">
+                            <%unless project['activity_status']['name'].nil? %>
+                                <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>
+                            <%end%>  
+                        </div>
+                    </div>
+                    <div class="bottom-table row">
+                        <div class="six columns">
+                            <span>Start Date:
+                                <%begin%>
+                                    <%plannedStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 1}%>
+                                    <%actualStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 2}%>
+                                    <%if !actualStartD.nil? || actualStartD.length != 0%>
+                                        <em><%= DateTime.parse(actualStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                    <%elsif plannedStartD.nil? || plannedStartD.length != 0%>
+                                        <em><%= DateTime.parse(plannedStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                    <%else%>
+                                        <em>N/A</em>
+                                    <%end%>
+                                <%rescue%>
+                                    <em>N/A</em>
+                                <%end%>
+                            </span>
+                        </div>
+                        <div class="six columns">
+                            <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
+                                <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
+                                    <span class="budget">Total Budget: <em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                                <%else%>
+                                    <span class="budget">Budget: <em>Not Provided</em></span>
+                                <%end%>
+                            <%end%>  
+                        </div>
+                    </div>
                 </div>
                 <% end %>
             </div>
