@@ -153,13 +153,37 @@ module ProjectHelpers
         end
         projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
         puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
-        fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
-        fundedProjectsData = JSON.parse(fundedProjectsAPI)
+        projectCount = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title&ordering=title"
+        projectCount = JSON.parse(projectCount)
+        projectCount = projectCount['count']
+        pageSize = 10
+        pages = (projectCount.to_f/pageSize.to_f).ceil
+        fundedProjects = Array.new
+        for a in 1..pages do
+            tempProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{pageSize}&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{a}"
+            tempProjects = JSON.parse(tempProjects)
+            tempProjects['results'].each do |i|
+                begin
+                    if(projectIdentifierListArray.include?(i['iati_identifier'].to_s))
+                    else
+                        fundedProjects.push(i)
+                    end
+                rescue
+                    puts i
+                end
+            end
+        end
+        #fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
+        #fundedProjectsData = JSON.parse(fundedProjectsAPI)
         finalData = Array.new
-        fundedProjectsData['results'].each do |item|
-            if(projectIdentifierListArray.include?(item['iati_identifier'].to_s))
-            else
-                finalData.push(item)
+        fundedProjects.each do |item|
+            begin
+                if(projectIdentifierListArray.include?(item['iati_identifier'].to_s))
+                else
+                    finalData.push(item)
+                end
+            rescue
+                puts item
             end
         end
         finalData
