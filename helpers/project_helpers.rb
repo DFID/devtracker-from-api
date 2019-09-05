@@ -175,18 +175,19 @@ module ProjectHelpers
         end
         #fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
         #fundedProjectsData = JSON.parse(fundedProjectsAPI)
-        finalData = Array.new
-        fundedProjects.each do |item|
-            begin
-                if(projectIdentifierListArray.include?(item['iati_identifier'].to_s))
-                else
-                    finalData.push(item)
-                end
-            rescue
-                puts item
-            end
-        end
-        finalData
+        # finalData = Array.new
+        # fundedProjects.each do |item|
+        #     begin
+        #         if(projectIdentifierListArray.include?(item['iati_identifier'].to_s))
+        #         else
+        #             finalData.push(item)
+        #         end
+        #     rescue
+        #         puts item
+        #     end
+        # end
+        # finalData
+        fundedProjects
     end
 
     def get_transaction_details(projectId,transactionType)
