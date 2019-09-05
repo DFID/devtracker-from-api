@@ -49,42 +49,44 @@
                  <h3 class="section-group-title">Funded Projects</h3>
               <%end%>
                 <% fundedProjects.each do |fundedProject| %>
-                  <div class="row">
-                      <div class="four columns summary">
-                          <h4><%= begin 
-                            fundedProject['reporting_organisation']['narratives'][0]['text'] 
-                            rescue 
-                              end%></h4>
-                      </div>
-                      <div class="eight columns">
-                          <ul>
-                             <%# TODO - deal with the situation where we have multiple languages %>
-                             <li><a href="/projects/<%=fundedProject['iati_identifier']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
-                               <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
-                               <span>
-                                   <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
-                                   Total Project Budget:
-                                   <%=begin       
-                                            Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
-                                      rescue
-                                      end %>    
-                                </span>
+                  <%if (fundedProject['iati_identifier'].to_s != project['iati_identifier'].to_s)%>
+                    <div class="row">
+                        <div class="four columns summary">
+                            <h4><%= begin 
+                              fundedProject['reporting_organisation']['narratives'][0]['text'] 
+                              rescue 
+                                end%></h4>
+                        </div>
+                        <div class="eight columns">
+                            <ul>
+                               <%# TODO - deal with the situation where we have multiple languages %>
+                               <li><a href="/projects/<%=fundedProject['iati_identifier']%>"><%=fundedProject['title']['narratives'][0]['text']%></a>
+                                 <%=if fundedProject['descriptions'].length==0 then '' else fundedProject['descriptions'][0]['narratives'][0]['text'] end  %>
+                                 <span>
+                                     <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
+                                     Total Project Budget:
+                                     <%=begin       
+                                              Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                        rescue
+                                        end %>    
+                                  </span>
 
-                                <% if is_dfid_project(project['iati_identifier']) then %>
-                                   <span>
-                                   <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
-                                       DFID Funding:
-                                       <%=begin       
-                                                Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
-                                          rescue
-                                          end %>    
-                                  </span> 
-                                <%end%>
-                               <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
-                             </li>
-                          </ul> 
-                      </div>
-                  </div>  
+                                  <% if is_dfid_project(project['iati_identifier']) then %>
+                                     <span>
+                                     <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
+                                         DFID Funding:
+                                         <%=begin       
+                                                  Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
+                                            rescue
+                                            end %>    
+                                    </span> 
+                                  <%end%>
+                                 <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
+                               </li>
+                            </ul> 
+                        </div>
+                    </div>
+                  <%end%>
               <% end %>
           </div>
       </div>
