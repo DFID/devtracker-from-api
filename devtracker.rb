@@ -346,7 +346,7 @@ get '/projects/:proj_id/?' do |n|
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_count(n)
+	fundedProjectsCount = get_funded_project_details(n).length
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']
 	erb :'projects/summary', 
@@ -376,7 +376,7 @@ get '/projects/:proj_id/documents/?' do |n|
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_count(n)
+	fundedProjectsCount = get_funded_project_details(n).length
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -428,7 +428,7 @@ get '/projects/:proj_id/transactions/?' do |n|
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_count(n)
+	fundedProjectsCount = get_funded_project_details(n).length
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -473,8 +473,8 @@ get '/projects/:proj_id/partners/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
 			countryOrRegion: countryOrRegion, 			
- 			fundedProjects: fundedProjectsData['results'],
- 			fundedProjectsCount: fundedProjectsData['count'],
+ 			fundedProjects: fundedProjectsData,
+ 			fundedProjectsCount: fundedProjectsData.length,
  			fundingProjects: fundingProjects,
  			fundingProjectsCount: fundingProjectsData['count']
  		}
