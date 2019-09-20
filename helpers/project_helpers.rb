@@ -190,6 +190,65 @@ module ProjectHelpers
         fundedProjects
     end
 
+    def get_chained_data(projectId)
+        activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        activityDetails = JSON.parse(activityDetails)
+        activityDetails = activityDetails['related_activities']
+        projectIdentifierList = projectId + ','
+        projectIdentifierListArray = Array.new
+        projectIdentifierListArray.push(projectId.to_s)
+        if(activityDetails.length > 0)
+            activityDetails.each do |activity|
+                begin
+                    if(activity['type']['code'].to_i == 2)
+                        projectIdentifierList = projectIdentifierList + activity['ref'] + ','
+                        projectIdentifierListArray.push(activity['ref'].to_s)
+                    end
+                rescue
+                end
+            end
+        end
+        projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
+        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
+        projectCount = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title&ordering=title"
+        projectCount = JSON.parse(projectCount)
+        projectCount = projectCount['count']
+        pageSize = 10
+        pages = (projectCount.to_f/pageSize.to_f).ceil
+        fundedProjects = Array.new
+        puts '---------'
+        puts "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{pageSize}&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=1"
+        for a in 1..pages do
+            tempProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{pageSize}&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{a}"
+            tempProjects = JSON.parse(tempProjects)
+            tempProjects['results'].each do |i|
+                begin
+                    if(projectIdentifierListArray.include?(i['iati_identifier'].to_s))
+                    else
+                        fundedProjects.push(i)
+                    end
+                rescue
+                    puts i
+                end
+            end
+        end
+        #fundedProjectsAPI = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
+        #fundedProjectsData = JSON.parse(fundedProjectsAPI)
+        # finalData = Array.new
+        # fundedProjects.each do |item|
+        #     begin
+        #         if(projectIdentifierListArray.include?(item['iati_identifier'].to_s))
+        #         else
+        #             finalData.push(item)
+        #         end
+        #     rescue
+        #         puts item
+        #     end
+        # end
+        # finalData
+        fundedProjects
+    end
+
     def get_transaction_details(projectId,transactionType)
         if is_dfid_project(projectId) then
             #oipa v2.2

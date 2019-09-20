@@ -56,10 +56,10 @@ include RecaptchaHelper
 #set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
 #set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -76,8 +76,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -478,6 +478,37 @@ get '/projects/:proj_id/partners/?' do |n|
  			fundingProjects: fundingProjects,
  			fundingProjectsCount: fundingProjectsData['count']
  		}
+end
+
+#Project delivery chain
+
+get '/projects/:proj_id/delivery-chain/?' do |n|
+	# get the project data from the API
+	n = sanitize_input(n,"p")
+	project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	# get the funding projects from the API
+  	fundingProjectsData = get_funding_project_details(n)
+  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+
+	# get the funded projects from the API
+	fundedProjectsData = get_chained_data(n)
+	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain'
+	erb :'projects/delivery-chain',
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+			countryOrRegion: countryOrRegion,
+			fundedProjects: fundedProjectsData,
+ 			fundedProjectsCount: fundedProjectsData.length,
+ 			fundingProjects: fundingProjects,
+ 			fundingProjectsCount: fundingProjectsData['count']
+		}
+
 end
 
 #####################################################################
