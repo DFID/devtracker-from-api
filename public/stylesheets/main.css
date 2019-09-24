@@ -975,6 +975,7 @@ padding: 9px 0px;
   display: block;
   float: left;
   clear: left;
+  margin-bottom: 0.5em;
 }
 
 .policy_marker_significance {
