@@ -203,9 +203,18 @@
                 <div id="sectorChart"></div>
             </div>
         </div>
+    </div>
+    <div class="six columns">
+        <div class="country-info-container">  
+                <span class="country-info">Budget</span> 
+                <p>A comparison of forecast spend and the total amount of money spent on the project to date.</p>
+        </div>
+        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
+    </div>
+    <div class="twelve columns">
         <%if policyMarkersCount > 0%>
             <div class="country-info-container policy-marker-container">  
-                <span class="country-info">Policy Markers (<%= policyMarkersCount %>)</span>
+                <span class="country-info">Policy Markers</span>
             </div>
             <div class="row">
                 <div class="twelve columns">
@@ -218,15 +227,6 @@
             </div>
         <%end%>
     </div>
-    <div class="six columns">
-        <div class="country-info-container">  
-                <span class="country-info">Budget</span> 
-                <p>A comparison of forecast spend and the total amount of money spent on the project to date.</p>
-        </div>
-        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
-
-    </div>
-
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
