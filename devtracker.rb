@@ -347,7 +347,12 @@ get '/projects/:proj_id/?' do |n|
 
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_details(n).length
-	
+	#Policy markers
+	begin
+		getPolicyMarkers = get_policy_markers(n)
+	rescue
+		getPolicyMarkers = Array.new
+	end
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -359,7 +364,8 @@ get '/projects/:proj_id/?' do |n|
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
- 			participatingOrgList: participatingOrgList
+ 			participatingOrgList: participatingOrgList,
+ 			policyMarkers: getPolicyMarkers
  		}
 end
 

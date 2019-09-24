@@ -203,8 +203,19 @@
                 <div id="sectorChart"></div>
             </div>
         </div>
+        <%if policyMarkers.length > 0%>
+            <div class="country-info-container">  
+                <span class="country-info">Policy Markers (<%= policyMarkers.length %>)</span>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <% policyMarkers.each do |marker|  %>
+                        <span class="policy_marker"><%= marker['policy_marker']['name']%> <span class="policy_marker_significance">(<%= marker['significance']['name'] %>)</span></span>
+                    <%end%>
+                </div>
+            </div>
+        <%end%>
     </div>
-
     <div class="six columns">
         <div class="country-info-container">  
                 <span class="country-info">Budget</span> 

@@ -970,3 +970,13 @@ padding: 9px 0px;
   overflow: hidden;
   min-height: 200px;
 }
+
+.policy_marker {
+  display: block;
+  float: left;
+  clear: left;
+}
+
+.policy_marker_significance {
+  color: #aaa;
+}
