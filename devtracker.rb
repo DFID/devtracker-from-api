@@ -495,7 +495,10 @@ get '/projects/:proj_id/delivery-chain/?' do |n|
   	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-	fundedProjectsData = get_chained_data(n)
+	fundedProjectsData = get_funded_project_details(n)
+
+	#delivery chain stuff
+	testVar = get_chained_data(n)
 	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain'
 	erb :'projects/delivery-chain',
 		:layout => :'layouts/layout',
