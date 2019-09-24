@@ -981,3 +981,7 @@ padding: 9px 0px;
 .policy_marker_significance {
   color: #aaa;
 }
+
+.policy-marker-container {
+  margin-top: 25px;
+}

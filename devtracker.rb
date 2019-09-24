@@ -353,6 +353,12 @@ get '/projects/:proj_id/?' do |n|
 	rescue
 		getPolicyMarkers = Array.new
 	end
+	policyMarkerCount = 0
+	getPolicyMarkers.each do |marker|
+		if(marker['significance']['code'].to_i != 0)
+			policyMarkerCount += 1
+		end
+	end
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -365,7 +371,8 @@ get '/projects/:proj_id/?' do |n|
  			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
- 			policyMarkers: getPolicyMarkers
+ 			policyMarkers: getPolicyMarkers,
+ 			policyMarkersCount: policyMarkerCount
  		}
 end
 
