@@ -215,12 +215,13 @@
         <%if policyMarkersCount > 0%>
             <div class="country-info-container policy-marker-container">  
                 <span class="country-info">Policy Markers</span>
+                <p>ODA measures in relation to their realisation of OECD development policy objectives</p>
             </div>
             <div class="row">
                 <div class="twelve columns">
                     <% policyMarkers.each do |marker|  %>
                         <%if marker['significance']['code'].to_i != 0%>
-                            <span class="policy_marker"><%= marker['policy_marker']['name']%> <span class="policy_marker_significance">(<%= marker['significance']['name'] %>)</span></span>
+                            <span class="policy_marker"><%= marker['policy_marker']['name']%>: <span class="policy_marker_significance"><%= marker['significance']['name'] %></span></span>
                         <%end%>
                     <%end%>
                 </div>
