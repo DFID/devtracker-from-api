@@ -357,6 +357,38 @@ module ProjectHelpers
         end
     end
 
+    def get_policy_markers(projectID)
+        activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectID}/?format=json"
+        activityDetails = JSON.parse(activityDetails)
+        policyMarkers = activityDetails['policy_markers']
+        if(policyMarkers.length == 0)
+            if(activityDetails['related_activities'].length > 0)
+                activityDetails = activityDetails['related_activities']
+                projectIdentifierList = ''
+                if(activityDetails.length > 0)
+                    activityDetails.each do |activity|
+                        begin
+                            if(activity['type']['code'].to_i == 2)
+                                projectIdentifierList = activity['ref']
+                                break
+                            end
+                        rescue
+                            puts 'rescued'
+                        end
+                    end
+                end
+                getH2LevelData = RestClient.get settings.oipa_api_url + "activities/#{projectIdentifierList}/?format=json"
+                getH2LevelData = JSON.parse(getH2LevelData)
+                getH2LevelData['policy_markers']
+            else
+                policyMarkers = []
+                policyMarkers
+            end
+        else
+            policyMarkers
+        end
+    end
+
     def get_implementing_orgs(projectId)
         if is_dfid_project(projectId) then
             implementingOrgsDetailsJSON = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"

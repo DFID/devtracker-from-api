@@ -204,16 +204,30 @@
             </div>
         </div>
     </div>
-
     <div class="six columns">
         <div class="country-info-container">  
                 <span class="country-info">Budget</span> 
                 <p>A comparison of forecast spend and the total amount of money spent on the project to date.</p>
         </div>
         <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
-
     </div>
-
+    <div class="twelve columns">
+        <%if policyMarkersCount > 0%>
+            <div class="country-info-container policy-marker-container">  
+                <span class="country-info">Policy Marker(s)</span>
+                <p>ODA measures in relation to their realisation of OECD development policy objectives</p>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <% policyMarkers.each do |marker|  %>
+                        <%if marker['significance']['code'].to_i != 0%>
+                            <span class="policy_marker"><%= marker['policy_marker']['name']%>: <span class="policy_marker_significance"><%= marker['significance']['name'] %></span></span>
+                        <%end%>
+                    <%end%>
+                </div>
+            </div>
+        <%end%>
+    </div>
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
