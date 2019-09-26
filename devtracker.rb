@@ -498,7 +498,10 @@ get '/projects/:proj_id/delivery-chain/?' do |n|
 	fundedProjectsData = get_funded_project_details(n)
 
 	#delivery chain stuff
-	testVar = get_chained_data(n)
+	testVar = get_chained_data(n,"xxxxx")
+	puts '------------xxxxxx-------------'
+	puts testVar
+	puts '------------xxxxxx-------------'
 	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain'
 	erb :'projects/delivery-chain',
 		:layout => :'layouts/layout',
@@ -509,7 +512,8 @@ get '/projects/:proj_id/delivery-chain/?' do |n|
 			fundedProjects: fundedProjectsData,
  			fundedProjectsCount: fundedProjectsData.length,
  			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']
+ 			fundingProjectsCount: fundingProjectsData['count'],
+ 			deliveryChainData: testVar.to_json
 		}
 
 end

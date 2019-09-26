@@ -190,11 +190,10 @@ module ProjectHelpers
         fundedProjects
     end
 
-    def get_chained_data(projectId)
+    def get_chained_data(projectId,parentProject="null")
         tempTree = {}
         tempTree['name'] = projectId
-        tempTree['parent'] = null
-        tempTree['children'] = []
+        tempTree['parent'] = parentProject
         activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         activityDetails = JSON.parse(activityDetails)
         activityDetails = activityDetails['related_activities']
@@ -220,25 +219,30 @@ module ProjectHelpers
         pages = (projectCount.to_f/pageSize.to_f).ceil
         deliveryChain = Array.new
         for a in 1..pages do
-            puts '----'
-            puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{pageSize}&fields=id,title,iati_identifier&ordering=title&page=#{a}"
             tempProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{pageSize}&fields=id,title,iati_identifier&ordering=title&page=#{a}"
             tempProjects = JSON.parse(tempProjects)
             tempProjects['results'].each do |i|
                 begin
                     if(projectIdentifierListArray.include?(i['iati_identifier'].to_s))
+                    elsif(i['iati_identifier'].to_s.match(/\s/) || i['iati_identifier'].to_s.match(/\//))
                     else
-                        tempData = {}
-                        tempData['iati_identifier'] = i['iati_identifier']
-                        tempData['title'] = i['title']['narratives'][0]['text']
-                        deliveryChain.push(tempData)
+                        deliveryChain.push(i['iati_identifier'])
                     end
                 rescue
                     puts i
                 end
             end
         end
-        deliveryChain
+        if deliveryChain.length > 0
+            tempTree['children'] = []
+            deliveryChain.each do |item|
+                tempTree['children'].push(get_chained_data(item,tempTree['parent']))
+                #tempTree['children'].push(item)
+            end
+            tempTree
+        else
+            tempTree
+        end
     end
 
     def get_transaction_details(projectId,transactionType)

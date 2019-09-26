@@ -75,7 +75,7 @@
                                 <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                     <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/partners">Partners</a></li>
                                 <% end %>
-                                <li><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/delivery-chain">Delivery Chain</a></li>
+                                <li <%= active=="delivery-chain" ? "class='active'" : ""%>><a href="/projects/<%=sanitize_input(project['iati_identifier'],"id")%>/delivery-chain">Delivery Chain</a></li>
                                 <!-- TODO: bring back in r4dDocs element -->
                             </ul>
                         </nav>

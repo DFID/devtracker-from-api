@@ -1,6 +1,6 @@
 <!-- title: Development Tracker -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "delivery-chain"} %>
   <div class="row">
     <div class="twelve columns">
       <div class="draw-here">
@@ -27,7 +27,7 @@
 </style>
   <script type="text/javascript">
     $(document).ready(function() {
-      var treeData = [
+      var treeData2 = [
         {
           "name": "Top Level",
           "parent": "null",
@@ -53,12 +53,15 @@
           ]
         }
       ];
+      var treeData = [<%= deliveryChainData %>];
 
       // ************** Generate the tree diagram  *****************
       var margin = {top: 20, right: 120, bottom: 20, left: 120},
         width = 960 - margin.right - margin.left,
         height = 500 - margin.top - margin.bottom;
-        
+      var m = [20, 120, 20, 120],
+    w = 1280 - m[1] - m[3],
+    h = 800 - m[0] - m[2];
       var i = 0;
 
       var tree = d3.layout.tree()
@@ -78,7 +81,22 @@
       update(root);
 
       function update(source) {
-
+        // compute the new height
+        var levelWidth = [1];
+        var childCount = function(level, n) {
+          
+          if(n.children && n.children.length > 0) {
+            if(levelWidth.length <= level + 1) levelWidth.push(0);
+            
+            levelWidth[level+1] += n.children.length;
+            n.children.forEach(function(d) {
+              childCount(level + 1, d);
+            });
+          }
+        };
+        childCount(0, root);  
+        var newHeight = d3.max(levelWidth) * 20; // 20 pixels per line  
+        tree = tree.size([newHeight, width]);
         // Compute the new tree layout.
         var nodes = tree.nodes(root).reverse(),
           links = tree.links(nodes);
