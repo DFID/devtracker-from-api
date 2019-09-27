@@ -2,8 +2,13 @@
 
 <div class="row">
     <div class="twelve columns summary">
-      <h2 class="visually-hidden">Documents</h2>
+      <h2>Documents</h2>
       <div class="row">
+      </div>
+      <div style="color: grey; margin-top: 5px; font-size: 1em">
+        <% if(is_dfid_project(project['iati_identifier'])) %>
+          <p>Some documents can be excluded due to privacy or security risks. Dates in brackets refer to the date the document was first published.</p>
+        <% end %>
       </div>
         <table class="results-list">
             <thead class="visually-hidden">
@@ -67,10 +72,5 @@
                   <%#end%>
             </tbody>
         </table>
-        <div style="color: grey; margin-top: 50px; font-size: 1em">
-          <% if(is_dfid_project(project['iati_identifier'])) %>
-            <p>Some documents can be excluded due to privacy or security risks. Dates in brackets refer to the date the document was first published.</p>
-          <% end %>
-        </div>
     </div>
 </div>
