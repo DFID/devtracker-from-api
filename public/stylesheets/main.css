@@ -981,3 +981,7 @@ padding: 9px 0px;
 .policy-marker-container {
   margin-top: 25px;
 }
+
+.row ._10 {
+  display: none;
+}
