@@ -190,6 +190,78 @@ module ProjectHelpers
         fundedProjects
     end
 
+    def get_funded_project_details_byComponent(projectId)
+        activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        activityDetails = JSON.parse(activityDetails)
+        activityDetails = activityDetails['related_activities']
+        projectIdentifierListArray = Array.new
+        projectIdentifierListArray.push(projectId.to_s)
+        if(activityDetails.length > 0)
+            activityDetails.each do |activity|
+                begin
+                    if(activity['type']['code'].to_i == 2)
+                        projectIdentifierListArray.push(activity['ref'].to_s)
+                    end
+                rescue
+                end
+            end
+        end
+        #projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
+        fundedProjectDataHolder = {}
+        projectIdentifierListArray.each do |item|
+            fundedProjectDataHolder[item] = {}
+            fundedProjectDataHolder[item]['selfData'] = {}
+            fundedProjectDataHolder[item]['fundedProjectData'] = Array.new
+            tempActivityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+            tempActivityDetails = JSON.parse(tempActivityDetails)
+            fundedProjectDataHolder[item]['selfData']['iati_identifier'] = tempActivityDetails['iati_identifier']
+            fundedProjectDataHolder[item]['selfData']['title'] = tempActivityDetails['title']['narratives'][0]['text']
+            fundedProjectDataHolder[item]['selfData']['activityDates'] = tempActivityDetails['activity_dates']
+            fundedProjectDataHolder[item]['selfData']['sectors'] = tempActivityDetails['sectors']
+            fundedProjectDataHolder[item]['selfData']['recipient_countries'] = tempActivityDetails['recipient_countries']
+            fundedProjectDataHolder[item]['selfData']['recipient_regions'] = tempActivityDetails['recipient_regions']
+            #fundedProjectDataHolder[item]['selfData']['disbursements'] = get_transaction_details(item,"3")
+            fundedProjectDataHolder[item]['selfData']['budget'] = tempActivityDetails['budgets']
+            projectCount = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{item}&page_size=1&fields=id,title&ordering=title"
+            projectCount = JSON.parse(projectCount)
+            projectCount = projectCount['count']
+            pageSize = 10
+            pages = (projectCount.to_f/pageSize.to_f).ceil
+            fundedProjects = Array.new
+            for a in 1..pages do
+                puts '------------generating links----------'
+                puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{item}&page_size=#{pageSize}&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{a}"
+                tempProjects = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{item}&page_size=#{pageSize}&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{a}"
+                tempProjects = JSON.parse(tempProjects)
+                tempProjects['results'].each do |i|
+                    begin
+                        if(projectIdentifierListArray.include?(i['iati_identifier'].to_s))
+                        else
+                            fundedProjects.push(i)
+                        end
+                    rescue
+                        puts i
+                    end
+                end
+            end
+            fundedProjects.each do |item2|
+                tempChildActivity = RestClient.get settings.oipa_api_url + "activities/#{item2['iati_identifier']}/?format=json"
+                tempChildActivity = JSON.parse(tempChildActivity)
+                tempChildActivityData = {}
+                tempChildActivityData['iati_identifier'] = tempActivityDetails['iati_identifier']
+                tempChildActivityData['title'] = tempActivityDetails['title']['narratives'][0]['text']
+                tempChildActivityData['activityDates'] = tempActivityDetails['activity_dates']
+                tempChildActivityData['sectors'] = tempActivityDetails['sectors']
+                tempChildActivityData['recipient_countries'] = tempActivityDetails['recipient_countries']
+                tempChildActivityData['recipient_regions'] = tempActivityDetails['recipient_regions']
+                #fundedProjectDataHolder[item]['selfData']['disbursements'] = get_transaction_details(item,"3")
+                tempChildActivityData['budget'] = tempActivityDetails['budgets']
+                fundedProjectDataHolder[item]['fundedProjectData'].push(tempChildActivityData)
+            end
+        end
+        fundedProjectDataHolder
+    end
+
     def get_transaction_details(projectId,transactionType)
         if is_dfid_project(projectId) then
             #oipa v2.2

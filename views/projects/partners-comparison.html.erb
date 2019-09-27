@@ -1,0 +1,27 @@
+<!-- title: Development Tracker -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners-comparison"} %>
+<div class="row">
+  <div class="twelve columns">
+    <h3 class="section-group-title">Comparison table</h3>
+    <%partnerComparisonData.each do |data|%>
+      <table class="comparison-table display" style="width:100%; display: none">
+        <thead>
+          <tr>
+            <th>DFID</th>
+            <th>Supplier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% projectYearWiseBudgets.each do |projectYearWiseBudget| %>
+            <tr>
+              <td><%= projectYearWiseBudget['fy'] %></td>
+              <!--<td><span class="<%#= projectYearWiseBudget['value'].round(0) < 0 ? 'negative' : ''%>"> -->
+                <td><span><%begin%><%= Money.new(projectYearWiseBudget['value'].to_f.round(0)*100, project['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %><%rescue%><%end%></span></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <%end%>
+  </div>
+</div>
