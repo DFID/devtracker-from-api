@@ -216,6 +216,8 @@ module ProjectHelpers
             tempActivityDetails = JSON.parse(tempActivityDetails)
             fundedProjectDataHolder[item]['selfData']['iati_identifier'] = tempActivityDetails['iati_identifier']
             fundedProjectDataHolder[item]['selfData']['title'] = tempActivityDetails['title']['narratives'][0]['text']
+            #Activity dates
+            
             fundedProjectDataHolder[item]['selfData']['activityDates'] = tempActivityDetails['activity_dates']
             fundedProjectDataHolder[item]['selfData']['sectors'] = tempActivityDetails['sectors']
             fundedProjectDataHolder[item]['selfData']['recipient_countries'] = tempActivityDetails['recipient_countries']
@@ -248,14 +250,14 @@ module ProjectHelpers
                 tempChildActivity = RestClient.get settings.oipa_api_url + "activities/#{item2['iati_identifier']}/?format=json"
                 tempChildActivity = JSON.parse(tempChildActivity)
                 tempChildActivityData = {}
-                tempChildActivityData['iati_identifier'] = tempActivityDetails['iati_identifier']
-                tempChildActivityData['title'] = tempActivityDetails['title']['narratives'][0]['text']
-                tempChildActivityData['activityDates'] = tempActivityDetails['activity_dates']
-                tempChildActivityData['sectors'] = tempActivityDetails['sectors']
-                tempChildActivityData['recipient_countries'] = tempActivityDetails['recipient_countries']
-                tempChildActivityData['recipient_regions'] = tempActivityDetails['recipient_regions']
+                tempChildActivityData['iati_identifier'] = tempChildActivity['iati_identifier']
+                tempChildActivityData['title'] = tempChildActivity['title']['narratives'][0]['text']
+                tempChildActivityData['activityDates'] = tempChildActivity['activity_dates']
+                tempChildActivityData['sectors'] = tempChildActivity['sectors']
+                tempChildActivityData['recipient_countries'] = tempChildActivity['recipient_countries']
+                tempChildActivityData['recipient_regions'] = tempChildActivity['recipient_regions']
                 #fundedProjectDataHolder[item]['selfData']['disbursements'] = get_transaction_details(item,"3")
-                tempChildActivityData['budget'] = tempActivityDetails['budgets']
+                tempChildActivityData['budget'] = tempChildActivity['budgets']
                 fundedProjectDataHolder[item]['fundedProjectData'].push(tempChildActivityData)
             end
         end
