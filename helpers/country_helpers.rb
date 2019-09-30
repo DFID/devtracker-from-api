@@ -77,7 +77,7 @@ module CountryHelpers
             :name     => countriesInfo.find do |source|
                            source["code"].to_s == elem["recipient_country"]["code"]
                          end["name"],
-            :budget   => elem["value"]                                                                                    
+            :budget   => elem["value"].to_i                                                                                  
          } 
       end
   end
