@@ -621,47 +621,51 @@ module CommonHelpers
     components = Array.new
     project['related_activities'].each do |component|
       if(component['ref'].to_s.include? project['iati_identifier'].to_s)
-        pullActivityData = get_h1_project_details(component['ref'])
-        componentData = {}
         begin
-          componentData['title'] = pullActivityData['title']['narratives'][0]['text']
-        rescue
-          componentData['title'] = 'N/A'
-        end
-        begin
-          componentData['activityID'] = pullActivityData['iati_identifier']
-        rescue
-          componentData['title'] = 'N/A'
-        end
-        dates = pullActivityData['activity_dates']
-        if (dates.length > 0)
+          pullActivityData = get_h1_project_details(component['ref'])
+          componentData = {}
           begin
-            if(!dates.select{|activityDate| activityDate['type']['code'] == '2'}.first.nil?)
-              componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '2'}.first['iso_date']
-            elsif(!dates.select{|activityDate| activityDate['type']['code'] == '1'}.first.nil?)
-              componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '1'}.first['iso_date']
-            else
-              componentData['startDate'] = 'N/A'  
-            end
+            componentData['title'] = pullActivityData['title']['narratives'][0]['text']
           rescue
-            componentData['startDate'] = 'N/A'
+            componentData['title'] = 'N/A'
           end
           begin
-            if(!dates.select{|activityDate| activityDate['type']['code'] == '4'}.first.nil?)
-              componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '4'}.first['iso_date']
-            elsif(!dates.select{|activityDate| activityDate['type']['code'] == '3'}.first.nil?)
-              componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '3'}.first['iso_date']
-            else
-              componentData['endDate'] = 'N/A'  
-            end
+            componentData['activityID'] = pullActivityData['iati_identifier']
           rescue
+            componentData['title'] = 'N/A'
+          end
+          dates = pullActivityData['activity_dates']
+          if (dates.length > 0)
+            begin
+              if(!dates.select{|activityDate| activityDate['type']['code'] == '2'}.first.nil?)
+                componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '2'}.first['iso_date']
+              elsif(!dates.select{|activityDate| activityDate['type']['code'] == '1'}.first.nil?)
+                componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '1'}.first['iso_date']
+              else
+                componentData['startDate'] = 'N/A'  
+              end
+            rescue
+              componentData['startDate'] = 'N/A'
+            end
+            begin
+              if(!dates.select{|activityDate| activityDate['type']['code'] == '4'}.first.nil?)
+                componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '4'}.first['iso_date']
+              elsif(!dates.select{|activityDate| activityDate['type']['code'] == '3'}.first.nil?)
+                componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '3'}.first['iso_date']
+              else
+                componentData['endDate'] = 'N/A'  
+              end
+            rescue
+              componentData['endDate'] = 'N/A'
+            end
+          else
+            componentData['startDate'] = 'N/A'
             componentData['endDate'] = 'N/A'
           end
-        else
-          componentData['startDate'] = 'N/A'
-          componentData['endDate'] = 'N/A'
+          components.push(componentData)
+        rescue
+          puts 'Component does not exist in OIPA yet.'
         end
-        components.push(componentData)
       end
     end
     components = components.sort_by{|component| component['activityID'].to_s}
