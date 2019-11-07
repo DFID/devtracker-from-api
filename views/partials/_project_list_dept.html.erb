@@ -168,7 +168,7 @@
                             <ul style="display: block; margin: 5px;">
                                 <% reportingOrgTypes.each do |reportingOrgType| %>
                                     <li>
-                                        <label for="reportingOrgType_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
+                                        <label for="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
                                         <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
                                         </label>
                                     </li>
