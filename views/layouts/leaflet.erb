@@ -1,0 +1,59 @@
+<!--
+published: true
+title: Development Tracker
+ -->
+ <style>
+     #mapid { height: 180px; }
+   </style>
+<div class="hero hero-notabs">
+  <div id="page-title" class="row">
+      <div class="twelve columns">
+          <!-- <img src="/images/ukaid_logo.png" alt="UK aid from the British people"> -->
+          <div>
+              <div class="breadcrumb">
+              <ul>
+                  <li><a href="/">Home</a></li>
+                  <li>Aid by Department</li>
+              </ul>
+          </div>
+              <h1>
+                  UK Government Spend
+              </h1>
+          </div>
+          
+      </div>
+  </div>
+</div>
+<div class="row overview-text">
+    <div class="twelve columns summary">
+        <p>In the UK, the 0.7% commitment on ODA spend applies across government. DFID is the UK’s primary channel for aid but in response to the changing world, more aid is administered by other government departments, drawing on their complementary skills. To support the UK's cross government approach and to ensure a joined-up approach, there will also be several cross-government funds setup. Each departments is responsible for ensuring that their own ODA budgets are allocated optimally, spent well and published to IATI.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelve columns">
+        <h3 class="section-group-title">Projects by UK Government Department</h3>
+    </div>
+    <div class="twelve columns">
+      <div id="mapid"></div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    
+
+  var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox.streets'
+  }).addTo(mymap);
+
+
+  });
+</script>
