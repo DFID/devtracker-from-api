@@ -27,7 +27,7 @@
 
                 <div id="map" role="presentation">
                   <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
-                    <img src="/images/country-map-legend.png" style="Map Legend"/>
+                    <img alt="Map legend" src="/images/country-map-legend.png" style="Map Legend"/>
                     <!-- <h3>Current Projects: Total Project Budget for <%#=current_financial_year%></h3> -->
                   </div>
                 </div>
@@ -56,7 +56,7 @@
           <%dfid_country_stats_data.each do |key,val|%>
             <%if val["projects"] > 0 && val["budget"] > 0%>
               <tr>
-                <td><img class="flag" alt="Country Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
+                <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
                 <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
                 <td>
                 <% if sectorData.key?(key) %>
