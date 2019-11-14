@@ -76,8 +76,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -1027,8 +1027,42 @@ end
 
 ##### Test new leaflet version
 get '/leaflet' do
+	n = 'BD'
+	country = ''
+	results = ''
+	countryYearWiseBudgets = ''
+	countrySectorGraphData = ''
+	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1")
+	Benchmark.bm(7) do |x|
+	 	x.report("Loading Time: ") {
+	 		country = get_country_details(n)
+	 		results = get_country_results(n)
+			#oipa v3.1
+			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
+	 	}
+	end
+	begin
+		implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=1&activity_status=2&participating_organisation_role=4"
+		implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
+		implementingOrgList = implementingOrgList['results']
+	rescue
+		implementingOrgList = Array.new
+	end
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	topSixResults = pick_top_six_results(n)
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	settings.devtracker_page_title = 'Testing leaflet'
-	erb :'layouts/leaflet', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+	erb :'layouts/leaflet', :layout => :'layouts/layout', :locals => {
+		country: country,
+		countryYearWiseBudgets: countryYearWiseBudgets,
+		countrySectorGraphData: countrySectorGraphData,
+		results: results,
+		topSixResults: topSixResults,
+		oipa_api_url: settings.oipa_api_url,
+		activityCount: tempActivityCount['count'],
+		implementingOrgList: implementingOrgList
+	}
 end
 
 

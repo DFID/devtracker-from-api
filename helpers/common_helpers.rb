@@ -387,6 +387,8 @@ module CommonHelpers
     
     # Reporting org type filter preparation
     if (apiList[0].include? "recipient_country")
+      puts '------THIS IS API CALL 7---------'
+      puts settings.oipa_api_url + apiList[7]
       reportingOrgList = RestClient.get settings.oipa_api_url + apiList[7]
     else
       reportingOrgList = RestClient.get settings.oipa_api_url + apiList[6]
