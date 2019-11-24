@@ -1026,42 +1026,58 @@ get '/department/:dept_id/?' do
 end
 
 ##### Test new leaflet version
-get '/leaflet' do
-	n = 'BD'
-	country = ''
-	results = ''
-	countryYearWiseBudgets = ''
-	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1")
-	Benchmark.bm(7) do |x|
-	 	x.report("Loading Time: ") {
-	 		country = get_country_details(n)
-	 		results = get_country_results(n)
-			#oipa v3.1
-			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
-	 	}
+get '/leaflet/:countryCode/?' do
+	countryCode = params[:countryCode]
+	countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
+	country3DigitCode = ''
+	if countryMappedFile.has_key?(countryCode)
+		country3DigitCode = countryMappedFile[countryCode]
 	end
-	begin
-		implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=1&activity_status=2&participating_organisation_role=4"
-		implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
-		implementingOrgList = implementingOrgList['results']
-	rescue
-		implementingOrgList = Array.new
+	#Geo Location data of country
+	geoLocationData = ''
+	geoJsonData = ''
+	if country3DigitCode != ''
+		geoLocationData = JSON.parse(File.read('data/world.json'))
+		geoLocationData['features'].each do |loc|
+			if loc['properties']['ISO_A3'].to_s == country3DigitCode.to_s
+				geoJsonData = loc['geometry']
+				break;
+			end
+		end
 	end
-	ogds = Oj.load(File.read('data/OGDs.json'))
-	topSixResults = pick_top_six_results(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
+	# Get a list of map markers
+	rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=title,iati_identifier,locations&page_size=500&activity_status=2")
+	rawMapMarkers = rawMapMarkers['results']
+	mapMarkers = Array.new
+	ar = 0
+	rawMapMarkers.each do |data|
+		if(data['recipient_countries'].count == 1)
+			data['locations'].each do |location|
+				begin
+					tempStorage = {}
+					tempStorage["geometry"] = {}
+					tempStorage['geometry']['type'] = 'Point'
+					tempStorage['geometry']['coordinates'] = Array.new
+					tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+					tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+					tempStorage['type'] = 'Feature'
+					tempStorage['properties'] = {}
+					tempStorage['properties']['popupContent'] = ar
+					tempStorage['id'] = ar
+					mapMarkers.push(tempStorage)
+					ar = ar + 1
+				rescue
+					puts 'Data missing in API response.'
+				end
+			end
+		end
+	end
 	settings.devtracker_page_title = 'Testing leaflet'
 	erb :'layouts/leaflet', :layout => :'layouts/layout', :locals => {
-		country: country,
-		countryYearWiseBudgets: countryYearWiseBudgets,
-		countrySectorGraphData: countrySectorGraphData,
-		results: results,
-		topSixResults: topSixResults,
 		oipa_api_url: settings.oipa_api_url,
-		activityCount: tempActivityCount['count'],
-		implementingOrgList: implementingOrgList
+		countryCode: countryCode,
+		countryGeoJsonData: geoJsonData,
+		mapMarkers: mapMarkers
 	}
 end
 
