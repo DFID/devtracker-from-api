@@ -1053,6 +1053,11 @@ get '/about/?' do
 	erb :'about/about', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
+get '/accessibility-statement/?' do
+  	settings.devtracker_page_title = 'Accessibility Statement Page'
+	erb :'accessibility/accessibility-statement', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end
+
 get '/cookies/?' do
   	settings.devtracker_page_title = 'Cookies Page'
 	erb :'cookies/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
