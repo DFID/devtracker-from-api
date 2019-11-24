@@ -92,7 +92,7 @@ title: Development Tracker
     var mapBorder = {
         "type": "Feature",
         "properties": {
-            "popupContent": "This is the Auraria West Campus",
+            "popupContent": "Country name goes here",
             "style": {
               stroke: true,
               weight: 1,
@@ -107,10 +107,11 @@ title: Development Tracker
             "coordinates": <%= countryGeoJsonData['coordinates'].to_json %>
         }
     };
-  var mapMarkers = {
-      "type": "FeatureCollection",
-      "features": <%= mapMarkers.to_json%>
-    };
+  // var mapMarkers = {
+  //     "type": "FeatureCollection",
+  //     "features": <%= mapMarkers.to_json%>
+  //   };
+  var mapMarkers = <%= mapMarkers.to_json%>;
   function onEachFeature(feature, layer) {
     var popupContent = "";
 
@@ -120,7 +121,7 @@ title: Development Tracker
 
     layer.bindPopup(popupContent);
   }
-  L.geoJSON([mapBorder, mapMarkers], {
+  L.geoJSON([mapBorder], {
     style: function (feature) {
       return feature.properties && feature.properties.style;
     },
@@ -139,5 +140,20 @@ title: Development Tracker
     }
   }).addTo(map);
 
+    //Draw markers
+    var markers = L.markerClusterGroup({ chunkedLoading: true });
+    $.each(mapMarkers,function(index, marker){
+      var dtUrl = "/projects/" + marker['iati_identifier'];
+      var title = marker['title'];
+      var prepAltText = 'Project title: ' + title + '. Project identifier: ' + marker['iati_identifier'] + '. Project location on map: ' + marker['loc'];
+      var tempMarker = L.marker(L.latLng(marker.geometry.coordinates[1],marker.geometry.coordinates[0]),{
+        title: title,
+        keyboard: true,
+        alt: prepAltText
+      });
+      tempMarker.bindPopup("<a href='" + dtUrl + "'>" + title + " (" + marker['iati_identifier'] + ")</a>" + "<br />" + marker['loc']);
+      markers.addLayer(tempMarker); 
+    });
+    map.addLayer(markers);
   });
 </script>

@@ -132,6 +132,10 @@ get '/countries/:country_code/?' do |n|
 	end
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
+	#Geo Location data of country
+	geoJsonData = getCountryBounds(n)
+	# Get a list of map markers
+	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
@@ -143,8 +147,9 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount['count'],
- 			implementingOrgList: implementingOrgList
- 			#relevantReportingOrgs: relevantReportingOrgsFinal
+ 			implementingOrgList: implementingOrgList,
+ 			countryGeoJsonData: geoJsonData,
+			mapMarkers: mapMarkers
  		}
 end
 
@@ -1028,50 +1033,10 @@ end
 ##### Test new leaflet version
 get '/leaflet/:countryCode/?' do
 	countryCode = params[:countryCode]
-	countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
-	country3DigitCode = ''
-	if countryMappedFile.has_key?(countryCode)
-		country3DigitCode = countryMappedFile[countryCode]
-	end
 	#Geo Location data of country
-	geoLocationData = ''
-	geoJsonData = ''
-	if country3DigitCode != ''
-		geoLocationData = JSON.parse(File.read('data/world.json'))
-		geoLocationData['features'].each do |loc|
-			if loc['properties']['ISO_A3'].to_s == country3DigitCode.to_s
-				geoJsonData = loc['geometry']
-				break;
-			end
-		end
-	end
+	geoJsonData = getCountryBounds(countryCode)
 	# Get a list of map markers
-	rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=title,iati_identifier,locations&page_size=500&activity_status=2")
-	rawMapMarkers = rawMapMarkers['results']
-	mapMarkers = Array.new
-	ar = 0
-	rawMapMarkers.each do |data|
-		if(data['recipient_countries'].count == 1)
-			data['locations'].each do |location|
-				begin
-					tempStorage = {}
-					tempStorage["geometry"] = {}
-					tempStorage['geometry']['type'] = 'Point'
-					tempStorage['geometry']['coordinates'] = Array.new
-					tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-					tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-					tempStorage['type'] = 'Feature'
-					tempStorage['properties'] = {}
-					tempStorage['properties']['popupContent'] = ar
-					tempStorage['id'] = ar
-					mapMarkers.push(tempStorage)
-					ar = ar + 1
-				rescue
-					puts 'Data missing in API response.'
-				end
-			end
-		end
-	end
+	mapMarkers = getCountryMapMarkers(countryCode)
 	settings.devtracker_page_title = 'Testing leaflet'
 	erb :'layouts/leaflet', :layout => :'layouts/layout', :locals => {
 		oipa_api_url: settings.oipa_api_url,
