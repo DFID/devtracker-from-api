@@ -913,6 +913,45 @@ module ProjectHelpers
         end
         tempTransactions
     end
+
+    #Get a list of map markers for visualisation for project
+    def getProjectMapMarkers(projectId)
+        rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json")
+        begin
+            projectTitle = rawMapMarkers['title']['narratives'][0]['text']
+        rescue
+            projectTitle = 'N/A'
+        end
+        rawMapMarkers = rawMapMarkers['locations']
+        mapMarkers = Array.new
+        ar = 0
+        rawMapMarkers.each do |location|
+            begin
+                tempStorage = {}
+                tempStorage["geometry"] = {}
+                tempStorage['geometry']['type'] = 'Point'
+                tempStorage['geometry']['coordinates'] = Array.new
+                tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+                tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+                tempStorage['iati_identifier'] = location['iati_identifier']
+                begin
+                    tempStorage['loc'] = location['name']['narratives'][0]['text']
+                rescue
+                    tempStorage['loc'] = 'N/A'
+                end
+                begin
+                tempStorage['title'] = projectTitle
+                rescue
+                tempStorage['title'] = 'N/A'
+                end
+                mapMarkers.push(tempStorage)
+                ar = ar + 1
+            rescue
+                puts 'Data missing in API response.'
+            end
+        end
+        mapMarkers
+    end
 end
 
 #helpers ProjectHelpers

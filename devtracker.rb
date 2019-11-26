@@ -294,7 +294,9 @@ get '/regions/:region_code/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
  			regionYearWiseBudgets: regionYearWiseBudgets,
- 			regionSectorGraphData: regionSectorGraphData
+ 			regionSectorGraphData: regionSectorGraphData,
+ 			mapMarkers: getRegionMapMarkers(region[:code])
+ 			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end
 
@@ -377,7 +379,8 @@ get '/projects/:proj_id/?' do |n|
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
  			policyMarkers: getPolicyMarkers,
- 			policyMarkersCount: policyMarkerCount
+ 			policyMarkersCount: policyMarkerCount,
+ 			mapMarkers: getProjectMapMarkers(n)
  		}
 end
 
