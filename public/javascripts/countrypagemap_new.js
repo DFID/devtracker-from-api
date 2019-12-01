@@ -132,6 +132,19 @@ $(document).ready(function() {
         };
         countryList.push(tempMapBorder);
     });
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h6>Total DFID Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
+    };
+
+    info.addTo(map);
   }
   else if (mapType == 'project'){
     map = new L.Map('countryMap', {
