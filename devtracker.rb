@@ -660,6 +660,8 @@ end
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
   	map_data = dfid_country_map_data()
+  	getMaxBudget = map_data[1].sort_by{|k,val| val['budget']}.reverse!.first
+  	getMaxBudget = getMaxBudget[1]['budget']
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -668,7 +670,9 @@ get '/location/country/?' do
 			:dfid_country_stats_data => map_data[1],
 			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
 			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData()
+			:sectorData => generateCountryData(),
+			:countryMapData => getCountryBoundsForLocation(map_data[1]),
+			:maxBudget => getMaxBudget
 		}
 end
 

@@ -673,4 +673,35 @@ module CommonHelpers
     components = components.sort_by{|component| component['activityID'].to_s}
     components
   end
+
+  # Get country bounds for location country page
+    def getCountryBoundsForLocation(countryList)
+      countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
+      country3DigitCodeList = Array.new
+      countryList.each do |key,val|
+        if countryMappedFile.has_key?(key.to_s)
+          tempHash = {}
+          tempHash['extra'] = val
+          tempHash['3Code'] = countryMappedFile[key]
+          country3DigitCodeList.push(tempHash)
+        end
+      end
+      geoLocationData = ''
+      geoJsonData = Array.new
+      if country3DigitCodeList != ''
+        geoLocationData = JSON.parse(File.read('data/world.json'))
+        country3DigitCodeList.each do |countryCode|
+          geoLocationData['features'].each do |loc|
+            if loc['properties']['ISO_A3'].to_s == countryCode['3Code'].to_s
+              tempHash = {}
+              tempHash['extra'] = countryCode['extra']
+              tempHash['geometry'] = loc['geometry']
+              geoJsonData.push(tempHash)
+              break
+            end
+          end
+        end
+      end
+      geoJsonData
+    end
 end
