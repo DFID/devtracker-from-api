@@ -147,11 +147,34 @@ $(document).ready(function() {
     info.addTo(map);
   }
   else if (mapType == 'project'){
-    map = new L.Map('countryMap', {
-        center: new L.LatLng(7.79,21.28), 
-        zoom: 1,
-        layers: [layer]
-    });
+    if(countryCount > 1 || regionCount> 0){
+      map = new L.Map('countryMap', {
+          center: new L.LatLng(7.79,21.28), 
+          zoom: 1,
+          layers: [layer]
+      });
+    }
+    else if(countryCount == 1){
+      if (countryBounds[$('#countryCode').val()][2] != null){
+        zoomFactor = countryBounds[$('#countryCode').val()][2];
+      }
+      else{
+        zoomFactor = 6;
+      }
+      // Create the main leaflet map based on type of map
+      map = new L.Map('countryMap', {
+          center: new L.LatLng(countryBounds[$('#countryCode').val()][0], countryBounds[$('#countryCode').val()][1]), 
+          zoom: zoomFactor,  
+          layers: [layer]
+      });
+    }
+    else{
+      map = new L.Map('countryMap', {
+          center: new L.LatLng(7.79,21.28), 
+          zoom: 1,
+          layers: [layer]
+      });
+    }
   }
   else if($("#projectType").val() == 'region'){
     var bounds = regionBounds[$("#countryCode").val()];
