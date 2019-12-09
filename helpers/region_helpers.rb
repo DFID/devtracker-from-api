@@ -209,4 +209,76 @@ module RegionHelpers
 
   #   end
     
+    #This returns a list of countries bound by the target region
+    def getCountryListForRegionMap(regionName)
+      regionCountryList = dfid_complete_country_list_region_wise_sorted.sort_by{|k| k}
+      targetRegionData = ''
+      regionCountryList.each do |region|
+        if(region[0].to_s == regionName)
+          targetRegionData = region[1]
+        end
+      end
+      targetRegionData
+    end
+
+    # Get country bounds for region for map visualisation
+    def getCountryBoundsForRegions(targetRegionData)
+      countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
+      country3DigitCodeList = Array.new
+      targetRegionData.each do |key,val|
+        if countryMappedFile.has_key?(key.to_s)
+          country3DigitCodeList.push(countryMappedFile[key])
+        end
+      end
+      geoLocationData = ''
+      geoJsonData = Array.new
+      if country3DigitCodeList != ''
+        geoLocationData = JSON.parse(File.read('data/world.json'))
+        country3DigitCodeList.each do |countryCode|
+          geoLocationData['features'].each do |loc|
+            if loc['properties']['ISO_A3'].to_s == countryCode.to_s
+              geoJsonData.push(loc['geometry'])
+              break
+            end
+          end
+        end
+      end
+      geoJsonData
+    end
+
+    #Get a list of map markers for visualisation
+    def getRegionMapMarkers(regionCode)
+      rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,locations&page_size=500&activity_status=2")
+      rawMapMarkers = rawMapMarkers['results']
+      mapMarkers = Array.new
+      ar = 0
+      rawMapMarkers.each do |data|
+        data['locations'].each do |location|
+          begin
+            tempStorage = {}
+            tempStorage["geometry"] = {}
+            tempStorage['geometry']['type'] = 'Point'
+            tempStorage['geometry']['coordinates'] = Array.new
+            tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+            tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+            tempStorage['iati_identifier'] = location['iati_identifier']
+            begin
+              tempStorage['loc'] = location['name']['narratives'][0]['text']
+            rescue
+              tempStorage['loc'] = 'N/A'
+            end
+            begin
+              tempStorage['title'] = data['title']['narratives'][0]['text']
+            rescue
+              tempStorage['title'] = 'N/A'
+            end
+            mapMarkers.push(tempStorage)
+            ar = ar + 1
+          rescue
+            puts 'Data missing in API response.'
+          end
+        end
+      end
+      mapMarkers
+    end
 end

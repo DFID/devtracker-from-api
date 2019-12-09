@@ -168,21 +168,22 @@
             <input type="hidden" id="projectType" value="<%= countryOrRegion[:projectType] %>">
         <%end%>
        
-        <script src="/javascripts/regionBounds.js" type="text/javascript"></script>
+        <!-- New leaflet libraries -->
+        <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="/javascripts/leaflet/leaflet_new.js"></script>
         <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
-<!--        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
-        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/leaflet.css">
-        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.css">
-        <link rel="stylesheet" type="text/css" href="/javascripts/leaflet/MarkerCluster.Default.css">
-        <script src="/javascripts/leaflet/leaflet.js"></script>
-        <script src="/javascripts/leaflet/leaflet-googlemaps.js"></script>
-        <script src="/javascripts/leaflet/leaflet.markercluster-src.js"></script>
+        <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
+        <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
+        <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
         <script type="text/javascript">
             var mapType = "project";
-            var locations = <%=project['locations'].to_json%>;
+            window.mainMarkers = <%= mapMarkers.to_json%>;
             var ProjectTitle = "<%= project['title']['narratives'][0]['text'] %>";
-        </script> 
-        <script src="/javascripts/countrymap.js" type="text/javascript"></script>
+            var countryCount = <%= countryOrRegion[:countriesCount]%>;
+            var regionCount = <%= countryOrRegion[:regionsCount]%>;
+        </script>
+        <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
 
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>

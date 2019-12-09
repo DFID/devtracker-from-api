@@ -171,12 +171,12 @@ module CountryHelpers
 
   def get_country_or_region(projectId)
       #get the data
-      if is_dfid_project(projectId) then
-         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json&page_size=500"
-      else
-         countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
-      end   
-      
+      # if is_dfid_project(projectId) then
+      #    countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json&page_size=500"
+      # else
+      #    countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
+      # end
+      countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
       data = countryOrRegionData['results']
       data.each do |d|
@@ -553,4 +553,64 @@ module CountryHelpers
         end
         locationData
     end
+
+    #Get a list of map markers for visualisation
+    def getCountryMapMarkers(countryCode)
+      rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=title,iati_identifier,locations&page_size=500&activity_status=2")
+      rawMapMarkers = rawMapMarkers['results']
+      mapMarkers = Array.new
+      ar = 0
+      rawMapMarkers.each do |data|
+        if(data['recipient_countries'].count == 1)
+          data['locations'].each do |location|
+            begin
+              tempStorage = {}
+              tempStorage["geometry"] = {}
+              tempStorage['geometry']['type'] = 'Point'
+              tempStorage['geometry']['coordinates'] = Array.new
+              tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+              tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+              tempStorage['iati_identifier'] = location['iati_identifier']
+              begin
+                tempStorage['loc'] = location['name']['narratives'][0]['text']
+              rescue
+                tempStorage['loc'] = 'N/A'
+              end
+              begin
+                tempStorage['title'] = data['title']['narratives'][0]['text']
+              rescue
+                tempStorage['title'] = 'N/A'
+              end
+              mapMarkers.push(tempStorage)
+              ar = ar + 1
+            rescue
+              puts 'Data missing in API response.'
+            end
+          end
+        end
+      end
+      mapMarkers
+    end
+
+    # Get country bounds for map visualisation
+    def getCountryBounds(countryCode)
+      countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
+      country3DigitCode = ''
+      if countryMappedFile.has_key?(countryCode)
+        country3DigitCode = countryMappedFile[countryCode]
+      end
+      geoLocationData = ''
+      geoJsonData = ''
+      if country3DigitCode != ''
+        geoLocationData = JSON.parse(File.read('data/world.json'))
+        geoLocationData['features'].each do |loc|
+          if loc['properties']['ISO_A3'].to_s == country3DigitCode.to_s
+            geoJsonData = loc['geometry']
+            break;
+          end
+        end
+      end
+      geoJsonData
+    end
+    
 end

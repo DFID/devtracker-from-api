@@ -132,6 +132,10 @@ get '/countries/:country_code/?' do |n|
 	end
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
+	#Geo Location data of country
+	geoJsonData = getCountryBounds(n)
+	# Get a list of map markers
+	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
@@ -143,8 +147,9 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount['count'],
- 			implementingOrgList: implementingOrgList
- 			#relevantReportingOrgs: relevantReportingOrgsFinal
+ 			implementingOrgList: implementingOrgList,
+ 			countryGeoJsonData: geoJsonData,
+			mapMarkers: mapMarkers
  		}
 end
 
@@ -289,7 +294,9 @@ get '/regions/:region_code/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
  			regionYearWiseBudgets: regionYearWiseBudgets,
- 			regionSectorGraphData: regionSectorGraphData
+ 			regionSectorGraphData: regionSectorGraphData,
+ 			mapMarkers: getRegionMapMarkers(region[:code])
+ 			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end
 
@@ -372,7 +379,8 @@ get '/projects/:proj_id/?' do |n|
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
  			policyMarkers: getPolicyMarkers,
- 			policyMarkersCount: policyMarkerCount
+ 			policyMarkersCount: policyMarkerCount,
+ 			mapMarkers: getProjectMapMarkers(n)
  		}
 end
 
@@ -652,6 +660,8 @@ end
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
   	map_data = dfid_country_map_data()
+  	getMaxBudget = map_data[1].sort_by{|k,val| val['budget']}.reverse!.first
+  	getMaxBudget = getMaxBudget[1]['budget']
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -660,7 +670,9 @@ get '/location/country/?' do
 			:dfid_country_stats_data => map_data[1],
 			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
 			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData()
+			:sectorData => generateCountryData(),
+			:countryMapData => getCountryBoundsForLocation(map_data[1]),
+			:maxBudget => getMaxBudget
 		}
 end
 
@@ -1024,6 +1036,7 @@ get '/department/:dept_id/?' do
  		reportingOrgTypes: projectData['reportingOrg_types']
 	}
 end
+
 
 #####################################################################
 #  STATIC PAGES
