@@ -207,7 +207,7 @@ $(document).ready(function() {
             $.each(sectorList,function(i,val){
                 tempSectors = tempSectors + '<li><label for="activity_status_'+val[0]+'" title="'+val[0]+'"><input id="activity_status_'+val[0]+'" type="checkbox" value="'+val[1][0]+'" class="sector" name="sector">'+val[0]+'</label></li>';
             });
-            tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempSectors + '</ul></div><input type="hidden" id="selected_sectors" value=""  />';
+            tempSectors = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Sectors</h3></span><div class="mContent"><fieldset class="no-style"><legend>Sectors</legend><ul style="display: block; margin: 5px;">' + tempSectors + '</ul></fieldset></div><input type="hidden" id="selected_sectors" value=""  />';
             $('#sector-filter').html(tempSectors);
         }
         else{
@@ -222,7 +222,7 @@ $(document).ready(function() {
             $.each(documentTypes,function(i,val){
                 tempDocuments = tempDocuments + '<li><label for="document_type_'+val["document_link_category"]["code"]+'" title="'+val["document_link_category"]["name"]+'"><input id="document_type_'+val["document_link_category"]["code"]+'" type="checkbox" value="'+val["document_link_category"]["code"]+'" class="document_type" name="document_type">'+val["document_link_category"]["name"]+'</label></li>';
             });
-            tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempDocuments + '</ul></div><input type="hidden" id="selected_document_type" value=""  />';
+            tempDocuments = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Document Type</h3></span><div class="mContent"><fieldset class="no-style"><legend>Document Type</legend><ul style="display: block; margin: 5px;">' + tempDocuments + '</ul></fieldset></div><input type="hidden" id="selected_document_type" value=""  />';
             $('#document-filter').html(tempDocuments);
         }
         else{
@@ -237,7 +237,7 @@ $(document).ready(function() {
             $.each(orgList,function(i,val){
                 tempOrgs = tempOrgs + '<li><label for="implementingOrg_type_'+val["participating_organisation_ref"]+'" title="'+val["participating_organisation"]+'"><input id="implementingOrg_type_'+val["participating_organisation_ref"]+'" type="checkbox" value="'+val["participating_organisation_ref"]+'" class="implementingOrg_type" name="implementingOrg_type">'+val["participating_organisation"]+'</label></li>';
             });
-            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3></span><div class="mContent"><ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_implementingOrg_type" value=""  /><div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="display: none; text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>';
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3></span><div class="mContent"><fieldset class="no-style"><legend>Implementing Organisations</legend><ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">' + tempOrgs + '</ul></fieldset></div><input type="hidden" id="selected_implementingOrg_type" value=""  /><div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="display: none; text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>';
             $('#organisation-filter').html(tempOrgs);
             console.log($('.implenting-orgs').height());
             if($('.implenting-orgs').height() > 700){
@@ -258,7 +258,7 @@ $(document).ready(function() {
             $.each(orgList,function(i,val){
                 tempOrgs = tempOrgs + '<li><label for="reportingOrg_type_'+val["organisation_identifier"]+'" title="'+val["organisaion_name"]+'"><input id="reportingOrg_type_'+val["organisation_identifier"]+'" type="checkbox" value="'+val["organisation_identifier"]+'" class="reportingOrg_type" name="reportingOrg_type">'+val["organisaion_name"]+'</label></li>';
             });
-            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Goverment Departments</h3></span><div class="mContent"><ul style="display: block; margin: 5px;">' + tempOrgs + '</ul></div><input type="hidden" id="selected_reportingOrg_type" value=""  />';
+            tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Goverment Departments</h3></span><div class="mContent"><fieldset class="no-style"><legend>Goverment Departments</legend><ul style="display: block; margin: 5px;">' + tempOrgs + '</ul></fieldset></div><input type="hidden" id="selected_reportingOrg_type" value=""  />';
             $('#reporting-organisation-filter').html(tempOrgs);
         }
         else{
@@ -273,7 +273,7 @@ $(document).ready(function() {
             $.each(countryList,function(i, val){
                 tempCountryLocations = tempCountryLocations + '<li><label for="location_country_'+val['recipient_country']['code']+'" title="'+val['recipient_country']['name']+'"><input id="location_country_'+val['recipient_country']['code']+'" type="checkbox" value="'+val['recipient_country']['code']+'" class="location_country" name="locationCountry">'+val['recipient_country']['name']+'</label></li>';
             });
-            tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><ul style="display: block;margin: 5px;">' + tempCountryLocations + '</ul></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
+            tempCountryLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Countries</h4></span><div class="mContent"><fieldset class="no-style"><legend>Countries</legend><ul style="display: block;margin: 5px;">' + tempCountryLocations + '</ul></fieldset></div><input type="hidden" id="locationCountryFilterStates" value=""  />';
             $('#sector-country-filter').html(tempCountryLocations);
         }
         else{
@@ -288,7 +288,7 @@ $(document).ready(function() {
             $.each(regionList,function(i, val){
                 tempRegionLocations = tempRegionLocations + '<li><label for="location_region_'+val['recipient_region']['code']+'" title="'+val['recipient_region']['name']+'"><input id="location_region_'+val['recipient_region']['code']+'" type="checkbox" value="'+ val['recipient_region']['code']+'" class="location_region" name="locationRegion">'+val['recipient_region']['name']+'</label></li>';
             });
-            tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><ul style="display: block;margin: 5px;">' + tempRegionLocations + '</ul></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
+            tempRegionLocations = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h4>Regions</h4></span><div class="mContent"><fieldset class="no-style"><legend>Regions</legend><ul style="display: block;margin: 5px;">' + tempRegionLocations + '</ul></fieldset></div><input type="hidden" id="locationRegionFilterStates" value=""  />';
             $('#sector-region-filter').html(tempRegionLocations);
         }
         else{

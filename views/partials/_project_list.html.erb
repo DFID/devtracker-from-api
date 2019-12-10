@@ -136,23 +136,26 @@
                         <h3>Status</h3>
                     </span>
                     <div class="mContent">
-                        <ul style="display: none; margin: 5px">
-                            <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                                <%if statuses["code"] == '2' %>
-                                    <li>
-                                        <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                        <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
-                                        </label>
-                                    </li>
-                                <%else%>
-                                    <li>
-                                        <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                        <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
-                                        </label>
-                                    </li>
-                                <%end%>
-                            <% end %>
-                        </ul>
+                        <fieldset class="no-style">
+                            <legend>Activity Status</legend>
+                            <ul style="display: none; margin: 5px">
+                                <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                                    <%if statuses["code"] == '2' %>
+                                        <li>
+                                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                            <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                            </label>
+                                        </li>
+                                    <%else%>
+                                        <li>
+                                            <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                            <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
+                                            </label>
+                                        </li>
+                                    <%end%>
+                                <% end %>
+                            </ul>
+                        </fieldset>
                     </div>
                     <input type="hidden" id="activity_status_states" value="2"  />
                 </div>
@@ -164,15 +167,18 @@
                             <h3>Government Departments</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: block; margin: 5px;">
-                                <% reportingOrgTypes.each do |reportingOrgType| %>
-                                    <li>
-                                        <label for="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
-                                        <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
-                                        </label>
-                                    </li>
-                                <% end %>
-                            </ul>
+                            <fieldset class="no-style">
+                                <legend>Government Departments</legend>
+                                <ul style="display: block; margin: 5px;">
+                                    <% reportingOrgTypes.each do |reportingOrgType| %>
+                                        <li>
+                                            <label for="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
+                                            <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
+                                            </label>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            </fieldset>
                         </div>
                         <input type="hidden" id="selected_reportingOrg_type" value=""  />
                     </div>
@@ -188,15 +194,18 @@
                                 <h4>Countries</h4>
                             </span>
                             <div class="mContent">
-                                <ul style="display: block;margin: 5px;">
-                                    <% locationCountryFilters.each do |countryFilters| %>
-                                    <li>
-                                        <label for="location_country_<%= countryFilters['recipient_country']['code'] %>" title=" <%= countryFilters['recipient_country']['name'] %>">
-                                        <input id="location_country_<%= countryFilters['recipient_country']['code'] %>" type="checkbox" value="<%= countryFilters['recipient_country']['code'] %>" class="location_country" name="locationCountry"><%= countryFilters['recipient_country']['name'] %>
-                                        </label>
-                                    </li>
-                                    <% end %>
-                                </ul>
+                                <fieldset class="no-style">
+                                    <legend>Countries</legend>
+                                    <ul style="display: block;margin: 5px;">
+                                        <% locationCountryFilters.each do |countryFilters| %>
+                                        <li>
+                                            <label for="location_country_<%= countryFilters['recipient_country']['code'] %>" title=" <%= countryFilters['recipient_country']['name'] %>">
+                                            <input id="location_country_<%= countryFilters['recipient_country']['code'] %>" type="checkbox" value="<%= countryFilters['recipient_country']['code'] %>" class="location_country" name="locationCountry"><%= countryFilters['recipient_country']['name'] %>
+                                            </label>
+                                        </li>
+                                        <% end %>
+                                    </ul>
+                                </fieldset>
                             </div>
                             <input type="hidden" id="locationCountryFilterStates" value=""  />
                         </div>
@@ -206,15 +215,18 @@
                                 <h4>Regions</h4>
                             </span>
                             <div class="mContent">
-                                <ul style="display: block;margin: 5px;">
-                                    <% locationRegionFilters.each do |regionFilters| %>
-                                    <li>
-                                        <label for="location_region_<%= regionFilters['recipient_region']['code'] %>" title=" <%= regionFilters['recipient_region']['name'] %>">
-                                        <input id="location_region_<%= regionFilters['recipient_region']['code'] %>" type="checkbox" value="<%= regionFilters['recipient_region']['code'] %>" class="location_region" name="locationRegion"><%= regionFilters['recipient_region']['name'] %>
-                                        </label>
-                                    </li>
-                                    <% end %>
-                                </ul>
+                                <fieldset class="no-style">
+                                    <legend>Regions</legend>
+                                    <ul style="display: block;margin: 5px;">
+                                        <% locationRegionFilters.each do |regionFilters| %>
+                                        <li>
+                                            <label for="location_region_<%= regionFilters['recipient_region']['code'] %>" title=" <%= regionFilters['recipient_region']['name'] %>">
+                                            <input id="location_region_<%= regionFilters['recipient_region']['code'] %>" type="checkbox" value="<%= regionFilters['recipient_region']['code'] %>" class="location_region" name="locationRegion"><%= regionFilters['recipient_region']['name'] %>
+                                            </label>
+                                        </li>
+                                        <% end %>
+                                    </ul>
+                                </fieldset>
                             </div>
                             <input type="hidden" id="locationRegionFilterStates" value=""  />
                         </div>
@@ -227,15 +239,18 @@
                             <h3>Sectors</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: block; margin: 5px;">
-                                <% highLevelSectorList.each do |highLevelSectorName| %>
-                                    <li>
-                                        <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
-                                            <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
-                                        </label>
-                                    </li>
-                                <%end%>
-                            </ul>
+                            <fieldset class="no-style">
+                                <legend>Sectors</legend>
+                                <ul style="display: block; margin: 5px;">
+                                    <% highLevelSectorList.each do |highLevelSectorName| %>
+                                        <li>
+                                            <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
+                                                <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                            </label>
+                                        </li>
+                                    <%end%>
+                                </ul>
+                            </fieldset>
                         </div>
                         <input type="hidden" id="selected_sectors" value=""  />
                     </div>
@@ -255,15 +270,18 @@
                             <h3>Document Type</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: none; margin: 5px;">
-                                <% documentTypes.each do |documentTypes| %>
-                                <li>
-                                    <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
-                                    <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
-                                    </label>
-                                </li>
-                                <% end %>
-                            </ul>
+                            <fieldset class="no-style">
+                                <legend>Document Type</legend>
+                                <ul style="display: none; margin: 5px;">
+                                    <% documentTypes.each do |documentTypes| %>
+                                    <li>
+                                        <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
+                                        <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
+                                        </label>
+                                    </li>
+                                    <% end %>
+                                </ul>
+                            </fieldset>
                         </div>
                         <input type="hidden" id="selected_document_type" value=""  />
                     </div>
@@ -278,17 +296,20 @@
                             <h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3>
                         </span>
                         <div class="mContent">
-                            <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
-                                <% implementingOrgTypes.each do |implementingOrgTypes| %>
-                                    <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
-                                        <li>
-                                            <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
-                                            <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
-                                            </label>
-                                        </li>
-                                    <%end%>
-                                <% end %>
-                            </ul>
+                            <fieldset class="no-style">
+                                <legend>Implementing Organisations</legend>
+                                <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
+                                    <% implementingOrgTypes.each do |implementingOrgTypes| %>
+                                        <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
+                                            <li>
+                                                <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
+                                                <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
+                                                </label>
+                                            </li>
+                                        <%end%>
+                                    <% end %>
+                                </ul>
+                            </fieldset>
                             <!-- <div class="description-collapse" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div> -->
                         </div>
                         <input type="hidden" id="selected_implementingOrg_type" value=""  />
