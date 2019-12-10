@@ -590,7 +590,7 @@ Sector breakdown
 #search-results span em {
   font-style: normal;
   font-weight: normal;
-  color: #03b39b; }
+  color: #008270; }
 
 /* button styles
 -----------------------------------------------*/
@@ -962,7 +962,7 @@ a.button {
   padding: 30px 0; }
 
 #footer a {
-  color: #666;
+  color: #454a4c;
   text-decoration: underline; }
 
 #footer .copyright a {
