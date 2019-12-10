@@ -205,33 +205,36 @@
                             <h3>Status</h3>
                         </span>
                         <div class="mContent">
-                            <ul style="display: none; margin: 5px">
-                                <%if includeClosed == '1' %>
-                                    <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                                            <li>
-                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
-                                                </label>
-                                            </li>
-                                    <% end %>
-                                <%else%>
-                                    <% countryAllProjectFilters["activity_status"].each do |statuses| %>
-                                        <%if statuses["code"] == '2' %>
-                                            <li>
-                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
-                                                </label>
-                                            </li>
-                                        <%else%>
-                                            <li>
-                                                <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
-                                                <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
-                                                </label>
-                                            </li>
-                                        <%end%>
-                                    <% end %>
-                                <%end%>
-                            </ul>
+                            <fieldset class="no-style">
+                                <legend>Activity Status</legend>
+                                <ul style="display: none; margin: 5px">
+                                    <%if includeClosed == '1' %>
+                                        <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                                                <li>
+                                                    <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                    <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                                    </label>
+                                                </li>
+                                        <% end %>
+                                    <%else%>
+                                        <% countryAllProjectFilters["activity_status"].each do |statuses| %>
+                                            <%if statuses["code"] == '2' %>
+                                                <li>
+                                                    <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                    <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" checked name="status"><%= statuses["name"] %>
+                                                    </label>
+                                                </li>
+                                            <%else%>
+                                                <li>
+                                                    <label for="activity_status_<%= statuses["code"] %>" title=" <%= statuses["name"] %>">
+                                                    <input id="activity_status_<%= statuses["code"] %>" type="checkbox" value="<%= statuses["code"] %>" class="activity_status" name="status"><%= statuses["name"] %>
+                                                    </label>
+                                                </li>
+                                            <%end%>
+                                        <% end %>
+                                    <%end%>
+                                </ul>
+                            </fieldset>
                         </div>
                         <%if includeClosed == '1' %>
                             <input type="hidden" id="activity_status_states" value="2,3,4"  />
@@ -284,15 +287,18 @@
                                 <h3>Sectors</h3>
                             </span>
                             <div class="mContent">
-                                <ul style="display: block; margin: 5px">
-                                    <% highLevelSectorList.each do |highLevelSectorName| %>
-                                        <li>
-                                            <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
-                                                <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
-                                            </label>
-                                        </li>
-                                    <%end%>
-                                </ul>
+                                <fieldset class="no-style">
+                                    <legend>Sectors</legend>
+                                    <ul style="display: block; margin: 5px">
+                                        <% highLevelSectorList.each do |highLevelSectorName| %>
+                                            <li>
+                                                <label for="activity_status_<%= highLevelSectorName[0] %>" title=" <%= highLevelSectorName[0] %>">
+                                                    <input id="activity_status_<%= highLevelSectorName[0] %>" type="checkbox" value="<%= highLevelSectorName[1][0] %>" class="sector" name="sector"><%= highLevelSectorName[0] %> <!--(<%#= highLevelSectorName[1][1] %>) -->
+                                                </label>
+                                            </li>
+                                        <%end%>
+                                    </ul>
+                                </fieldset>
                             </div>
                             <input type="hidden" id="selected_sectors" value=""  />
                         </div>
@@ -313,15 +319,18 @@
                                 <h3>Document Type</h3>
                             </span>
                             <div class="mContent">
-                                <ul style="display: block; margin: 5px">
-                                    <% documentTypes.each do |documentTypes| %>
-                                    <li>
-                                        <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
-                                        <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
-                                        </label>
-                                    </li>
-                                    <% end %>
-                                </ul>
+                                <fieldset class="no-style">
+                                    <legend>Document type</legend>
+                                    <ul style="display: block; margin: 5px">
+                                        <% documentTypes.each do |documentTypes| %>
+                                        <li>
+                                            <label for="document_type_<%= documentTypes["document_link_category"]["code"] %>" title=" <%= documentTypes["document_link_category"]["name"] %>">
+                                            <input id="document_type_<%= documentTypes["document_link_category"]["code"] %>" type="checkbox" value="<%= documentTypes["document_link_category"]["code"] %>" class="document_type" name="document_type"><%= documentTypes["document_link_category"]["name"] %>
+                                            </label>
+                                        </li>
+                                        <% end %>
+                                    </ul>
+                                </fieldset>
                             </div>
                             <input type="hidden" id="selected_document_type" value=""  />
                         </div>
@@ -336,17 +345,20 @@
                                 <h3 style="margin-left: 5px; padding-bottom: 5px">Implementing Organisations</h3>
                             </span>
                             <div class="mContent">
-                                <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
-                                    <% implementingOrgTypes.each do |implementingOrgTypes| %>
-                                        <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
-                                            <li>
-                                                <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
-                                                    <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
-                                                </label>
-                                            </li>
-                                        <%end%>
-                                    <% end %>
-                                </ul>
+                                <fieldset class="no-style">
+                                    <legend>Implementing Organisations</legend>
+                                    <ul class="implenting-orgs implenting-orgs-container" style="overflow: hidden; display: none; margin: 5px;">
+                                        <% implementingOrgTypes.each do |implementingOrgTypes| %>
+                                            <%if implementingOrgTypes["participating_organisation_ref"] != 'na' %>
+                                                <li>
+                                                    <label for="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" title=" <%= implementingOrgTypes["participating_organisation"] %>">
+                                                        <input id="implementingOrg_type_<%= implementingOrgTypes["participating_organisation_ref"] %>" type="checkbox" value="<%= implementingOrgTypes["participating_organisation_ref"] %>" class="implementingOrg_type" name="implementingOrg_type"><%= implementingOrgTypes["participating_organisation"] %>
+                                                    </label>
+                                                </li>
+                                            <%end%>
+                                        <% end %>
+                                    </ul>
+                                </fieldset>
                             </div>
                             <input type="hidden" id="selected_implementingOrg_type" value=""  />
                             <div class="description-overlay" style="display: none; position: relative;top: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 20px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)"><div class="description-expander" style="text-align: center; color: #2e3191; text-decoration: underline; cursor: pointer">Expand</div></div>

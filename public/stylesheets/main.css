@@ -990,3 +990,13 @@ padding: 9px 0px;
   padding-left: 30px;
 }
 
+.no-style {
+  border: none;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: contents; 
+}
+
+.no-style legend {
+  display: none;
+}
