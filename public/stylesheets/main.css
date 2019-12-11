@@ -1000,3 +1000,20 @@ padding: 9px 0px;
 .no-style legend {
   display: none;
 }
+
+.search-title {
+  line-height:0.6em; 
+  font-size: 1.5em; 
+  float: left; 
+  font-weight: bold; 
+  margin-top: 14px; 
+  margin-bottom: 14px;
+}
+
+.h3-replacement {
+  display: block;
+  font-size: 2em;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  padding-bottom: 0.25em;
+  margin-bottom: 14px;
+}

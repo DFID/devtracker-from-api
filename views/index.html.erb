@@ -27,7 +27,7 @@ layout: cw_landing
                     <div class="ten columns">
                         <div class="row">
                             <div class="twelve columns">
-                                <h3 style="line-height:0.6em; font-size: 1.5em; float: left">Search Projects</h3>
+                                <span class="search-title">Search Projects</span>
                                 <label class="visually-hidden" for="query">Search for  location, sector, organisation or keyword</label>
                                 <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
                                 <input id="front-search-submit" type="submit" value="Search">
@@ -86,7 +86,7 @@ layout: cw_landing
 
 <div class="row">
     <div class="twelve columns">
-        <h3 class="section-group-title">UK Government Priorities</h3>
+        <span class="section-group-title h3-replacement">UK Government Priorities</span>
     </div>
 </div>
 
@@ -135,10 +135,10 @@ layout: cw_landing
         </div>
         <table class="transactions-table oda-table" style="width:100%; font-size: 1.0em; margin-bottom: 25px">
           <tbody>
-            <!-- <thead>
-              <th></th>
-              <th style="border-left: 1px solid rgb(218, 218, 218)">£m</th>
-            </thead> -->
+            <thead style="display: none">
+              <th>Department name</th>
+              <th style="border-left: 1px solid rgb(218, 218, 218)">Budget amount</th>
+            </thead>
             <% odas.each do |oda| %>
               <tr style="border-bottom: none">
                 <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>"><%= oda[1][0]["name"] %></a></td>
