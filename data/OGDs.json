@@ -31,7 +31,7 @@
 	},
 	"HMT":
 	{
-		"identifiers":"x",
+		"identifiers":"GB-GOV-2",
 		"name": "HM Treasury"
 	},
 	"DH":
@@ -86,7 +86,7 @@
 	},
 	"CDC":
 	{
-		"identifiers":"GB-GOV-2,GB-COH-03877777",
+		"identifiers":"GB-COH-03877777",
 		"name": "CDC Group PLC"
 	},
 	"DIT":
