@@ -1267,7 +1267,7 @@
         "Name": "Department for Culture, Media and Sports"
     }, {
         "Code": "GB-GOV-2",
-        "Name": "CDC Capital Partners PLC"
+        "Name": "HM Treasury"
     }, {
         "Code": "GB-GOV-21",
         "Name": "Scottish Government"
@@ -1496,5 +1496,9 @@
     }, {
         "Code": "US-9",
         "Name": "Department of Interior"
+    },
+    {
+        "Code": "GB-COH-03877777",
+        "Name": "CDC Group PLC"
     }
 ]
