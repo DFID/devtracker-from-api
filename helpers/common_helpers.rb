@@ -369,6 +369,8 @@ module CommonHelpers
 
     #Implementing org type filters
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+    # Get the list of valid iati publisher identifiers
+    iatiPublisherList = JSON.parse(File.read('data/iati_publishers_list.json'))
     puts apiList[5]
     oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
@@ -382,9 +384,21 @@ module CommonHelpers
         else
           implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
         end
+      elsif implementingOrgs['participating_organisation_ref'].length < 1 || implementingOrgs['participating_organisation_ref'] == 'NULL'
+        implementingOrgs['participating_organisation_ref'] = 'na'
+        implementingOrgs['participating_organisation'] = 'na'
+      else
+        tempImplmentingOrgData = iatiPublisherList.select{|implementingOrg| implementingOrg['IATI Organisation Identifier'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
+        if tempImplmentingOrgData.nil?
+          implementingOrgs['participating_organisation_ref'] = 'na'
+          implementingOrgs['participating_organisation'] = 'na'
+        else
+          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Publisher']
+          implementingOrgs['participating_organisation_ref'] = tempImplmentingOrgData['IATI Organisation Identifier']
+        end
       end
     end
-    
+
     # Reporting org type filter preparation
     if (apiList[0].include? "recipient_country")
       puts '------THIS IS API CALL 7---------'
