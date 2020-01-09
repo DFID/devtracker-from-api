@@ -368,7 +368,7 @@ module CommonHelpers
     allProjectsData['document_types'] = document_type_list['results']
 
     #Implementing org type filters
-    participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
+    #participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
     # Get the list of valid iati publisher identifiers
     iatiPublisherList = JSON.parse(File.read('data/iati_publishers_list.json'))
     puts apiList[5]
@@ -377,12 +377,13 @@ module CommonHelpers
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
       if implementingOrgs['participating_organisation'].length < 1
-        tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
+        #tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
+        tempImplmentingOrgData = iatiPublisherList.select{|implementingOrg| implementingOrg['IATI Organisation Identifier'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first        
         if tempImplmentingOrgData.nil?
           implementingOrgs['participating_organisation_ref'] = 'na'
           implementingOrgs['participating_organisation'] = 'na'
         else
-          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Name']
+          implementingOrgs['participating_organisation'] = tempImplmentingOrgData['Publisher']
         end
       elsif implementingOrgs['participating_organisation_ref'].length < 1 || implementingOrgs['participating_organisation_ref'] == 'NULL'
         implementingOrgs['participating_organisation_ref'] = 'na'
