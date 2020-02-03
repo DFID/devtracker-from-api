@@ -615,7 +615,6 @@ module CountryHelpers
     
   # Returns the country level implementing organisations
   def getCountryLevelImplOrgs(countryCode, activityCount)
-    puts settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_organisations,recipient_countries,recipient_regions&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=#{activityCount}&activity_status=2"
     allActivities = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_organisations,recipient_countries,recipient_regions&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=#{activityCount}&activity_status=2")
     allActivities = allActivities['results']
     implementingOrgs = {}
