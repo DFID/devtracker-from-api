@@ -613,4 +613,39 @@ module CountryHelpers
       geoJsonData
     end
     
+  # Returns the country level implementing organisations
+  def getCountryLevelImplOrgs(countryCode, activityCount)
+    puts settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_organisations,recipient_countries,recipient_regions&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=#{activityCount}&activity_status=2"
+    allActivities = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_organisations,recipient_countries,recipient_regions&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=#{activityCount}&activity_status=2")
+    allActivities = allActivities['results']
+    implementingOrgs = {}
+    allActivities.each do |activity|
+      if(activity['recipient_countries'].count == 1)
+        if(activity['recipient_countries'][0]['country']['code'].to_s == countryCode)
+          activity['participating_organisations'].each do |org|
+            begin
+              if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
+                if(implementingOrgs.has_key?(org['ref'].to_s))
+                  puts org['ref']
+                  if(org['role']['code'].to_s == '4')
+                    implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
+                  end
+                else
+                  puts 'I am here lol'
+                  if(org['role']['code'].to_s == '4')
+                    implementingOrgs[org['ref']] = {}
+                    implementingOrgs[org['ref']]['orgName'] = org['narratives'][0]['text']
+                    implementingOrgs[org['ref']]['count'] = 1
+                  end
+                end
+              end
+            rescue
+              # Do nothing
+            end
+          end
+        end
+      end
+    end
+    implementingOrgs
+  end
 end
