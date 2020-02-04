@@ -53,10 +53,7 @@ include RecaptchaHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
-#set :oipa_api_url, 'http://loadbalancer1-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://staging-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://dev-dfid.oipa.nl/api/'
-#set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+#set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -123,13 +120,13 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
-	begin
-		implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=2&activity_status=2&participating_organisation_role=4"
-		implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
-		implementingOrgList = implementingOrgList['results']
-	rescue
-		implementingOrgList = Array.new
-	end
+	#begin
+		#implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=2&activity_status=2&participating_organisation_role=4"
+		#implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
+		implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
+	# rescue
+	# 	implementingOrgList = {}
+	# end
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
 	#Geo Location data of country
