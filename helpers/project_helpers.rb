@@ -755,7 +755,9 @@ module ProjectHelpers
                 tempHash = {}
                 project2 = get_h1_project_details(projID)
                 if !transaction['receiver_organisation'].nil?
-                    if transaction['receiver_organisation']['ref'] != ''
+                    if transaction['receiver_organisation']['ref'] == 'Excluded' || transaction['receiver_organisation']['ref'] == 'Not available'
+                        tempHash['Receiver Organisation'] = transaction['receiver_organisation']['narratives'][0]['text']
+                    elsif transaction['receiver_organisation']['ref'] != ''
                         tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s} 
                         if !tempOrg.nil? && tempOrg.length > 0
                            tempHash['Receiver Organisation'] = tempOrg[0]['narratives'][0]['text']
