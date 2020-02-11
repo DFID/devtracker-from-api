@@ -1057,6 +1057,17 @@ get '/about/?' do
 	erb :'about/about', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 
+get '/custom-codes/?' do
+	# Process policy priorities
+	policyPriorities = Oj.load(File.read('data/custom-codes/policy-priorities.json'))
+	settings.devtracker_page_title = 'Custom Codes & Vocabularies'
+	erb :'custom-codes/custom-codes', :layout => :'layouts/layout', :locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		policyPriorities: policyPriorities
+	}
+end 
+
 get '/accessibility-statement/?' do
   	settings.devtracker_page_title = 'Accessibility Statement Page'
 	erb :'accessibility/accessibility-statement', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}

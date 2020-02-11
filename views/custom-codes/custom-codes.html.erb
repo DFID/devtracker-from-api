@@ -1,0 +1,72 @@
+<!-- ---
+published: true
+title: Development Tracker
+--- -->
+<div class="hero resize-static-headers">
+    <div id="page-title" class="row">
+        <div class="twelve columns">
+            <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
+            <div>
+                <div class="breadcrumb">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li>Custom Codes</li>
+                </ul>
+            </div>
+                <h1>
+                    Custom Codes & Vocabularies
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="twelve columns">
+        <h3><%= policyPriorities['metadata']['name']%></h3>
+        <span>
+            <%= policyPriorities['metadata']['description']%>
+        </span>
+        <%if policyPriorities['data'].length > 0%>
+            <table class="custom-codes display" style="width:100%; display: none">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%policyPriorities['data'].each do |data|%>
+                        <tr>
+                            <td><%= data['Code']%></td>
+                            <td><%= data['Name']%></td>
+                            <td><%= data['Description']%></td>
+                            <td><%= data['Status']%></td>
+                        </tr>
+                    <%end%>
+                </tbody>
+            </table>
+        <%end%>
+    </div>
+</div>
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.html5.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    jq3('.custom-codes').DataTable({
+      "info":false,
+      "paging":false,
+      "searching":false,
+      "order":[1,"asc"]
+    });
+    jq3('.custom-codes').show();
+  })
+</script>
