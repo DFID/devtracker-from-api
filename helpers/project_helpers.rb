@@ -187,7 +187,7 @@ module ProjectHelpers
         #     end
         # end
         # finalData
-        fundedProjects
+        fundedProjects.uniq!
     end
 
     def get_transaction_details(projectId,transactionType)
