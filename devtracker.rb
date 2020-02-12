@@ -345,7 +345,6 @@ get '/projects/:proj_id/?' do |n|
   	#get project sectorwise graph  data
   	
   	projectSectorGraphData = get_project_sector_graph_data(n)
-  	
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
 
@@ -483,7 +482,7 @@ get '/projects/:proj_id/partners/?' do |n|
   	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n)
+	fundedProjectsData = get_funded_project_details(n).uniq!
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
