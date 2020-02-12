@@ -2,7 +2,7 @@
 	"metadata": 
 	{
 		"name": "Policy Priorities",
-		"description": "<p>The Policy Priorities Codelist allows for bilateral donors working in specific remits to connect their data. A priority could be considered a specific fund, event, sub-sector, or super-sector (respectively more or less specific than traditional sectors. The Codelist is by design ad-hoc, and is not a substitute for traditional Sector codes or vocabularies such as the OECD DAC CRS Purpose codes or the SDGs. Rather, it is used to quickly associate data which doesn't neatly fit into existing categories.</p><p>This Codelist can be used both as a Sector or a Tag in the IATI standard. The former requires a percentage for every sector within a given vocabulary if there is more than one. As such, the 'null' code is included to allow for padding where appropriate.</p>"
+		"description": "<p>The Policy Priorities Codelist allows for bilateral donors working in specific remits to connect their data. A priority could be considered a specific fund, event, sub-sector, or super-sector (respectively more or less specific than traditional sectors). The Codelist is by design ad-hoc, and is not a substitute for traditional Sector codes or vocabularies such as the OECD DAC CRS Purpose codes or the SDGs. Rather, it is used to quickly associate data which doesn't neatly fit into existing categories.</p><p>This Codelist can be used both as a Sector or a Tag in the IATI standard. The former requires a percentage for every sector within a given vocabulary if there is more than one. As such, the 'null' code is included to allow for padding where appropriate.</p>"
 	},
 	"data": 
 	[
