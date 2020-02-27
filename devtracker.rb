@@ -482,7 +482,8 @@ get '/projects/:proj_id/partners/?' do |n|
   	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n).uniq!
+	fundedProjectsData = get_funded_project_details(n)
+
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',

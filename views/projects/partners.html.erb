@@ -48,7 +48,7 @@
               <%else%>
                  <h3 class="section-group-title">Funded Projects</h3>
               <%end%>
-                <% fundedProjects.each do |fundedProject| %>
+                <% fundedProjects.each do |key, fundedProject| %>
                   <%if (fundedProject['iati_identifier'].to_s != project['iati_identifier'].to_s)%>
                     <div class="row">
                         <div class="four columns summary">
