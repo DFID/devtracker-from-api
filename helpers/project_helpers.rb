@@ -187,7 +187,12 @@ module ProjectHelpers
         #     end
         # end
         # finalData
-        fundedProjects
+        projectsByKeys = {}
+        fundedProjects.each do |p|
+            projectsByKeys[p['iati_identifier']] = {}
+            projectsByKeys[p['iati_identifier']] = p
+        end
+        projectsByKeys
     end
 
     def get_transaction_details(projectId,transactionType)
