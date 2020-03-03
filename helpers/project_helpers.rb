@@ -65,7 +65,6 @@ module ProjectHelpers
     def get_document_links_local(projectId)
         local_documents = JSON.parse(File.read('data/document_inclusion_list.json'))
         matched_local_documents = local_documents.select{|p| p['projectid'] == projectId}
-        puts matched_local_documents
         matched_local_documents
     end
 
@@ -73,7 +72,6 @@ module ProjectHelpers
         project_documents = projectJson['document_links']
         static_projects = JSON.parse(File.read('data/document_exclusion_list.json'))
         static_projects = static_projects.select{ |p| p['project'] == projectId }
-        puts static_projects
         if static_projects.length > 0
             project_documents.delete_if do |pd|
                 flag = 0
@@ -121,14 +119,12 @@ module ProjectHelpers
             end
         end
         projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
-        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&fields=url"
         oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&fields=url"
         project = JSON.parse(oipa)
         project = project['count']
     end
 
     def get_funding_project_details(projectId)
-        puts settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" 
         fundingProjectsAPI = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" 
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
     end
@@ -152,7 +148,6 @@ module ProjectHelpers
             end
         end
         projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
-        puts settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1000&fields=id,title,descriptions,reporting_organisation,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title"
         projectCount = RestClient.get settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=1&fields=id,title&ordering=title"
         projectCount = JSON.parse(projectCount)
         projectCount = projectCount['count']
@@ -298,7 +293,6 @@ module ProjectHelpers
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         #OIPA V3.1
-        puts "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
         oipaCountryProjectBudgetValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country"
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
@@ -684,7 +678,6 @@ module ProjectHelpers
     def location_data_for_csv(projectId)
         oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
         project = JSON.parse(oipa)
-        #puts project['locations']
         locationArray = Array.new
         project['locations'].each do |location|
             locationHash = {}
@@ -784,7 +777,6 @@ module ProjectHelpers
                         tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
                     else
                         tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
-                        puts tempOrg
                         if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
                             tempHash['Organisation Type'] = tempOrg[0]['type']['name']
                         else
@@ -829,7 +821,6 @@ module ProjectHelpers
                         tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
                     else
                         tempOrg = project2['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
-                        puts tempOrg
                         if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
                             tempHash['Organisation Type'] = tempOrg[0]['type']['name']
                         else
@@ -876,7 +867,6 @@ module ProjectHelpers
         elsif transactionType == '0'
             project = get_h1_project_details(projID)
             tempStorage = Array.new
-            #puts transactionsForCSV
             transactionsForCSV.each do |transaction|
                 tempHash = {}
                 tempHash['Financial Year'] = transaction['fy']
@@ -885,7 +875,6 @@ module ProjectHelpers
                 tempHash['Currency'] = project['default_currency']['code']
                 tempStorage.push(tempHash)
             end
-            puts tempStorage
             tempTransactions = hash_to_csv(tempStorage)
         else
             tempStorage = Array.new
