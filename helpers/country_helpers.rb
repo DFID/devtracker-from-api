@@ -483,7 +483,6 @@ module CountryHelpers
   def location_data_for_countries_csv(countryCode)
         oipa = RestClient.get settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=title,locations&page_size=500&activity_status=2"
         projects = JSON.parse(oipa)
-        #puts project['locations']
         locationArray = Array.new
         projects['results'].each do |project|
           project['locations'].each do |location|
@@ -625,12 +624,10 @@ module CountryHelpers
             begin
               if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
                 if(implementingOrgs.has_key?(org['ref'].to_s))
-                  puts org['ref']
                   if(org['role']['code'].to_s == '4')
                     implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
                   end
                 else
-                  puts 'I am here lol'
                   if(org['role']['code'].to_s == '4')
                     implementingOrgs[org['ref']] = {}
                     implementingOrgs[org['ref']]['orgName'] = org['narratives'][0]['text']

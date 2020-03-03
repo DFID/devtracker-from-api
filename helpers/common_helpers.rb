@@ -310,16 +310,6 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
-    puts '------'
-    puts settings.oipa_api_url + apiList[0]
-    puts settings.oipa_api_url + apiList[1]
-    puts settings.oipa_api_url + apiList[2]
-    puts settings.oipa_api_url + apiList[3]
-    puts settings.oipa_api_url + apiList[4]
-    puts settings.oipa_api_url + apiList[5]
-    puts settings.oipa_api_url + apiList[6]
-    #puts settings.oipa_api_url + apiList[7]
-    puts '-----'
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
@@ -371,7 +361,6 @@ module CommonHelpers
     #participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
     # Get the list of valid iati publisher identifiers
     iatiPublisherList = JSON.parse(File.read('data/iati_publishers_list.json'))
-    puts apiList[5]
     oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
@@ -402,8 +391,6 @@ module CommonHelpers
 
     # Reporting org type filter preparation
     if (apiList[0].include? "recipient_country")
-      puts '------THIS IS API CALL 7---------'
-      puts settings.oipa_api_url + apiList[7]
       reportingOrgList = RestClient.get settings.oipa_api_url + apiList[7]
     else
       reportingOrgList = RestClient.get settings.oipa_api_url + apiList[6]
@@ -483,7 +470,6 @@ module CommonHelpers
   def generateProjectStartDate(apiLink)
     startDate = '1990-01-01T00:00:00'
     begin
-      puts apiLink
       tempStartDate = RestClient.get settings.oipa_api_url + apiLink
       tempStartDate = JSON.parse(tempStartDate)
       tempStartDate = tempStartDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
@@ -623,7 +609,6 @@ module CommonHelpers
   end
 
   def hash_to_csv(data)
-      #puts data
       column_names = data.first.keys
       csv_string = CSV.generate do |csv|
           csv << column_names
