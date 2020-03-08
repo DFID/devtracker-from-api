@@ -22,7 +22,7 @@ title: Development Tracker
 </div>
 <div class="row">
     <div class="twelve columns">
-        <h3 id="<%= policyPriorities['metadata']['name']%>"><%= policyPriorities['metadata']['name']%><a class="anchor" href="#<%= policyPriorities['metadata']['name']%>" title="Permalink to this headline"><span class="ui-icon ui-icon-link"></span></a></h3>
+        <h3 id="<%= policyPriorities['metadata']['name'].downcase.gsub!(" ","_")%>"><%= policyPriorities['metadata']['name']%><a class="anchor" href="#<%= policyPriorities['metadata']['name'].downcase.gsub!(" ","_")%>" title="Permalink to this headline"><span class="ui-icon ui-icon-link"></span></a></h3>
         <span>
             <%= policyPriorities['metadata']['description']%>
         </span>
