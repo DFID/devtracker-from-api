@@ -1038,6 +1038,7 @@ padding: 9px 0px;
     background: white;
     color: black;
     display: none;
+    font-size: 1.1em;
 }
 
 #cookieDiv h1 {
@@ -1047,4 +1048,41 @@ padding: 9px 0px;
 #cookieDiv button {
   font-size: 1em;
   cursor: pointer;
+}
+
+#acceptCookie {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 8px 16px!important;
+  font-size: 1em;
+  margin: 4px 8px 4px 0;
+  font-weight: 400;
+  line-height: 1.5em;
+  background: transparent;
+  cursor: pointer;
+  color: #fff;
+  background: #000;
+  font-weight: 700;
+  font-family: "nta", Arial, sans-serif;
+}
+
+#rejectCookie {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 8px 16px!important;
+  font-size: 1em;
+  margin: 4px 8px 4px 0;
+  font-weight: 400;
+  line-height: 1.5em;
+  background: transparent;
+  cursor: pointer;
+  font-family: "nta", Arial, sans-serif;
+  color: #000;
+  border-color: #000;
+}
+
+#cookieContent {
+  font-size: 1.1em;
+  line-height: 1.5em;
+  font-family: Arial,sans-serif;
 }
