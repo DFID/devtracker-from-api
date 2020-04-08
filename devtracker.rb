@@ -18,6 +18,7 @@ require 'rss'
 require "sinatra/json"
 require "action_view"
 require 'csv'
+require "sinatra/cookies"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -88,6 +89,8 @@ get '/' do  #homepage
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
   	settings.devtracker_page_title = ''
+  	# Example of setting up a cookie from server end
+  	# response.set_cookie('my_cookie', 'value_of_cookie')
  	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {

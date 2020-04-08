@@ -1021,3 +1021,68 @@ padding: 9px 0px;
 .anchor {
   display: inline-block;
 }
+
+#cookieDiv {
+  position: fixed;
+    z-index: 100;
+    -webkit-box-shadow: 0 -5px 10px 2px rgba(172,171,171,.3);
+    box-shadow: 0 -5px 10px 2px rgba(172,171,171,.3);
+    text-align: left;
+    padding: 16px!important;
+    width: 480px;
+    right: 16px;
+    left: auto;
+    bottom: 16px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: white;
+    color: black;
+    display: none;
+    font-size: 1.1em;
+}
+
+#cookieDiv h1 {
+  font-size: 1.3em;
+}
+
+#cookieDiv button {
+  font-size: 1em;
+  cursor: pointer;
+}
+
+#acceptCookie {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 8px 16px!important;
+  font-size: 1em;
+  margin: 4px 8px 4px 0;
+  font-weight: 400;
+  line-height: 1.5em;
+  background: transparent;
+  cursor: pointer;
+  color: #fff;
+  background: #000;
+  font-weight: 700;
+  font-family: "nta", Arial, sans-serif;
+}
+
+#rejectCookie {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 8px 16px!important;
+  font-size: 1em;
+  margin: 4px 8px 4px 0;
+  font-weight: 400;
+  line-height: 1.5em;
+  background: transparent;
+  cursor: pointer;
+  font-family: "nta", Arial, sans-serif;
+  color: #000;
+  border-color: #000;
+}
+
+#cookieContent {
+  font-size: 1.1em;
+  line-height: 1.5em;
+  font-family: Arial,sans-serif;
+}

@@ -29,6 +29,7 @@
 
 
     <script src="/javascripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/javascripts/js.cookie.min.js" type="text/javascript"></script>
     <!--[if lt IE 9]>
       <script src="/javascripts/ie-compat.js?1435740689" type="text/javascript"></script>
     <![endif]-->
@@ -194,7 +195,57 @@
         </div>
       </div>
     </footer>
-    <%= erb :'partials/_analytics'%>
+    <div id="cookieDiv">
+      <!-- <button style="display: flex; position: absolute; top: 16px; right: 16px " id="closeCookie">Close</button> -->
+      <div id="cookieContent">
+        <h1>This site uses cookies</h1>
+        <div>
+          We use Google Analytics to measure how you use the website so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about how you got to the site, the internal pages you visit, how long you spend on each page and what you click on while you're visiting the site. <a href="/cookies">Read more</a>
+        </div>
+        <hr />
+        <button id="acceptCookie">Accept</button>
+        <button id="rejectCookie">Reject</button>
+      </div>
+    </div>
+    <%if request.cookies['accept_cookie'].nil? %>
+      <script>
+        $(document).ready(function() {
+          function clearCookies(){
+            var cookies = document.cookie.split("; ");
+            for (var c = 0; c < cookies.length; c++) {
+                var d = window.location.hostname.split(".");
+                while (d.length > 0) {
+                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                    var p = location.pathname.split('/');
+                    document.cookie = cookieBase + '/';
+                    while (p.length > 0) {
+                        document.cookie = cookieBase + p.join('/');
+                        p.pop();
+                    };
+                    d.shift();
+                }
+            }
+          };
+          $('#cookieDiv').slideDown('slow');
+          $('#acceptCookie').click(function(){
+            Cookies.set('accept_cookie', 1, { expires: 90 });
+            $.getScript("/javascripts/analytics.js")
+            $('#cookieDiv').slideUp();
+          });
+          // $('#closeCookie').click(function(){
+          //   $('#cookieDiv').slideUp();
+          // });
+          $('#rejectCookie').click(function(){
+            clearCookies();
+            Cookies.set('accept_cookie', 0, { expires: 90 });
+            $('#cookieDiv').slideUp();
+          });
+        });
+      </script>
+    <%elsif request.cookies['accept_cookie'] == '1'%>
+      <%puts('working fine................')%>
+      <%= erb :'partials/_analytics'%> 
+    <%end%>
     <!-- <%#=DateTime.now%> -->
   </body>
 </html>
