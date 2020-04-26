@@ -1086,3 +1086,9 @@ padding: 9px 0px;
   line-height: 1.5em;
   font-family: Arial,sans-serif;
 }
+
+@media screen and (max-width: 600px){
+  #cookieDiv{
+    width: 95%;
+  }
+}
