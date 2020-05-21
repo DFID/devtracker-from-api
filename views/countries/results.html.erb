@@ -3,12 +3,12 @@
         <div class="twelve columns">
             <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
             <div>
-                <div class="breadcrumb">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/location/country">Aid by Location</a></li>
-                        <li><%= country[:name] %></li>
-                    </ul>
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country[:name] %></li>
+                    </ol>
                 </div>
                 <h1>
                     <%= country[:name] %>

@@ -6,19 +6,19 @@ title: Development Tracker
     <div class="twelve columns">
         <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
         <div>
-            <div class="breadcrumb">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/sector">Aid by Sector</a></li>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
                     <%#if !(defined?(sectorData['categoryCode'])).nil? %>
                     <%if sectorData['categoryCode'].length > 0 %>
-                    <li><a href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
                     <%end%>
                     <%if !(defined?(sectorData['sectorName'])).nil?%>
-                    <li><%= sectorData['sectorName'] %></li>
+                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= sectorData['sectorName'] %></li>
                     <%end%>
-                </ul>
+                </ol>
             </div>
             <h1>
                 Aid by Sector
