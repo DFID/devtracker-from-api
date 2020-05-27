@@ -289,6 +289,14 @@
         },
         2000
       )
+        //Prepare color codes to be used for the bar graph
+        var graphData = [<%= countrySectorGraphData[0] %>];
+        var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+        var fColors = {};
+        for(i = 0; i<graphData.length; i++){
+            fColors[graphData[i][0]] = colors[i];
+        };
+
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -297,6 +305,7 @@
                 ],
                 type: 'bar',
                 labels: false,
+                colors: fColors,
                 groups: [
                     <%= countrySectorGraphData[1] %>
                 ],
@@ -363,7 +372,7 @@
                     type: 'bar'
                 },
                 color: {
-                    pattern: ['#d8dcbf']
+                    pattern: ['#f3f2f1']
                 },
                 axis:{
                     x:{
