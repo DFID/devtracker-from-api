@@ -273,6 +273,28 @@ module CountryHelpers
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end
+
+  def get_reporting_orgWise_yearly_country_budgets(apiLink)
+    allBudgets = Oj.load(apiLink)
+    puts 'Data loading completed.'
+    reportingOrgWiseData = {}
+    allBudgets['results'].each do |budget|
+      if(!reportingOrgWiseData.key?(budget['reporting_organisation']['reporting_org']['ref']))
+        reportingOrgWiseData[budget['reporting_organisation']['reporting_org']['ref']] = []
+      end
+      tempData = {}
+      tempData['budget_period_start_year'] = budget['budget_period_start_year']
+      tempData['budget_period_start_quarter'] = budget['budget_period_start_quarter']
+      tempData['value'] = budget['value']
+      reportingOrgWiseData[budget['reporting_organisation']['reporting_org']['ref']].push(tempData)
+    end
+    reportingOrgWiseData.each do |key, value|
+      value = value.select {|val| !val['value'].nil?}
+      reportingOrgWiseData[key] = {}
+      reportingOrgWiseData[key] = financial_year_wise_budgets(value, 'C2')
+    end
+    reportingOrgWiseData
+  end
   
   def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
       budgetArray = Array.new
