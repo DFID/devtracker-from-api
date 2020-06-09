@@ -2,12 +2,12 @@
     <div class="twelve columns">
         <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
         <div>
-            <div class="breadcrumb">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/location/country">Aid by Location</a></li>
-                    <li><%= country[:name] %></li>
-                </ul>
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
+                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country[:name] %></li>
+                </ol>
             </div>
             <h1>
                 <%= country[:name] %>
@@ -112,14 +112,25 @@
     <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
 </div>
 <%if implementingOrgList.length > 0%>
-    <div style="margin-top: 8px" class="country-info-container row">
+    <div class="row">
         <div class="twelve columns">
-            <span style="font-weight: bold;width: 100%;text-align: center;display: block;font-size: 1.7em;margin-bottom: 12px;">Implementing Partners (Beta)</span>
-            <span>
-            <%implementingOrgList.each do |key, val|%>
-                <%=val['orgName']%> (<%=val['count']%>) ¦
-            <%end%>
-            </span>
+            <table class="govuk-table">
+              <caption class="govuk-table__caption">Implementing Partners</caption>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Partner(s)</th>
+                  <th scope="col" class="govuk-table__header">Active Projects</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <%implementingOrgList.each do |key, val|%>
+                    <tr class="govuk-table__row">
+                      <th scope="row" class="govuk-table__header"><%=val['orgName']%></th>
+                      <td class="govuk-table__cell"><%=val['count']%></td>
+                    </tr>
+                <%end%>
+              </tbody>
+            </table>
         </div>
     </div>
 <%end%>
@@ -278,6 +289,14 @@
         },
         2000
       )
+        //Prepare color codes to be used for the bar graph
+        var graphData = [<%= countrySectorGraphData[0] %>];
+        var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+        var fColors = {};
+        for(i = 0; i<graphData.length; i++){
+            fColors[graphData[i][0]] = colors[i];
+        };
+
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -286,6 +305,7 @@
                 ],
                 type: 'bar',
                 labels: false,
+                colors: fColors,
                 groups: [
                     <%= countrySectorGraphData[1] %>
                 ],
@@ -352,7 +372,7 @@
                     type: 'bar'
                 },
                 color: {
-                    pattern: ['#d8dcbf']
+                    pattern: ['#1d70b8']
                 },
                 axis:{
                     x:{

@@ -3,16 +3,16 @@
         <div class="twelve columns">
             <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
             <div>
-                <div class="breadcrumb">
-                    <ul>
-                        <li><a href="/">Home</a></li>
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
                         <% if region[:type] == "Regional" then %>
-                        <li><a href="/location/regional">Aid by Location</a></li>
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
                         <% else %>
-                        <li><a href="/location/global">Aid by Location</a></li>
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/global">Aid by Location</a></li>
                         <% end %>
-                        <li><%= region[:name] %></li>
-                    </ul>
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= region[:name] %></li>
+                    </ol>
                 </div>
                 <h1>
                     <% if region[:code] == '998' then%>

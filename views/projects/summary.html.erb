@@ -299,6 +299,13 @@
                 return string.replace(/[0.]*/,"");
             }
         }
+        //Prepare color codes to be used for the bar graph
+        var graphData = [<%= projectSectorGraphData[0] %>];
+        var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+        var fColors = {};
+        for(i = 0; i<graphData.length; i++){
+            fColors[graphData[i][0]] = colors[i];
+        };
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -307,6 +314,7 @@
                 ],
                 type: 'bar',
                 labels: false,
+                colors: fColors,
                 groups: [
                     <%= projectSectorGraphData[1] %>
                 ],
@@ -388,7 +396,7 @@
                     type: 'bar'
                 },
                 color: {
-                    pattern: ["#D8DCBF", "#2B6367"]
+                    pattern: ["#5694ca", "#003078"]
                 },
                 axis:{
                     x:{

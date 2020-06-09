@@ -25,7 +25,7 @@ $(document).ready(function() {
     .title(function(d){return "Budget: £" + reformCurrencyFormat(d3.format(".4s")(d.value))})
     .ordering(function(t){return t.budget;})
     .cap(10)
-    .ordinalColors(['#D8DCBF'])
+    .ordinalColors(['#f3f2f1'])
     .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
 
     chart2.on('renderlet', function(chart) {
@@ -53,7 +53,7 @@ $(document).ready(function() {
     .title(function(d){return "Budget: £" + reformCurrencyFormat(d3.format(".4s")(d.value))})
     .ordering(function(t){return t.budget;})
     .cap(10)
-    .ordinalColors(['#D8DCBF'])
+    .ordinalColors(['#1d70b8'])
     .xAxis().tickFormat(function(d){return "£" + d3.format(".2s")(d)}).ticks(4);
 
     chart3.on('renderlet', function(chart) {

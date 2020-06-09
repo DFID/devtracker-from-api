@@ -1,0 +1,29 @@
+{
+  "name": "devtracker-from-api",
+  "version": "1.0.0",
+  "description": "This repository is to support the redevelopment of Development Tracker using the OIPA open public API instead of the more complex data back-end used in the orginal DevTracker.",
+  "main": "devtracker.rb",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DFID/devtracker-from-api.git"
+  },
+  "keywords": [
+    "GDS",
+    "DFID"
+  ],
+  "author": "Open Data Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DFID/devtracker-from-api/issues"
+  },
+  "homepage": "https://github.com/DFID/devtracker-from-api#readme",
+  "dependencies": {
+    "govuk-frontend": "^3.6.0"
+  }
+}
