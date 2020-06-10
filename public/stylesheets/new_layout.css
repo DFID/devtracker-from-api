@@ -58,12 +58,12 @@ Homepage hero banner
   margin-bottom: 10px;
   padding: 20px 0 0;
   position: relative;
-  background: #2a78ba;
-  background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  background: #1d70b8;
+  /*background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: -webkit-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: -ms-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );*/
   /* IE6-9 fallback on horizontal gradient */ }
   .hero h1 {
     font-size: 1.8em;
@@ -118,12 +118,12 @@ Homepage country summary info
     left: 15px; }
 
 #top-5-countries {
-  background: #2a78ba;
-  background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
+  background: #1d70b8;
+  /*background: -moz-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: -webkit-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: -ms-linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
   background: linear-gradient(30deg, #2a78ba 1%, #3b82bd 33%, #4b8bc0 71%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a78ba', endColorstr='#4b8bc0',GradientType=1 );*/
   /* IE6-9 fallback on horizontal gradient */ }
   #top-5-countries .top-five-title {
     color: #fff; }

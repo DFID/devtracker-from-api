@@ -1092,3 +1092,25 @@ padding: 9px 0px;
     width: 95%;
   }
 }
+
+/*GDS Style overwrites to support DevTracker*/
+.govuk-inset-text {
+  margin-top: 0px;
+}
+
+.govuk-breadcrumbs__list-item:before {
+  border-color: white;
+}
+
+.govuk-breadcrumbs,
+.govuk-breadcrumbs__link:link, .govuk-breadcrumbs__link:visited, .govuk-breadcrumbs__link:hover, .govuk-breadcrumbs__link:active, .govuk-breadcrumbs__link:focus {
+  color: white;
+}
+
+table.govuk-table thead {
+  background: white;
+}
+
+table.govuk-table {
+  border: none;
+}
