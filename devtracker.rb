@@ -117,7 +117,6 @@ get '/countries/:country_code/?' do |n|
 	puts 'started...'
 	puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter&page=1&page_size=20"
 	tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	puts tempInfo
 	reportingOrgList = []
 	reportingOrgList = tempInfo.keys
 	finYearList = []
@@ -127,7 +126,6 @@ get '/countries/:country_code/?' do |n|
 		finYearList = (finYearList+tempArr).uniq
 	end
 	finYearList = finYearList.sort
-	puts finYearList
 	columnData = {}
 	reportingOrgList.each do |o|
 		tempData = []
@@ -152,6 +150,15 @@ get '/countries/:country_code/?' do |n|
 		tempData = tempData + val
 		finalData.push(tempData)
 	end
+	finalData.each do |x|
+		x[0] = returnDepartmentName(x[0])
+	end
+	puts '------generating reportingorglist-----------'
+	finalReportingOrgList = []
+	reportingOrgList.each do |x|
+		finalReportingOrgList.push(returnDepartmentName(x))
+	end
+		puts '------generated reportingorglist-----------'
 	puts finalData
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
@@ -159,7 +166,6 @@ get '/countries/:country_code/?' do |n|
 	 		results = get_country_results(n)
 			#oipa v3.1
 			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-			puts countryYearWiseBudgets
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
@@ -190,7 +196,7 @@ get '/countries/:country_code/?' do |n|
  			implementingOrgList: implementingOrgList,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
-			chartDataRepOrgs: reportingOrgList,
+			chartDataRepOrgs: finalReportingOrgList,
 			chartDataFinYears: finYearList,
 			chartDataColumnData: finalData
  		}
