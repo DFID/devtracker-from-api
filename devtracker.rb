@@ -114,80 +114,27 @@ get '/countries/:country_code/?' do |n|
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
 	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1")
-	puts 'started...'
-	puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter&page=1&page_size=20"
-	tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	reportingOrgList = []
-	reportingOrgList = tempInfo.keys
-	finYearList = []
-	tempInfo.each do |v|
-		tempArr = []
-		tempArr = v[1].keys
-		finYearList = (finYearList+tempArr).uniq
-	end
-	finYearList = finYearList.sort
-	columnData = {}
-	reportingOrgList.each do |o|
-		tempData = []
-		i = finYearList.length
-		j = 0
-		while j < i
-			tempData.push(0)
-			j = j + 1
-		end
-		columnData[o] = {}
-		columnData[o] = tempData
-	end
-	tempInfo.each do |key, val|
-		val.each do |k , v|
-			columnData[key][finYearList.index(k)] = v
-		end
-	end
-	finalData = []
-	columnData.each do |key, val|
-		tempData = []
-		tempData.push(key)
-		tempData = tempData + val
-		finalData.push(tempData)
-	end
-	finalData.each do |x|
-		x[0] = returnDepartmentName(x[0])
-	end
-	puts '------generating reportingorglist-----------'
-	finalReportingOrgList = []
-	reportingOrgList.each do |x|
-		finalReportingOrgList.push(returnDepartmentName(x))
-	end
-		puts '------generated reportingorglist-----------'
-	puts finalData
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
 	 		results = get_country_results(n)
 			#oipa v3.1
-			countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
-	#begin
-		#implementingOrgURL = settings.oipa_api_url + "activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{n}&hierarchy=2&activity_status=2&participating_organisation_role=4"
-		#implementingOrgList = JSON.parse(RestClient.get(implementingOrgURL))
-		implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
-	# rescue
-	# 	implementingOrgList = {}
-	# end
+	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
 	#Geo Location data of country
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
+	countryBudgetBarGraphData = countryBudgetBarGraphData(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
  			country: country,
- 			countryYearWiseBudgets: countryYearWiseBudgets,
  			countrySectorGraphData: countrySectorGraphData,
  			results: results,
  			topSixResults: topSixResults,
@@ -196,9 +143,9 @@ get '/countries/:country_code/?' do |n|
  			implementingOrgList: implementingOrgList,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
-			chartDataRepOrgs: finalReportingOrgList,
-			chartDataFinYears: finYearList,
-			chartDataColumnData: finalData
+			chartDataRepOrgs: countryBudgetBarGraphData[0],
+			chartDataFinYears: countryBudgetBarGraphData[1],
+			chartDataColumnData: countryBudgetBarGraphData[2]
  		}
 end
 

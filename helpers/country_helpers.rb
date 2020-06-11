@@ -263,6 +263,55 @@ module CountryHelpers
 
   end
 
+  def countryBudgetBarGraphData(n)
+    tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+    reportingOrgList = []
+    reportingOrgList = tempInfo.keys
+    finYearList = []
+    tempInfo.each do |v|
+      tempArr = []
+      tempArr = v[1].keys
+      finYearList = (finYearList+tempArr).uniq
+    end
+    finYearList = finYearList.sort
+    columnData = {}
+    reportingOrgList.each do |o|
+      tempData = []
+      i = finYearList.length
+      j = 0
+      while j < i
+        tempData.push(0)
+        j = j + 1
+      end
+      columnData[o] = {}
+      columnData[o] = tempData
+    end
+    tempInfo.each do |key, val|
+      val.each do |k , v|
+        columnData[key][finYearList.index(k)] = v
+      end
+    end
+    finalData = []
+    columnData.each do |key, val|
+      tempData = []
+      tempData.push(key)
+      tempData = tempData + val
+      finalData.push(tempData)
+    end
+    finalData.each do |x|
+      x[0] = returnDepartmentName(x[0])
+    end
+    finalReportingOrgList = []
+    reportingOrgList.each do |x|
+      finalReportingOrgList.push(returnDepartmentName(x))
+    end
+    data = []
+    data.push(finalReportingOrgList)
+    data.push(finYearList)
+    data.push(finalData)
+    data
+  end
+
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
