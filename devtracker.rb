@@ -129,7 +129,7 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-	countryBudgetBarGraphData = countryBudgetBarGraphData(n)
+	countryBudgetBarGraphData = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
@@ -281,7 +281,8 @@ get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
     region = get_region_details(n)
 	#oipa v3.1
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
@@ -289,9 +290,12 @@ get '/regions/:region_code/?' do |n|
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
- 			regionYearWiseBudgets: regionYearWiseBudgets,
+ 			#regionYearWiseBudgets: regionYearWiseBudgets,
  			regionSectorGraphData: regionSectorGraphData,
- 			mapMarkers: getRegionMapMarkers(region[:code])
+ 			mapMarkers: getRegionMapMarkers(region[:code]),
+ 			chartDataRepOrgs: regionYearWiseBudgets[0],
+			chartDataFinYears: regionYearWiseBudgets[1],
+			chartDataColumnData: regionYearWiseBudgets[2]
  			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end

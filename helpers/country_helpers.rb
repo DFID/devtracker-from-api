@@ -263,8 +263,8 @@ module CountryHelpers
 
   end
 
-  def countryBudgetBarGraphData(n)
-    tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+  def budgetBarGraphData(apiLink)
+    tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + apiLink)
     reportingOrgList = []
     reportingOrgList = tempInfo.keys
     finYearList = []

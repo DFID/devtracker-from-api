@@ -111,29 +111,6 @@
     </div>
     <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
 </div>
-<%if implementingOrgList.length > 0%>
-    <div class="row">
-        <div class="twelve columns">
-            <table class="govuk-table">
-              <caption class="govuk-table__caption">Implementing Partners</caption>
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Partner(s)</th>
-                  <th scope="col" class="govuk-table__header">Active Projects</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <%implementingOrgList.each do |key, val|%>
-                    <tr class="govuk-table__row">
-                      <th scope="row" class="govuk-table__header"><%=val['orgName']%></th>
-                      <td class="govuk-table__cell"><%=val['count']%></td>
-                    </tr>
-                <%end%>
-              </tbody>
-            </table>
-        </div>
-    </div>
-<%end%>
 <div class="stuffs">
 <!-- Top six results -->
 <div id="topSixResults" style="margin-top: 25px" class="row">
@@ -271,7 +248,29 @@
         <p>Download IATI Activity Data for <%= country[:name]%>: <a href="http://iati.dfid.gov.uk/iati_files/Country/DFID-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.dfid.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
     </div>
 </div>
-
+<%if implementingOrgList.length > 0%>
+    <div class="row">
+        <div class="twelve columns">
+            <table class="govuk-table">
+              <caption class="govuk-table__caption">Implementing Partners</caption>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Partner(s)</th>
+                  <th scope="col" class="govuk-table__header">Active Projects</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <%implementingOrgList.each do |key, val|%>
+                    <tr class="govuk-table__row">
+                      <th scope="row" class="govuk-table__header"><%=val['orgName']%></th>
+                      <td class="govuk-table__cell"><%=val['count']%></td>
+                    </tr>
+                <%end%>
+              </tbody>
+            </table>
+        </div>
+    </div>
+<%end%>
 
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
