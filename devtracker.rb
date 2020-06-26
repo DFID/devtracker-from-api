@@ -53,7 +53,8 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
+# set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'

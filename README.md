@@ -17,27 +17,6 @@ The open public API being used in the [OIPA API](https://www.oipa.nl/home) built
 ## Get started
 The site is being developed using a Sinatra web framework and Ruby. To get started, go to the [Wiki](https://github.com/DFID/devtracker-from-api/wiki). We will be adding new guidance and features to the wiki as we go along.
 
-## Load DevTracker Using Vagrant
-If you do not want to setup the whole environment using the manual process and would rather prefer a quick vagrant setup, please follow the below steps
+## Local Development
 
-```
-vagrant up
-vagrant ssh
-# Give execute permission to the following scripts
-chmod +x /vagrant/vagrant-requirements/post-setup-phase-1.sh
-chmod +x /vagrant/vagrant-requirements/post-setup-phase-2.sh
-# Run the first script
-/vagrant/vagrant-requirements/post-setup-phase-1.sh
-# Exit from the console as the running scripts need a reloaded login of the current user
-exit
-# Login again using vagrant ssh
-vagrant ssh
-# Run the following script
-/vagrant/vagrant-requirements/post-setup-phase-2.sh
-# Once everything's complete, edit devtracker.rb to a publicly accessible OIPA endpoint. Just follow [this link](https://github.com/DFID/devtracker-from-api/wiki#do-this-first-on-a-dev-machine) to make the change.
-# Run the following command
-cd /vagrant
-ruby devtracker.rb -o 0.0.0.0 -p 4567
-
-# Now from the host machine web browser, go to http://localhost:8080 and you will have a running devtracker
-```
+See [this page](docs/local_development.md) for details of running with vagrant and interactively debugging using VS Code.
