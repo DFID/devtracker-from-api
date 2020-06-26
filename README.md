@@ -36,6 +36,7 @@ vagrant ssh
 /vagrant/vagrant-requirements/post-setup-phase-2.sh
 # Once everything's complete, edit devtracker.rb to a publicly accessible OIPA endpoint. Just follow [this link](https://github.com/DFID/devtracker-from-api/wiki#do-this-first-on-a-dev-machine) to make the change.
 # Run the following command
+cd /vagrant
 ruby devtracker.rb -o 0.0.0.0 -p 4567
 
 # Now from the host machine web browser, go to http://localhost:8080 and you will have a running devtracker
