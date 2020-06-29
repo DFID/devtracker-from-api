@@ -49,7 +49,8 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.2.0)
     kgio (2.11.2)
-    kramdown (1.17.0)
+    kramdown (2.3.0)
+      rexml
     loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -92,6 +93,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rest-open-uri (1.0.0)
+    rexml (3.2.4)
     rubygems-update (3.1.2)
     simplecov (0.16.1)
       docile (~> 1.1)
