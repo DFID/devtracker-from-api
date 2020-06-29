@@ -16,3 +16,7 @@ The open public API being used in the [OIPA API](https://www.oipa.nl/home) built
 
 ## Get started
 The site is being developed using a Sinatra web framework and Ruby. To get started, go to the [Wiki](https://github.com/DFID/devtracker-from-api/wiki). We will be adding new guidance and features to the wiki as we go along.
+
+## Local Development
+
+See [this page](docs/local_development.md) for details of running with vagrant and interactively debugging using VS Code.
