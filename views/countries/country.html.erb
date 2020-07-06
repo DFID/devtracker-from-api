@@ -227,7 +227,6 @@
             <p>Project budget total by year approved at the project level to date.</p>
          </div>
          <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
-         <div id="budget-year-chart2" style="height: 300px; width: 100%;" class="row"></div>
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
          <div class="row">
             <div style="text-align: center" class="six columns">
@@ -353,45 +352,45 @@
         <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
             
             var yTicks = [];
-            var chartv3 = c3.generate({
-                bindto: '#budget-year-chart',
-              data: {
-                columns: <%= chartDataColumnData %>,
-                type: 'bar',
-                groups: [<%= chartDataRepOrgs %>],
-              },
-              color: {
-                pattern: colors
-              },
-              tooltip: {
-                    format: {
-                        /*value: function(value){
-                            return value;
-                        }*/
-                        value: function(value){
-                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        }
-                    }
-                },
-              axis: { 
-                x: {
-                type: 'category',
-                categories: <%= chartDataFinYears %>,
-              },
-              y: {
-                        tick: {
-                            //count: 6,
-                            format: function(d){ 
-                                yTicks.push(d3.format(".2s")(d)); 
-                                return "£" + d3.format(".2s")(d);
-                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
-                        },
-                    }
-            },
-            });
+            // var chartv3 = c3.generate({
+            //     bindto: '#budget-year-chart',
+            //   data: {
+            //     columns: <%#= chartDataColumnData %>,
+            //     type: 'bar',
+            //     groups: [<%#= chartDataRepOrgs %>],
+            //   },
+            //   color: {
+            //     pattern: colors
+            //   },
+            //   tooltip: {
+            //         format: {
+            //             /*value: function(value){
+            //                 return value;
+            //             }*/
+            //             value: function(value){
+            //                 return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //             }
+            //         }
+            //     },
+            //   axis: { 
+            //     x: {
+            //     type: 'category',
+            //     categories: <%#= chartDataFinYears %>,
+            //   },
+            //   y: {
+            //             tick: {
+            //                 //count: 6,
+            //                 format: function(d){ 
+            //                     yTicks.push(d3.format(".2s")(d)); 
+            //                     return "£" + d3.format(".2s")(d);
+            //                 } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+            //             },
+            //         }
+            // },
+            // });
 
             var chartv4 = c3.generate({
-                bindto: '#budget-year-chart2',
+                bindto: '#budget-year-chart',
               data: {
                 columns: <%= chartDataColumnDataD %>,
                 type: 'bar',
