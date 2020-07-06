@@ -49,7 +49,32 @@ module CommonHelpers
                 finalData[0] = tempFYear
                 finalData[1] = tempFYAmount
                 return finalData
+      elsif (type=='C2') then
+        range = if finYearWiseBudgets.size < 7 then
+                 finYearWiseBudgets
+                # if the last item in the list is less than or equal to 
+                # the current financial year get the last 6
+                elsif finYearWiseBudgets.last['fy'] <= currentFinancialYear
+                  finYearWiseBudgets.last(6)
+                # other wise show current FY - 3 years and cuurent FY + 3 years
+                else
+                  index_of_now = finYearWiseBudgets.index { |i| i['fy'] == currentFinancialYear }
 
+                  if index_of_now.nil? then
+                    finYearWiseBudgets.last(6)
+                  else
+                    finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
+                  end
+                end
+                tempFYear = ""
+                tempFYAmount = ""
+                finalData = {}
+                # finally convert the range into a label format
+                range.each { |item| 
+                  item['fy'] = financial_year_formatter(item['fy'])
+                  finalData[item['fy']] = item['value']
+                }
+                return finalData
       elsif (type=="P") then
         finYearWiseBudgets.each { |item| 
           item['fy'] = financial_year_formatterv2(item['fy']) 

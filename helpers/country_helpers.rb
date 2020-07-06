@@ -263,6 +263,105 @@ module CountryHelpers
 
   end
 
+  def budgetBarGraphData(apiLink)
+    tempInfo = get_reporting_orgWise_yearly_country_budgets(RestClient.get settings.oipa_api_url + apiLink)
+    reportingOrgList = []
+    reportingOrgList = tempInfo.keys
+    finYearList = []
+    tempInfo.each do |v|
+      tempArr = []
+      tempArr = v[1].keys
+      finYearList = (finYearList+tempArr).uniq
+    end
+    finYearList = finYearList.sort
+    columnData = {}
+    reportingOrgList.each do |o|
+      tempData = []
+      i = finYearList.length
+      j = 0
+      while j < i
+        tempData.push(0)
+        j = j + 1
+      end
+      columnData[o] = {}
+      columnData[o] = tempData
+    end
+    tempInfo.each do |key, val|
+      val.each do |k , v|
+        columnData[key][finYearList.index(k)] = v
+      end
+    end
+    finalData = []
+    columnData.each do |key, val|
+      tempData = []
+      tempData.push(key)
+      tempData = tempData + val
+      finalData.push(tempData)
+    end
+    finalData.each do |x|
+      x[0] = returnDepartmentName(x[0])
+    end
+    finalReportingOrgList = []
+    reportingOrgList.each do |x|
+      finalReportingOrgList.push(returnDepartmentName(x))
+    end
+    data = []
+    data.push(finalReportingOrgList)
+    data.push(finYearList)
+    data.push(finalData)
+    data
+  end
+
+  def budgetBarGraphDataD(apiLink)
+    tempInfo = get_reporting_orgWise_yearly_country_budgetsD(RestClient.get apiLink)
+    reportingOrgList = []
+    reportingOrgList = tempInfo.keys
+    finYearList = []
+    tempInfo.each do |v|
+      tempArr = []
+      tempArr = v[1].keys
+      finYearList = (finYearList+tempArr).uniq
+    end
+    finYearList = finYearList.sort
+    columnData = {}
+    reportingOrgList.each do |o|
+      tempData = []
+      i = finYearList.length
+      j = 0
+      while j < i
+        tempData.push(0)
+        j = j + 1
+      end
+      columnData[o] = {}
+      columnData[o] = tempData
+    end
+    tempInfo.each do |key, val|
+      val.each do |k , v|
+        columnData[key][finYearList.index(k)] = v
+      end
+    end
+    finalData = []
+    columnData.each do |key, val|
+      tempData = []
+      tempData.push(key)
+      tempData = tempData + val
+      finalData.push(tempData)
+    end
+    finalData.each do |x|
+      x[0] = returnDepartmentName(x[0])
+    end
+    finalReportingOrgList = []
+    reportingOrgList.each do |x|
+      finalReportingOrgList.push(returnDepartmentName(x))
+    end
+    data = []
+    data.push(finalReportingOrgList)
+    data.push(finYearList)
+    data.push(finalData)
+    data
+  end
+
+
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
       yearWiseBudgets = Oj.load(apiLink)
@@ -273,7 +372,53 @@ module CountryHelpers
       budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
 
   end
+
+  def get_reporting_orgWise_yearly_country_budgets(apiLink)
+    allBudgets = Oj.load(apiLink)
+    puts 'Data loading completed.'
+    reportingOrgWiseData = {}
+    allBudgets['results'].each do |budget|
+      if(!reportingOrgWiseData.key?(budget['reporting_organisation']['reporting_org']['ref']))
+        reportingOrgWiseData[budget['reporting_organisation']['reporting_org']['ref']] = []
+      end
+      tempData = {}
+      tempData['budget_period_start_year'] = budget['budget_period_start_year']
+      tempData['budget_period_start_quarter'] = budget['budget_period_start_quarter']
+      tempData['value'] = budget['value']
+      reportingOrgWiseData[budget['reporting_organisation']['reporting_org']['ref']].push(tempData)
+    end
+    reportingOrgWiseData.each do |key, value|
+      value = value.select {|val| !val['value'].nil?}
+      reportingOrgWiseData[key] = {}
+      reportingOrgWiseData[key] = financial_year_wise_budgets(value, 'C2')
+    end
+    reportingOrgWiseData
+  end
   
+  def get_reporting_orgWise_yearly_country_budgetsD(apiLink)
+    allBudgets = Oj.load(apiLink)
+    puts 'Data loading completed.'
+    puts allBudgets
+    reportingOrgWiseData = {}
+    allBudgets['result'].each do |budget|
+      puts budget
+      if(!reportingOrgWiseData.key?(budget['reporting_organisation'].to_s))
+        reportingOrgWiseData[budget['reporting_organisation']] = []
+      end
+      tempData = {}
+      tempData['budget_period_start_year'] = budget['budget_period_start_year']
+      tempData['budget_period_start_quarter'] = budget['budget_period_start_quarter']
+      tempData['value'] = budget['value']
+      reportingOrgWiseData[budget['reporting_organisation']].push(tempData)
+    end
+    reportingOrgWiseData.each do |key, value|
+      value = value.select {|val| !val['value'].nil?}
+      reportingOrgWiseData[key] = {}
+      reportingOrgWiseData[key] = financial_year_wise_budgets(value, 'C2')
+    end
+    reportingOrgWiseData
+  end
+
   def get_country_sector_graph_data(countrySpecificsectorValuesJSONLink)
       budgetArray = Array.new
       resultCount = Oj.load(countrySpecificsectorValuesJSONLink)

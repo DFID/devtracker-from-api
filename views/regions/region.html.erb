@@ -140,6 +140,12 @@
  <script src="/javascripts/bar.js"></script> -->
  <script>
     $(document).ready(function() {
+        var graphData = [<%= regionSectorGraphData[0] %>];
+        var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+        var fColors = {};
+        for(i = 0; i<graphData.length; i++){
+            fColors[graphData[i][0]] = colors[i];
+        };
         var stacked = c3.generate({
             bindto: '#sectorChart',
             data: {
@@ -148,6 +154,7 @@
                 ],
                 type: 'bar',
                 labels: false,
+                colors: fColors,
                 groups: [
                     <%= regionSectorGraphData[1] %>
                 ],
@@ -185,46 +192,42 @@
         });
     <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
         var yTicks = [];
-        var chart = c3.generate({
-            bindto: '#budget-year-chart',
-            legend: {
-                show: false
-            },
-            tooltip: {
-                format: {
-                    value: function(value){
-                        return "£" + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        var chartv3 = c3.generate({
+                bindto: '#budget-year-chart',
+              data: {
+                columns: <%= chartDataColumnData %>,
+                type: 'bar',
+                groups: [<%= chartDataRepOrgs %>],
+              },
+              color: {
+                pattern: colors
+              },
+              tooltip: {
+                    format: {
+                        /*value: function(value){
+                            return value;
+                        }*/
+                        value: function(value){
+                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }
                     }
-                }
-            },
-            bar: {
-                width: {
-                    ratio: .5
-                }
-            },
-            data: {
-                x: 'x',
-                columns: [
-                    ['x', <%= regionYearWiseBudgets[0] %>],
-                    ['Financial Year', <%= regionYearWiseBudgets[1] %>]
-                ],
-                type: 'bar'
-            },
-            color: {
-                pattern: ['#d8dcbf']
-            },
-            axis:{
-                x:{
-                    type: 'category'
                 },
-                y: {
-                    tick: {
-                        count: 6,
-                        format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
-                    },
-                }
+              axis: { 
+                x: {
+                type: 'category',
+                categories: <%= chartDataFinYears %>,
+              },
+              y: {
+                        tick: {
+                            //count: 6,
+                            format: function(d){ 
+                                yTicks.push(d3.format(".2s")(d)); 
+                                return "£" + d3.format(".2s")(d);
+                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                        },
+                    }
             },
-        });
+            });
         /*This code is for generating the grid line values for the bar chart*/
         var tempString = [];
         yTicks.pop();
@@ -233,12 +236,6 @@
         }
         /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
         yTicks = [];
-        /* Generating the grid lines */
-        for(i=0;i<tempString.length;i++){
-            yTicks = [];
-            chart.ygrids.add({value: tempString[i]});
-        }
-        <%#end%>
     });
  </script>
 

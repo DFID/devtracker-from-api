@@ -111,29 +111,6 @@
     </div>
     <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
 </div>
-<%if implementingOrgList.length > 0%>
-    <div class="row">
-        <div class="twelve columns">
-            <table class="govuk-table">
-              <caption class="govuk-table__caption">Implementing Partners</caption>
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Partner(s)</th>
-                  <th scope="col" class="govuk-table__header">Active Projects</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <%implementingOrgList.each do |key, val|%>
-                    <tr class="govuk-table__row">
-                      <th scope="row" class="govuk-table__header"><%=val['orgName']%></th>
-                      <td class="govuk-table__cell"><%=val['count']%></td>
-                    </tr>
-                <%end%>
-              </tbody>
-            </table>
-        </div>
-    </div>
-<%end%>
 <div class="stuffs">
 <!-- Top six results -->
 <div id="topSixResults" style="margin-top: 25px" class="row">
@@ -225,7 +202,9 @@
 <div class="row">
     <div class="six columns">
         <div class="country-info-container">  
-            <span class="country-info">Sectors</span> 
+            <div class="more-info-container">  
+                <span class="more-info-title">Sectors</span> 
+            </div>
             <p>Sectors groups as a percentage of country budgets according to the Development Assistance Committee's classifications.</p>
         </div>
         <div class="row">
@@ -236,7 +215,15 @@
     </div>
     <div class="six columns">
          <div class="country-info-container">  
-            <span class="country-info">Budget</span> 
+            <div class="more-info-container">  
+                <span class="more-info-title">Budget</span> 
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+                <aside id="moreinfo3" class="more-info">            
+                        <div class="more-info-content">
+                            Please note that although budgets are generally split by year, some departments publish budgets that span multiple years. These are represented in the first year of their allocation.
+                        </div>
+                </aside>
+            </div>
             <p>Project budget total by year approved at the project level to date.</p>
          </div>
          <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
@@ -261,7 +248,29 @@
         <p>Download IATI Activity Data for <%= country[:name]%>: <a href="http://iati.dfid.gov.uk/iati_files/Country/DFID-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.dfid.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
     </div>
 </div>
-
+<%if implementingOrgList.length > 0%>
+    <div class="row">
+        <div class="twelve columns">
+            <table class="govuk-table">
+              <caption class="govuk-table__caption">Implementing Partners</caption>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Partner(s)</th>
+                  <th scope="col" class="govuk-table__header">Active Projects</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <%implementingOrgList.each do |key, val|%>
+                    <tr class="govuk-table__row">
+                      <th scope="row" class="govuk-table__header"><%=val['orgName']%></th>
+                      <td class="govuk-table__cell"><%=val['count']%></td>
+                    </tr>
+                <%end%>
+              </tbody>
+            </table>
+        </div>
+    </div>
+<%end%>
 
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
@@ -343,12 +352,54 @@
         <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
             
             var yTicks = [];
-            var chart = c3.generate({
+            // var chartv3 = c3.generate({
+            //     bindto: '#budget-year-chart',
+            //   data: {
+            //     columns: <%#= chartDataColumnData %>,
+            //     type: 'bar',
+            //     groups: [<%#= chartDataRepOrgs %>],
+            //   },
+            //   color: {
+            //     pattern: colors
+            //   },
+            //   tooltip: {
+            //         format: {
+            //             /*value: function(value){
+            //                 return value;
+            //             }*/
+            //             value: function(value){
+            //                 return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //             }
+            //         }
+            //     },
+            //   axis: { 
+            //     x: {
+            //     type: 'category',
+            //     categories: <%#= chartDataFinYears %>,
+            //   },
+            //   y: {
+            //             tick: {
+            //                 //count: 6,
+            //                 format: function(d){ 
+            //                     yTicks.push(d3.format(".2s")(d)); 
+            //                     return "£" + d3.format(".2s")(d);
+            //                 } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+            //             },
+            //         }
+            // },
+            // });
+
+            var chartv4 = c3.generate({
                 bindto: '#budget-year-chart',
-                legend: {
-                    show: true
-                },
-                tooltip: {
+              data: {
+                columns: <%= chartDataColumnDataD %>,
+                type: 'bar',
+                groups: [<%= chartDataRepOrgsD %>],
+              },
+              color: {
+                pattern: colors
+              },
+              tooltip: {
                     format: {
                         /*value: function(value){
                             return value;
@@ -358,28 +409,12 @@
                         }
                     }
                 },
-                bar: {
-                    width: {
-                        ratio: .5
-                    }
-                },
-                data: {
-                    x: 'x',
-                    columns: [
-                        ['x', <%= countryYearWiseBudgets[0] %>],
-                        ['Project Budget', <%= countryYearWiseBudgets[1] %>]
-                    ],
-                    type: 'bar'
-                },
-                color: {
-                    pattern: ['#1d70b8']
-                },
-                axis:{
-                    x:{
-                        type: 'category',
-                        show: true
-                    },
-                    y: {
+              axis: { 
+                x: {
+                type: 'category',
+                categories: <%= chartDataFinYearsD %>,
+              },
+              y: {
                         tick: {
                             //count: 6,
                             format: function(d){ 
@@ -388,7 +423,7 @@
                             } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
                     }
-                },
+            },
             });
             /*This code is for generating the grid line values for the bar chart*/
             var tempString = [];
