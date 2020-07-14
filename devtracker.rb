@@ -123,6 +123,7 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
 	 	}
 	end
+	countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
@@ -130,14 +131,15 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-#	countryBudgetBarGraphData = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	countryBudgetBarGraphDataD = budgetBarGraphDataD("http://d-portal.org/dquery?sql=SELECT%20reporting_ref%20as%20reporting_organisation%20%2C%20EXTRACT(QUARTER%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_quarter%2C%20EXTRACT(YEAR%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_year%20%2C%20SUM(budget_gbp)%20AS%20value%20FROM%20act%20JOIN%20budget%20USING%20(aid)%20WHERE%20reporting_ref%20in%20(%27GB-GOV-15%27%2C%27GB-GOV-9%27%2C%27GB-GOV-6%27%2C%27GB-GOV-2%27%2C%27GB-GOV-1%27%2C%27GB-1%27%2C%27GB-GOV-3%27%2C%27GB-GOV-13%27%2C%27GB-GOV-7%27%2C%27GB-GOV-50%27%2C%27GB-GOV-52%27%2C%27GB-6%27%2C%27GB-10%27%2C%27GB-GOV-10%27%2C%27GB-9%27%2C%27GB-GOV-8%27%2C%27GB-GOV-5%27%2C%27GB-GOV-12%27%2C%27GB-COH-RC000346%27%2C%27GB-COH-03877777%27)%20AND%20flags%20%3D%200%20AND%20budget_priority%20%3D%201%20AND%20budget_country%20%3D%20%27#{n}%27%20GROUP%20BY%20budget_period_start_quarter%2C%20budget_period_start_year%2Cbudget_country%2Creporting_ref")
-	puts countryBudgetBarGraphDataD
+	countryBudgetBarGraphData = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	#countryBudgetBarGraphDataD = budgetBarGraphDataD("http://d-portal.org/dquery?sql=SELECT%20reporting_ref%20as%20reporting_organisation%20%2C%20EXTRACT(QUARTER%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_quarter%2C%20EXTRACT(YEAR%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_year%20%2C%20SUM(budget_gbp)%20AS%20value%20FROM%20act%20JOIN%20budget%20USING%20(aid)%20WHERE%20reporting_ref%20in%20(%27GB-GOV-15%27%2C%27GB-GOV-9%27%2C%27GB-GOV-6%27%2C%27GB-GOV-2%27%2C%27GB-GOV-1%27%2C%27GB-1%27%2C%27GB-GOV-3%27%2C%27GB-GOV-13%27%2C%27GB-GOV-7%27%2C%27GB-GOV-50%27%2C%27GB-GOV-52%27%2C%27GB-6%27%2C%27GB-10%27%2C%27GB-GOV-10%27%2C%27GB-9%27%2C%27GB-GOV-8%27%2C%27GB-GOV-5%27%2C%27GB-GOV-12%27%2C%27GB-COH-RC000346%27%2C%27GB-COH-03877777%27)%20AND%20flags%20%3D%200%20AND%20budget_priority%20%3D%201%20AND%20budget_country%20%3D%20%27#{n}%27%20GROUP%20BY%20budget_period_start_quarter%2C%20budget_period_start_year%2Cbudget_country%2Creporting_ref")
+	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
  			country: country,
+ 			countryYearWiseBudgets: countryYearWiseBudgets,
  			countrySectorGraphData: countrySectorGraphData,
  			results: results,
  			topSixResults: topSixResults,
@@ -146,12 +148,12 @@ get '/countries/:country_code/?' do |n|
  			implementingOrgList: implementingOrgList,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
-#			chartDataRepOrgs: countryBudgetBarGraphData[0],
-#			chartDataFinYears: countryBudgetBarGraphData[1],
-#			chartDataColumnData: countryBudgetBarGraphData[2],
-			chartDataRepOrgsD: countryBudgetBarGraphDataD[0],
-			chartDataFinYearsD: countryBudgetBarGraphDataD[1],
-			chartDataColumnDataD: countryBudgetBarGraphDataD[2]
+			chartDataRepOrgs: countryBudgetBarGraphData[0],
+			chartDataFinYears: countryBudgetBarGraphData[1],
+			chartDataColumnData: countryBudgetBarGraphData[2],
+			# chartDataRepOrgsD: countryBudgetBarGraphDataD[0],
+			# chartDataFinYearsD: countryBudgetBarGraphDataD[1],
+			# chartDataColumnDataD: countryBudgetBarGraphDataD[2]
  		}
 end
 
@@ -287,8 +289,8 @@ get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
     region = get_region_details(n)
 	#oipa v3.1
-	regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
@@ -296,12 +298,12 @@ get '/regions/:region_code/?' do |n|
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
- 			#regionYearWiseBudgets: regionYearWiseBudgets,
+ 			regionYearWiseBudgets: regionYearWiseBudgets,
  			regionSectorGraphData: regionSectorGraphData,
  			mapMarkers: getRegionMapMarkers(region[:code]),
- 			chartDataRepOrgs: regionYearWiseBudgets[0],
-			chartDataFinYears: regionYearWiseBudgets[1],
-			chartDataColumnData: regionYearWiseBudgets[2]
+ 			#chartDataRepOrgs: regionYearWiseBudgets[0],
+			#chartDataFinYears: regionYearWiseBudgets[1],
+			#chartDataColumnData: regionYearWiseBudgets[2]
  			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end

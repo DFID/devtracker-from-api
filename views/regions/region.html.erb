@@ -192,42 +192,82 @@
         });
     <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
         var yTicks = [];
-        var chartv3 = c3.generate({
-                bindto: '#budget-year-chart',
-              data: {
-                columns: <%= chartDataColumnData %>,
-                type: 'bar',
-                groups: [<%= chartDataRepOrgs %>],
-              },
-              color: {
-                pattern: colors
-              },
-              tooltip: {
-                    format: {
-                        /*value: function(value){
-                            return value;
-                        }*/
-                        value: function(value){
-                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        }
+        var chart = c3.generate({           
+            bindto: '#budget-year-chart',   
+            legend: {
+                show: false
+            },             
+            tooltip: {     
+                format: {  
+                    value: function(value){
+                        return "£" + Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
+                }   
+            },  
+            bar: {  
+                width: {    
+                    ratio: .5   
+                }   
+            },  
+            data: { 
+                x: 'x', 
+                columns: [  
+                    ['x', <%= regionYearWiseBudgets[0] %>], 
+                    ['Financial Year', <%= regionYearWiseBudgets[1] %>] 
+                ],  
+                type: 'bar' 
+            },  
+            color: {    
+                pattern: ['#d8dcbf']    
+            },  
+            axis:{  
+                x:{ 
+                    type: 'category'    
                 },
-              axis: { 
-                x: {
-                type: 'category',
-                categories: <%= chartDataFinYears %>,
-              },
-              y: {
-                        tick: {
-                            //count: 6,
-                            format: function(d){ 
-                                yTicks.push(d3.format(".2s")(d)); 
-                                return "£" + d3.format(".2s")(d);
-                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
-                        },
-                    }
+                y: {                   
+                    tick: {           
+                        count: 6,     
+                        format: function(d){ yTicks.push(d3.format(".2s")(d)); return d3.format(".2s")(d);} /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/                   
+                    },
+                }     
             },
-            });
+        });
+        // var chartv3 = c3.generate({
+        //         bindto: '#budget-year-chart2',
+        //       data: {
+        //         columns: <%#= chartDataColumnData %>,
+        //         type: 'bar',
+        //         groups: [<%#= chartDataRepOrgs %>],
+        //       },
+        //       color: {
+        //         pattern: colors
+        //       },
+        //       tooltip: {
+        //             format: {
+        //                 /*value: function(value){
+        //                     return value;
+        //                 }*/
+        //                 value: function(value){
+        //                     return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //                 }
+        //             }
+        //         },
+        //       axis: { 
+        //         x: {
+        //         type: 'category',
+        //         categories: <%#= chartDataFinYears %>,
+        //       },
+        //       y: {
+        //                 tick: {
+        //                     //count: 6,
+        //                     format: function(d){ 
+        //                         yTicks.push(d3.format(".2s")(d)); 
+        //                         return "£" + d3.format(".2s")(d);
+        //                     } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+        //                 },
+        //             }
+        //     },
+        //     });
         /*This code is for generating the grid line values for the bar chart*/
         var tempString = [];
         yTicks.pop();
