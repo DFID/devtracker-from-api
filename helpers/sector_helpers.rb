@@ -44,8 +44,16 @@ module SectorHelpers
 
   		sectorValues  = JSON.parse(apiUrl)
   		sectorValues  = sectorValues['results'] 
-  		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
-
+		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+		sectorValues.each do |elem|
+			begin
+			x = highLevelSector.find do |source|
+				source["Code (L3)"].to_s == elem["sector"]["code"]
+			 end[codeType]
+			rescue
+				puts elem["sector"]['code']
+			end
+		end
         #Create a data structure to map each DAC 5 sector code to a high level sector code          
         highLevelSectorBudget = sectorValues.map do |elem| 
 	       {  

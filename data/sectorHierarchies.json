@@ -60,6 +60,16 @@
     "Category Description":""
   },
   {
+    "Code (L3)":12382,
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Name":"Research for prevention and control of NCDs",
+    "Description":"Research to enhance understanding of NCDs, their risk factors, epidemiology, social determinants and economic impact; translational and implementation research to enhance operationalisation of cost-effective strategies to prevent and control NCDs; surveillance and monitoring of NCD mortality, morbidity, risk factor exposures, and national capacity to prevent and control NCDs.",
+    "Category (L2)":123,
+    "Category Name":"Non-communicable diseases (NCDs)",
+    "Category Description":""
+  },
+  {
     "Code (L3)":11240,
     "High Level Code (L1)":1,
     "High Level Sector Description":"Education",
