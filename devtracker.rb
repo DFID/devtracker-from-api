@@ -545,7 +545,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData = {}
 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
 	sectorData['sectorCode'] = ""
-	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
 	sectorJsonData.each do |sdata|
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
@@ -595,7 +596,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
 	sectorData['sectorCode'] = ""
 	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
-	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
 	sectorJsonData.each do |sdata|
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
@@ -633,8 +635,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
 	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
 	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
-	sectorJsonData = Oj.load(File.read('data/sectorHierarchies.json')).select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
-	sectorData['sectorName'] = sectorJsonData["Name"]
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'

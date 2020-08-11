@@ -44,32 +44,28 @@ module SectorHelpers
 
   		sectorValues  = JSON.parse(apiUrl)
   		sectorValues  = sectorValues['results'] 
-		highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+		highLevelSector = map_sector_data()
+		#Create a data structure to map each DAC 5 sector code to a high level sector code
+		highLevelSectorBudget = []
 		sectorValues.each do |elem|
 			begin
-			x = highLevelSector.find do |source|
-				source["Code (L3)"].to_s == elem["sector"]["code"]
-			 end[codeType]
+			selectedData = highLevelSector.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+			tempData = {}
+			tempData[:code] = selectedData[codeType]
+			tempData[:name] = selectedData[sectorDescription]
+			tempData[:budget] = elem["value"].to_i
+			highLevelSectorBudget.push(tempData)
 			rescue
-				puts elem["sector"]['code']
+				puts elem["sector"]["code"]
+				tempData = {}
+				tempData[:code] = 0
+				tempData[:name] = 'Uncategorised'
+				tempData[:budget] = elem["value"].to_i
+				highLevelSectorBudget.push(tempData)
 			end
-		end
-        #Create a data structure to map each DAC 5 sector code to a high level sector code          
-        highLevelSectorBudget = sectorValues.map do |elem| 
-	       {  
-	       	   :code 		 => highLevelSector.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[codeType], # "High Level Code (L1)"  High Level Sector Description"  
-			   :name 		 => highLevelSector.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[sectorDescription], #"High Level Sector Description"
-               #oipa v2.2
-               #:budget       => elem["budget"]
-               #oipa v3.1
-               :budget       => elem["value"].to_i                       			           			                          
-	       } 
-	     end
-
+		end          
+        
 	    #Aggregate the budget for each high level sector code (i.e. remove duplicate sector codes from the data structure and aggregate the budgets)
 	   	highLevelSectorBudgetAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
   	
@@ -93,38 +89,83 @@ module SectorHelpers
 
 	end
 
+	def map_sector_data()
+		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValues  = JSON.parse(sectorValuesJSON)
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+		sectorValues['results'].each do |elem|
+			begin
+				selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+				td = selectedData["Code (L3)"]
+			rescue
+				tempData = {}
+				tempData["Code (L3)"] = elem['sector']['code']
+				tempData["High Level Code (L1)"] = 0
+				tempData["High Level Sector Description"] = "Uncategorised"
+				tempData["Name"] = elem['sector']['name']
+				tempData["Description"] = 'Not yet mapped'
+				tempData["Category (L2)"] = 0
+				tempData["Category Name"] = "Not yet mapped"
+				tempData["Category Description"] = "Not yet mapped"
+				sectorHierarchy.push(tempData)
+			end
+		end
+		sectorHierarchy
+	end
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
 		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
-  		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
-        
-        # Create a data structure that holds: budget, child code, child description & parent code
-        budgetData = sectorValues.map do |elem| 
-	       {  
-	       	   :code 		 => sectorHierarchy.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"] 
-                      			end[code],   
-			   :name 		 => sectorHierarchy.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[description], 
-      		   :parentCode   => sectorHierarchy.find do |source|
-                         			source["Code (L3)"].to_s == elem["sector"]["code"]
-                      			end[parentCodeType],                      			
-               :budget       => elem["value"]      			                         			           			                          
-	       } 
-	     end
+  		#sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+		sectorHierarchy = map_sector_data()
+		# Create a data structure that holds: budget, child code, child description & parent code
+		budgetData = []
+		sectorValues.each do |elem|
+			begin
+			selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+			tempData = {}
+			tempData[:code] = selectedData[code]
+			tempData[:name] = selectedData[description]
+			tempData[:parentCode] = selectedData[parentCodeType]
+			tempData[:budget] = elem["value"]
+			budgetData.push(tempData)
+			rescue
+				puts elem["sector"]["code"]
+				tempData = {}
+				tempData[:code] = urlCategoryCode
+				tempData[:parentCode] = 0
+				tempData[:name] = 'Uncategorised'
+				tempData[:budget] = elem["value"]
+				budgetData.push(tempData)
+			end
+		end
+        # budgetData = sectorValues.map do |elem|
+		# 	{  
+		# 		:code 		 => sectorHierarchy.find do |source|
+		# 							source["Code (L3)"].to_s == elem["sector"]["code"] 
+		# 						end[code],   
+		# 		:name 		 => sectorHierarchy.find do |source|
+		# 							source["Code (L3)"].to_s == elem["sector"]["code"]
+		# 						end[description], 
+		# 		:parentCode   => sectorHierarchy.find do |source|
+		# 							source["Code (L3)"].to_s == elem["sector"]["code"]
+		# 						end[parentCodeType],                      			
+		# 		:budget       => elem["value"]      			                         			           			                          
+		# 	} 
+	    #  end
 
 	     #TODO - test the input to see that there is no bad data comming in
-	     if pageType == "category"
+		if pageType == "category"
+			puts urlHighLevelSectorCode
+			puts parentCodeType
 	     	inputCode = urlHighLevelSectorCode
 	     	sectorHierarchyPath = {	     
 	     			:highLevelSectorCode => inputCode,			
 	     			:highLevelSectorDescription => sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]
 	     	}	     	
-	     else	
+	    else	
 	     	inputCode = urlCategoryCode
 	     	sectorHierarchyPath = {	     			
 	     			:highLevelSectorCode => urlHighLevelSectorCode,	
@@ -132,7 +173,7 @@ module SectorHelpers
 	     			:categoryCode => inputCode,	 
 	     			:categoryDescription => sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]	     		
 	     	}
-		 end
+		end
 
 		 #Return the parent's description
 	  	 parentDescription  = sectorHierarchy.find { |i| i[parentCodeType].to_s == inputCode }[parentDescriptionType]
@@ -143,7 +184,8 @@ module SectorHelpers
 	     if pageType == "category"
 	     	#Aggregate all of the budget values for each child code & sort the list by name
 	  	 	selectedCodesBudgetAggregated = group_hashes  selectedCodes, [:code,:name,:parentCode]
-	     	selectedCodesBudgetAggregatedSorted = selectedCodesBudgetAggregated.sort_by{ |k| k[:name]}
+			selectedCodesBudgetAggregatedSorted = selectedCodesBudgetAggregated.sort_by{ |k| k[:name]}
+			puts  selectedCodesBudgetAggregatedSorted
 		 else
 		 	#DAC 5 digit sector code budgets are pre-aggregated in the API 
 		 	selectedCodesBudgetAggregatedSorted = selectedCodes.sort_by{ |k| k[:name]}	
@@ -171,7 +213,8 @@ module SectorHelpers
 	 end
 
 	 def get_hash_data_with_high_level_sector_name(hashData)
-	 	highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+		 #highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
+		 highLevelSector = map_sector_data()
 	 	hashData.each do |result|
 	 		result["higherLevelSectorName"] = highLevelSector.select{|k| k["Code (L3)"].to_s==result["sectorId"]}.map{|x| x["High Level Sector Description"]}[0]
 	 	end
