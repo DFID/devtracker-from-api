@@ -53,7 +53,7 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.dfid.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
@@ -637,6 +637,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
 	sectorJsonData = map_sector_data()
 	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
+	sectorData['sectorName'] = sectorJsonData['Name']
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
