@@ -185,7 +185,6 @@ module SectorHelpers
 	     	#Aggregate all of the budget values for each child code & sort the list by name
 	  	 	selectedCodesBudgetAggregated = group_hashes  selectedCodes, [:code,:name,:parentCode]
 			selectedCodesBudgetAggregatedSorted = selectedCodesBudgetAggregated.sort_by{ |k| k[:name]}
-			puts  selectedCodesBudgetAggregatedSorted
 		 else
 		 	#DAC 5 digit sector code budgets are pre-aggregated in the API 
 		 	selectedCodesBudgetAggregatedSorted = selectedCodes.sort_by{ |k| k[:name]}	
