@@ -16,7 +16,9 @@ title: Development Tracker
                     <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
                     <%end%>
                     <%if !(defined?(sectorData['sectorName'])).nil?%>
-                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= sectorData['sectorName'] %></li>
+                        <% if sectorData['sectorName'] != ''%>
+                            <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= sectorData['sectorName'] %></li>
+                        <%end%>
                     <%end%>
                 </ol>
             </div>
