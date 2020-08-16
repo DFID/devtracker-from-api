@@ -1,12 +1,13 @@
 {
-    "DFID":
+    "FCDO":
     [
         {
-            "name":"Department for International Development",
+            "name":"Foreign, Commonwealth and Development Office",
             "year":"2018",
-            "value": 10897,
-            "percentage": 74.8,
-            "shortName": "DFID"
+            "value": 11530,
+            "percentage": 79.2,
+            "shortName": "FCDO",
+            "note": "This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately."
         }
     ],
     "BEIS":
@@ -16,17 +17,8 @@
             "year":"2018",
             "value": 851,
             "percentage": 5.8,
-            "shortName": "BEIS"
-        }
-    ],
-    "FCO":
-    [
-        {
-            "name":"Foreign & Commonwealth Office",
-            "year":"2018",
-            "value": 633,
-            "percentage": 4.4,
-            "shortName": "FCO"
+            "shortName": "BEIS",
+            "note": ""
         }
     ],
     "CSSF":
@@ -36,7 +28,8 @@
             "year":"2018",
             "value": 605,
             "percentage": 4.2,
-            "shortName": "CSSF"
+            "shortName": "CSSF",
+            "note": ""
         }
     ],
     "HO":
@@ -46,7 +39,8 @@
             "year":"2018",
             "value": 337,
             "percentage": 2.3,
-            "shortName": "Home Office"
+            "shortName": "Home Office",
+            "note": ""
         }
     ],
     "DH":
@@ -56,7 +50,8 @@
             "year":"2018",
             "value": 201,
             "percentage": 1.4,
-            "shortName": "DoH"
+            "shortName": "DoH",
+            "note": ""
         }
     ],
     "PF":
@@ -66,7 +61,8 @@
             "year":"2016",
             "value": 94,
             "percentage": 0.6,
-            "shortName": "CGPF"
+            "shortName": "CGPF",
+            "note": ""
         }
     ],
     "HMT":
@@ -76,7 +72,8 @@
             "year":"2018",
             "value": 83,
             "percentage": 0.6,
-            "shortName": "HMT"
+            "shortName": "HMT",
+            "note": ""
         }
     ],
     "DEFRA":
@@ -86,7 +83,8 @@
             "year":"2018",
             "value": 70,
             "percentage": 0.5,
-            "shortName": "DEFRA"
+            "shortName": "DEFRA",
+            "note": ""
         }
     ],
     
@@ -97,7 +95,8 @@
             "year":"2018",
             "value": 25,
             "percentage": 0.2,
-            "shortName": "DWP"
+            "shortName": "DWP",
+            "note": ""
         }
     ],
     "CO":
@@ -107,7 +106,8 @@
             "year":"2018",
             "value": 21,
             "percentage": 0.1,
-            "shortName": "CO"
+            "shortName": "CO",
+            "note": ""
         }
     ],
     "DFE":
@@ -117,7 +117,8 @@
             "year":"2018",
             "value": 20,
             "percentage": 0.1,
-            "shortName": "DoE"
+            "shortName": "DoE",
+            "note": ""
         }
     ],
     "HMRC":
@@ -127,7 +128,8 @@
             "year":"2018",
             "value": 11,
             "percentage": 0.1,
-            "shortName": "HMRC"
+            "shortName": "HMRC",
+            "note": ""
         }
     ],
     "DCMS":
@@ -137,7 +139,8 @@
             "year":"2018",
             "value": 9,
             "percentage": 0.1,
-            "shortName": "DCMS"
+            "shortName": "DCMS",
+            "note": ""
         }
     ],
     "MOD":
@@ -147,7 +150,8 @@
             "year":"2016",
             "value": 5,
             "percentage": 0.0,
-            "shortName": "MOD"
+            "shortName": "MOD",
+            "note": ""
         }
     ],
     
@@ -158,7 +162,8 @@
             "year":"2018",
             "value": 4,
             "percentage": 0.0,
-            "shortName": "UKEF"
+            "shortName": "UKEF",
+            "note": ""
         }
     ]
 }

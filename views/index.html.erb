@@ -125,7 +125,7 @@ layout: cw_landing
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
-            <span class="top-five-title">Top 10 Departments</span> 
+            <span class="top-five-title" title="This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately.">Top 10 Departments</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
@@ -141,7 +141,7 @@ layout: cw_landing
             </thead>
             <% odas.each do |oda| %>
               <tr style="border-bottom: none">
-                <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>"><%= oda[1][0]["name"] %></a></td>
+                <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>" title="<%= oda[1][0]['note']%>"><%= oda[1][0]["name"] %></a></td>
                 <% if oda[1][0]["value"] >= 0 %>
                   <td style="padding-bottom: 0px; text-align: right; font-size: 14px"><span>£<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</span>
                   <!-- <td style="border-left: 1px solid rgb(218, 218, 218)"><%#= ((oda[1][0]["value"].to_f / totalOdaValue.to_f)*100.0).round(1) %>%</td> -->
