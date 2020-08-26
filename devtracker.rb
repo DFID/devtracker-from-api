@@ -513,7 +513,7 @@ end
 #  SECTOR PAGES
 #####################################################################
 # examples:
-# http://devtracker.dfid.gov.uk/sector/
+# http://devtracker.fcdo.gov.uk/sector/
 
 # High Level Sector summary page
 get '/sector/?' do
@@ -1115,8 +1115,8 @@ end
 #   	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
 # 	if status == true
 # 		Pony.mail({
-# 			:from => "devtracker-feedback@dfid.gov.uk",
-# 		    :to => "devtracker-feedback@dfid.gov.uk",
+# 			:from => "devtracker-feedback@fcdo.gov.uk",
+# 		    :to => "devtracker-feedback@fcdo.gov.uk",
 # 		    :subject => "DevTracker Feedback",
 # 		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
 # 		    :via => :smtp,
@@ -1156,14 +1156,14 @@ get '/rss/country/:country_code/?' do |n|
 	    maker.channel.author = "Department for International Development"
 	    maker.channel.updated = Time.now.to_s
 	    maker.channel.about = "A breakdown of all the projects that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
-	    maker.channel.title = "DFID projects feed for #{countryName[:name]}"
-	    maker.channel.link = "http://devtracker.dfid.gov.uk/countries/#{n}/projects/"
+	    maker.channel.title = "FCDO projects feed for #{countryName[:name]}"
+	    maker.channel.link = "http://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
 
 	    projects.each do |project|
 	      maker.items.new_item do |item|
 	        #convert lastUpdatedDatetime to UTC
 	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
-	        item.link = "http://devtracker.dfid.gov.uk/projects/" + project['iati_identifier'] + "/"
+	        item.link = "http://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
 	        item.title = project['title']['narratives'][0]['text']
 	        item.description = project['descriptions'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
 	        item.updated = lastUpdatedDateTimeUtc
