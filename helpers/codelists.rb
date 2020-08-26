@@ -78,7 +78,7 @@ module CodeLists
     "C"  => "Commitment (obligation to provide funding)",            
     "D"  => "Disbursement (fund transfer to implementing agency)",          
     "E"  => "Expenditure (project spend)",
-    "IF" => "First installment from DFID"
+    "IF" => "First installment from FCDO"
   }
 
   @@activity_statuses = {

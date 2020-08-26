@@ -238,7 +238,7 @@
             </div>
             <div style="text-align: center" class="six columns">
                 <!-- <span style="font-size: 1.5em"><%#= country[:projectBudgetPercentToDfidBudget] %>%</span> -->
-                <!-- <p><strong>DFID Total</strong></p> -->
+                <!-- <p><strong>FCDO Total</strong></p> -->
             </div>
          </div>
     </div>
@@ -246,7 +246,7 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Download IATI Activity Data for <%= country[:name]%>: <a href="http://iati.dfid.gov.uk/iati_files/Country/DFID-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.dfid.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
+        <p>Download IATI Activity Data for <%= country[:name]%>: <a href="http://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
     </div>
 </div>
 <%if implementingOrgList.length > 0%>

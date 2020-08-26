@@ -4,69 +4,69 @@
     "name":"Africa",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Africa-regional-298.xml"   
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-Africa-regional-298.xml"   
   },
   {
     "code":"798",
     "name":"Asia",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Asia-regional-798.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-Asia-regional-798.xml"    
   },
   {
     "code":"89",
     "name":"Europe",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Europe-regional-89.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-Europe-regional-89.xml"    
   },
   {
     "code":"589",
     "name":"Middle East",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Middle-East-regional-589.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-Middle-East-regional-589.xml"    
   },
   {
     "code":"389",
     "name":"North and Central America",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-North-and-Central-America-regional-389.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-North-and-Central-America-regional-389.xml"    
   },
   {
     "code":"189",
     "name":"North of Sahara",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-North-of-Sahara-regional-189.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-North-of-Sahara-regional-189.xml"    
   },
   {
     "code":"679",
     "name":"South Asia",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-South-Asia-regional-679.xml"   
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-South-Asia-regional-679.xml"   
   },
   {
     "code":"289",
     "name":"South of Sahara",
     "description":"",
     "type":"Regional",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-South-of-Sahara-regional-289.xml"    
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-South-of-Sahara-regional-289.xml"    
   },
   {
     "code":"380",
     "name":"West Indies",
     "description":"",
     "type":"Regional" ,
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-West-Indies-regional-380.xml"   
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-West-Indies-regional-380.xml"   
   },
   {
     "code":"998",
     "name":"Developing Countries Unspecified",
     "description":"",
     "type":"Global",
-    "url":"http://iati.dfid.gov.uk/iati_files/Region/DFID-Developing-countries-unspecified-998-1.xml"   
+    "url":"http://iati.fcdo.gov.uk/iati_files/Region/DFID-Developing-countries-unspecified-998-1.xml"   
   }
 ]  

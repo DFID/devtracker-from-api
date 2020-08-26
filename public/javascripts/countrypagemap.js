@@ -197,7 +197,7 @@ $(document).ready(function() {
             //iterate through every activity
                 iati.results.forEach(function (d) {
                     var iatiIdentifier = d.iati_identifier;
-                    var dtUrl = "http://devtracker.dfid.gov.uk/projects/" + iatiIdentifier;
+                    var dtUrl = "http://devtracker.fcdo.gov.uk/projects/" + iatiIdentifier;
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
                     //iterate over each location
                     d.locations.forEach(function (p) {
