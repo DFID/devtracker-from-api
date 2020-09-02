@@ -186,7 +186,7 @@
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h6>Total DFID Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
+        this._div.innerHTML = '<h6>Total FCDO Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</h6>';
     };
 
     info.addTo(map);

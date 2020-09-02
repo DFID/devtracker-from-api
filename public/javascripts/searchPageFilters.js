@@ -256,7 +256,7 @@ $(document).ready(function() {
             $('#reporting-organisation-filter').show();
             var tempOrgs = '';
             $.each(orgList,function(i,val){
-                tempOrgs = tempOrgs + '<li><label for="reportingOrg_type_'+val["organisation_identifier"]+'" title="'+val["organisaion_name"]+'"><input id="reportingOrg_type_'+val["organisation_identifier"]+'" type="checkbox" value="'+val["organisation_identifier"]+'" class="reportingOrg_type" name="reportingOrg_type">'+val["organisaion_name"]+'</label></li>';
+                tempOrgs = tempOrgs + '<li><label for="reportingOrg_type_'+val["organisation_identifier"]+'" title="'+val["organisation_name"]+'"><input id="reportingOrg_type_'+val["organisation_identifier"]+'" type="checkbox" value="'+val["organisation_identifier"]+'" class="reportingOrg_type" name="reportingOrg_type">'+val["organisation_name"]+'</label></li>';
             });
             tempOrgs = '<div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div><span class="proj-filter-exp-collapse-text" style="cursor:pointer"><h3>Goverment Departments</h3></span><div class="mContent"><fieldset class="no-style"><legend>Goverment Departments</legend><ul style="display: block; margin: 5px;">' + tempOrgs + '</ul></fieldset></div><input type="hidden" id="selected_reportingOrg_type" value=""  />';
             $('#reporting-organisation-filter').html(tempOrgs);
@@ -548,7 +548,12 @@ $(document).ready(function() {
                         //Check reporting organization
                         if(!isEmpty(result.reporting_organisation)){
                             if(!isEmpty(result.reporting_organisation.narratives)){
-                                validResults['reporting_organisations'] = result.reporting_organisation.narratives[0].text;
+                                if(result.reporting_organisation.narratives[0].text == 'UK Department for International Development' || result.reporting_organisation.narratives[0].text == 'UK - Foreign & Commonwealth Office'){
+                                    validResults['reporting_organisations'] = 'UK - Foreign, Commonwealth and Development Office';
+                                }
+                                else{
+                                    validResults['reporting_organisations'] = result.reporting_organisation.narratives[0].text;
+                                }
                             }
                             else {
                                 validResults['reporting_organisations'] = "";    
@@ -735,7 +740,12 @@ $(document).ready(function() {
                 //Check reporting organization
                 if(!isEmpty(result.reporting_organisation)){
                     if(!isEmpty(result.reporting_organisation.narratives)){
-                        validResults['reporting_organisations'] = result.reporting_organisation.narratives[0].text;
+                        if(result.reporting_organisation.narratives[0].text == 'UK Department for International Development' || result.reporting_organisation.narratives[0].text == 'UK - Foreign & Commonwealth Office'){
+                            validResults['reporting_organisations'] = 'UK - Foreign, Commonwealth and Development Office';
+                        }
+                        else{
+                            validResults['reporting_organisations'] = result.reporting_organisation.narratives[0].text;
+                        }
                     }
                     else {
                         validResults['reporting_organisations'] = "";    

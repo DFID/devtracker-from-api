@@ -3,7 +3,7 @@
     "country": "Afghanistan",
     "code": "AF",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "140,000",
     "Thousands": 140
   },
@@ -11,7 +11,7 @@
     "country": "Afghanistan",
     "code": "AF",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "1,400,000",
     "Thousands": "1,400"
   },
@@ -19,7 +19,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "200,000",
     "Thousands": 200
   },
@@ -27,7 +27,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "120,000",
     "Thousands": 120
   },
@@ -35,7 +35,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "1,540,000",
     "Thousands": "1,540"
   },
@@ -43,7 +43,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "1,170,000",
     "Thousands": "1,170"
   },
@@ -51,7 +51,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "1,300,000",
     "Thousands": "1,300"
   },
@@ -59,7 +59,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "820,000",
     "Thousands": 820
   },
@@ -67,7 +67,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "530,000",
     "Thousands": 530
   },
@@ -83,7 +83,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "2,520,000",
     "Thousands": "2,520"
   },
@@ -91,7 +91,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "6,320,000",
     "Thousands": "6,320"
   },
@@ -99,7 +99,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "9,660,000",
     "Thousands": "9,660"
   },
@@ -107,7 +107,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "150,000",
     "Thousands": 150
   },
@@ -123,7 +123,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "4,400,000",
     "Thousands": "4,400"
   },
@@ -131,7 +131,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "2,010,000",
     "Thousands": "2,010"
   },
@@ -147,7 +147,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "550,000",
     "Thousands": 550
   },
@@ -155,7 +155,7 @@
     "country": "Bangladesh",
     "code": "BD",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "1,330,000",
     "Thousands": "1,330"
   },
@@ -163,7 +163,7 @@
     "country": "Burundi",
     "code": "BI",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -179,7 +179,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "1,670,000",
     "Thousands": "1,670"
   },
@@ -195,7 +195,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "2,100,000",
     "Thousands": "2,100"
   },
@@ -203,7 +203,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "1,780,000",
     "Thousands": "1,780"
   },
@@ -211,7 +211,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "1,750,000",
     "Thousands": "1,750"
   },
@@ -219,7 +219,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "150,000",
     "Thousands": 150
   },
@@ -235,7 +235,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "950,000",
     "Thousands": 950
   },
@@ -243,7 +243,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "8,160,000",
     "Thousands": "8,160"
   },
@@ -251,7 +251,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "660,000",
     "Thousands": 660
   },
@@ -259,7 +259,7 @@
     "country": "Democratic Republic of Congo",
     "code": "CD",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "210,000",
     "Thousands": 210
   },
@@ -267,7 +267,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "8,000",
     "Thousands": 8
   },
@@ -275,7 +275,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "1,250,000",
     "Thousands": "1,250"
   },
@@ -283,7 +283,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "4,180,000",
     "Thousands": "4,180"
   },
@@ -291,7 +291,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "440,000",
     "Thousands": 440
   },
@@ -299,7 +299,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "2,760,000",
     "Thousands": "2,760"
   },
@@ -307,7 +307,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "530,000",
     "Thousands": 530
   },
@@ -323,7 +323,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "1,810,000",
     "Thousands": "1,810"
   },
@@ -331,7 +331,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "2,660,000",
     "Thousands": "2,660"
   },
@@ -339,7 +339,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "3,670,000",
     "Thousands": "3,670"
   },
@@ -347,7 +347,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "3,270,000",
     "Thousands": "3,270"
   },
@@ -363,7 +363,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "200,000",
     "Thousands": 200
   },
@@ -371,7 +371,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "310,000",
     "Thousands": 310
   },
@@ -379,7 +379,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "1,570,000",
     "Thousands": "1,570"
   },
@@ -387,7 +387,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "940,000",
     "Thousands": 940
   },
@@ -395,7 +395,7 @@
     "country": "Ethiopia",
     "code": "ET",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "530,000",
     "Thousands": 530
   },
@@ -403,7 +403,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "170,000",
     "Thousands": 170
   },
@@ -411,7 +411,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "140,000",
     "Thousands": 140
   },
@@ -419,7 +419,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -427,7 +427,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "11,240,000",
     "Thousands": "11,240"
   },
@@ -443,7 +443,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "5,460,000",
     "Thousands": "5,460"
   },
@@ -451,7 +451,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -459,7 +459,7 @@
     "country": "Ghana",
     "code": "GH",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "110,000",
     "Thousands": 110
   },
@@ -475,7 +475,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "3,510,000",
     "Thousands": "3,510"
   },
@@ -483,7 +483,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "1,250,000",
     "Thousands": "1,250"
   },
@@ -491,7 +491,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "3,700,000",
     "Thousands": "3,700"
   },
@@ -499,7 +499,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "1,470,000",
     "Thousands": "1,470"
   },
@@ -515,7 +515,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "2,500,000",
     "Thousands": "2,500"
   },
@@ -523,7 +523,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "1,580,000",
     "Thousands": "1,580"
   },
@@ -531,7 +531,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "1,580,000",
     "Thousands": "1,580"
   },
@@ -547,7 +547,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "1,420,000",
     "Thousands": "1,420"
   },
@@ -555,7 +555,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "680,000",
     "Thousands": 680
   },
@@ -563,7 +563,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "740,000",
     "Thousands": 740
   },
@@ -571,7 +571,7 @@
     "country": "India",
     "code": "IN",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "340,000",
     "Thousands": 340
   },
@@ -579,7 +579,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "12,420,000",
     "Thousands": "12,420"
   },
@@ -587,7 +587,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "810,000",
     "Thousands": 810
   },
@@ -595,7 +595,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "60,000",
     "Thousands": 60
   },
@@ -603,7 +603,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -611,7 +611,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "200,000",
     "Thousands": 200
   },
@@ -619,7 +619,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "12,330,000",
     "Thousands": "12,330"
   },
@@ -635,7 +635,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "940,000",
     "Thousands": 940
   },
@@ -643,7 +643,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "330,000",
     "Thousands": 330
   },
@@ -651,7 +651,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "9,320,000",
     "Thousands": "9,320"
   },
@@ -659,7 +659,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -667,7 +667,7 @@
     "country": "Kenya",
     "code": "KE",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "460,000",
     "Thousands": 460
   },
@@ -675,7 +675,7 @@
     "country": "Liberia",
     "code": "LR",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "4,000",
     "Thousands": 4
   },
@@ -683,7 +683,7 @@
     "country": "Myanmar",
     "code": "MM",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -691,7 +691,7 @@
     "country": "Myanmar",
     "code": "MM",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -699,7 +699,7 @@
     "country": "Myanmar",
     "code": "MM",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "1,030,000",
     "Thousands": "1,030"
   },
@@ -715,7 +715,7 @@
     "country": "Myanmar",
     "code": "MM",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "950,000",
     "Thousands": 950
   },
@@ -723,7 +723,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "40,000",
     "Thousands": 40
   },
@@ -731,7 +731,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "280,000",
     "Thousands": 280
   },
@@ -739,7 +739,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "500,000",
     "Thousands": 500
   },
@@ -747,7 +747,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -763,7 +763,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "530,000",
     "Thousands": 530
   },
@@ -771,7 +771,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "730,000",
     "Thousands": 730
   },
@@ -779,7 +779,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "720,000",
     "Thousands": 720
   },
@@ -787,7 +787,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "650,000",
     "Thousands": 650
   },
@@ -795,7 +795,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "5,280,000",
     "Thousands": "5,280"
   },
@@ -811,7 +811,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "400,000",
     "Thousands": 400
   },
@@ -819,7 +819,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "360,000",
     "Thousands": 360
   },
@@ -827,7 +827,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "110,000",
     "Thousands": 110
   },
@@ -835,7 +835,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "60,000",
     "Thousands": 60
   },
@@ -843,7 +843,7 @@
     "country": "Malawi",
     "code": "MW",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "640,000",
     "Thousands": 640
   },
@@ -851,7 +851,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "210,000",
     "Thousands": 210
   },
@@ -859,7 +859,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "110,000",
     "Thousands": 110
   },
@@ -867,7 +867,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "4,080,000",
     "Thousands": "4,080"
   },
@@ -875,7 +875,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "290,000",
     "Thousands": 290
   },
@@ -883,7 +883,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -899,7 +899,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "310,000",
     "Thousands": 310
   },
@@ -907,7 +907,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "460,000",
     "Thousands": 460
   },
@@ -915,7 +915,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "5,330,000",
     "Thousands": "5,330"
   },
@@ -931,7 +931,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "2,200,000",
     "Thousands": "2,200"
   },
@@ -939,7 +939,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "110,000",
     "Thousands": 110
   },
@@ -947,7 +947,7 @@
     "country": "Mozambique",
     "code": "MZ",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "280,000",
     "Thousands": 280
   },
@@ -955,7 +955,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "14,660,000",
     "Thousands": "14,660"
   },
@@ -963,7 +963,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -971,7 +971,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "6,490,000",
     "Thousands": "6,490"
   },
@@ -979,7 +979,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "450,000",
     "Thousands": 450
   },
@@ -995,7 +995,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "840,000",
     "Thousands": 840
   },
@@ -1003,7 +1003,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "2,950,000",
     "Thousands": "2,950"
   },
@@ -1011,7 +1011,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "5,130,000",
     "Thousands": "5,130"
   },
@@ -1019,7 +1019,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "4,000",
     "Thousands": 4
   },
@@ -1027,7 +1027,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "40,000,000",
     "Thousands": "40,000"
   },
@@ -1043,7 +1043,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "9,790,000",
     "Thousands": "9,790"
   },
@@ -1051,7 +1051,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "780,000",
     "Thousands": 780
   },
@@ -1059,7 +1059,7 @@
     "country": "Nigeria",
     "code": "NG",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1067,7 +1067,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -1075,7 +1075,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "550,000",
     "Thousands": 550
   },
@@ -1083,7 +1083,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "370,000",
     "Thousands": 370
   },
@@ -1091,7 +1091,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1099,7 +1099,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -1115,7 +1115,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "250,000",
     "Thousands": 250
   },
@@ -1123,7 +1123,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "370,000",
     "Thousands": 370
   },
@@ -1131,7 +1131,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "430,000",
     "Thousands": 430
   },
@@ -1139,7 +1139,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "9,700,000",
     "Thousands": "9,700"
   },
@@ -1155,7 +1155,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "340,000",
     "Thousands": 340
   },
@@ -1163,7 +1163,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "1,340,000",
     "Thousands": "1,340"
   },
@@ -1171,7 +1171,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "300,000",
     "Thousands": 300
   },
@@ -1187,7 +1187,7 @@
     "country": "Nepal",
     "code": "NP",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "70,000",
     "Thousands": 70
   },
@@ -1195,7 +1195,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "1,330,000",
     "Thousands": "1,330"
   },
@@ -1203,7 +1203,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "3,230,000",
     "Thousands": "3,230"
   },
@@ -1211,7 +1211,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "270,000",
     "Thousands": 270
   },
@@ -1219,7 +1219,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "1,350,000",
     "Thousands": "1,350"
   },
@@ -1227,7 +1227,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "330,000",
     "Thousands": 330
   },
@@ -1243,7 +1243,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "1,160,000",
     "Thousands": "1,160"
   },
@@ -1251,7 +1251,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "1,630,000",
     "Thousands": "1,630"
   },
@@ -1259,7 +1259,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "3,510,000",
     "Thousands": "3,510"
   },
@@ -1267,7 +1267,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "1,580,000",
     "Thousands": "1,580"
   },
@@ -1275,7 +1275,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "46,210,000",
     "Thousands": "46,210"
   },
@@ -1291,7 +1291,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "440,000",
     "Thousands": 440
   },
@@ -1299,7 +1299,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "1,060,000",
     "Thousands": "1,060"
   },
@@ -1307,7 +1307,7 @@
     "country": "Pakistan",
     "code": "PK",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "350,000",
     "Thousands": 350
   },
@@ -1315,7 +1315,7 @@
     "country": "Occupied Palestinian Territories",
     "code": "PS",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "100,000",
     "Thousands": 100
   },
@@ -1323,7 +1323,7 @@
     "country": "Occupied Palestinian Territories",
     "code": "PS",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "240,000",
     "Thousands": 240
   },
@@ -1331,7 +1331,7 @@
     "country": "Occupied Palestinian Territories",
     "code": "PS",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1339,7 +1339,7 @@
     "country": "Occupied Palestinian Territories",
     "code": "PS",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "7,000",
     "Thousands": 7
   },
@@ -1347,7 +1347,7 @@
     "country": "Occupied Palestinian Territories",
     "code": "PS",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "290,000",
     "Thousands": 290
   },
@@ -1355,7 +1355,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "370,000",
     "Thousands": 370
   },
@@ -1363,7 +1363,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people supported through DFID programmes to improve their rights to land and property",
+    "results_indicators": "Number of people supported through FCDO programmes to improve their rights to land and property",
     "totals": "3,830,000",
     "Thousands": "3,830"
   },
@@ -1371,7 +1371,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "470,000",
     "Thousands": 470
   },
@@ -1379,7 +1379,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "40,000",
     "Thousands": 40
   },
@@ -1387,7 +1387,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "400,000",
     "Thousands": 400
   },
@@ -1395,7 +1395,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -1411,7 +1411,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1427,7 +1427,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -1435,7 +1435,7 @@
     "country": "Rwanda",
     "code": "RW",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -1443,7 +1443,7 @@
     "country": "Sudan",
     "code": "SD",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1459,7 +1459,7 @@
     "country": "Sudan",
     "code": "SD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "1,410,000",
     "Thousands": "1,410"
   },
@@ -1467,7 +1467,7 @@
     "country": "Sudan",
     "code": "SD",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "560,000",
     "Thousands": 560
   },
@@ -1483,7 +1483,7 @@
     "country": "Sudan",
     "code": "SD",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "920,000",
     "Thousands": 920
   },
@@ -1491,7 +1491,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "320,000",
     "Thousands": 320
   },
@@ -1499,7 +1499,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "40,000",
     "Thousands": 40
   },
@@ -1515,7 +1515,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "1,040,000",
     "Thousands": "1,040"
   },
@@ -1523,7 +1523,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "2,110,000",
     "Thousands": "2,110"
   },
@@ -1531,7 +1531,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "3,200,000",
     "Thousands": "3,200"
   },
@@ -1539,7 +1539,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "2,450,000",
     "Thousands": "2,450"
   },
@@ -1547,7 +1547,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "290,000",
     "Thousands": 290
   },
@@ -1555,7 +1555,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -1563,7 +1563,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "130,000",
     "Thousands": 130
   },
@@ -1571,7 +1571,7 @@
     "country": "Sierra Leone",
     "code": "SL",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -1579,7 +1579,7 @@
     "country": "Somalia",
     "code": "SO",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "220,000",
     "Thousands": 220
   },
@@ -1587,7 +1587,7 @@
     "country": "Somalia",
     "code": "SO",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "1,490,000",
     "Thousands": "1,490"
   },
@@ -1595,7 +1595,7 @@
     "country": "Somalia",
     "code": "SO",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1603,7 +1603,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1611,7 +1611,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1619,7 +1619,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "1,430,000",
     "Thousands": "1,430"
   },
@@ -1635,7 +1635,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "270,000",
     "Thousands": 270
   },
@@ -1643,7 +1643,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1651,7 +1651,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -1659,7 +1659,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "310,000",
     "Thousands": 310
   },
@@ -1667,7 +1667,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -1675,7 +1675,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -1683,7 +1683,7 @@
     "country": "South Sudan",
     "code": "SS",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1691,7 +1691,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "2,180,000",
     "Thousands": "2,180"
   },
@@ -1699,7 +1699,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "150,000",
     "Thousands": 150
   },
@@ -1707,7 +1707,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "500,000",
     "Thousands": 500
   },
@@ -1715,7 +1715,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "140,000",
     "Thousands": 140
   },
@@ -1731,7 +1731,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "2,950,000",
     "Thousands": "2,950"
   },
@@ -1739,7 +1739,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "310,000",
     "Thousands": 310
   },
@@ -1747,7 +1747,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -1755,7 +1755,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "100,000",
     "Thousands": 100
   },
@@ -1763,7 +1763,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "8,620,000",
     "Thousands": "8,620"
   },
@@ -1779,7 +1779,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "150,000",
     "Thousands": 150
   },
@@ -1787,7 +1787,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people with improved access to clean energy as a result of DFID funding",
+    "results_indicators": "Number of people with improved access to clean energy as a result of FCDO funding",
     "totals": "350,000",
     "Thousands": 350
   },
@@ -1795,7 +1795,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "4,440,000",
     "Thousands": "4,440"
   },
@@ -1803,7 +1803,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "70,000",
     "Thousands": 70
   },
@@ -1811,7 +1811,7 @@
     "country": "Tanzania",
     "code": "TZ",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -1819,7 +1819,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "120,000",
     "Thousands": 120
   },
@@ -1827,7 +1827,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "460,000",
     "Thousands": 460
   },
@@ -1835,7 +1835,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "130,000",
     "Thousands": 130
   },
@@ -1843,7 +1843,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1851,7 +1851,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "1,000",
     "Thousands": 1
   },
@@ -1867,7 +1867,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "3,000",
     "Thousands": 3
   },
@@ -1875,7 +1875,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "490,000",
     "Thousands": 490
   },
@@ -1883,7 +1883,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "8,270,000",
     "Thousands": "8,270"
   },
@@ -1899,7 +1899,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -1907,7 +1907,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Climate Change",
-    "results_indicators": "Number of people supported by DFID funding to cope with the effects of climate change",
+    "results_indicators": "Number of people supported by FCDO funding to cope with the effects of climate change",
     "totals": "400,000",
     "Thousands": 400
   },
@@ -1915,7 +1915,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "4,450,000",
     "Thousands": "4,450"
   },
@@ -1923,7 +1923,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "80,000",
     "Thousands": 80
   },
@@ -1931,7 +1931,7 @@
     "country": "Uganda",
     "code": "UG",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "800,000",
     "Thousands": 800
   },
@@ -1939,7 +1939,7 @@
     "country": "Vietnam",
     "code": "VN",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "60,000",
     "Thousands": 60
   },
@@ -1947,7 +1947,7 @@
     "country": "Vietnam",
     "code": "VN",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -1963,7 +1963,7 @@
     "country": "Vietnam",
     "code": "VN",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "130,000",
     "Thousands": 130
   },
@@ -1971,7 +1971,7 @@
     "country": "Vietnam",
     "code": "VN",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "230,000",
     "Thousands": 230
   },
@@ -1979,7 +1979,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "220,000",
     "Thousands": 220
   },
@@ -1987,7 +1987,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "100,000",
     "Thousands": 100
   },
@@ -1995,7 +1995,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "1,120,000",
     "Thousands": "1,120"
   },
@@ -2003,7 +2003,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "70,000",
     "Thousands": 70
   },
@@ -2019,7 +2019,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "650,000",
     "Thousands": 650
   },
@@ -2027,7 +2027,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -2035,7 +2035,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "480,000",
     "Thousands": 480
   },
@@ -2043,7 +2043,7 @@
     "country": "Yemen",
     "code": "YE",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "6,660,000",
     "Thousands": "6,660"
   },
@@ -2051,7 +2051,7 @@
     "country": "South Africa",
     "code": "ZA",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "90,000",
     "Thousands": 90
   },
@@ -2059,7 +2059,7 @@
     "country": "South Africa",
     "code": "ZA",
     "pillar": "Humanitarian and Emergency",
-    "results_indicators": "Number of people reached with emergency food assistance through DFID support",
+    "results_indicators": "Number of people reached with emergency food assistance through FCDO support",
     "totals": "50,000",
     "Thousands": 50
   },
@@ -2067,7 +2067,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "130,000",
     "Thousands": 130
   },
@@ -2075,7 +2075,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -2083,7 +2083,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "1,910,000",
     "Thousands": "1,910"
   },
@@ -2091,7 +2091,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "70,000",
     "Thousands": 70
   },
@@ -2099,7 +2099,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -2115,7 +2115,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "2,240,000",
     "Thousands": "2,240"
   },
@@ -2123,7 +2123,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "6,290,000",
     "Thousands": "6,290"
   },
@@ -2131,7 +2131,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "2,750,000",
     "Thousands": "2,750"
   },
@@ -2147,7 +2147,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Health",
-    "results_indicators": "Number of insecticide treated bed-nets distributed with DFID support",
+    "results_indicators": "Number of insecticide treated bed-nets distributed with FCDO support",
     "totals": "2,440,000",
     "Thousands": "2,440"
   },
@@ -2155,7 +2155,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "20,000",
     "Thousands": 20
   },
@@ -2163,7 +2163,7 @@
     "country": "Zambia",
     "code": "ZM",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "180,000",
     "Thousands": 180
   },
@@ -2171,7 +2171,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Wealth Creation",
-    "results_indicators": "Number of people with access to financial services as a result of DFID support",
+    "results_indicators": "Number of people with access to financial services as a result of FCDO support",
     "totals": "30,000",
     "Thousands": 30
   },
@@ -2179,7 +2179,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people benefiting from DFID-supported cash transfer programmes",
+    "results_indicators": "Number of people benefiting from FCDO-supported cash transfer programmes",
     "totals": "160,000",
     "Thousands": 160
   },
@@ -2187,7 +2187,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of children under five and pregnant women reached through DFID's nutrition-relevant programmes",
+    "results_indicators": "Number of children under five and pregnant women reached through FCDO's nutrition-relevant programmes",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -2195,7 +2195,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Poverty, Vulnerability, Nutrition and Hunger",
-    "results_indicators": "Number of people achieving food security through DFID support",
+    "results_indicators": "Number of people achieving food security through FCDO support",
     "totals": "890,000",
     "Thousands": 890
   },
@@ -2203,7 +2203,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Education",
-    "results_indicators": "Number of children supported by DFID in primary and lower secondary education",
+    "results_indicators": "Number of children supported by FCDO in primary and lower secondary education",
     "totals": "170,000",
     "Thousands": 170
   },
@@ -2211,7 +2211,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Education",
-    "results_indicators": "Number of children completing primary education supported by DFID",
+    "results_indicators": "Number of children completing primary education supported by FCDO",
     "totals": "40,000",
     "Thousands": 40
   },
@@ -2227,7 +2227,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to clean drinking water sources through DFID support",
+    "results_indicators": "Number of people with sustainable access to clean drinking water sources through FCDO support",
     "totals": "1,280,000",
     "Thousands": "1,280"
   },
@@ -2235,7 +2235,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through DFID support",
+    "results_indicators": "Number of people with sustainable access to an improved sanitation facility through FCDO support",
     "totals": "190,000",
     "Thousands": 190
   },
@@ -2243,7 +2243,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Water, Sanitation and Hygiene",
-    "results_indicators": "Number of people with access to improved hygiene through DFID support to hygiene promotion",
+    "results_indicators": "Number of people with access to improved hygiene through FCDO support to hygiene promotion",
     "totals": "1,090,000",
     "Thousands": "1,090"
   },
@@ -2251,7 +2251,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of people who vote in elections supported by DFID",
+    "results_indicators": "Number of people who vote in elections supported by FCDO",
     "totals": "3,250,000",
     "Thousands": "3,250"
   },
@@ -2259,7 +2259,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Governance and Security",
-    "results_indicators": "Number of women and girls with improved access to security and justice services through DFID support",
+    "results_indicators": "Number of women and girls with improved access to security and justice services through FCDO support",
     "totals": "10,000",
     "Thousands": 10
   },
@@ -2267,7 +2267,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Health",
-    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through DFID support",
+    "results_indicators": "Number of births delivered with the help of nurses, midwives or doctors through FCDO support",
     "totals": "160,000",
     "Thousands": 160
   },
@@ -2275,7 +2275,7 @@
     "country": "Zimbabwe",
     "code": "ZW",
     "pillar": "Health",
-    "results_indicators": "Number of additional women using modern methods of family planning through DFID support",
+    "results_indicators": "Number of additional women using modern methods of family planning through FCDO support",
     "totals": "170,000",
     "Thousands": 170
   },

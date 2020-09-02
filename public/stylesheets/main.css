@@ -763,7 +763,7 @@ g.c3-axis-y > g:last-child {
   border: none;
   margin: 0;
   padding: 0;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 13px;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: bold;
@@ -778,6 +778,10 @@ g.c3-axis-y > g:last-child {
 .dfbei h1,
 .dfid h1 {
   border-left: 3px solid #003e74;
+}
+
+.fcdo-title{
+  margin-top: 11px !important;
 }
 
 .defra h1 {
@@ -832,6 +836,11 @@ g.c3-axis-y > g:last-child {
 
 .logo .uk-gov-logo {
   background-image: url(/images/org-crest-27px.png);
+}
+
+.logo .uk-gov-logo-fcdo {
+  background-image: url(/images/org-crest-27px.png);
+  /* background-size: 44px; */
 }
 
 .logo .uk-gov-logo-ho {
@@ -1113,4 +1122,40 @@ table.govuk-table thead {
 
 table.govuk-table {
   border: none;
+}
+/*Tooltips*/
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

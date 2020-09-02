@@ -26,13 +26,13 @@ def r4DApiDocFetch(projectId)
 
 end
 
-def getR4DSearchLink(object_id)
+# def getR4DSearchLink(object_id)
 
-	search_uri = "http://r4d.dfid.gov.uk/Search/SearchResults.aspx?search=advancedsearch&SearchType=3&Projects=false&Documents=true&DocumentsOnly=true&ProjectID="+object_id
+# 	search_uri = "http://r4d.dfid.gov.uk/Search/SearchResults.aspx?search=advancedsearch&SearchType=3&Projects=false&Documents=true&DocumentsOnly=true&ProjectID="+object_id
 
-	search_uri
+# 	search_uri
 	
-end
+# end
 
 def getR4DDocsCountNotShowing(output_count)
 		output_count.to_i - 5 

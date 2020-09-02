@@ -4,12 +4,15 @@ title: Development Tracker
 layout: cw_landing
 
 -->
+<link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
 <div class="hero hero-notabs">    
 <div class="row">
     <div class="nine columns">
         <h1>Making Development Assistance More Transparent</h1>
-        <p class="meta">The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Department for International Development (DFID), other government departments and partners.</p>
-        <div class="summary"><p>The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Department for International Development (DFID), other government departments and partners.</p></div>
+        <p class="meta">The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
+        <div class="summary">
+            <p>The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
+        </div>
     </div>
     <div class="two columns" style="text-align:right; margin-top:10px;">
            <img src="/images/UK_AID_logo-w.png" alt="UK aid from the British people">
@@ -99,7 +102,7 @@ layout: cw_landing
                 <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
                 <aside id="moreinfo2" class="more-info">            
                         <div class="more-info-content">
-                            The sectors that projects have allocated their budget to, consistent with the Development Assistance Committee's classifications.
+                            The sectors that projects have allocated their budget to,  consistent with the Development Assistance Committee's classifications.
                          </div>
                 </aside>
             </div> 
@@ -125,11 +128,11 @@ layout: cw_landing
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
         <div class="top-five-header">        
-            <span class="top-five-title">Top 10 Departments</span> 
+            <span class="top-five-title" title="This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately.">Top 10 Departments</span> 
             <a class="more-info-link float-right move-up-4" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about the top 5 places we work"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        <a style="color: white" href="https://www.gov.uk/government/statistics/statistics-on-international-development-2017" target="_BLANK">Statistics on International Development 2017</a>
+                        <a style="color: white" href="https://www.gov.uk/government/statistics/statistics-on-international-development-2017" target="_BLANK">Statistics on International Development 2017. Please note: The FCDO figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately.</a>
                     </div>
             </aside>
         </div>
@@ -141,7 +144,7 @@ layout: cw_landing
             </thead>
             <% odas.each do |oda| %>
               <tr style="border-bottom: none">
-                <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>"><%= oda[1][0]["name"] %></a></td>
+                <td style="padding-bottom: 0px; text-align: left; padding-top: 0px"><a style="line-height: 1.9em" href="department/<%= oda[0]%>" title="<%= oda[1][0]['note']%>"><%= oda[1][0]["name"] %></a></td>
                 <% if oda[1][0]["value"] >= 0 %>
                   <td style="padding-bottom: 0px; text-align: right; font-size: 14px"><span>£<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</span>
                   <!-- <td style="border-left: 1px solid rgb(218, 218, 218)"><%#= ((oda[1][0]["value"].to_f / totalOdaValue.to_f)*100.0).round(1) %>%</td> -->

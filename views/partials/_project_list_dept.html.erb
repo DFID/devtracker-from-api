@@ -66,7 +66,11 @@
                     <span class="reporting-org">
                         <%unless project['reporting_organisation'].empty? %>
                             <%unless project['reporting_organisation']['narratives'].empty? %>
-                                <%= project['reporting_organisation']['narratives'][0]['text']%>
+                                <%if project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK Department for International Development' || project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK - Foreign & Commonwealth Office'%>
+                                    UK - Foreign, Commonwealth and Development Office
+                                <%else%>
+                                    <%= project['reporting_organisation']['narratives'][0]['text']%>
+                                <%end%>
                             <%end%>
                         <%end%>
                     </span>
