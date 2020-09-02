@@ -65,7 +65,11 @@
                     <span class="reporting-org">
                         <%unless project['reporting_organisation'].empty? %>
                             <%unless project['reporting_organisation']['narratives'].empty? %>
-                                <%= project['reporting_organisation']['narratives'][0]['text']%>
+                                <%if project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK Department for International Development' || project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK - Foreign & Commonwealth Office'%>
+                                    UK - Foreign, Commonwealth and Development Office
+                                <%else%>
+                                    <%= project['reporting_organisation']['narratives'][0]['text']%>
+                                <%end%>
                             <%end%>
                         <%end%>
                     </span>
@@ -172,8 +176,8 @@
                                 <ul style="display: block; margin: 5px;">
                                     <% reportingOrgTypes.each do |reportingOrgType| %>
                                         <li>
-                                            <label for="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisaion_name"] %>">
-                                            <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisaion_name"] %>
+                                            <label for="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" title=" <%= reportingOrgType["organisation_name"] %>">
+                                            <input id="reportingOrg_type_<%= reportingOrgType["organisation_identifier"] %>" type="checkbox" value="<%= reportingOrgType["organisation_identifier"] %>" class="reportingOrg_type" name="reportingOrg_type"><%= reportingOrgType["organisation_name"] %>
                                             </label>
                                         </li>
                                     <% end %>
