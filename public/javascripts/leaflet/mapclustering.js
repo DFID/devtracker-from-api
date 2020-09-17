@@ -29,7 +29,7 @@ function createMapWithCoordinates(coordinatesArray){
         var map = L.map('map');
 
         // creates a tile layer
-        L.tileLayer("http://devtracker.dfid.gov.uk/v2/dfid/{z}/{x}/{y}.png", {
+        L.tileLayer("http://devtracker.fcdo.gov.uk/v2/dfid/{z}/{x}/{y}.png", {
             minZoom: 1,
             maxZoom: 10,
             attribution: ''
