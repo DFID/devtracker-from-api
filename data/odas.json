@@ -3,9 +3,9 @@
     [
         {
             "name":"Foreign, Commonwealth and Development Office",
-            "year":"2018",
-            "value": 11530,
-            "percentage": 79.2,
+            "year":"2019",
+            "value": 11786,
+            "percentage": 77.6,
             "shortName": "FCDO",
             "note": "This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately."
         }
@@ -14,9 +14,9 @@
     [
         {
             "name":"Department for Business, Energy and Industrial Strategy",
-            "year":"2018",
-            "value": 851,
-            "percentage": 5.8,
+            "year":"2019",
+            "value": 960,
+            "percentage": 6.3,
             "shortName": "BEIS",
             "note": ""
         }
@@ -25,9 +25,9 @@
     [
         {
             "name":"Conflict, Stability and Security Fund",
-            "year":"2018",
-            "value": 605,
-            "percentage": 4.2,
+            "year":"2019",
+            "value": 659,
+            "percentage": 4.3,
             "shortName": "CSSF",
             "note": ""
         }
@@ -36,9 +36,9 @@
     [
         {
             "name":"Home Office",
-            "year":"2018",
-            "value": 337,
-            "percentage": 2.3,
+            "year":"2019",
+            "value": 452,
+            "percentage": 3.0,
             "shortName": "Home Office",
             "note": ""
         }
@@ -47,9 +47,9 @@
     [
         {
             "name":"Department of Health and Social Care",
-            "year":"2018",
-            "value": 201,
-            "percentage": 1.4,
+            "year":"2019",
+            "value": 222,
+            "percentage": 1.5,
             "shortName": "DoH",
             "note": ""
         }
@@ -58,21 +58,10 @@
     [
         {
             "name":"Cross-Government Prosperity Fund",
-            "year":"2016",
-            "value": 94,
-            "percentage": 0.6,
+            "year":"2019",
+            "value": 176,
+            "percentage": 1.2,
             "shortName": "CGPF",
-            "note": ""
-        }
-    ],
-    "HMT":
-    [
-        {
-            "name":"HM Treasury",
-            "year":"2018",
-            "value": 83,
-            "percentage": 0.6,
-            "shortName": "HMT",
             "note": ""
         }
     ],
@@ -80,33 +69,32 @@
     [
         {
             "name":"Department for Environment Food and Rural Affairs",
-            "year":"2018",
-            "value": 70,
-            "percentage": 0.5,
+            "year":"2019",
+            "value": 87,
+            "percentage": 0.6,
             "shortName": "DEFRA",
             "note": ""
         }
     ],
-    
+    "HMT":
+    [
+        {
+            "name":"HM Treasury",
+            "year":"2019",
+            "value": 80,
+            "percentage": 0.5,
+            "shortName": "HMT",
+            "note": ""
+        }
+    ],
     "DWP":
     [
         {
             "name":"Department for Work and Pensions",
-            "year":"2018",
-            "value": 25,
+            "year":"2019",
+            "value": 27,
             "percentage": 0.2,
             "shortName": "DWP",
-            "note": ""
-        }
-    ],
-    "CO":
-    [
-        {
-            "name":"Cabinet Office",
-            "year":"2018",
-            "value": 21,
-            "percentage": 0.1,
-            "shortName": "CO",
             "note": ""
         }
     ],
@@ -114,8 +102,8 @@
     [
         {
             "name":"Department for Education",
-            "year":"2018",
-            "value": 20,
+            "year":"2019",
+            "value": 21,
             "percentage": 0.1,
             "shortName": "DoE",
             "note": ""
@@ -125,8 +113,8 @@
     [
         {
             "name":"HM Revenue and Customs",
-            "year":"2018",
-            "value": 11,
+            "year":"2019",
+            "value": 13,
             "percentage": 0.1,
             "shortName": "HMRC",
             "note": ""
@@ -136,8 +124,8 @@
     [
         {
             "name":"Department for Culture, Media and Sports",
-            "year":"2018",
-            "value": 9,
+            "year":"2019",
+            "value": 12,
             "percentage": 0.1,
             "shortName": "DCMS",
             "note": ""
@@ -147,22 +135,21 @@
     [
         {
             "name":"Ministry of Defence",
-            "year":"2016",
-            "value": 5,
+            "year":"2019",
+            "value": 6,
             "percentage": 0.0,
             "shortName": "MOD",
             "note": ""
         }
     ],
-    
-    "UKEF":
+    "DIT":
     [
         {
-            "name":"Export Credit Guarantee Department",
-            "year":"2018",
-            "value": 4,
+            "name":"Department of International Trade",
+            "year":"2019",
+            "value": 2,
             "percentage": 0.0,
-            "shortName": "UKEF",
+            "shortName": "DIT",
             "note": ""
         }
     ]
