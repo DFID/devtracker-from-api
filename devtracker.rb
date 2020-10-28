@@ -60,6 +60,8 @@ include RecaptchaHelper
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
+#set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
+
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 Money.locale_backend = :i18n
