@@ -98,9 +98,14 @@ module ProjectHelpers
     end
 
     def get_funding_project_count(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url"
-        project = JSON.parse(oipa)
-        project = project['count']
+        begin
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url"
+            project = JSON.parse(oipa)
+            project = project['count']
+        rescue
+            puts 'API error for get_funding_project_count method'
+            project = 0
+        end
     end
 
     def get_funded_project_count(projectId)
