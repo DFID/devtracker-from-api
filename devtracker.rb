@@ -53,12 +53,12 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+ set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -342,8 +342,16 @@ end
 #####################################################################
 
 # Project summary page
-get '/projects/:proj_id/?' do |n|
-	n = sanitize_input(n,"p")
+#get '/projects/:proj_id/?' do |n|
+get '/projects/*' do
+	puts 'processing....'
+	n = params[:splat].first
+	n = n.dump
+	puts n
+	n = n.gsub("/","%2F")
+	puts n
+	puts 'processing completed..'
+	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
