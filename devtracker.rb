@@ -960,6 +960,8 @@ end
 
 get '/downloadCSV/:proj_id/:transaction_type?' do
 	projID = sanitize_input(params[:proj_id],"p")
+	project = get_h1_project_details(projID)
+	projID = project['iati_identifier']
 	transactionType = sanitize_input(params[:transaction_type],"p")
 	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
 	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
@@ -975,6 +977,8 @@ end
 
 get '/downloadLocationDataCSV/:proj_id?' do
 	projID = sanitize_input(params[:proj_id],"p")
+	project = get_h1_project_details(projID)
+	projID = project['iati_identifier']
 	locationData = location_data_for_csv(projID)
 	content_type 'text/csv'
 	attachment "Export-locations-"+projID+".csv"
