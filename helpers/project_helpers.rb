@@ -10,7 +10,12 @@ module ProjectHelpers
 
     def check_if_project_exists(projectId)
         begin
-            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+            if projectId.match(/^[0-9]+$/)
+                puts 'I am here'
+                oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=reporting_organisation,id,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations"
+            else
+                oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+            end
         rescue => e
             halt 404, "Activity not found"
         end
@@ -18,11 +23,19 @@ module ProjectHelpers
     end
 
     def get_h1_project_details(projectId)
-        oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
-        project = JSON.parse(oipa)
-        project['document_links'] = get_h1_project_document_details(projectId,project)
-        #project['local_document_links'] = get_document_links_local(projectId)
-        project
+        if projectId.match(/^[0-9]+$/)
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activities,activity_dates,participating_organisations,default_currency,activity_plus_child_aggregation,locations,document_links,contact_info,id,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations"
+            project = JSON.parse(oipa)
+            project['document_links'] = get_h1_project_document_details(project['iati_identifier'],project)
+            #project['local_document_links'] = get_document_links_local(projectId)
+            project
+        else
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+            project = JSON.parse(oipa)
+            project['document_links'] = get_h1_project_document_details(projectId,project)
+            #project['local_document_links'] = get_document_links_local(projectId)
+            project
+        end
     end
     
     def get_funded_by_organisations(project)
@@ -191,6 +204,8 @@ module ProjectHelpers
     end
 
     def get_transaction_details(projectId,transactionType)
+        puts 'checking projectid'
+        puts projectId
         if is_dfid_project(projectId) then
             #oipa v2.2
             #oipaTransactionsJSON = RestClient.get settings.oipa_api_url + "transactions/?format=json&activity_related_activity_id=#{projectId}&page_size=400&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"

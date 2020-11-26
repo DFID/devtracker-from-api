@@ -102,7 +102,7 @@
                     <h3>    
                         <%unless project['iati_identifier'].nil? %>
                             <!-- <a href="/projects/<%#= project['iati_identifier'].gsub(/\s+/, '').gsub(/\//, '-').gsub(/&/,'-') %>"> -->
-                            <a href="/projects/<%= project['iati_identifier'].dump %>">
+                            <a href="/projects/<%= project['id'] %>">
                             <%unless project['title']['narratives'].nil? %>
                                 <%unless project['title']['narratives'][0]['text'].nil? %>
                                     <%=project['title']['narratives'][0]['text']%>

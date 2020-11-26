@@ -53,12 +53,12 @@ include RegionHelpers
 include RecaptchaHelper
 
 # Developer Machine: set global settings
- set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -342,38 +342,31 @@ end
 #####################################################################
 
 # Project summary page
-#get '/projects/:proj_id/?' do |n|
-get '/projects/*' do
-	puts 'processing....'
-	n = params[:splat].first
-	n = n.dump
-	puts n
-	n = n.gsub("/","%2F")
-	puts n
-	puts 'processing completed..'
+get '/projects/:proj_id/?' do |n|
 	#n = sanitize_input(n,"p")
+
 	check_if_project_exists(n)
 	# get the project data from the API
-  	project = get_h1_project_details(n)
-  	participatingOrgList = get_participating_organisations(project)
+	project = get_h1_project_details(n)
+	participatingOrgList = get_participating_organisations(project)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region(project['iati_identifier'])
 
   	#get total project budget and spend Data
   	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
   	
-  	projectSectorGraphData = get_project_sector_graph_data(n)
+  	projectSectorGraphData = get_project_sector_graph_data(project['iati_identifier'])
 	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
 	#Policy markers
 	begin
-		getPolicyMarkers = get_policy_markers(n)
+		getPolicyMarkers = get_policy_markers(project['iati_identifier'])
 	rescue
 		getPolicyMarkers = Array.new
 	end
@@ -397,7 +390,7 @@ get '/projects/*' do
  			participatingOrgList: participatingOrgList,
  			policyMarkers: getPolicyMarkers,
  			policyMarkersCount: policyMarkerCount,
- 			mapMarkers: getProjectMapMarkers(n)
+ 			mapMarkers: getProjectMapMarkers(project['iati_identifier'])
  		}
 end
 
@@ -408,13 +401,13 @@ get '/projects/:proj_id/documents/?' do |n|
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region(project['iati_identifier'])
 
   	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -436,37 +429,37 @@ get '/projects/:proj_id/transactions/?' do |n|
 	componentData = get_project_component_data(project)
 		
 	# get the transactions from the API
-  	incomingFunds = get_transaction_details(n,"1")
+  	incomingFunds = get_transaction_details(project['iati_identifier'],"1")
 
   	# get the incomingFund transactions from the API
-  	commitments = get_transaction_details(n,"2")
+  	commitments = get_transaction_details(project['iati_identifier'],"2")
 
   	# get the disbursement transactions from the API
-  	disbursements = get_transaction_details(n,"3")
+  	disbursements = get_transaction_details(project['iati_identifier'],"3")
 
   	# get the expenditure transactions from the API
-  	expenditures = get_transaction_details(n,"4")
+  	expenditures = get_transaction_details(project['iati_identifier'],"4")
 
   	# get the Interest Repayment transactions from the API
-  	interestRepayment = get_transaction_details(n,"5")
+  	interestRepayment = get_transaction_details(project['iati_identifier'],"5")
 
   	# get the Loan Repayment transactions from the API
-  	loanRepayment = get_transaction_details(n,"6")
+  	loanRepayment = get_transaction_details(project['iati_identifier'],"6")
 
   	# get the Purchase of Equity transactions from the API
-  	purchaseEquity = get_transaction_details(n,"8")
+  	purchaseEquity = get_transaction_details(project['iati_identifier'],"8")
 
   	# get yearly budget for H1 Activity from the API
-	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	projectYearWiseBudgets= get_project_yearwise_budget(project['iati_identifier'])
 
 	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region(project['iati_identifier'])
 
     # get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -496,14 +489,14 @@ get '/projects/:proj_id/partners/?' do |n|
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	countryOrRegion = get_country_or_region(project['iati_identifier'])
 
   	# get the funding projects from the API
-  	fundingProjectsData = get_funding_project_details(n)
+  	fundingProjectsData = get_funding_project_details(project['iati_identifier'])
   	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n)
+	fundedProjectsData = get_funded_project_details(project['iati_identifier'])
 
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
@@ -1167,13 +1160,13 @@ get '/rss/country/:country_code/?' do |n|
 	    maker.channel.updated = Time.now.to_s
 	    maker.channel.about = "A breakdown of all the projects that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
 	    maker.channel.title = "FCDO projects feed for #{countryName[:name]}"
-	    maker.channel.link = "http://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
+	    maker.channel.link = "https://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
 
 	    projects.each do |project|
 	      maker.items.new_item do |item|
 	        #convert lastUpdatedDatetime to UTC
 	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
-	        item.link = "http://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
+	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + project['id'] + "/"
 	        item.title = project['title']['narratives'][0]['text']
 	        item.description = project['descriptions'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
 	        item.updated = lastUpdatedDateTimeUtc

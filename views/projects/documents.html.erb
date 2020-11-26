@@ -23,6 +23,9 @@
                   <%begin%>
                     <%
                     t_url = document['url']
+                    if t_url.include? "http://iati.fcdo."
+                      t_url = t_url.sub! 'http:', 'https:'
+                    end
                     t_url_txt = document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '')
                     t_code = document['title']['narratives'][0]['language']['code']
                     t_title = document['title']['narratives'][0]['language']['name']
