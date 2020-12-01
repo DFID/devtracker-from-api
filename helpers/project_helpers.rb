@@ -26,6 +26,11 @@ module ProjectHelpers
         if projectId.match(/^[0-9]+$/)
             oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activities,activity_dates,participating_organisations,default_currency,activity_plus_child_aggregation,locations,document_links,contact_info,id,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations"
             project = JSON.parse(oipa)
+            #Handle percentage inside the project identifier
+             project['iati_identifier'] = project['iati_identifier'].gsub('%', '')
+             project['iati_identifier'] = project['iati_identifier'].gsub(' ', '%20')
+            #project['iati_identifier'] = CGI.escape project['iati_identifier']
+            puts project['iati_identifier']
             project['document_links'] = get_h1_project_document_details(project['iati_identifier'],project)
             #project['local_document_links'] = get_document_links_local(projectId)
             project
@@ -143,7 +148,7 @@ module ProjectHelpers
     end
 
     def get_funded_project_details(projectId)
-        activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+        activityDetails = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activities,"
         activityDetails = JSON.parse(activityDetails)
         activityDetails = activityDetails['related_activities']
         projectIdentifierList = projectId + ','
@@ -927,7 +932,7 @@ module ProjectHelpers
 
     #Get a list of map markers for visualisation for project
     def getProjectMapMarkers(projectId)
-        rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json")
+        rawMapMarkers = JSON.parse(RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=policy_markers,title,locations")
         begin
             projectTitle = rawMapMarkers['title']['narratives'][0]['text']
         rescue

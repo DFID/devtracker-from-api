@@ -176,7 +176,7 @@ module CountryHelpers
       # else
       #    countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
       # end
-      countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
+      countryOrRegionAPI = RestClient.get settings.oipa_api_url + "activities/?id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500"
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
       data = countryOrRegionData['results']
       data.each do |d|
