@@ -378,11 +378,11 @@ end
     maker.channel.updated = Time.now.to_s
     maker.channel.about = "A breakdown of all the projects that have changed for #{country['name']} on Devtracker in reverse chronological order"
     maker.channel.title = "FCDO projects feed for #{country['name']}"
-    maker.channel.link = "http://devtracker.fcdo.gov.uk/countries/#{country['code']}/projects/"
+    maker.channel.link = "https://devtracker.fcdo.gov.uk/countries/#{country['code']}/projects/"
 
     projects.each do |project|
       maker.items.new_item do |item|
-        item.link = "http://devtracker.fcdo.gov.uk/projects/#{project['iatiId']}/"
+        item.link = "https://devtracker.fcdo.gov.uk/projects/#{project['iatiId']}/"
         item.title = project["title"]
         item.description = project["description"] + " [Last updated: " + project["lastUpdatedDateTime"].to_s + "]"
         item.updated = project["lastUpdatedDateTime"]
@@ -400,11 +400,11 @@ rss = RSS::Maker.make("atom") do |maker|
   maker.channel.updated = Time.now.to_s
   maker.channel.about = "A breakdown of all the projects that have changed on Devtracker in reverse chronological order"
   maker.channel.title = "FCDO projects feed for all projects"
-  maker.channel.link = "http://devtracker.fcdo.gov.uk/location/country/"
+  maker.channel.link = "https://devtracker.fcdo.gov.uk/location/country/"
 
   projects.each do |project|
     maker.items.new_item do |item|
-      item.link = "http://devtracker.fcdo.gov.uk/projects/#{project['iatiId']}/"
+      item.link = "https://devtracker.fcdo.gov.uk/projects/#{project['iatiId']}/"
       item.title = project["title"]
       item.description = project["description"] + " [Last updated: " + project["lastUpdatedDateTime"].to_s + "]"
       item.updated = project["lastUpdatedDateTime"]

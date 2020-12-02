@@ -9,7 +9,7 @@ The Development Tracker (often just called DevTracker) is a public web platform 
 
 Users are members of the public, journalists, researchers, civil society organisations, politicians, officials in the UK, in other donor countries and in countries where the UK supplies official development assistance.
 
-DevTracker uses open data published by the UK Government and its partners in the [International Aid Transparency Initiative](http://iatistandard.org) (IATI) format. The IATI format is an XML-based international data standard and therefore requires some manipulation to make it readable by non-technical people. That is what DevTracker attempts to do.
+DevTracker uses open data published by the UK Government and its partners in the [International Aid Transparency Initiative](https://iatistandard.org) (IATI) format. The IATI format is an XML-based international data standard and therefore requires some manipulation to make it readable by non-technical people. That is what DevTracker attempts to do.
 
 ## OIPA
 The open public API being used in the [OIPA API](https://www.oipa.nl/home) built by [Zimmerman & Zimmerman] (https://www.zimmermanzimmerman.nl/).
