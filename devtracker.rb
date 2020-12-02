@@ -1159,13 +1159,13 @@ get '/rss/country/:country_code/?' do |n|
 	    maker.channel.updated = Time.now.to_s
 	    maker.channel.about = "A breakdown of all the projects that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
 	    maker.channel.title = "FCDO projects feed for #{countryName[:name]}"
-	    maker.channel.link = "http://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
+	    maker.channel.link = "https://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
 
 	    projects.each do |project|
 	      maker.items.new_item do |item|
 	        #convert lastUpdatedDatetime to UTC
 	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
-	        item.link = "http://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
+	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
 	        item.title = project['title']['narratives'][0]['text']
 	        item.description = project['descriptions'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
 	        item.updated = lastUpdatedDateTimeUtc
