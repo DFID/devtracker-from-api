@@ -719,7 +719,8 @@ end
 
 get '/search/?' do
 	countryAllProjectFilters = get_static_filter_list()
-	query = sanitize_input(params['query'],"a")
+	#query = sanitize_input(params['query'],"a")
+	query = params['query']
 	includeClosed = sanitize_input(params['includeClosed'],"a")
 	activityStatusList = ''
 	if(includeClosed == "1") then 

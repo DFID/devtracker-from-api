@@ -24,7 +24,8 @@ module ProjectHelpers
 
     def get_h1_project_details(projectId)
         if projectId.match(/^[0-9]+$/)
-            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activities,activity_dates,participating_organisations,default_currency,activity_plus_child_aggregation,locations,document_links,contact_info,id,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations"
+            #oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activities,activity_dates,participating_organisations,default_currency,activity_plus_child_aggregation,locations,document_links,contact_info,id,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations"
+            oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=id,url,iati_identifier,reporting_organisation,title,descriptions,participating_organisations,other_identifier,activity_status,budget_not_provided,activity_dates,contact_info,activity_scope,recipient_countries,recipient_regions,locations,sectors,tags,country_budget_items,humanitarian,humanitarian_scope,policy_markers,collaboration_type,default_flow_type,default_finance_type,default_aid_type,default_tied_status,budgets,planned_disbursements,capital_spend,transactions,document_links,related_activities,legacy_data,conditions,results,crs_add,fss,last_updated_datetime,xml_lang,default_currency,hierarchy,linked_data_uri,activity_plus_child_aggregation,dataset,publisher,published_state,transaction_types"
             project = JSON.parse(oipa)
             #Handle percentage inside the project identifier
              project['iati_identifier'] = project['iati_identifier'].gsub('%', '')
