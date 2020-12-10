@@ -72,8 +72,8 @@ Money.locale_backend = :i18n
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
-
+#set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777'
+set :goverment_department_ids, 'GB-GOV-1,GB-GOV-13'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -134,7 +134,9 @@ get '/countries/:country_code/?' do |n|
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
 	countryBudgetBarGraphData = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	#countryBudgetBarGraphDataD = budgetBarGraphDataD("http://d-portal.org/dquery?sql=SELECT%20reporting_ref%20as%20reporting_organisation%20%2C%20EXTRACT(QUARTER%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_quarter%2C%20EXTRACT(YEAR%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_year%20%2C%20SUM(budget_gbp)%20AS%20value%20FROM%20act%20JOIN%20budget%20USING%20(aid)%20WHERE%20reporting_ref%20in%20(%27GB-GOV-15%27%2C%27GB-GOV-9%27%2C%27GB-GOV-6%27%2C%27GB-GOV-2%27%2C%27GB-GOV-1%27%2C%27GB-1%27%2C%27GB-GOV-3%27%2C%27GB-GOV-13%27%2C%27GB-GOV-7%27%2C%27GB-GOV-50%27%2C%27GB-GOV-52%27%2C%27GB-6%27%2C%27GB-10%27%2C%27GB-GOV-10%27%2C%27GB-9%27%2C%27GB-GOV-8%27%2C%27GB-GOV-5%27%2C%27GB-GOV-12%27%2C%27GB-COH-RC000346%27%2C%27GB-COH-03877777%27)%20AND%20flags%20%3D%200%20AND%20budget_priority%20%3D%201%20AND%20budget_country%20%3D%20%27#{n}%27%20GROUP%20BY%20budget_period_start_quarter%2C%20budget_period_start_year%2Cbudget_country%2Creporting_ref")
+	countryBudgetBarGraphDataD = budgetBarGraphDataD("http://d-portal.org/dquery?sql=SELECT%20reporting_ref%20as%20reporting_organisation%20%2C%20EXTRACT(QUARTER%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_quarter%2C%20EXTRACT(YEAR%20FROM%20TO_TIMESTAMP(budget_day_start*24*60*60.0))%20as%20budget_period_start_year%20%2C%20SUM(budget_gbp)%20AS%20value%20FROM%20act%20JOIN%20budget%20USING%20(aid)%20WHERE%20reporting_ref%20in%20(%27GB-GOV-15%27%2C%27GB-GOV-9%27%2C%27GB-GOV-6%27%2C%27GB-GOV-2%27%2C%27GB-GOV-1%27%2C%27GB-1%27%2C%27GB-GOV-3%27%2C%27GB-GOV-13%27%2C%27GB-GOV-7%27%2C%27GB-GOV-50%27%2C%27GB-GOV-52%27%2C%27GB-6%27%2C%27GB-10%27%2C%27GB-GOV-10%27%2C%27GB-9%27%2C%27GB-GOV-8%27%2C%27GB-GOV-5%27%2C%27GB-GOV-12%27%2C%27GB-COH-RC000346%27%2C%27GB-COH-03877777%27)%20AND%20flags%20%3D%200%20AND%20budget_priority%20%3D%201%20AND%20budget_country%20%3D%20%27#{n}%27%20GROUP%20BY%20budget_period_start_quarter%2C%20budget_period_start_year%2Cbudget_country%2Creporting_ref", "e")
+	countryBudgetBarGraphDataSplit = budgetBarGraphDataD("https://devtracker.fcdo.gov.uk/api/budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
+	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD("https://devtracker-staging.oipa.nl/api/budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
@@ -153,9 +155,15 @@ get '/countries/:country_code/?' do |n|
 			chartDataRepOrgs: countryBudgetBarGraphData[0],
 			chartDataFinYears: countryBudgetBarGraphData[1],
 			chartDataColumnData: countryBudgetBarGraphData[2],
-			# chartDataRepOrgsD: countryBudgetBarGraphDataD[0],
-			# chartDataFinYearsD: countryBudgetBarGraphDataD[1],
-			# chartDataColumnDataD: countryBudgetBarGraphDataD[2]
+			chartDataRepOrgsD: countryBudgetBarGraphDataD[0],
+			chartDataFinYearsD: countryBudgetBarGraphDataD[1],
+			chartDataColumnDataD: countryBudgetBarGraphDataD[2],
+			chartDataRepOrgsSplit: countryBudgetBarGraphDataSplit[0],
+			chartDataFinYearsSplit: countryBudgetBarGraphDataSplit[1],
+			chartDataColumnDataSplit: countryBudgetBarGraphDataSplit[2],
+			chartDataRepOrgsSplit2: countryBudgetBarGraphDataSplit2[0],
+			chartDataFinYearsSplit2: countryBudgetBarGraphDataSplit2[1],
+			chartDataColumnDataSplit2: countryBudgetBarGraphDataSplit2[2],
  		}
 end
 
