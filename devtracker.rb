@@ -344,7 +344,6 @@ end
 # Project summary page
 get '/projects/:proj_id/?' do |n|
 	#n = sanitize_input(n,"p")
-	puts '12965065'
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -359,11 +358,19 @@ get '/projects/:proj_id/?' do |n|
   	#get project sectorwise graph  data
   	
   	projectSectorGraphData = get_project_sector_graph_data(project['iati_identifier'])
-	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(project['id'])
+	  if is_dfid_project(project['iati_identifier'])
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
-	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(project['id']).length
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
+	else
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['id'])
+
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['id']).length
+	end
 	#Policy markers
 	begin
 		getPolicyMarkers = get_policy_markers(project['iati_identifier'])
@@ -403,11 +410,19 @@ get '/projects/:proj_id/documents/?' do |n|
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(project['id'])
 
-  	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(project['id'])
+  	if is_dfid_project(project['iati_identifier'])
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
-	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(project['id']).length
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
+	else
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['id'])
+
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['id']).length
+	end
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -429,37 +444,45 @@ get '/projects/:proj_id/transactions/?' do |n|
 	componentData = get_project_component_data(project)
 		
 	# get the transactions from the API
-  	incomingFunds = get_transaction_details(project['iati_identifier'],"1")
+  	incomingFunds = get_transaction_details(project['iati_identifier'],project['id'],"1")
 
   	# get the incomingFund transactions from the API
-  	commitments = get_transaction_details(project['iati_identifier'],"2")
+  	commitments = get_transaction_details(project['iati_identifier'],project['id'],"2")
 
   	# get the disbursement transactions from the API
-  	disbursements = get_transaction_details(project['iati_identifier'],"3")
+  	disbursements = get_transaction_details(project['iati_identifier'],project['id'],"3")
 
   	# get the expenditure transactions from the API
-  	expenditures = get_transaction_details(project['iati_identifier'],"4")
+  	expenditures = get_transaction_details(project['iati_identifier'],project['id'],"4")
 
   	# get the Interest Repayment transactions from the API
-  	interestRepayment = get_transaction_details(project['iati_identifier'],"5")
+  	interestRepayment = get_transaction_details(project['iati_identifier'],project['id'],"5")
 
   	# get the Loan Repayment transactions from the API
-  	loanRepayment = get_transaction_details(project['iati_identifier'],"6")
+  	loanRepayment = get_transaction_details(project['iati_identifier'],project['id'],"6")
 
   	# get the Purchase of Equity transactions from the API
-  	purchaseEquity = get_transaction_details(project['iati_identifier'],"8")
+  	purchaseEquity = get_transaction_details(project['iati_identifier'],project['id'],"8")
 
   	# get yearly budget for H1 Activity from the API
-	projectYearWiseBudgets= get_project_yearwise_budget(project['iati_identifier'])
+	projectYearWiseBudgets= get_project_yearwise_budget(project['iati_identifier'],project['id'])
 
 	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(project['id'])
 
-    # get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(project['id'])
+	if is_dfid_project(project['iati_identifier'])
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['iati_identifier'])
 
-	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(project['id']).length
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['iati_identifier']).length
+	else
+		# get the funding projects Count from the API
+		fundingProjectsCount = get_funding_project_count(project['id'])
+
+		# get the funded projects Count from the API
+		fundedProjectsCount = get_funded_project_details(project['id']).length
+	end
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -487,16 +510,20 @@ get '/projects/:proj_id/partners/?' do |n|
 	# get the project data from the API
 	n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
-
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(project['id'])
 
-  	# get the funding projects from the API
-  	fundingProjectsData = get_funding_project_details(project['iati_identifier'])
-  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
-
-	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(project['id'])
+	if is_dfid_project(project['iati_identifier'])
+		# get the funding projects from the API
+		fundingProjectsData = get_funding_project_details(project['iati_identifier'])
+		# get the funded projects from the API
+		fundedProjectsData = get_funded_project_details(project['iati_identifier'])
+	else
+		fundingProjectsData = get_funding_project_details(project['id'])
+		fundedProjectsData = get_funded_project_details(project['id'])
+	end
+	# Process funding projects
+	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }
 
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 

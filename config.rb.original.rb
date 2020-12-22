@@ -400,7 +400,7 @@ rss = RSS::Maker.make("atom") do |maker|
   maker.channel.updated = Time.now.to_s
   maker.channel.about = "A breakdown of all the projects that have changed on Devtracker in reverse chronological order"
   maker.channel.title = "FCDO projects feed for all projects"
-  maker.channel.link = "http://devtracker.fcdo.gov.uk/location/country/"
+  maker.channel.link = "https://devtracker.fcdo.gov.uk/location/country/"
 
   projects.each do |project|
     maker.items.new_item do |item|
