@@ -38,14 +38,20 @@
             {
                 "name": "text",
                 "type": "string",
-                "required": false,
-                "description": "Text of the navigation item."
+                "required": true,
+                "description": "Text for the navigation item. If `html` is provided, the `text` argument will be ignored."
+            },
+            {
+                "name": "html",
+                "type": "string",
+                "required": true,
+                "description": "HTML for the navigation item. If `html` is provided, the `text` argument will be ignored."
             },
             {
                 "name": "href",
                 "type": "string",
                 "required": false,
-                "description": "Url of the navigation item anchor. Both `href` and `text` attributes for navigation items need to be provided to create an item."
+                "description": "Url of the navigation item anchor."
             },
             {
                 "name": "active",
@@ -66,6 +72,18 @@
         "type": "string",
         "required": false,
         "description": "Classes for the navigation section of the header."
+    },
+    {
+        "name": "navigationLabel",
+        "type": "string",
+        "required": false,
+        "description": "Text for the `aria-label` attribute of the navigation. Defaults to \"Navigation menu\"."
+    },
+    {
+        "name": "menuButtonLabel",
+        "type": "string",
+        "required": false,
+        "description": "Text for the `aria-label` attribute of the button that toggles the navigation. Defaults to \"Show or hide navigation menu\"."
     },
     {
         "name": "containerClasses",
