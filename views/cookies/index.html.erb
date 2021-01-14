@@ -18,22 +18,71 @@ title: Development Tracker
     </div>
 </div>
 <div class="row cookies">
-  <div class="twelve columns">
-    <p>We sometimes place small data files on your computer. These are known as cookies. Most websites do this.</p>
-    <p>They improve things by:</p>
-    <ul>
-        <li>remembering settings, so you don’t have to keep re-entering them whenever you visit a new page</li>
-        <li>remembering information you’ve given (eg your postcode) so you don’t need to keep entering it</li>
-        <li>measuring how you use the website so we can make sure it meets your needs</li>
-    </ul>
-    <p>Our cookies aren’t used to identify you personally. They’re just here to make the site work better for you. Indeed, you can manage and/or delete these small files as you wish.</p>
-    <p>To learn more about cookies and how to manage them, visit AboutCookies.org. Or please read on to find out more about how and where we use cookies.</p>
-    <h4>How we use cookies</h4>
-    <p>The Development Tracker uses cookies – we’ve listed each of them below with more details about why we use them and how long they will last.</p>
-    <p>In most cases, we will let you know before we store a cookie on your computer by providing a message similar to this: sets a cookie.</p>
-    <h4>First-party cookies</h4>
-    <p>Website analytic providers such as Google Analytics set cookies to help accurately estimate the number of visitors to the website and volumes of usage.</p>
-  </div>
+    <div class="twelve columns">
+        <h4>Cookies on DEVTRACKER.FCDO.GOV.UK</h4>
+        <p>Cookies are files saved on your phone, tablet or computer when you visit a website.</p>
+        <p>We use cookies to store information about how you use the devtracker.fcdo.gov.uk website, such as the pages you visit.</p>
+        <h4>Cookie Settings</h4>
+        <p>We use one type of cookie. Please read on to find out more about how and where we use cookies.</p>
+        <h4>Cookies that measure website use</h4>
+        <p>We use Google Analytics and SiteImprove to measure how you use the website so we can improve it based on user needs. Google Analytics and SiteImprove set cookies that store anonymised information about:</p>
+        <ul>
+            <li>How you got to the site</li>
+            <li>The pages you visit on devtracker.fcdo.gov.uk and how long you spend on each page</li>
+            <li>What you click on while you are visiting the site</li>
+            <li>The way in which you interact with a page</li>
+        </ul>
+        <p>We do not allow Google or SiteImprove to use or share the data about how you use this site.</p>
+        <div id="cookieDiv2" style="display: none;">
+            <input value="1" type="radio" name="cookieState" id="c1">
+            <label style="display: inline;" for="c1">On</label>
+            <input value="0" type="radio" name="cookieState" id="c2">
+            <label style="display: inline;" for="c2">Off</label>
+        </div>
+    </div>
 </div>
 
+<script>
+    $(document).ready(function(){
+        function clearCookies2(){
+            var cookies = document.cookie.split("; ");
+            for (var c = 0; c < cookies.length; c++) {
+                var d = window.location.hostname.split(".");
+                while (d.length > 0) {
+                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                    var p = location.pathname.split('/');
+                    document.cookie = cookieBase + '/';
+                    while (p.length > 0) {
+                        document.cookie = cookieBase + p.join('/');
+                        p.pop();
+                    };
+                    d.shift();
+                }
+            }
+            Cookies.set('accept_cookie', 0, { expires: 90 });
+        };
 
+        function setCookie2(){
+            Cookies.set('accept_cookie', 1, { expires: 90 });
+            $.getScript("/javascripts/analytics.js")
+        }
+
+        if(Cookies.get('accept_cookie')){
+            if(Cookies.get('accept_cookie') == 0){
+                $('#c2').attr('checked',  true);
+            }
+            else if(Cookies.get('accept_cookie') == 1){
+                $('#c1').attr('checked',  true);
+            }
+        }
+        $('#cookieDiv2').show();
+        $('#c1').click(function(){
+            $('#c2').attr('checked',  false);
+            setCookie2();
+        });
+        $('#c2').click(function(){
+            $('#c1').attr('checked',  false);
+            clearCookies2();
+        });
+    });
+</script>
