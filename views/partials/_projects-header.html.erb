@@ -93,7 +93,7 @@
 <div class="row">
     <div class="twelve columns">
         <% if(!is_dfid_project(project['iati_identifier'])) %>
-        <div class="govuk-inset-text">
+        <div class="govuk-inset-text" style="font-size: 14px;">
           <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project['reporting_organisation']['narratives'][0]['text'] || "" %></strong>. 
              <% if (!project['contact_info'][0].nil? && project['contact_info'][0]['email'].length > 0) %>
                 Please contact them (<span id='showEmail' style='color: blue; cursor: pointer'>Show Email Address</span>) if you have any questions about their data.
