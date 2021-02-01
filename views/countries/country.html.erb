@@ -227,7 +227,7 @@
             </div>
             <p>Project budget total by year approved at the project level to date.</p>
          </div>
-         <div id="budget-year-chart" style="height: 300px; width: 100%;" class="row"></div>
+         <div id="budget-year-chart5" style="height: 300px; width: 100%;" class="row"></div>
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
          <div class="row">
             <div style="text-align: center" class="six columns">
@@ -241,6 +241,18 @@
                 <!-- <p><strong>FCDO Total</strong></p> -->
             </div>
          </div>
+    </div>
+    <div class="twelve columnns">
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Help with Sector and Budget Figures
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                Please note that although budgets are generally split by year, some departments publish budgets that span multiple years. these are represented in the first year of their allocation. Cross-government allocations such as prosperity Fund and Conflict, Stability and Security Fund are known to duplicate budgets published by other departments, as well as using multi-year budgets.
+            </div>
+        </details>
     </div>
 </div>
 
@@ -353,58 +365,13 @@
         <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
             
             var yTicks = [];
-            var chart = c3.generate({
-                bindto: '#budget-year-chart',
-                legend: {
-                    show: true
-                },
-                tooltip: {
-                    format: {
-                        value: function(value){
-                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        }
-                    }
-                },
-                bar: {
-                    width: {
-                        ratio: .5
-                    }
-                },
-                data: {
-                    x: 'x',
-                    columns: [
-                        ['x', <%= countryYearWiseBudgets[0] %>],
-                        ['Project Budget', <%= countryYearWiseBudgets[1] %>]
-                    ],
-                    type: 'bar'
-                },
-                color: {    
-                    pattern: ['#1d70b8']    
-                },
-                axis: {
-                    x: {
-                        type: 'category',
-                        show: true
-                    },
-                    y: {
-                        tick: {
-                            format: function(d){
-                                yTicks.push(d3.format(".2s")(d));
-                                return "£" + d3.format(".2s")(d);
-                            }
-                        }
-                    }
-                }
-            });
 
-
-
-            var chartv3 = c3.generate({
-                bindto: '#budget-year-chart2',
+            var chartv5 = c3.generate({
+                bindto: '#budget-year-chart5',
               data: {
-                columns: <%= chartDataColumnData %>,
+                columns: <%= chartDataColumnDataSplit2 %>,
                 type: 'bar',
-                groups: [<%= chartDataRepOrgs %>],
+                groups: [<%= chartDataRepOrgsSplit2 %>],
               },
               color: {
                 pattern: colors
@@ -422,7 +389,7 @@
               axis: { 
                 x: {
                 type: 'category',
-                categories: <%= chartDataFinYears %>,
+                categories: <%= chartDataFinYearsSplit2 %>,
               },
               y: {
                         tick: {
@@ -433,45 +400,8 @@
                             } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
                         },
                     }
-            },
+                },
             });
-
-            // var chartv4 = c3.generate({
-            //     bindto: '#budget-year-chart2',
-            //   data: {
-            //     columns: <%#= chartDataColumnDataD %>,
-            //     type: 'bar',
-            //     groups: [<%#= chartDataRepOrgsD %>],
-            //   },
-            //   color: {
-            //     pattern: colors
-            //   },
-            //   tooltip: {
-            //         format: {
-            //             /*value: function(value){
-            //                 return value;
-            //             }*/
-            //             value: function(value){
-            //                 return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            //             }
-            //         }
-            //     },
-            //   axis: { 
-            //     x: {
-            //     type: 'category',
-            //     categories: <%#= chartDataFinYearsD %>,
-            //   },
-            //   y: {
-            //             tick: {
-            //                 //count: 6,
-            //                 format: function(d){ 
-            //                     yTicks.push(d3.format(".2s")(d)); 
-            //                     return "£" + d3.format(".2s")(d);
-            //                 } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
-            //             },
-            //         }
-            // },
-            // });
             /*This code is for generating the grid line values for the bar chart*/
             var tempString = [];
             yTicks.pop();

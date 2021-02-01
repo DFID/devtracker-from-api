@@ -312,8 +312,12 @@ module CountryHelpers
     data
   end
 
-  def budgetBarGraphDataD(apiLink)
-    tempInfo = get_reporting_orgWise_yearly_country_budgetsD(RestClient.get apiLink)
+  def budgetBarGraphDataD(apiLink, type)
+    if type == 'i'
+      tempInfo = get_reporting_orgWise_yearly_country_budgetsSplit(RestClient.get apiLink)  
+    else
+      tempInfo = get_reporting_orgWise_yearly_country_budgetsD(RestClient.get apiLink)
+    end
     reportingOrgList = []
     reportingOrgList = tempInfo.keys
     finYearList = []
@@ -410,6 +414,30 @@ module CountryHelpers
       tempData['budget_period_start_quarter'] = budget['budget_period_start_quarter']
       tempData['value'] = budget['value']
       reportingOrgWiseData[budget['reporting_organisation']].push(tempData)
+    end
+    reportingOrgWiseData.each do |key, value|
+      value = value.select {|val| !val['value'].nil?}
+      reportingOrgWiseData[key] = {}
+      reportingOrgWiseData[key] = financial_year_wise_budgets(value, 'C2')
+    end
+    reportingOrgWiseData
+  end
+
+  def get_reporting_orgWise_yearly_country_budgetsSplit(apiLink)
+    allBudgets = Oj.load(apiLink)
+    puts 'Data loading completed.'
+    puts allBudgets
+    reportingOrgWiseData = {}
+    allBudgets['results'].each do |budget|
+      puts budget
+      if(!reportingOrgWiseData.key?(budget['reporting_organisation']['organisation_identifier'].to_s))
+        reportingOrgWiseData[budget['reporting_organisation']['organisation_identifier']] = []
+      end
+      tempData = {}
+      tempData['budget_period_start_year'] = budget['budget_period_start_year']
+      tempData['budget_period_start_quarter'] = budget['budget_period_start_quarter']
+      tempData['value'] = budget['value']
+      reportingOrgWiseData[budget['reporting_organisation']['organisation_identifier']].push(tempData)
     end
     reportingOrgWiseData.each do |key, value|
       value = value.select {|val| !val['value'].nil?}

@@ -507,11 +507,11 @@ $(document).ready(function() {
                         $('.modal').hide();
                     });
                     if(window.searchType == 'F'){
-                        $('#showResults').html('<div class="govuk-inset-text">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
+                        $('#showResults').html('<div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
                         json = json.output;
                     }
                     else{
-                        $('#showResults').html('<div class="govuk-inset-text">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
+                        $('#showResults').html('<div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
                     }
                     
                     if (!isEmpty(json.next)){
@@ -695,11 +695,11 @@ $(document).ready(function() {
                 $('.modal').hide();
             });
             if(window.searchType == 'F'){
-                $('#showResults').html('<div class="govuk-inset-text">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
+                $('#showResults').html('<div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, either use the status filters or select the checkbox to search for completed projects.</div>');
                 json = json.output;
             }
             else{
-                $('#showResults').html('<div class="govuk-inset-text">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
+                $('#showResults').html('<div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>');
             }
 
             //$('#showResults').html('<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0.5em 0.7em 0em;"><p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>');

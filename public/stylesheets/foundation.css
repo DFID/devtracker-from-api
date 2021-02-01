@@ -2,7 +2,7 @@
 /* Global Reset & Standards ---------------------- */
 *, *:before, *:after { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 
-html { font-size: 62.5%; }
+/* html { font-size: 62.5%; } */
 
 body { background: white; font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; font-size: 14px; line-height: 1; color: #222222; position: relative; -webkit-font-smoothing: antialiased; }
 
