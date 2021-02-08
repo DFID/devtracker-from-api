@@ -21,3 +21,15 @@ gem 'rubygems-update'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'unicorn'
+
+group :development, :test do 
+  gem "ruby-debug-ide"
+
+  platform :jruby do
+    gem "ruby-debug-base"
+  end
+
+  platform :ruby do
+    gem "debase"
+  end
+end
