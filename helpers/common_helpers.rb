@@ -4,6 +4,13 @@ include ActionView::Helpers::NumberHelper
 
 module CommonHelpers
 
+  def api_simple_log(apiLink)
+    open('data/apiTelem/api_out.txt', 'a') do |f|
+      f.puts apiLink + "\n"
+    end
+    return apiLink
+  end
+
   def get_current_total_budget(apiLink)
       currentTotalBudget= JSON.parse(apiLink)
   end
@@ -339,9 +346,9 @@ module CommonHelpers
 
   def generate_project_page_data(apiList)
     allProjectsData = {}
-    oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
+    oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[0])
     allProjectsData['projects']= JSON.parse(oipa_project_list)
-    sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
+    sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[1])
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
     allProjectsData['project_budget_higher_bound'] = 0
     allProjectsData['actualStartDate'] = '1990-01-01T00:00:00' 
@@ -351,11 +358,11 @@ module CommonHelpers
     end
     # This part is for sorting the returned data based on actual start date. For now, this is applicable for country projects page only.
     if (apiList[0].include? "recipient_country")
-      oipa_project_list = RestClient.get settings.oipa_api_url + apiList[6]
+      oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[6])
       allProjectsData['projects']= JSON.parse(oipa_project_list)
     end
     begin
-      allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + apiList[2]
+      allProjectsData['actualStartDate'] = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[2])
       allProjectsData['actualStartDate'] = JSON.parse(allProjectsData['actualStartDate'])
       tempStartDate = allProjectsData['actualStartDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
       if (tempStartDate.nil?)
@@ -371,7 +378,7 @@ module CommonHelpers
     #  allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
     #end
     begin
-      allProjectsData['plannedEndDate'] = RestClient.get settings.oipa_api_url + apiList[3]
+      allProjectsData['plannedEndDate'] = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[3])
       allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
@@ -382,7 +389,7 @@ module CommonHelpers
     #unless allProjectsData['plannedEndDate']['results'][0].nil?
     #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
     #end
-    oipa_document_type_list = RestClient.get settings.oipa_api_url + apiList[4]
+    oipa_document_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[4])
     document_type_list = JSON.parse(oipa_document_type_list)
     allProjectsData['document_types'] = document_type_list['results']
 
@@ -390,7 +397,7 @@ module CommonHelpers
     #participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
     # Get the list of valid iati publisher identifiers
     iatiPublisherList = JSON.parse(File.read('data/iati_publishers_list.json'))
-    oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiList[5]
+    oipa_implementingOrg_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[5])
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
@@ -420,9 +427,9 @@ module CommonHelpers
 
     # Reporting org type filter preparation
     if (apiList[0].include? "recipient_country")
-      reportingOrgList = RestClient.get settings.oipa_api_url + apiList[7]
+      reportingOrgList = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[7])
     else
-      reportingOrgList = RestClient.get settings.oipa_api_url + apiList[6]
+      reportingOrgList = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[6])
     end
     reportingOrgList = JSON.parse(reportingOrgList)
     reportingOrgList = reportingOrgList['results']
@@ -467,7 +474,7 @@ module CommonHelpers
   #Return projects and budget higher bound information
   def generateProjectListWithBudgetHiBound(apiLink)
     allProjectsData = {}
-    oipa_project_list = RestClient.get settings.oipa_api_url + apiLink
+    oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     allProjectsData['projects']= JSON.parse(oipa_project_list)
     allProjectsData['project_budget_higher_bound'] = 0
     unless allProjectsData['projects']['results'][0].nil?
@@ -478,7 +485,7 @@ module CommonHelpers
 
   #Return budget higher bound information
   def generateBudgetHiBound(apiLink)
-    oipa_project_list = RestClient.get settings.oipa_api_url + apiLink
+    oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     oipa_project_list = JSON.parse(oipa_project_list)
     project_budget_higher_bound = 0
     unless oipa_project_list['results'][0].nil?
@@ -489,7 +496,7 @@ module CommonHelpers
 
   #Return High Level sector List
   def generateSectorList(apiLink)
-    sectorValuesJSON = RestClient.get settings.oipa_api_url + apiLink
+    sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     highLevelSectorList = high_level_sector_list_filter(sectorValuesJSON)
     highLevelSectorList = highLevelSectorList.sort_by {|key| key}
     highLevelSectorList
@@ -499,7 +506,7 @@ module CommonHelpers
   def generateProjectStartDate(apiLink)
     startDate = '1990-01-01T00:00:00'
     begin
-      tempStartDate = RestClient.get settings.oipa_api_url + apiLink
+      tempStartDate = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
       tempStartDate = JSON.parse(tempStartDate)
       tempStartDate = tempStartDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '2'}.first
       if (tempStartDate.nil?)
@@ -516,7 +523,7 @@ module CommonHelpers
   def generateProjectEndDate(apiLink)
     endDate = '2000-01-01T00:00:00'
     begin
-      tempEndDate = RestClient.get settings.oipa_api_url + apiLink
+      tempEndDate = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
       tempEndDate = JSON.parse(tempEndDate)
       tempEndDate = tempEndDate['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
       endDate = tempEndDate['iso_date']
@@ -528,7 +535,7 @@ module CommonHelpers
   
   #Return Document Type List
   def generateDocumentTypeList(apiLink)
-    oipa_document_type_list = RestClient.get settings.oipa_api_url + apiLink
+    oipa_document_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     document_type_list = JSON.parse(oipa_document_type_list)
     document_type_list = document_type_list['results']
     document_type_list = document_type_list.sort_by {|key| key["document_link_category"]["name"]}
@@ -538,7 +545,7 @@ module CommonHelpers
   #Return Implementing Org List
   def generateImplOrgList(apiLink)
     participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
-    oipa_implementingOrg_type_list = RestClient.get settings.oipa_api_url + apiLink
+    oipa_implementingOrg_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     implementingOrg_type_list = JSON.parse(oipa_implementingOrg_type_list)
     implementingOrg_type_list = implementingOrg_type_list['results']
     implementingOrg_type_list.each do |implementingOrgs|
@@ -557,7 +564,7 @@ module CommonHelpers
 
   #Return Reporting Org List
   def generateReportingOrgList(apiLink)
-    reportingOrgList = RestClient.get settings.oipa_api_url + apiLink
+    reportingOrgList = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     reportingOrgList = JSON.parse(reportingOrgList)
     reportingOrgList = reportingOrgList['results']
     finalReportingOrgList = Array.new
@@ -574,7 +581,7 @@ module CommonHelpers
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
     current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-    sectorBudgets = Oj.load(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}")
+    sectorBudgets = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}"))
     sectorHierarchies = Oj.load(File.read('data/sectorHierarchies.json'))
     sectorBudgets = sectorBudgets["results"]
     sectorBudgets = sectorBudgets.group_by{|key| key["recipient_country"]["code"]}
@@ -608,7 +615,7 @@ module CommonHelpers
 
   #Provide a list of dependent reporting organisations grouped by country code
   def generateReportingOrgsCountryWise()
-    oipa_reporting_orgs = RestClient.get settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2"
+    oipa_reporting_orgs = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2")
     oipa_reporting_orgs = Oj.load(oipa_reporting_orgs)
     oipa_reporting_orgs = oipa_reporting_orgs['results']
     countryHash = {}
