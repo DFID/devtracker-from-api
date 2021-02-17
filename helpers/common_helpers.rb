@@ -10,7 +10,8 @@ module CommonHelpers
       time = String(Time.now.iso8601)
       route = request.env['sinatra.route']
       stackstring = "[" + caller.map {|x| x =~ /devtracker/i ? x : nil}.reject!(&:nil?).join(",") + "]"
-      f.puts time + "\t" + route + "\t" + apiLink + "\t" + stackstring + "\n"
+      f.puts time + "\t" + route + "\t'" + apiLink + "'\t'" + stackstring + "'\n"
+      #f.puts time + "\t" + route + "\t'" + apiLink + "'\n"
     end
     return apiLink
   end
