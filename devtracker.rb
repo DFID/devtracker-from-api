@@ -38,6 +38,7 @@ require_relative 'helpers/search_helper.rb'
 require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
+require_relative 'helpers/solr_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -51,15 +52,16 @@ include SearchHelper
 include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
+include SolrHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+ set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -95,7 +97,7 @@ get '/' do  #homepage
   	settings.devtracker_page_title = ''
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
- 	erb :index,
+	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
@@ -747,6 +749,60 @@ get '/search/?' do
  		implementingOrgTypes: results['implementingOrg_types'],
  		reportingOrgTypes: results['reportingOrg_types']
 	}
+end
+
+
+get '/solr-search/?' do
+	#query = params['query']
+	query= 'development'
+	#results = generate_searched_data(query,activityStatusList)
+	filters = prepareFilters('q='+query.to_s)
+	response = solrResponse(query, filters, 'F', 0)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrSearch',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response
+	}
+end
+
+post '/solr-search/?' do
+	query = params['query']
+	#results = generate_searched_data(query,activityStatusList)
+	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
+	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrSearch',
+	:layout => :'layouts/layout',
+	:locals => {
+		oipa_api_url: settings.oipa_api_url,
+		:query => query,
+		includeClosed: includeClosed,
+		dfidCountryBudgets: didYouMeanData['dfidCountryBudgets'],
+		dfidRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		countryAllProjectFilters: countryAllProjectFilters,
+		projects: results['projects']['results'],
+		project_count: results['projects']['count'],
+		budgetHigherBound: results['project_budget_higher_bound'],
+		highLevelSectorList: results['highLevelSectorList'],
+		actualStartDate: results['actualStartDate'],
+ 		plannedEndDate: results['plannedEndDate'],
+ 		documentTypes: results['document_types'],
+ 		implementingOrgTypes: results['implementingOrg_types'],
+ 		reportingOrgTypes: results['reportingOrg_types']
+	}
+end
+
+post '/solr-reponse' do
+	query = params['query']
+	filters = params['filters']
+	searchType = params['searchType']
+	startPage = params['start']
+	response = solrResponse(query, filters, searchType, startPage)
+	json :output => response
 end
 
 #####################################################################

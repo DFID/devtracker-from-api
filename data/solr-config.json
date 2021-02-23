@@ -1,0 +1,44 @@
+{
+    "APILink": "https://iatidatastore.iatistandard.org/",
+    "DefaultFields": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag",
+    "searchLimit": 20,
+    "Filters": 
+    [
+        {
+            "title": "Sectors",
+            "field": "sector_code",
+            "url": "search/activity/?q=participating_org_ref:GB-*&facet=on&facet.field=sector_code&facet.limit=-1&facet.mincount=1",
+            "mappingFile": "sectorHierarchies.json"
+        },
+        {
+            "title": "Activity Status",
+            "field": "activity_status_code",
+            "url": "search/activity/?q=*:*&facet=on&facet.field=activity_status_code&facet.limit=-1&facet.mincount=1",
+            "mappingFile": "mappingSolrFilters/activity_status.json"
+        },
+        {
+            "title": "Implementing Organisations",
+            "field": "participating_org_ref",
+            "url": "search/activity/?q=participating_org_role:4&q=participating_org_ref:GB-*&facet=on&facet.field=participating_org_ref&facet.limit=-1&facet.mincount=1",
+            "mappingFile": "iati_publishers_list.json"
+        },
+        {
+            "title": "Activity Dates",
+            "field": "activity_date_iso_date",
+            "url": "search/activity/?q=*:*&facet=on&facet.field=activity_date_iso_date&facet.limit=-1&facet.mincount=1"
+        }
+    ],
+    "QueryCategories":
+    {
+        "F":
+        {
+            "url": "/search/activity/?q=participating_org_ref:GB-*",
+            "fieldDependency": ""
+        },
+        "C":
+        {
+            "url": "/search/activity/?q=participating_org_ref:GB-*",
+            "fieldDependency": "recipient_country_code"
+        }
+    }
+}
