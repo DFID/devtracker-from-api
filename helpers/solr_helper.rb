@@ -40,7 +40,7 @@ module SolrHelper
         end
     end
 
-    def prepareFilters(query)
+    def prepareFilters(query, queryType)
         solrConfig = Oj.load(File.read('data/solr-config.json'))
         apiLink = solrConfig['APILink']
         filters = solrConfig['Filters']
@@ -55,18 +55,32 @@ module SolrHelper
     def solrResponse(query, filters, queryType, startPage)
         solrConfig = Oj.load(File.read('data/solr-config.json'))
         apiLink = solrConfig['APILink']
+        mainQueryString = prepareQuery(query, queryType)
         # First we are going to handle the free text search under DevTracker. We are denoting this type of search with letter 'F'
         if(queryType == 'F')
             queryCategory = solrConfig['QueryCategories'][queryType]
             # Handing of filters
             # TO-DO
             preparedFilters = '' # For now, it's empty
-            if(queryCategory['fieldDependency'] == '')
-                mainQueryString = '&q=' + query.to_s
-            end
             # Get response based on the API responses
-            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['searchLimit'].to_s+'&fl='+solrConfig['DefaultFields']+'&start='+startPage.to_s+'&'+preparedFilters))
+            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['searchLimit'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s+'&'+preparedFilters))
             response['response']
         end
+    end
+
+    ## Method for preparing main search query
+    def prepareQuery(query, queryType)
+        mainQueryString = ' ('
+        solrConfig = Oj.load(File.read('data/solr-config.json'))
+        if(queryType == 'F')
+            queryCategory = solrConfig['QueryCategories'][queryType]
+            if(queryCategory['fieldDependency'] == '')
+                solrConfig['DefaultFieldsToSearch'].each do |fieldToBeSearched|
+                    mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" '
+                end
+                mainQueryString = mainQueryString + ')'
+            end
+        end
+        mainQueryString
     end
 end

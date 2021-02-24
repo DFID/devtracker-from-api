@@ -754,7 +754,7 @@ end
 
 get '/solr-search/?' do
 	#query = params['query']
-	query= 'GB-1-202035'
+	query= 'development'
 	#results = generate_searched_data(query,activityStatusList)
 	filters = prepareFilters('q='+query.to_s)
 	response = solrResponse(query, filters, 'F', 0)
