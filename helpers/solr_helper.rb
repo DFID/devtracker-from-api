@@ -2,7 +2,7 @@ module SolrHelper
 
     ## Filter handling driver goes below ##
     def filterDriver(filter, apiUrl)
-        case filter
+        case filter 
         when 'sector_code'
             # Write logic for this filter that will prepare the key value pairs
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
