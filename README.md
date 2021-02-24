@@ -19,4 +19,4 @@ The site is being developed using a Sinatra web framework and Ruby. To get start
 
 ## Local Development
 
-See [this page](docs/local_development.md) for details of running with vagrant and interactively debugging using VS Code. 
+See [this page](docs/local_development.md) for details of running with vagrant and interactively debugging using VS Code.
