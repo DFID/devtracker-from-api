@@ -754,7 +754,7 @@ end
 
 get '/solr-search/?' do
 	#query = params['query']
-	query= 'development'
+	query= 'GB-1-202035'
 	#results = generate_searched_data(query,activityStatusList)
 	filters = prepareFilters('q='+query.to_s)
 	response = solrResponse(query, filters, 'F', 0)
@@ -765,7 +765,8 @@ get '/solr-search/?' do
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
-		response: response
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
 	}
 end
 

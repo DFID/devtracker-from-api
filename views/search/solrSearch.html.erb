@@ -21,7 +21,7 @@
             <div class="row">
             <div class="twelve columns">
                 <div id="search-bar">
-                    <form id="mid-search-form" method="GET" action="/search">
+                    <form id="mid-search-form" method="POST" action="/solr-search">
                         <div class="row">
                             <div class="two columns">
                                 <label for="query">
@@ -54,7 +54,68 @@
     <script type="text/javascript" src="/javascripts/formatDate.js"></script>
     <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
     <% if response['numFound'] != 0 %>
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
+                        <h2 class="govuk-heading-m">Filters</h2>
+                        <div class="govuk-body">
+                            <div class="govuk-form-group">
+                                <%filters.each do |key, val|%>
+                                    <p>
+                                        <fieldset class="govuk-fieldset">
+                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                <h1 class="govuk-fieldset__heading">
+                                                    <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
+                                                </h1>
+                                            </legend>
+                                            <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
+                                                <%val.each do |item|%>
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                        <label class="govuk-label govuk-checkboxes__label">
+                                                            <%= item['key']%>
+                                                        </label>
+                                                    </div>
+                                                <%end%>
+                                            </div>
+                                            <input class="selectedFilters" type="hidden">
+                                        </fieldset>
+                                    </p>
+                                <%end%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-xl">Results</h2>
+                        <%response['docs'].each do |item|%>
+                            <p class="govuk-body">
+                                <div class="govuk-grid-row">
+                                    <h3 style="color: blue" class="govuk-heading"><%=item['title_narrative'].first%></h3>
+                                    <p style="color: grey" class="govuk-body">
+                                        <%=item['reporting_org_narrative'].first%>
+                                    </p>
+                                    <p class="govuk-body">
+                                        <%=item['description_narrative'].first%>
+                                    </p>
+                                    <p class="govuk-body">
+                                        <b>Project identifier:</b> <%=item['iati_identifier']%> <br />
+                                        <b>Start Date:</b> <%=item['activity_date_start_actual']%> <br />
+                                        <b>Activity Status:</b> <%=item['activity_status_code']%> <br />
+                                        <b>Total Budget:</b> Feature not yet implemented
+                                    </p>
+                                </div>
+                            </p>
+                            <br />
+                        <%end%>
+                    </div>
+                </div>
+
+            </main>
+            </div>
         <%=filters%>
+        <br/>
+        <br />
         <%=response%>
     <%else%>
         <div class="row">
@@ -72,3 +133,6 @@
     <%end%>
 </div>
 
+<script>
+
+</script>
