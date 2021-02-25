@@ -86,7 +86,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="govuk-grid-column-two-thirds">
+                    <div id="response-container" class="govuk-grid-column-two-thirds">
                         <h2 class="govuk-heading-xl">Results</h2>
                         <%response['docs'].each do |item|%>
                             <p class="govuk-body">
@@ -138,12 +138,45 @@
         <%filters.each do |key, val|%>
             <%if (val.length > 0)%>
                 $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
-                    $('.<%= key%>').children('.govuk-checkboxes__item').each(function(){
-                        console.log($(this).children('input[name=<%= key%>]:checked').val());
-                    });
-                    //$(this).parent().parent().children('.selectedFilters').val($(this).val());
+                    if($('input[name="<%= key%>"]:checked').length > 0) {
+                        var tempFilters = '<%=key%>:(';
+                        $('input[name="<%= key%>"]:checked').each(function(){
+                            tempFilters = tempFilters + this.value;
+                        });
+                        tempFilters = tempFilters + ')';
+                        console.log(tempFilters);
+                        $('.<%= key%>').children('.selectedFilters').val(tempFilters);
+                    }
+                    else {
+                        $('.<%= key%>').children('.selectedFilters').val('');
+                    }
+                    //get new set of results
+                    getFilteredResponse();
                 });
             <%end%>
         <%end%>
+        // Post filter changes to the server end and update page with response
+        function getFilteredResponse(){
+            var data = {};
+            data['query'] = '<%= query%>';
+            data['queryType'] = 'F';
+            data['page'] = 0;
+            data['filters'] = '';
+            <%filters.each do |key, val|%>
+                <%if (val.length > 0)%>
+                    data['filters'] = data['filters'] + ' ' + $('.<%= key%>').children('.selectedFilters').val();
+                <%end%>
+            <%end%>
+            $.post('/solr-response',{
+                data: data
+            })
+            .done(function(response){
+                var prepareContainer = '<h2 class="govuk-heading-xl">Results</h2>';
+                $.each(response.output.docs,function(i, result){
+                    prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading">' + result.title_narrative[0] + '</h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + result.activity_status_code + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
+                })
+                $('#response-container').html(prepareContainer);
+            });
+        }
     });
 </script>

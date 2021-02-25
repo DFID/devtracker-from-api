@@ -17,9 +17,9 @@ module SolrHelper
                         if source["Code (L3)"].to_s == value
                             if !highLevelSectorHash.has_key?(source["High Level Sector Description"].to_s)
                                 highLevelSectorHash[source["High Level Sector Description"].to_s] = {}
-                                highLevelSectorHash[source["High Level Sector Description"].to_s][0] = value.to_s + " OR "
+                                highLevelSectorHash[source["High Level Sector Description"].to_s][0] = value.to_s + " "
                             else
-                                highLevelSectorHash[source["High Level Sector Description"].to_s][0].concat(value.to_s + " OR ");
+                                highLevelSectorHash[source["High Level Sector Description"].to_s][0].concat(value.to_s + " ");
                             end
                         end
                     end
@@ -62,9 +62,10 @@ module SolrHelper
             queryCategory = solrConfig['QueryCategories'][queryType]
             # Handing of filters
             # TO-DO
-            preparedFilters = '' # For now, it's empty
+            preparedFilters = filters # For now, it's empty
+            mainQueryString = mainQueryString + preparedFilters
             # Get response based on the API responses
-            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['searchLimit'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s+'&'+preparedFilters))
+            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['searchLimit'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         end
     end

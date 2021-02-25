@@ -757,7 +757,7 @@ get '/solr-search/?' do
 	query= ''
 	#results = generate_searched_data(query,activityStatusList)
 	filters = prepareFilters(query.to_s, 'F')
-	response = solrResponse(query, filters, 'F', 0)
+	response = solrResponse(query, '', 'F', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
@@ -775,7 +775,7 @@ post '/solr-search/?' do
 	#query = params['query']
 	#results = generate_searched_data(query,activityStatusList)
 	filters = prepareFilters(query.to_s, 'F')
-	response = solrResponse(query, filters, 'F', 0)
+	response = solrResponse(query, '', 'F', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
@@ -788,11 +788,17 @@ post '/solr-search/?' do
 	}
 end
 
-post '/solr-reponse' do
-	query = params['query']
-	filters = params['filters']
-	searchType = params['searchType']
-	startPage = params['start']
+post '/solr-response' do
+	puts(params['data'])
+	query = params['data']['query']
+	if params['data']['filters'].length > 1
+		filters = 'AND ' + params['data']['filters']
+	else
+		filters = ''
+	end
+	puts(filters)
+	searchType = params['data']['queryType']
+	startPage = params['data']['page']
 	response = solrResponse(query, filters, searchType, startPage)
 	json :output => response
 end
