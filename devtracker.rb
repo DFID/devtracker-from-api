@@ -754,9 +754,9 @@ end
 
 get '/solr-search/?' do
 	#query = params['query']
-	query= 'development'
+	query= ''
 	#results = generate_searched_data(query,activityStatusList)
-	filters = prepareFilters('q='+query.to_s)
+	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, filters, 'F', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
@@ -772,28 +772,19 @@ end
 
 post '/solr-search/?' do
 	query = params['query']
+	#query = params['query']
 	#results = generate_searched_data(query,activityStatusList)
-	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
-	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
+	filters = prepareFilters(query.to_s, 'F')
+	response = solrResponse(query, filters, 'F', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
 	:locals => {
 		oipa_api_url: settings.oipa_api_url,
-		:query => query,
-		includeClosed: includeClosed,
-		dfidCountryBudgets: didYouMeanData['dfidCountryBudgets'],
-		dfidRegionBudgets: didYouMeanData['dfidRegionBudgets'],
-		countryAllProjectFilters: countryAllProjectFilters,
-		projects: results['projects']['results'],
-		project_count: results['projects']['count'],
-		budgetHigherBound: results['project_budget_higher_bound'],
-		highLevelSectorList: results['highLevelSectorList'],
-		actualStartDate: results['actualStartDate'],
- 		plannedEndDate: results['plannedEndDate'],
- 		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types'],
- 		reportingOrgTypes: results['reportingOrg_types']
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
 	}
 end
 

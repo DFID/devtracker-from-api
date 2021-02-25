@@ -78,8 +78,8 @@
                                                         </label>
                                                     </div>
                                                 <%end%>
+                                                <input class="selectedFilters" type="hidden">
                                             </div>
-                                            <input class="selectedFilters" type="hidden">
                                         </fieldset>
                                     </p>
                                 <%end%>
@@ -134,5 +134,16 @@
 </div>
 
 <script>
-
+    $("document").ready(function (){
+        <%filters.each do |key, val|%>
+            <%if (val.length > 0)%>
+                $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
+                    $('.<%= key%>').children('.govuk-checkboxes__item').each(function(){
+                        console.log($(this).children('input[name=<%= key%>]:checked').val());
+                    });
+                    //$(this).parent().parent().children('.selectedFilters').val($(this).val());
+                });
+            <%end%>
+        <%end%>
+    });
 </script>

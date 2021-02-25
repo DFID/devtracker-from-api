@@ -44,10 +44,11 @@ module SolrHelper
         solrConfig = Oj.load(File.read('data/solr-config.json'))
         apiLink = solrConfig['APILink']
         filters = solrConfig['Filters']
+        mainQueryString = prepareQuery(query, queryType)
         finalFilterList = {}
         filters.each do |filter|
             finalFilterList[filter['field']] = []
-            finalFilterList[filter['field']] = filterDriver(filter['field'], apiLink + filter['url'] + '&' + query)
+            finalFilterList[filter['field']] = filterDriver(filter['field'], apiLink + filter['url'] + mainQueryString)
         end
         finalFilterList
     end
@@ -75,8 +76,12 @@ module SolrHelper
         if(queryType == 'F')
             queryCategory = solrConfig['QueryCategories'][queryType]
             if(queryCategory['fieldDependency'] == '')
-                solrConfig['DefaultFieldsToSearch'].each do |fieldToBeSearched|
-                    mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" '
+                solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
+                    if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
+                        mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '"'
+                    else
+                        mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" OR '
+                    end
                 end
                 mainQueryString = mainQueryString + ')'
             end
