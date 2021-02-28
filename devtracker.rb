@@ -791,7 +791,7 @@ end
 post '/solr-response' do
 	puts(params['data'])
 	query = params['data']['query']
-	if params['data']['filters'].length > 1
+	if params['data']['filters'].strip.length > 1
 		filters = 'AND ' + params['data']['filters']
 	else
 		filters = ''

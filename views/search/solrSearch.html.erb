@@ -86,37 +86,39 @@
                             </div>
                         </div>
                     </div>
-                    <div id="response-container" class="govuk-grid-column-two-thirds">
+                    <div class="govuk-grid-column-two-thirds">
                         <h2 class="govuk-heading-xl">Results</h2>
-                        <%response['docs'].each do |item|%>
-                            <p class="govuk-body">
-                                <div class="govuk-grid-row">
-                                    <h3 style="color: blue" class="govuk-heading"><%=item['title_narrative'].first%></h3>
-                                    <p style="color: grey" class="govuk-body">
-                                        <%=item['reporting_org_narrative'].first%>
-                                    </p>
-                                    <p class="govuk-body">
-                                        <%=item['description_narrative'].first%>
-                                    </p>
-                                    <p class="govuk-body">
-                                        <b>Project identifier:</b> <%=item['iati_identifier']%> <br />
-                                        <b>Start Date:</b> <%=item['activity_date_start_actual']%> <br />
-                                        <b>Activity Status:</b> <%=item['activity_status_code']%> <br />
-                                        <b>Total Budget:</b> Feature not yet implemented
-                                    </p>
-                                </div>
-                            </p>
-                            <br />
-                        <%end%>
+                        <div class="light-pagination"></div>
+                        <div id="response-container">
+                            <%response['docs'].each do |item|%>
+                                <p class="govuk-body">
+                                    <div class="govuk-grid-row">
+                                        <h3 style="color: blue" class="govuk-heading"><%=item['title_narrative'].first%></h3>
+                                        <p style="color: grey" class="govuk-body">
+                                            <%=item['reporting_org_narrative'].first%>
+                                        </p>
+                                        <p class="govuk-body">
+                                            <%=item['description_narrative'].first%>
+                                        </p>
+                                        <p class="govuk-body">
+                                            <b>Project identifier:</b> <%=item['iati_identifier']%> <br />
+                                            <b>Start Date:</b> <%=item['activity_date_start_actual']%> <br />
+                                            <b>Activity Status:</b> <%=item['activity_status_code']%> <br />
+                                            <b>Total Budget:</b> Feature not yet implemented
+                                        </p>
+                                    </div>
+                                </p>
+                                <br />
+                            <%end%>
+                        </div>
                     </div>
                 </div>
-
             </main>
             </div>
-        <%=filters%>
+        <%#=filters%>
         <br/>
         <br />
-        <%=response%>
+        <%#=response%>
     <%else%>
         <div class="row">
             <div class="twelve columns">
@@ -132,9 +134,11 @@
         </div>
     <%end%>
 </div>
-
+<script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
 <script>
     $("document").ready(function (){
+        // Store a static variable where we will keep the per page item show count
+        var pageSize = <%= solrConfig['PageSize']%>;
         <%filters.each do |key, val|%>
             <%if (val.length > 0)%>
                 $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
@@ -151,16 +155,27 @@
                         $('.<%= key%>').children('.selectedFilters').val('');
                     }
                     //get new set of results
-                    getFilteredResponse();
+                    getFilteredResponse(0, true);
                 });
             <%end%>
         <%end%>
+        function initiatePagination(projectCount){
+            $('.light-pagination').pagination({
+                items: projectCount,
+                itemsOnPage: pageSize,
+                cssStyle: 'compact-theme',
+                onPageClick: function(pageNumber, event){
+                    getFilteredResponse(pageNumber-1, false)
+                }
+            });
+        }
+        initiatePagination(<%= response['numFound']%>, true);
         // Post filter changes to the server end and update page with response
-        function getFilteredResponse(){
+        function getFilteredResponse(page, isResetPagination){
             var data = {};
             data['query'] = '<%= query%>';
             data['queryType'] = 'F';
-            data['page'] = 0;
+            data['page'] = page;
             data['filters'] = '';
             <%filters.each do |key, val|%>
                 <%if (val.length > 0)%>
@@ -171,7 +186,10 @@
                 data: data
             })
             .done(function(response){
-                var prepareContainer = '<h2 class="govuk-heading-xl">Results</h2>';
+                if(isResetPagination){
+                    initiatePagination(response.output.numFound)
+                }
+                var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
                     prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading">' + result.title_narrative[0] + '</h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + result.activity_status_code + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
                 })
