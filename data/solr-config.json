@@ -18,6 +18,12 @@
             "mappingFile": "https://iatistandard.org/reference_downloads/203/codelists/downloads/clv3/json/en/ActivityStatus.json"
         },
         {
+            "title": "Tags",
+            "field": "tag_code",
+            "url": "search/activity/?facet=on&facet.field=tag_code&facet.limit=-1&facet.mincount=1&q=participating_org_ref:GB-* AND ",
+            "mappingFile": ""
+        },
+        {
             "title": "Sectors",
             "field": "sector_code",
             "url": "search/activity/?facet=on&facet.field=sector_code&facet.limit=-1&facet.mincount=1&q=participating_org_ref:GB-* AND ",

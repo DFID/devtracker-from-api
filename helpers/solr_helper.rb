@@ -80,6 +80,16 @@ module SolrHelper
             end
             # Sort Data
             finalData = finalData.sort_by {|data| data['key']}
+        when 'tag_code'
+            response = Oj.load(RestClient.get api_simple_log(apiUrl))
+            tags = response['facet_counts']['facet_fields'][filter]
+            tags.each_with_index do |value, index|
+                if index.even?
+                    finalData.push(populateKeyVal(value, value))
+                end
+            end
+            # Sort Data
+            finalData = finalData.sort_by {|data| data['key']}
         else
             finalData
         end
