@@ -71,26 +71,28 @@
                         <div class="govuk-body">
                             <div class="govuk-form-group">
                                 <%filters.each do |key, val|%>
-                                    <p>
-                                        <fieldset class="govuk-fieldset">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                <h1 class="govuk-fieldset__heading">
-                                                    <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                </h1>
-                                            </legend>
-                                            <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
-                                                <%val.each do |item|%>
-                                                    <div class="govuk-checkboxes__item">
-                                                        <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                        <label class="govuk-label govuk-checkboxes__label">
-                                                            <%= item['key']%>
-                                                        </label>
-                                                    </div>
-                                                <%end%>
-                                                <input class="selectedFilters" type="hidden">
-                                            </div>
-                                        </fieldset>
-                                    </p>
+                                    <%if (val.length > 0)%>
+                                        <p>
+                                            <fieldset class="govuk-fieldset">
+                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
+                                                    </h1>
+                                                </legend>
+                                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
+                                                    <%val.each do |item|%>
+                                                        <div class="govuk-checkboxes__item">
+                                                            <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                            <label class="govuk-label govuk-checkboxes__label">
+                                                                <%= item['key']%>
+                                                            </label>
+                                                        </div>
+                                                    <%end%>
+                                                    <input class="selectedFilters" type="hidden">
+                                                </div>
+                                            </fieldset>
+                                        </p>
+                                    <%end%>
                                 <%end%>
                             </div>
                         </div>

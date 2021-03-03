@@ -13,7 +13,7 @@
 			"Status": "active"
 		},
 		{
-			"Code": "null",
+			"Code": "-",
 			"Name": "No explicit priority",
 			"Description": "When used in a sector element, this code can be used to indicate that the rest of an IATI activity is not financially dedicated to a given priority on this list. For instance, if only 25% of a given activity is devoted to supporting low carbon growth, this code can be used and set to 75% to pad the remainder. Activities will not validate otherwise, as sector codes are designed to sum to 100%. This code is not needed when using the Tag element.",
 			"Status": "active"

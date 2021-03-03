@@ -80,8 +80,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, true
-set :show_exceptions, true
+set :raise_errors, false
+set :show_exceptions, false
 
 set :devtracker_page_title, ''
 #####################################################################

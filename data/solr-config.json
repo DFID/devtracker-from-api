@@ -21,7 +21,7 @@
             "title": "Tags",
             "field": "tag_code",
             "url": "search/activity/?facet=on&facet.field=tag_code&facet.limit=-1&facet.mincount=1&q=participating_org_ref:GB-* AND ",
-            "mappingFile": ""
+            "mappingFile": "data/custom-codes/policy-priorities.json"
         },
         {
             "title": "Sectors",
