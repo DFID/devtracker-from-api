@@ -47,12 +47,18 @@
         "F":
         {
             "url": "/search/activity/?q=participating_org_ref:GB-* AND ",
-            "fieldDependency": ""
+            "fieldDependency": "",
+            "comments": "This search category is related to the free text search of DevTracker"
         },
         "C":
         {
             "url": "/search/activity/?q=participating_org_ref:GB-* AND ",
             "fieldDependency": "recipient_country_code"
         }
+    },
+    "SearchTags":
+    {
+        "tags": "tag_code",
+        "status": "activity_status_code"
     }
 }

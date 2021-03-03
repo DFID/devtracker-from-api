@@ -55,13 +55,13 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
- set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -80,8 +80,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -753,15 +753,18 @@ end
 
 
 get '/solr-search/?' do
-	#query = params['query']
 	query= ''
-	#results = generate_searched_data(query,activityStatusList)
-	filters = prepareFilters(query.to_s, 'F')
-	response = solrResponse(query, '', 'F', 0)
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	filters = []
+	response = 
+	{
+		'numFound' => -1,
+		'docs' => []
+	}
+  	settings.devtracker_page_title = 'Search Page'
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
-	:locals => {
+	:locals => 
+	{
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
@@ -772,14 +775,13 @@ end
 
 post '/solr-search/?' do
 	query = params['query']
-	#query = params['query']
-	#results = generate_searched_data(query,activityStatusList)
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, '', 'F', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
-	:locals => {
+	:locals => 
+	{
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
@@ -789,7 +791,6 @@ post '/solr-search/?' do
 end
 
 post '/solr-response' do
-	puts(params['data'])
 	query = params['data']['query']
 	if params['data']['filters'].strip.length > 1
 		filters = 'AND ' + params['data']['filters']

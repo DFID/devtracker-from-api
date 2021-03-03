@@ -134,21 +134,37 @@ module SolrHelper
 
     ## Method for preparing main search query
     def prepareQuery(query, queryType)
-        mainQueryString = ' ('
         solrConfig = Oj.load(File.read('data/solr-config.json'))
-        if(queryType == 'F')
-            queryCategory = solrConfig['QueryCategories'][queryType]
-            if(queryCategory['fieldDependency'] == '')
-                solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
-                    if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
-                        mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '"'
-                    else
-                        mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" OR '
+        mainQueryString = checkSearchTagPresence(query)
+        if(mainQueryString == '')
+            mainQueryString = ' ('
+            if(queryType == 'F')
+                queryCategory = solrConfig['QueryCategories'][queryType]
+                if(queryCategory['fieldDependency'] == '')
+                    solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
+                        if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
+                            mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '"'
+                        else
+                            mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" OR '
+                        end
                     end
+                    mainQueryString = mainQueryString + ')'
                 end
-                mainQueryString = mainQueryString + ')'
             end
         end
+        puts(mainQueryString)
         mainQueryString
+    end
+
+    def checkSearchTagPresence(query)
+        solrConfig = Oj.load(File.read('data/solr-config.json'))
+        searchTags = solrConfig['SearchTags']
+        trimmedSearchedTerm = ''
+        searchTags.each do |key, value|
+            if(query.to_s.downcase.start_with?(key+':'))
+                return trimmedSearchedTerm = value + ':(' + query.to_s.partition(key+':')[2].lstrip + ')'
+            end
+        end
+        trimmedSearchedTerm
     end
 end
