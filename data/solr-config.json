@@ -58,7 +58,7 @@
     },
     "SearchTags":
     {
-        "tags": "tag_code",
+        "tag": "tag_code",
         "status": "activity_status_code"
     }
 }
