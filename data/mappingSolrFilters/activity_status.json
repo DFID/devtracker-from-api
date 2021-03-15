@@ -1,4 +1,20 @@
-{
-    "2": "Active",
-    "4": "Closed"
-}
+[
+    {
+        "code":
+        [
+            1,
+            2,
+            3
+        ],
+        "name":"Active"
+    },
+    {
+        "code":
+        [
+            4,
+            5,
+            6
+        ],
+        "name":"Closed"
+    }
+]

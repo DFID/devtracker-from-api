@@ -15,7 +15,7 @@
             "title": "Activity Status",
             "field": "activity_status_code",
             "url": "search/activity/?facet=on&facet.field=activity_status_code&facet.limit=-1&facet.mincount=1&q=participating_org_ref:GB-* AND ",
-            "mappingFile": "https://iatistandard.org/reference_downloads/203/codelists/downloads/clv3/json/en/ActivityStatus.json"
+            "mappingFile": "data/mappingSolrFilters/activity_status.json"
         },
         {
             "title": "Tags",

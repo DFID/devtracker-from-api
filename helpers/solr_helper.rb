@@ -27,17 +27,19 @@ module SolrHelper
         when 'activity_status_code'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             activityStatusCodes  = response['facet_counts']['facet_fields'][filter]
-            statusCodeDetails = Oj.load(RestClient.get api_simple_log(mappingFileUrl))
-            statusCodeDetails = statusCodeDetails['data']
+            statusCodeDetails = Oj.load(File.read(mappingFileUrl))
             activityStatusCodes.each_with_index do |value, index|
                 # The reason we did a check of this is because, solr engine returns a flat array 
                 # with first position holding the facet data and the second position holding data count.
                 # Right now, we are not working with the data count. Hence, that field data is not handled. Only the even positions are being taken care of.
                 if index.even?
-                    finalData.push(populateKeyVal(statusCodeDetails.select{|status| status['code'].to_s == value.to_s}.first['name'], value))
+                    tempStatus = statusCodeDetails.select{|status| status['code'].include? value.to_i}.first
+                    if finalData.detect{|data| data['key'].to_s == tempStatus['name']}.nil?
+                        finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'].join(' ')))
+                    end
                 end
             end
-            # Sort Data
+            # Sort Datac
             finalData = finalData.sort_by {|data| data['key']}
         when 'sector_code'
             # Write logic for this filter that will prepare the key value pairs
