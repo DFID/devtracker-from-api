@@ -55,20 +55,20 @@
               <%if transactionTypeTitle == 'Commitments' %>                
               <%elsif transactionTypeTitle == 'Disbursements'%>
               <%else%>
-                <td><%= if !transaction['description'].nil? then transaction['description']['narratives'][0]['text'] else "" end %></td>
+                <td><%= if !transaction['description'].nil? then transaction['description']['narrative'][0]['text'] else "" end %></td>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments' && transactionTypeTitle != 'Disbursements'%>
-                <td><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end else "" end %></td>
+                <td><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narrative'].length > 0 then transaction['receiver_organisation']['narrative'][0]['text'] else "" end else "" end %></td>
               <%end%>
               <%if transactionTypeTitle == 'Disbursements' || transactionTypeTitle == 'Commitments' %>
                 <%if !transaction['receiver_organisation'].nil?%>
                   <%if transaction['receiver_organisation']['ref'] == 'Excluded' || transaction['receiver_organisation']['ref'] == 'Not available'%>
-                    <td><%= transaction['receiver_organisation']['narratives'][0]['text'] %></td>
+                    <td><%= transaction['receiver_organisation']['narrative'][0]['text'] %></td>
                   <%elsif transaction['receiver_organisation']['ref'] != ''%>
-                    <%tempOrg = project['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
-                    <td><%if !tempOrg.nil? && tempOrg.length > 0%><%= tempOrg[0]['narratives'][0]['text']%><%else%><%= "N/A" %><%end%></td>
+                    <%tempOrg = project['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
+                    <td><%if !tempOrg.nil? && tempOrg.length > 0%><%= tempOrg[0]['narrative'][0]['text']%><%else%><%= "N/A" %><%end%></td>
                   <%else%>
-                    <td><%= if transaction['receiver_organisation']['narratives'].length > 0 then transaction['receiver_organisation']['narratives'][0]['text'] else "" end %></td>
+                    <td><%= if transaction['receiver_organisation']['narrative'].length > 0 then transaction['receiver_organisation']['narrative'][0]['text'] else "" end %></td>
                   <%end%>
                 <%else%>
                   <td>N/A</td>
@@ -77,7 +77,7 @@
                   <%if !transaction['receiver_organisation']['type'].nil? %>
                     <td><%= transaction['receiver_organisation']['type']['name'] %></td>
                   <%else%>
-                    <%tempOrg = project['participating_organisations'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
+                    <%tempOrg = project['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
                     <td><%begin%>
                       <%if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''%><%= tempOrg[0]['type']['name']%><%else%><%= "N/A" %><%end%><%rescue%><%= "N/A" %><%end%></td>  
                   <%end%>
@@ -91,8 +91,8 @@
               <%if transactionTypeTitle == 'Incoming Funds' %>
               <td><%= 
               if transaction['provider_organisation'].nil? then '' 
-                else if transaction['provider_organisation']['narratives'][0].nil? then '' 
-                else transaction['provider_organisation']['narratives'][0]['text'] end + 
+                else if transaction['provider_organisation']['narrative'][0].nil? then '' 
+                else transaction['provider_organisation']['narrative'][0]['text'] end + 
               if transaction['provider_organisation']['provider_activity_id'].nil? then '' else " (" + transaction['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
               <%end%>
               <td data-order="<%= Date.parse(transaction['transaction_date']).strftime("%Q")%>"><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>

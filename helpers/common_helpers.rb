@@ -10,7 +10,8 @@ module CommonHelpers
       time = String(Time.now.iso8601)
       route = request.env['sinatra.route']
       stackstring = "[" + caller.map {|x| x =~ /devtracker/i ? x : nil}.reject!(&:nil?).join(",") + "]"
-      f.puts time + "\t" + route + "\t'" + apiLink + "'\t'" + stackstring + "'\n"
+      #f.puts time + "\t" + route + "\t'" + apiLink + "'\t'" + stackstring + "'\n"
+      f.puts route + "\t'" + apiLink + "'\t\n"
       #f.puts time + "\t" + route + "\t'" + apiLink + "'\n"
     end
     return apiLink
@@ -270,51 +271,51 @@ module CommonHelpers
     apiList = Array.new
     if(listType == 'C')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # This is to return data sorted according to actual start date
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=actual_start_date&recipient_country=#{listParams}")
       # Reporting Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'R')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_region=#{listParams}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # Reporting Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&recipient_region=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     elsif (listType == 'S')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_sector=#{listParams}")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&related_activity_sector=#{listParams}")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities/?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
       # Reporting Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_sector=#{listParams}&activity_status=#{activityStatus}")
     elsif (listType == 'F')
       # Total project list API call
       #apiList.push("activities/?hierarchy=1&format=json&page_size=10&fields=aggregations,descriptions,activity_status,iati_identifier,url,title,reporting_organisations,activity_plus_child_aggregation&q=#{listParams}&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&reporting_organisation_startswith=GB")
@@ -330,22 +331,22 @@ module CommonHelpers
       # Implementing Org List API call
       apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # Reporting Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}&reporting_organisation_identifier=#{settings.goverment_department_ids}")
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&q=#{listParams}&hierarchy=1&activity_status=#{activityStatus}&reporting_org_identifier=#{settings.goverment_department_ids}")
     elsif (listType == 'O')
       # Total project list API call
-      apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{listParams}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value")
+      apiList.push("activities/?hierarchy=1&format=json&reporting_org_identifier=#{listParams}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value")
       # Sector values JSON API call
-      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_org_identifier=#{listParams}&activity_status=#{activityStatus}")
       # Actual Start Date API call
-      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{listParams}&hierarchy=1&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
+      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{listParams}&hierarchy=1&ordering=actual_start_date&start_date_gte=1900-01-02&activity_status=#{activityStatus}")
       # Planned End Date API call
-      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_organisation_identifier=#{listParams}&hierarchy=1&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
+      apiList.push("activities?format=json&page_size=1&fields=activity_dates&reporting_org_identifier=#{listParams}&hierarchy=1&ordering=-planned_end_date&end_date_isnull=False&activity_status=#{activityStatus}")
       # Document List API call
-      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_organisation_identifier=#{listParams}&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=document_link_category&aggregations=count&reporting_org_identifier=#{listParams}&activity_status=#{activityStatus}")
       # Implementing Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_organisation_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=participating_organisation&aggregations=count&reporting_org_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
       # Reporting Org List API call
-      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_organisation_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
+      apiList.push("activities/aggregations/?format=json&group_by=reporting_organisation&aggregations=count&reporting_org_identifier=#{listParams}&hierarchy=1&activity_status=#{activityStatus}")
     end
   end
 
@@ -620,7 +621,7 @@ module CommonHelpers
 
   #Provide a list of dependent reporting organisations grouped by country code
   def generateReportingOrgsCountryWise()
-    oipa_reporting_orgs = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2")
+    oipa_reporting_orgs = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&group_by=reporting_organisation,recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&activity_status=2")
     oipa_reporting_orgs = Oj.load(oipa_reporting_orgs)
     oipa_reporting_orgs = oipa_reporting_orgs['results']
     countryHash = {}
@@ -662,13 +663,13 @@ module CommonHelpers
 
   def get_project_component_data(project)
     components = Array.new
-    project['related_activities'].each do |component|
+    project['related_activity'].each do |component|
       if(component['ref'].to_s.include? project['iati_identifier'].to_s)
         begin
           pullActivityData = get_h1_project_details(component['ref'])
           componentData = {}
           begin
-            componentData['title'] = pullActivityData['title']['narratives'][0]['text']
+            componentData['title'] = pullActivityData['title']['narrative'][0]['text']
           rescue
             componentData['title'] = 'N/A'
           end
@@ -677,7 +678,7 @@ module CommonHelpers
           rescue
             componentData['title'] = 'N/A'
           end
-          dates = pullActivityData['activity_dates']
+          dates = pullActivityData['activity_date']
           if (dates.length > 0)
             begin
               if(!dates.select{|activityDate| activityDate['type']['code'] == '2'}.first.nil?)

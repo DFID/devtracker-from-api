@@ -258,7 +258,7 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Download IATI Activity Data for <%= country[:name]%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
+        <p>Download IATI Activity Data for <%= country[:name]%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_org_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
     </div>
 </div>
 <%if implementingOrgList.length > 0%>

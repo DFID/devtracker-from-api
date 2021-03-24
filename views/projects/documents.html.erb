@@ -19,16 +19,16 @@
                 </tr>
             </thead>
             <tbody>
-                <% project['document_links'].each do |document| %>
+                <% project['document_link'].each do |document| %>
                   <%begin%>
                     <%
                     t_url = document['url']
                     if t_url.include? "http://iati.fcdo."
                       t_url = t_url.sub! 'http:', 'https:'
                     end
-                    t_url_txt = document['title']['narratives'][0]['text'].gsub(/\.[^.]*$/, '')
-                    t_code = document['title']['narratives'][0]['language']['code']
-                    t_title = document['title']['narratives'][0]['language']['name']
+                    t_url_txt = document['title']['narrative'][0]['text'].gsub(/\.[^.]*$/, '')
+                    t_code = document['title']['narrative'][0]['lang']['code']
+                    t_title = document['title']['narrative'][0]['lang']['name']
                     %>
                     <tr class="result-list-row">
                         <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
@@ -43,7 +43,7 @@
                           <%#= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
                         </td> -->
                         <td scope="col">
-                          <% document['categories'].each do |category| %>
+                          <% document['category'].each do |category| %>
                             <span class="category">
                               <%= category['category']['name']%>
                             </span>

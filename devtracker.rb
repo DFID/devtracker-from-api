@@ -58,8 +58,10 @@ include RecaptchaHelper
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
+set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
+
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -78,8 +80,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -117,7 +119,7 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
@@ -126,7 +128,7 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
 	 	}
 	end
-	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
+	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
 	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
@@ -134,7 +136,7 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
+	#countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
@@ -150,9 +152,9 @@ get '/countries/:country_code/?' do |n|
  			implementingOrgList: implementingOrgList,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
-			chartDataRepOrgsSplit2: countryBudgetBarGraphDataSplit2[0],
-			chartDataFinYearsSplit2: countryBudgetBarGraphDataSplit2[1],
-			chartDataColumnDataSplit2: countryBudgetBarGraphDataSplit2[2],
+			chartDataRepOrgsSplit2: [],#countryBudgetBarGraphDataSplit2[0],
+			chartDataFinYearsSplit2: [],#countryBudgetBarGraphDataSplit2[1],
+			chartDataColumnDataSplit2: []#countryBudgetBarGraphDataSplit2[2],
  		}
 end
 
@@ -288,7 +290,7 @@ get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
     region = get_region_details(n)
 	#oipa v3.1
-	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
 	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
 	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
@@ -1008,7 +1010,7 @@ get '/department/:dept_id/?' do
 		#projectData = get_ogd_all_projects_data(deptIdentifier)
 		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
 		if projectData['projects']['count'] == 0
-			allActivityStatusProjects = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{deptIdentifier}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4&ordering=-activity_plus_child_budget_value"))
+			allActivityStatusProjects = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_org_identifier=#{deptIdentifier}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4&ordering=-activity_plus_child_budget_value"))
 			allActivityStatusProjectsCount = allActivityStatusProjects['count']
 		end
 	else

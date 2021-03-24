@@ -202,9 +202,9 @@ module SectorHelpers
 
 	 def prepare_location_country_region_data(activityStatus, sectorCode)
 	 	data = {}
-	 	locationCountryFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
+	 	locationCountryFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
   		locationCountryFilters = locationCountryFilters['results'].sort_by {|key| key["recipient_country"]["name"]}
-  		locationRegionFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
+  		locationRegionFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_org_identifier=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
   		locationRegionFilters = locationRegionFilters['results'].sort_by {|key| key["recipient_region"]["name"]}
   		data['locationCountryFilters'] = locationCountryFilters
   		data['locationRegionFilters'] = locationRegionFilters
