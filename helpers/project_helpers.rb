@@ -530,7 +530,7 @@ module ProjectHelpers
                 {
                     "fy"    => fy,
                     "type"  => "spend",
-                    "value" => bs.inject(0) { |v, item| v + item["value"] },
+                    "value" => bs.inject(0) { |v, item| v + item["value"].to_f.floor(2) },
                 }   
             }
 
