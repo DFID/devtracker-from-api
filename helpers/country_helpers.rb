@@ -341,7 +341,7 @@ module CountryHelpers
     end
     tempInfo.each do |key, val|
       val.each do |k , v|
-        columnData[key][finYearList.index(k)] = v
+        columnData[key][finYearList.index(k)] = v.to_f.floor(2)
       end
     end
     finalData = []
