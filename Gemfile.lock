@@ -134,7 +134,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicorn (5.5.5)
+    unicorn (6.0.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     zeitwerk (2.4.2)
