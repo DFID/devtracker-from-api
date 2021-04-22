@@ -54,6 +54,11 @@
         {
             "url": "/search/activity/?q=participating_org_ref:GB-* AND ",
             "fieldDependency": "recipient_country_code"
+        },
+        "R":
+        {
+            "url": "/search/activity/?q=participating_org_ref:GB-* AND ",
+            "fieldDependency": "recipient_region_code"
         }
     },
     "SearchTags":

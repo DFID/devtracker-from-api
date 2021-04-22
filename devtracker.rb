@@ -55,13 +55,13 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -751,6 +751,9 @@ get '/search/?' do
 	}
 end
 
+#####################################################################
+#  SOLR BASED PAGES
+#####################################################################
 
 get '/solr-search/?' do
 	query= ''
@@ -802,6 +805,23 @@ post '/solr-response' do
 	startPage = params['data']['page']
 	response = solrResponse(query, filters, searchType, startPage)
 	json :output => response
+end
+
+get '/solr-regions/?' do
+	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, '', 'R', 0)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrSearch',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
+	}
 end
 
 #####################################################################
