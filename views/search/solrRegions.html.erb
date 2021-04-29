@@ -1,0 +1,200 @@
+<div class="page-wrapper">
+    <div class="hero hero-notabs">
+        <div class="row" id="page-title">
+            <div class="twelve columns">
+                <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
+                <div>
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="row">
+            <div class="twelve columns">
+                <div style="display: none" id="search-bar">
+                    <form id="mid-search-form" method="POST" action="/solr-search">
+                        <div class="row">
+                            <div class="two columns">
+                                <label for="query">
+                                    <h3 style="margin:none!important;">Search Projects</h3>
+                                </label>
+                            </div>
+                            <div class="ten columns">
+                                <div class="row">
+                                    <div class="ten columns">
+                                        <div class="row">
+                                            <div class="twelve columns">
+                                                <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
+                                            </div>
+                                            <div class="twelve columns" style="text-align: left; margin-top: 10px">
+                                                <span>Search types are now supported. Ex: Searching for <b>tags:ICF</b> will return all the relevant results that have link to ICF tag.</span>
+                                                <span>Available search tags are: <%solrConfig['SearchTags'].each do |key, val|%><span style="color: green"><%=key%></span>, <%end%></span><br />
+                                                <span>Please note: The terms that are related to the search tags must align with IATI published standard and data.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two columns">
+                                        <input type="submit" class="button" value="Search">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
+    <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/formatDate.js"></script>
+    <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
+    <% if response['numFound'] > 0 %>
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
+                        <h2 class="govuk-heading-m">Filters</h2>
+                        <div class="govuk-body">
+                            <div class="govuk-form-group">
+                                <%filters.each do |key, val|%>
+                                    <%if (val.length > 0)%>
+                                        <p>
+                                            <fieldset class="govuk-fieldset">
+                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
+                                                    </h1>
+                                                </legend>
+                                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
+                                                    <%val.each do |item|%>
+                                                        <div class="govuk-checkboxes__item">
+                                                            <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                            <label class="govuk-label govuk-checkboxes__label">
+                                                                <%= item['key']%>
+                                                            </label>
+                                                        </div>
+                                                    <%end%>
+                                                    <input class="selectedFilters" type="hidden">
+                                                </div>
+                                            </fieldset>
+                                        </p>
+                                    <%end%>
+                                <%end%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-xl">Results</h2>
+                        <div class="light-pagination"></div>
+                        <div id="response-container">
+                            <%response['docs'].each do |item|%>
+                                <p class="govuk-body">
+                                    <div class="govuk-grid-row">
+                                        <h3 style="color: blue" class="govuk-heading"><%=item['title_narrative'].first%></h3>
+                                        <p style="color: grey" class="govuk-body">
+                                            <%=item['reporting_org_narrative'].first%>
+                                        </p>
+                                        <p class="govuk-body">
+                                            <%=item['description_narrative'].first%>
+                                        </p>
+                                        <p class="govuk-body">
+                                            <b>Project identifier:</b> <%=item['iati_identifier']%> <br />
+                                            <b>Start Date:</b> <%=item['activity_date_start_actual']%> <br />
+                                            <b>Activity Status:</b> <%=item['activity_status_code']%> <br />
+                                            <b>Total Budget:</b> Feature not yet implemented
+                                        </p>
+                                    </div>
+                                </p>
+                                <br />
+                            <%end%>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            </div>
+        <%#=filters%>
+        <br/>
+        <br />
+        <%#=response%>
+    <%elsif response['numFound'] == 0%>
+        <div class="row">
+            <div class="twelve columns">
+                <div class="search-result nine columns push-three">
+                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any projects.</p><p style="margin-top:1em">Suggestions:</p>
+                    <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
+                        <li>Make sure all words are spelled correctly or try different keywords</li>
+                    </ul>
+                    <p>Search results only show active projects. To see projects that have been completed, select the "Include Completed Projects" checkbox and click the Search button.</p>
+                </div>
+                <div class="three columns pull-nine"></div>
+            </div>
+        </div>
+    <%end%>
+</div>
+<script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
+<script>
+    $("document").ready(function (){
+        // Store a static variable where we will keep the per page item show count
+        var pageSize = <%= solrConfig['PageSize']%>;
+        <%filters.each do |key, val|%>
+            <%if (val.length > 0)%>
+                $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
+                    if($('input[name="<%= key%>"]:checked').length > 0) {
+                        var tempFilters = '<%=key%>:(';
+                        $('input[name="<%= key%>"]:checked').each(function(){
+                            tempFilters = tempFilters + this.value + ' ';
+                        });
+                        tempFilters = tempFilters + ')';
+                        $('.<%= key%>').children('.selectedFilters').val(tempFilters);
+                    }
+                    else {
+                        $('.<%= key%>').children('.selectedFilters').val('');
+                    }
+                    //get new set of results
+                    getFilteredResponse(0, true);
+                });
+            <%end%>
+        <%end%>
+        function initiatePagination(projectCount){
+            $('.light-pagination').pagination({
+                items: projectCount,
+                itemsOnPage: pageSize,
+                cssStyle: 'compact-theme',
+                onPageClick: function(pageNumber, event){
+                    getFilteredResponse(pageNumber-1, false)
+                }
+            });
+        }
+        initiatePagination(<%= response['numFound']%>, true);
+        // Post filter changes to the server end and update page with response
+        function getFilteredResponse(page, isResetPagination){
+            var data = {};
+            data['query'] = '<%= query%>';
+            data['queryType'] = 'R';
+            data['page'] = page;
+            data['filters'] = '';
+            <%filters.each do |key, val|%>
+                <%if (val.length > 0)%>
+                    data['filters'] = data['filters'] + ' ' + $('.<%= key%>').children('.selectedFilters').val();
+                <%end%>
+            <%end%>
+            $.post('/solr-response',{
+                data: data
+            })
+            .done(function(response){
+                if(isResetPagination){
+                    initiatePagination(response.output.numFound)
+                }
+                var prepareContainer = '';
+                $.each(response.output.docs,function(i, result){
+                    prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading">' + result.title_narrative[0] + '</h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + result.activity_status_code + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
+                })
+                $('#response-container').html(prepareContainer);
+            });
+        }
+    });
+</script>

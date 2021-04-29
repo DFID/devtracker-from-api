@@ -40,7 +40,7 @@
 
 <div class="row">
   <div class="twelve columns">
-  	<a id="view-all-regional-projects" class="button location-button" href="/regions" style="width:100%;">View All Regional Projects</a>
+  	<a id="view-all-regional-projects" class="button location-button" href="/solr-regions" style="width:100%;">View All Regional Projects</a>
   </div>
 </div>
 
@@ -55,7 +55,7 @@
       <!--<a href="/regions/<%#=region['code']%>"><%#= region['name'] %></a> | -->
     <%# end %>
     <% dfid_regional_projects_data[:regionsDataJSON].sort_by{ |k| k["region"]}.each do |region|%>
-    	<a href="/regions/<%=region['code']%>"><%=region['region']%></a> |
+    	<a href="/solr-regions/<%=region['code']%>"><%=region['region']%></a> |
     <%end%>
   </div>
 </div>

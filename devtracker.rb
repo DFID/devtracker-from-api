@@ -55,13 +55,13 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -812,7 +812,41 @@ get '/solr-regions/?' do
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, '', 'R', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrSearch',
+	erb :'search/solrRegions',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
+	}
+end
+
+get '/solr-regions/:region_code/?' do |n|
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, '', 'R', 0)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrRegions',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
+	}
+end
+
+get '/solr-global/?' do
+	query = '(998)'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, '', 'R', 0)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrRegions',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
