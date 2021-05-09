@@ -150,7 +150,7 @@
                 itemsOnPage: pageSize,
                 cssStyle: 'compact-theme',
                 onPageClick: function(pageNumber, event){
-                    getFilteredResponse(pageNumber-1, false)
+                    getFilteredResponse((pageNumber-1)*pageSize, false)
                 }
             });
         }
