@@ -155,10 +155,15 @@
                 $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
                     if($('input[name="<%= key%>"]:checked').length > 0) {
                         var tempFilters = '<%=key%>:(';
-                        $('input[name="<%= key%>"]:checked').each(function(){
-                            tempFilters = tempFilters + this.value + ' ';
+                        $('input[name="<%= key%>"]:checked').each(function(i, val){
+                            if(i < 1 ){
+                                tempFilters = tempFilters + this.value;
+                            }
+                            else{
+                                tempFilters = tempFilters + ' OR ' + this.value;
+                            }
                         });
-                        tempFilters = tempFilters + ')';
+                        tempFilters = tempFilters.trim() + ')';
                         $('.<%= key%>').children('.selectedFilters').val(tempFilters);
                     }
                     else {
@@ -189,9 +194,17 @@
             data['filters'] = '';
             <%filters.each do |key, val|%>
                 <%if (val.length > 0)%>
-                    data['filters'] = data['filters'] + ' ' + $('.<%= key%>').children('.selectedFilters').val();
+                    if($('.<%= key%>').children('.selectedFilters').val().length > 0){
+                        if(data['filters'].length > 0){
+                            data['filters'] = data['filters'] + ' AND ' + $('.<%= key%>').children('.selectedFilters').val();
+                        }
+                        else{
+                            data['filters'] = data['filters'] + $('.<%= key%>').children('.selectedFilters').val();
+                        }
+                    }
                 <%end%>
             <%end%>
+            data['filters'] = data['filters'].trim();
             $.post('/solr-response',{
                 data: data
             })

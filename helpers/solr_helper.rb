@@ -35,7 +35,7 @@ module SolrHelper
                 if index.even?
                     tempStatus = statusCodeDetails.select{|status| status['code'].include? value.to_i}.first
                     if finalData.detect{|data| data['key'].to_s == tempStatus['name']}.nil?
-                        finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'].join(' ')))
+                        finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'].join(' OR ')))
                     end
                 end
             end
@@ -54,9 +54,17 @@ module SolrHelper
                         if source["Code (L3)"].to_s == value
                             if !highLevelSectorHash.has_key?(source["High Level Sector Description"].to_s)
                                 highLevelSectorHash[source["High Level Sector Description"].to_s] = {}
-                                highLevelSectorHash[source["High Level Sector Description"].to_s][0] = value.to_s + " "
+                                if highLevelSectorHash[source["High Level Sector Description"].to_s].length > 0
+                                    highLevelSectorHash[source["High Level Sector Description"].to_s][0] = " OR " + value.to_s
+                                else
+                                    highLevelSectorHash[source["High Level Sector Description"].to_s][0] = value.to_s
+                                end
                             else
-                                highLevelSectorHash[source["High Level Sector Description"].to_s][0].concat(value.to_s + " ");
+                                if highLevelSectorHash[source["High Level Sector Description"].to_s].length > 0
+                                    highLevelSectorHash[source["High Level Sector Description"].to_s][0].concat(" OR " + value.to_s);
+                                else
+                                    highLevelSectorHash[source["High Level Sector Description"].to_s][0].concat(value.to_s);
+                                end
                             end
                         end
                     end
