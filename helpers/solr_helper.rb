@@ -77,15 +77,22 @@ module SolrHelper
             end
             # Sort data alphabetically according to the keys
             finalData = finalData.sort_by {|data| data['key']}
-        when 'participating_org_narrative'
+        when 'participating_org_ref'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
+            participatingOrgList = Oj.load(File.read('data/participating-orgs/processed_orgList.json'))
             implementingOrgs  = response['facet_counts']['facet_fields'][filter]
             implementingOrgs.each_with_index do |value, index|
                 # The reason we did a check of this is because, solr engine returns a flat array 
                 # with first position holding the facet data and the second position holding data count.
                 # Right now, we are not working with the data count. Hence, that field data is not handled. Only the even positions are being taken care of.
                 if index.even?
-                    finalData.push(populateKeyVal(value, value))
+                    if(participatingOrgList.key?(value.capitalize()))
+                        begin
+                            finalData.push(populateKeyVal(participatingOrgList[value.capitalize()][0]['text'], value))    
+                        rescue
+                            finalData.push(populateKeyVal('No Title', value))
+                        end    
+                    end
                 end
             end
             # Sort Data
