@@ -80,8 +80,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -847,12 +847,70 @@ get '/solr-regions/:region_code/?' do |n|
 	}
 end
 
+get '/solr-countries/:country_code/?' do |n|
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'C')
+	response = solrResponse(query, '', 'C', 0)
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrCountries',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
+	}
+end
+
 get '/solr-global/?' do
 	query = '(998)'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, '', 'R', 0)
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrRegions',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json'))
+	}
+end
+
+get '/solr-department/:dept_id/?' do
+	dept_id = sanitize_input(params[:dept_id],"a")
+	# if dept_id == 'DFID'
+	# 	redirect '/'
+	# end
+	if dept_id == 'abs'
+		redirect '/sector'
+	end
+	allActivityStatusProjectsCount = 0
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	deptIdentifier = ''
+	if ogds.has_key?(dept_id)
+		deptIdentifier = ogds[dept_id]["identifiers"]
+	else
+		redirect '/department'
+	end
+	if deptIdentifier == ''
+		redirect '/department'
+	end
+	if(deptIdentifier != 'x')
+		#projectData = get_ogd_all_projects_data(deptIdentifier)
+		query = deptIdentifier
+	else
+		redirect '/department'
+	end
+  	settings.devtracker_page_title = ogds[dept_id]["name"]
+	query = deptIdentifier
+	filters = prepareFilters(query.to_s, 'O')
+	response = solrResponse(query, '', 'O', 0)
+	erb :'search/solrDepartments',
 	:layout => :'layouts/layout',
 	:locals => 
 	{

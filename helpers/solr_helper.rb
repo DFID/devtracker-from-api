@@ -155,7 +155,21 @@ module SolrHelper
             mainQueryString = mainQueryString + ' AND reporting_org_ref:(' + settings.goverment_department_ids.gsub(","," OR ") + ')' + preparedFilters
             puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
-            response['response'] 
+            response['response']
+        elsif(queryType == 'C')
+            queryCategory = solrConfig['QueryCategories'][queryType]
+            preparedFilters = filters
+            mainQueryString = mainQueryString + ' AND reporting_org_ref:(' + settings.goverment_department_ids.gsub(","," OR ") + ')' + preparedFilters
+            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
+            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
+            response['response']
+        elsif(queryType == 'O')
+            queryCategory = solrConfig['QueryCategories'][queryType]
+            preparedFilters = filters
+            mainQueryString = mainQueryString + preparedFilters
+            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
+            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
+            response['response']
         end
     end
 
@@ -178,6 +192,16 @@ module SolrHelper
                     mainQueryString = mainQueryString + ')'
                 end
             elsif(queryType == 'R')
+                queryCategory = solrConfig['QueryCategories'][queryType]
+                if(queryCategory['fieldDependency'] != '')
+                    mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
+                end
+            elsif(queryType == 'C')
+                queryCategory = solrConfig['QueryCategories'][queryType]
+                if(queryCategory['fieldDependency'] != '')
+                    mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
+                end
+            elsif(queryType == 'O')
                 queryCategory = solrConfig['QueryCategories'][queryType]
                 if(queryCategory['fieldDependency'] != '')
                     mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
