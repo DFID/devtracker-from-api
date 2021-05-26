@@ -3,6 +3,7 @@
 
 <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/javascripts/formatDate.js"></script>
+<script type="text/javascript" src="/javascripts/readMoreJS.min.js"></script>
 <link href="/stylesheets/simplePagination.css" rel="stylesheet" type="text/css">
 <div class="row project-results">
     <%if ogd_code != 'x' && total_projects != 0 %>
@@ -43,7 +44,7 @@
             </div>
             <div id="showResults">
                 <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
-                <div>
+                <div class="tweleve columns">
                     Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
@@ -51,7 +52,7 @@
                     <%end%>
                 </div>
                 <% projects.each do |project| %>
-                <div class="search-result">
+                <!-- <div class="search-result">
                     <h3>    
                         <%unless project['iati_identifier'].nil? %>
                             <a href="/projects/<%= project['iati_identifier'].gsub(/\s+/, '').gsub(/\//, '-').gsub(/&/,'-') %>">
@@ -121,7 +122,112 @@
                             <%end%>  
                         </div>
                     </div>
+                </div> -->
+                <div class="search-result">
+                    <div class="eight columns">
+                            <h3>    
+                                <%unless project['iati_identifier'].nil? %>
+                                    <a href="/projects/<%= project['iati_identifier'].gsub(/\s+/, '').gsub(/\//, '-').gsub(/&/,'-') %>">
+                                    <%unless project['title']['narratives'].nil? %>
+                                        <%unless project['title']['narratives'][0]['text'].nil? %>
+                                            <%=project['title']['narratives'][0]['text']%>
+                                        <%end%>
+                                    <%end%>
+                                    </a>
+                                <%end%>
+                            </h3>
+                            <span class="reporting-org">
+                                <%unless project['reporting_organisation'].empty? %>
+                                    <%unless project['reporting_organisation']['narratives'].empty? %>
+                                        <%if project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK Department for International Development' || project['reporting_organisation']['narratives'][0]['text'].to_s == 'UK - Foreign & Commonwealth Office'%>
+                                            UK - Foreign, Commonwealth and Development Office
+                                        <%else%>
+                                            <%= project['reporting_organisation']['narratives'][0]['text']%>
+                                        <%end%>
+                                    <%end%>
+                                <%end%>
+                            </span>
+                            <p class="description">
+                                    <%unless project['descriptions'].empty? %>
+                                        <%unless project['descriptions'][0]['narratives'].empty? %>
+                                            <%= project['descriptions'][0]['narratives'][0]['text'] %>
+                                        <%end%>
+                                    <%end%>
+                            </p>
+                    </div>
+                    <div class="four columns">
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <span>Project Identifier:</span>
+                                </div>
+                            </div>
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <%unless project['iati_identifier'].nil? %>
+                                        <span><em><%= project['iati_identifier']%></em></span>
+                                    <%end%>
+                                </div>
+                            </div>
+
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <span>Activity Status:</span>
+                                </div>
+                            </div>
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <%unless project['activity_status']['name'].nil? %>
+                                        <span><em><%=project['activity_status']['name'].to_s %></em></span>
+                                    <%end%>
+                                </div>
+                            </div>
+
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <span>Start Date:</span>
+                                </div>
+                            </div>
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <span>
+                                        <%begin%>
+                                            <%plannedStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 1}%>
+                                            <%actualStartD = project['activity_dates'].select{|d| d['type']['code'].to_i == 2}%>
+                                            <%if !actualStartD.nil? || actualStartD.length != 0%>
+                                                <em><%= DateTime.parse(actualStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                            <%elsif plannedStartD.nil? || plannedStartD.length != 0%>
+                                                <em><%= DateTime.parse(plannedStartD[0]['iso_date']).strftime('%d-%m-%Y')%></em>
+                                            <%else%>
+                                                <em>N/A</em>
+                                            <%end%>
+                                        <%rescue%>
+                                            <em>N/A</em>
+                                        <%end%>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+                                    <span class="budget">Total Budget:</span>
+                                </div>
+                            </div>
+                            <div class="bottom-table row">
+                                <div class="tweleve columns">
+
+                                    <%unless project['activity_plus_child_aggregation']['activity_children'].nil? || project['activity_plus_child_aggregation']['activity_children']['budget_value'].nil? %>
+                                        <%if project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i != 0 %>
+                                            <span class="budget"><em> <%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100,"GBP").round.format(:no_cents_if_whole => true,:sign_before_symbol => false) %></em></span>
+                                        <%else%>
+                                            <span class="budget">Budget: <em>Not Provided</em></span>
+                                        <%end%>
+                                    <%end%>
+                                </div>
+                            </div>
+                    </div>    
                 </div>
+                <hr/>
+                <br/>
                 <% end %>
             </div>
             <div class="row">
@@ -661,5 +767,14 @@
             <% end %>
         });
     </script>
+    <script type="text/javascript">
+        $readMoreJS.init({
+            target: '.description',
+            numOfWords: 25,
+            toggle: true,
+            moreLink: 'Read more ...',
+            lessLink: 'Read less'
+        });
+        </script>
     <script src="/javascripts/searchPageFilters.js" type="text/javascript"></script>
 </div>
