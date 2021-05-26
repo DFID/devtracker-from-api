@@ -922,6 +922,89 @@ get '/solr-department/:dept_id/?' do
 	}
 end
 
+get '/solr-sector/:high_level_sector_code/projects/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	sectorCode = ''
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == highLevelCode.to_i}
+	sectorJsonData.each do |sdata|
+		sectorCode.concat(sdata['Code (L3)'].to_s + " OR ")
+	end
+	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, '', 'S', 0)
+  	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
+  	erb :'search/solrSectors',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		level: 1
+	}
+end
+
+# List of all the 3 DAC projects 
+get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	categoryCode = sanitize_input(params[:category_code],"p")
+	sectorCode = ''
+	sectorJsonData = map_sector_data()
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == categoryCode.to_i}
+	sectorJsonData.each do |sdata|
+		sectorCode.concat(sdata['Code (L3)'].to_s + " OR ")
+	end
+	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, '', 'S', 0)
+  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+  	erb :'search/solrSectors',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		level: 2
+	}
+end
+
+# Sector All Projects Page (e.g. Five Digit DAC Sector)
+get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/:sector_code/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	categoryCode = sanitize_input(params[:category_code],"p")
+	dac5Code = sanitize_input(params[:sector_code],"p")
+	# Get the five digit DAC sector project data from the API
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == dac5Code.to_i}.first
+	dac5SectorName = sectorJsonData['Name']
+	puts sectorJsonData
+	query = "(" + sectorJsonData['Code (L3)'].to_s + ")"
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, '', 'S', 0)
+	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
+  	erb :'search/solrSectors',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		level: 3
+	}	
+end
+
 #####################################################################
 #  CURRENCY HANDLER
 #####################################################################

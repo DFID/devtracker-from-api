@@ -64,6 +64,11 @@
         {
             "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:GB-* AND ",
             "fieldDependency": "reporting_org_ref"
+        },
+        "S":
+        {
+            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:GB-* AND ",
+            "fieldDependency": "sector_code"
         }
     },
     "SearchTags":

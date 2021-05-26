@@ -25,6 +25,7 @@ module SolrHelper
         # Activity Status Code filter. 
         # The 'activity_status_code' filter is a supported IATI standard field which is indexed by the iati.cloud solr engine. 
         when 'activity_status_code'
+            puts apiUrl
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             activityStatusCodes  = response['facet_counts']['facet_fields'][filter]
             statusCodeDetails = Oj.load(File.read(mappingFileUrl))
@@ -163,6 +164,13 @@ module SolrHelper
             puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
+        elsif(queryType == 'S')
+            queryCategory = solrConfig['QueryCategories'][queryType]
+            preparedFilters = filters
+            mainQueryString = mainQueryString + ' AND reporting_org_ref:(' + settings.goverment_department_ids.gsub(","," OR ") + ')' + preparedFilters
+            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
+            response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
+            response['response']
         elsif(queryType == 'O')
             queryCategory = solrConfig['QueryCategories'][queryType]
             preparedFilters = filters
@@ -202,6 +210,11 @@ module SolrHelper
                     mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
                 end
             elsif(queryType == 'O')
+                queryCategory = solrConfig['QueryCategories'][queryType]
+                if(queryCategory['fieldDependency'] != '')
+                    mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
+                end
+            elsif(queryType == 'S')
                 queryCategory = solrConfig['QueryCategories'][queryType]
                 if(queryCategory['fieldDependency'] != '')
                     mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
