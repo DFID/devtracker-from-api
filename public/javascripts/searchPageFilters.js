@@ -595,13 +595,76 @@ $(document).ready(function() {
                                 }
                             }
                             if(actualStartDate.length > 0){
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +actualStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
                             }
                             else if(plannedStartDate.length > 0){
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +plannedStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                             }
                             else{
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +'N/A'
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                             }
                         }
                         else{
@@ -617,13 +680,76 @@ $(document).ready(function() {
                                 }
                             }
                             if(actualStartDate.length > 0){
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +actualStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
                             }
                             else if(plannedStartDate.length > 0){
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +plannedStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                             }
                             else{
-                                var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                                var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +'N/A'
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                                //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                             }                           
                         }
                         // else{
@@ -782,13 +908,76 @@ $(document).ready(function() {
                         }
                     }
                     if(actualStartDate.length > 0){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +actualStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
                     }
                     else if(plannedStartDate.length > 0){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +plannedStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                     }
                     else{
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +'N/A'
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +result.activity_plus_child_aggregation.totalBudget
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+result.activity_plus_child_aggregation.totalBudget+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                     }
                 }
                 else{
@@ -806,13 +995,76 @@ $(document).ready(function() {
                     console.log('actual'+actualStartDate);
                     console.log('planned'+plannedStartDate);
                     if(actualStartDate.length > 0){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +actualStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+actualStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';                                      
                     }
                     else if(plannedStartDate.length > 0){
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +plannedStartDate
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>'+plannedStartDate+'</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                     }
                     else{
-                        var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
+                        var tempString = '<div class="eight columns"><h3><a href="/projects/'
+                                +validResults['iati_identifier']
+                                +'">'
+                                +validResults['title']
+                                +'</a></h3><span class="reporting-org">'
+                                +validResults['reporting_organisations']
+                                +'</span><p class="description">'
+                                +validResults['description']
+                                +'</p></div><div class="four columns"><div class="bottom-table row"><div class="tweleve columns"><span>Project Identifier:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['iati_identifier']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Activity Status:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +validResults['activity_status']
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span>Start Date:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span><em>'
+                                +'N/A'
+                                +'</em></span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget">Total Budget:</span></div></div><div class="bottom-table row"><div class="tweleve columns"><span class="budget"><em> '
+                                +'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'
+                                +validResults['total_plus_child_budget_value']
+                                +'</span><span class="total_plus_child_budget_currency_value_cur">'
+                                +validResults['total_plus_child_budget_currency']
+                                +'</span></div>'
+                                +'</em></span></div></div></div><hr/><br/>';
+                        //var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span class="reporting-org">'+validResults['reporting_organisations']+'</span><p class="description">'+validResults['description']+'</p><div class="bottom-table row"><div class="six columns"><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span></div><div class="six columns"><span>Activity Status: <em>'+validResults['activity_status']+'</em></span></div></div><div class="bottom-table row"><div class="six columns"><span>Start Date: <em>N/A</em></span></div><div class="six columns"><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div></div>'+'</em></span></div>';
                     }
                 }
                 // else{
