@@ -143,7 +143,7 @@ module SolrHelper
         # First we are going to handle the free text search under DevTracker. We are denoting this type of search with letter 'F'
         if(queryType == 'F')
             queryCategory = solrConfig['QueryCategories'][queryType]
-            # Handing of filters
+            # Handling of filters
             # TO-DO
             preparedFilters = filters # For now, it's empty
             mainQueryString = mainQueryString + preparedFilters
@@ -192,9 +192,9 @@ module SolrHelper
                 if(queryCategory['fieldDependency'] == '')
                     solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
                         if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
-                            mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '"'
+                            mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ''
                         else
-                            mainQueryString = mainQueryString + fieldToBeSearched + ':"' + query.to_s + '" OR '
+                            mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ' OR '
                         end
                     end
                     mainQueryString = mainQueryString + ')'

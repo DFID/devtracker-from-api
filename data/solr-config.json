@@ -6,7 +6,10 @@
         "description_narrative",
         "iati_identifier",
         "transaction_description_narrative",
-        "reporting_org_ref"
+        "reporting_org_ref",
+        "recipient_country_name",
+        "document_link_title_narrative_text",
+        "transaction"
     ],
     "PageSize": 20,
     "Filters": 

@@ -104,7 +104,7 @@
                             <%response['docs'].each do |item|%>
                                 <p class="govuk-body">
                                     <div class="govuk-grid-row">
-                                        <h3 style="color: blue" class="govuk-heading"><%=item['title_narrative'].first%></h3>
+                                        <h3 style="color: blue" class="govuk-heading"><a href="/projects/<%=item['iati_identifier']%>"><%=item['title_narrative'].first%></a></h3>
                                         <p style="color: grey" class="govuk-body">
                                             <%=item['reporting_org_narrative'].first%>
                                         </p>
