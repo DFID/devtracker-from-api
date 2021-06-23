@@ -9,7 +9,9 @@
         "reporting_org_ref",
         "recipient_country_name",
         "document_link_title_narrative_text",
-        "transaction"
+        "transaction",
+        "reporting_org_narrative",
+        "participating_org_narrative"
     ],
     "PageSize": 20,
     "Filters": 
