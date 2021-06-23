@@ -98,8 +98,32 @@
                         </div>
                     </div>
                     <div class="govuk-grid-column-two-thirds">
-                        <h2 class="govuk-heading-xl">Results</h2>
-                        <div class="light-pagination"></div>
+                        <!-- <h2 class="govuk-heading-l">Results</h2> -->
+                        <!-- <div class="light-pagination"></div> -->
+                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-one-third">
+                                Results: <span name="afterFilteringAmount" style="display:inline;"></span>
+                                <% if (response['numFound'] > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= response['numFound']%>
+                                <% else %>
+                                <span id="numberofResults" value="" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
+                                <%end%>
+                            </div>
+                            <div class="govuk-grid-column-two-thirds">
+                                <div class="light-pagination"></div>
+                            </div>
+                            <!-- <div class="govuk-grid-column-one-half">
+                                
+                                <div class="govuk-form-group">
+                                  <select class="govuk-select" id="sort" name="sort">
+                                    <option value="20">20</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="80">80</option>
+                                    <option value="100">100</option>
+                                  </select>
+                                </div>
+                            </div> -->
+                        </div>
                         <div id="response-container">
                             <%response['docs'].each do |item|%>
                                 <p class="govuk-body">
@@ -114,7 +138,7 @@
                                         <p class="govuk-body">
                                             <b>Project identifier:</b> <%=item['iati_identifier']%> <br />
                                             <b>Start Date:</b> <%=item['activity_date_start_actual']%> <br />
-                                            <b>Activity Status:</b> <%=item['activity_status_code']%> <br />
+                                            <b>Activity Status:</b> <%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%> <br />
                                             <b>Total Budget:</b> Feature not yet implemented
                                         </p>
                                     </div>
