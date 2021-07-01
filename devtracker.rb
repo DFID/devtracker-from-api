@@ -1,4 +1,5 @@
 #dotenv is used to load the sensitive environment variables for devtracker.
+
 require 'dotenv'
 Dotenv.load('/etc/platform.conf')
 
@@ -19,6 +20,7 @@ require "sinatra/json"
 require "action_view"
 require 'csv'
 require "sinatra/cookies"
+require "cgi"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -55,7 +57,7 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
@@ -63,7 +65,7 @@ include SolrHelper
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
-set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
+#set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -780,7 +782,7 @@ end
 post '/solr-search/?' do
 	query = params['query']
 	filters = prepareFilters(query.to_s, 'F')
-	response = solrResponse(query, '', 'F', 0)
+	response = solrResponse(query, '', 'F', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrSearch',
 	:layout => :'layouts/layout',
@@ -805,7 +807,7 @@ post '/solr-response' do
 	puts(filters)
 	searchType = params['data']['queryType']
 	startPage = params['data']['page']
-	response = solrResponse(query, filters, searchType, startPage)
+	response = solrResponse(query, filters, searchType, startPage, params['data']['dateRange'], params['data']['sortType'])
 	json :output => response
 end
 

@@ -136,10 +136,13 @@ module SolrHelper
         finalFilterList
     end
     ## Prepare search results ##
-    def solrResponse(query, filters, queryType, startPage)
+    def solrResponse(query, filters, queryType, startPage, dateRange, sortType)
         solrConfig = Oj.load(File.read('data/solr-config.json'))
         apiLink = solrConfig['APILink']
         mainQueryString = prepareQuery(query, queryType)
+        if(dateRange != '')
+            mainQueryString = mainQueryString + dateRange
+        end
         # First we are going to handle the free text search under DevTracker. We are denoting this type of search with letter 'F'
         if(queryType == 'F')
             queryCategory = solrConfig['QueryCategories'][queryType]
@@ -147,7 +150,12 @@ module SolrHelper
             # TO-DO
             preparedFilters = filters # For now, it's empty
             mainQueryString = mainQueryString + preparedFilters
+            if(sortType != '')
+                mainQueryString = mainQueryString + '&sort=' + sortType
+            end
             # Get response based on the API responses
+            puts ('---xxxx----')
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'R')

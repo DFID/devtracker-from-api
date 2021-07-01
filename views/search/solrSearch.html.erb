@@ -98,6 +98,102 @@
                         </div>
                     </div>
                     <div class="govuk-grid-column-two-thirds">
+                        <%# <button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+                            Advanced Filters
+                        </button> %>
+                        Advanced Filters
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-form-group">
+                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                        <h1 class="govuk-fieldset__heading">
+                                            Start Date
+                                        </h1>
+                                        </legend>
+                                        <div id="passport-issued-hint" class="govuk-hint">
+                                        For example, 01 01 2007
+                                        </div>
+                                        <div class="govuk-date-input" id="passport-issued">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="start-day">
+                                                Day
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-day" name="start-day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="start-month">
+                                                Month
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-month" name="start-month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="start-year">
+                                                Year
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="start-year" name="start-year" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-form-group">
+                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                        <h1 class="govuk-fieldset__heading">
+                                            End Date
+                                        </h1>
+                                        </legend>
+                                        <div id="passport-issued-hint" class="govuk-hint">
+                                        For example, 12 11 2007
+                                        </div>
+                                        <div class="govuk-date-input" id="passport-issued">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="end-day">
+                                                Day
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-day" name="end-day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="end-month">
+                                                Month
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-month" name="end-month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="end-year">
+                                                Year
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="end-year" name="end-year" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                    </div>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="sort">
+                                Sort by
+                            </label>
+                            <select class="govuk-select" id="sort" name="sort">
+                                <option value="">Select a sorting option</option>
+                                <%solrConfig['SortingOptions'].each do |val|%>
+                                    <option value="<%=val['field']%>"><%=val['title']%></option>    
+                                <%end%>
+                            </select>
+                        </div>
+                        <button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+                            Search
+                        </button>
                         <!-- <h2 class="govuk-heading-l">Results</h2> -->
                         <!-- <div class="light-pagination"></div> -->
                         <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
@@ -128,7 +224,7 @@
                             <%response['docs'].each do |item|%>
                                 <p class="govuk-body">
                                     <div class="govuk-grid-row">
-                                        <h3 style="color: blue" class="govuk-heading"><a href="/projects/<%=item['iati_identifier']%>"><%=item['title_narrative'].first%></a></h3>
+                                        <h3 style="color: blue" class="govuk-heading"><a href="/projects/<%=CGI.escape(item['iati_identifier'])%>"><%=item['title_narrative'].first%></a></h3>
                                         <p style="color: grey" class="govuk-body">
                                             <%=item['reporting_org_narrative'].first%>
                                         </p>
@@ -174,6 +270,18 @@
     $("document").ready(function (){
         // Store a static variable where we will keep the per page item show count
         var pageSize = <%= solrConfig['PageSize']%>;
+        var dateRange = '';
+        var sortType = '';
+        $('#av').click(function(){
+            if($('#start-day').val() && $('#start-month').val() && $('#start-year').val() && $('#end-day').val() && $('#end-month').val() && $('#end-year').val()){
+                //activity_date_start_actual:[1900-01-01%20TO%20*]%20AND%20activity_date_end_planned:[*%20TO%202021-01-01]&
+                dateRange = ' AND activity_date_start_actual:[' + $('#start-year').val()
+                + '-' + $('#start-month').val() + '-' + $('#start-day').val() + ' TO *] AND activity_date_end_planned:[* TO '
+                + $('#end-year').val() + '-' + $('#end-month').val() + '-' + $('#end-day').val() + ']'
+            }
+            sortType = $('#sort option:selected').val() + ' asc';
+            getFilteredResponse(0, true);
+        });
         <%filters.each do |key, val|%>
             <%if (val.length > 0)%>
                 $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
@@ -216,6 +324,8 @@
             data['queryType'] = 'F';
             data['page'] = page;
             data['filters'] = '';
+            data['dateRange'] = dateRange;
+            data['sortType'] = sortType;
             <%filters.each do |key, val|%>
                 <%if (val.length > 0)%>
                     if($('.<%= key%>').children('.selectedFilters').val().length > 0){
@@ -238,10 +348,33 @@
                 }
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
-                    prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading">' + result.title_narrative[0] + '</h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + result.activity_status_code + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
+                    prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading"><a href="' +result.iati_identifier + '">' + result.title_narrative[0] + '</a></h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + result.activity_status_code + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
                 })
                 $('#response-container').html(prepareContainer);
             });
         }
+
+        //Prepare modal
+        $('#av').click(function (e) {
+            console.log('clicked');
+            e.preventDefault(); 
+            $('.modal-overlay').removeClass('fade'); 
+            $('.modal-overlay').addClass('active'); 
+        }); 
+        $('.modal .close').click(function () { 
+            $('.modal-overlay').addClass("fade").delay(700).queue(function () { 
+                $(this).removeClass('active'); 
+                $(this).removeClass("fade").dequeue(); 
+            }); 
+        }); 
+        $('.modal-overlay').click(function (event) {      
+            // if you click on anything except the modal itself, close the modal      
+            if (!$(event.target).closest(".modal").length) {        
+                $('.modal-overlay').addClass("fade").delay(700).queue(function(){            
+                    $(this).removeClass('active');            
+                    $(this).removeClass("fade").dequeue();        
+                });      
+            }    
+        });
     });
 </script>

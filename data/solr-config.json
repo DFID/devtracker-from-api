@@ -1,5 +1,5 @@
 {
-    "APILink": "https://iatidatastore.iatistandard.org/",
+    "APILink": "https://iati.cloud/",
     "DefaultFieldsToReturn": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag",
     "DefaultFieldsToSearch": [
         "title_narrative",
@@ -12,6 +12,13 @@
         "transaction",
         "reporting_org_narrative",
         "participating_org_narrative"
+    ],
+    "SortingOptions":
+    [
+        {
+            "title": "Actual Start Date",
+            "field": "activity_date_start_actual"
+        }    
     ],
     "PageSize": 20,
     "Filters": 
