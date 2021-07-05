@@ -57,13 +57,13 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 #set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -814,7 +814,7 @@ end
 get '/solr-regions/?' do
 	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, '', 'R', 0)
+	response = solrResponse(query, '', 'R', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	
 	region = {}
@@ -837,7 +837,7 @@ end
 get '/solr-regions/:region_code/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, '', 'R', 0)
+	response = solrResponse(query, '', 'R', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrRegions',
 	:layout => :'layouts/layout',
@@ -854,7 +854,7 @@ end
 get '/solr-countries/:country_code/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
-	response = solrResponse(query, '', 'C', 0)
+	response = solrResponse(query, '', 'C', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrCountries',
 	:layout => :'layouts/layout',
@@ -871,7 +871,7 @@ end
 get '/solr-global/?' do
 	query = '(998)'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, '', 'R', 0)
+	response = solrResponse(query, '', 'R', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrRegions',
 	:layout => :'layouts/layout',
@@ -913,7 +913,7 @@ get '/solr-department/:dept_id/?' do
   	settings.devtracker_page_title = ogds[dept_id]["name"]
 	query = deptIdentifier
 	filters = prepareFilters(query.to_s, 'O')
-	response = solrResponse(query, '', 'O', 0)
+	response = solrResponse(query, '', 'O', 0, '', '')
 	erb :'search/solrDepartments',
 	:layout => :'layouts/layout',
 	:locals => 
@@ -937,7 +937,7 @@ get '/solr-sector/:high_level_sector_code/projects/?' do
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
 	puts query
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, '', 'S', 0)
+	response = solrResponse(query, '', 'S', 0, '', '')
   	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
   	erb :'search/solrSectors',
 	:layout => :'layouts/layout',
@@ -966,7 +966,7 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/?' 
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
 	puts query
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, '', 'S', 0)
+	response = solrResponse(query, '', 'S', 0, '', '')
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
   	erb :'search/solrSectors',
 	:layout => :'layouts/layout',
@@ -993,7 +993,7 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/:se
 	puts sectorJsonData
 	query = "(" + sectorJsonData['Code (L3)'].to_s + ")"
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, '', 'S', 0)
+	response = solrResponse(query, '', 'S', 0, '', '')
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
   	erb :'search/solrSectors',
