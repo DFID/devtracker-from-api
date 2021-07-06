@@ -766,7 +766,8 @@ get '/solr-search/?' do
 		'docs' => []
 	}
   	settings.devtracker_page_title = 'Search Page'
-	erb :'search/solrSearch',
+	#erb :'search/solrSearch',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -775,7 +776,10 @@ get '/solr-search/?' do
 		filters: filters,
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json'))
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'F',
+		breadcrumbURL: '',
+		breadcrumbText: ''
 	}
 end
 
@@ -784,7 +788,8 @@ post '/solr-search/?' do
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, '', 'F', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrSearch',
+	#erb :'search/solrSearch',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -793,7 +798,10 @@ post '/solr-search/?' do
 		filters: filters,
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json'))
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'F',
+		breadcrumbURL: '',
+		breadcrumbText: ''
 	}
 end
 
@@ -820,7 +828,8 @@ get '/solr-regions/?' do
 	region = {}
 	region[:code] = "298,798,89,589,389,189,679,289,380"
 	region[:name] = "All"
-	erb :'regions/projects-home',
+	#erb :'regions/projects-home',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -830,7 +839,11 @@ get '/solr-regions/?' do
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		region:region,
-		total_projects: response['numFound']
+		total_projects: response['numFound'],
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/regional',
+		breadcrumbText: 'Aid by Location'
 	}
 end
 
@@ -839,7 +852,8 @@ get '/solr-regions/:region_code/?' do |n|
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, '', 'R', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrRegions',
+	#erb :'search/solrRegions',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -847,7 +861,10 @@ get '/solr-regions/:region_code/?' do |n|
 		query: query,
 		filters: filters,
 		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json'))
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/regional',
+		breadcrumbText: 'Aid by Location'
 	}
 end
 
@@ -856,7 +873,8 @@ get '/solr-countries/:country_code/?' do |n|
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, '', 'C', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrCountries',
+	#erb :'search/solrCountries',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -864,7 +882,11 @@ get '/solr-countries/:country_code/?' do |n|
 		query: query,
 		filters: filters,
 		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json'))
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'C',
+		breadcrumbURL: '/location/country',
+		breadcrumbText: 'Aid by Location'
 	}
 end
 
@@ -873,7 +895,8 @@ get '/solr-global/?' do
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, '', 'R', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrRegions',
+	#erb :'search/solrRegions',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -881,7 +904,11 @@ get '/solr-global/?' do
 		query: query,
 		filters: filters,
 		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json'))
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/global',
+		breadcrumbText: 'Aid by Location'
 	}
 end
 
@@ -914,7 +941,8 @@ get '/solr-department/:dept_id/?' do
 	query = deptIdentifier
 	filters = prepareFilters(query.to_s, 'O')
 	response = solrResponse(query, '', 'O', 0, '', '')
-	erb :'search/solrDepartments',
+	#erb :'search/solrDepartments',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -922,7 +950,11 @@ get '/solr-department/:dept_id/?' do
 		query: query,
 		filters: filters,
 		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json'))
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'O',
+		breadcrumbURL: '/department',
+		breadcrumbText: 'Aid by Department'
 	}
 end
 
@@ -939,7 +971,8 @@ get '/solr-sector/:high_level_sector_code/projects/?' do
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, '', 'S', 0, '', '')
   	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
-  	erb :'search/solrSectors',
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -948,7 +981,11 @@ get '/solr-sector/:high_level_sector_code/projects/?' do
 		filters: filters,
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		level: 1
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 1,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Department'
 	}
 end
 
@@ -968,7 +1005,8 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/?' 
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, '', 'S', 0, '', '')
   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
-  	erb :'search/solrSectors',
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -977,7 +1015,11 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/?' 
 		filters: filters,
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		level: 2
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 2,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Department'
 	}
 end
 
@@ -996,7 +1038,8 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/:se
 	response = solrResponse(query, '', 'S', 0, '', '')
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
-  	erb :'search/solrSectors',
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
@@ -1005,7 +1048,11 @@ get '/solr-sector/:high_level_sector_code/categories/:category_code/projects/:se
 		filters: filters,
 		response: response,
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		level: 3
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 3,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Sector'
 	}	
 end
 
