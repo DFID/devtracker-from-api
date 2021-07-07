@@ -296,7 +296,10 @@
                 + '-' + $('#start-month').val() + '-' + $('#start-day').val() + ' TO *] AND activity_date_end_planned:[* TO '
                 + $('#end-year').val() + '-' + $('#end-month').val() + '-' + $('#end-day').val() + ']'
             }
-            sortType = $('#sort option:selected').val() + ' asc';
+            if ($('#sort option:selected').val() != '')
+            {
+                sortType = $('#sort option:selected').val() + ' asc';
+            }
             getFilteredResponse(0, true, 0);
         });
         <%filters.each do |key, val|%>
