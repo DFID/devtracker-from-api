@@ -127,24 +127,24 @@
                                         <div class="govuk-date-input" id="passport-issued">
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="start-day">
+                                            <label class="govuk-label govuk-date-input__label" for="s1">
                                                 Day
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-day" name="start-day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="start-month">
+                                            <label class="govuk-label govuk-date-input__label" for="s1">
                                                 Month
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-month" name="start-month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="start-year">
+                                            <label class="govuk-label govuk-date-input__label" for="s3">
                                                 Year
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="start-year" name="start-year" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="s3" name="s3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         </div>
 
@@ -165,24 +165,24 @@
                                         <div class="govuk-date-input" id="passport-issued">
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="end-day">
+                                            <label class="govuk-label govuk-date-input__label" for="e1">
                                                 Day
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-day" name="end-day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e1" name="e1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="end-month">
+                                            <label class="govuk-label govuk-date-input__label" for="e2">
                                                 Month
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-month" name="end-month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e2" name="e2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="end-year">
+                                            <label class="govuk-label govuk-date-input__label" for="e3">
                                                 Year
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="end-year" name="end-year" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="e3" name="e3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                     </div>
 
@@ -190,6 +190,9 @@
                                 </div>
                             </div>
                         </div>
+                        <span id="show-error" style="display: none" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Please enter a valid date or date range.
+                        </span>
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="sort">
                                 Sort by
@@ -291,11 +294,76 @@
         var dateRange = '';
         var sortType = '';
         $('#av').click(function(){
-            if($('#start-day').val() && $('#start-month').val() && $('#start-year').val() && $('#end-day').val() && $('#end-month').val() && $('#end-year').val()){
-                dateRange = ' AND activity_date_start_actual:[' + $('#start-year').val()
-                + '-' + $('#start-month').val() + '-' + $('#start-day').val() + ' TO *] AND activity_date_end_planned:[* TO '
-                + $('#end-year').val() + '-' + $('#end-month').val() + '-' + $('#end-day').val() + ']'
+            dateRange = '';
+            $('#show-error').hide();
+            if($('#s1').val() && $('#s1').val() && $('#s3').val() && $('#e1').val() && $('#e2').val() && $('#e3').val())
+            {
+                if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()) && isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
+                {
+                    var tempStartDate = new Date($('#s1').val() + '/' + $('#s1').val() + '/' + $('#s3').val());
+                    var tempEndDate = new Date($('#e1').val() + '/' + $('#e2').val() + '/' + $('#e3').val());
+                    if(tempStartDate < tempEndDate)
+                    {
+                        dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
+                        + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *] AND activity_date_end_planned:[* TO '
+                        + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                    }
+                    else {
+                        $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> End date cannot be lower than start date range.');
+                        $('#show-error').show();
+                    }
+                }
             }
+            else if ($('#s1').val() && $('#s1').val() && $('#s3').val() && (!$('#e1').val() || !$('#e2').val() || !$('#e3').val()))
+            {
+                if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()))
+                {
+                    dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
+                    + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *]'
+                }
+                else 
+                {
+                    $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
+                    $('#show-error').show();
+                }
+            }
+            else if ($('#e1').val() && $('#e2').val() && $('#e3').val() && (!$('#s1').val() || !$('#s1').val() || !$('#s3').val()))
+            {
+                if(isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
+                {
+                    dateRange = ' AND activity_date_end_planned:[* TO '
+                    + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                }
+                else 
+                {
+                    $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid end date.');
+                    $('#show-error').show();
+                }
+            }
+            var startDateB = 0;
+            var endDateB = 0;
+            for (var i = 1; i <4; i++)
+            {
+                if($('#s'+i).val() != '')
+                {
+                    startDateB = startDateB + 1;
+                }
+                if($('#e'+i).val() != '')
+                {
+                    endDateB = endDateB + 1;
+                }
+            }
+            if(startDateB > 0 && startDateB < 3)
+            {
+                $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
+                $('#show-error').show();
+            }
+            if(endDateB > 0 && endDateB < 3)
+            {
+                $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid end date.');
+                $('#show-error').show();
+            }
+            
             if ($('#sort option:selected').val() != '')
             {
                 sortType = $('#sort option:selected').val() + ' asc';
@@ -390,6 +458,15 @@
             });
         }
 
+        // Date validator
+        function isValidDate(d, m, y)
+        {
+            var dt = new Date(y + '/' + m + '/' + d);
+            return !!(dt && (dt.getMonth() + 1) == m && dt.getDate() == Number(d));
+        }
+        var currentDate = new Date('31/09/2011');
+        console.log(isValidDate(30, 09, 2011));
+        console.log(isValidDate(36, 09, 2011));
         //Prepare modal
         $('#av').click(function (e) {
             e.preventDefault(); 

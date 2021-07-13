@@ -361,7 +361,6 @@ ul.legend-list li div span{
   text-rendering: optimizeLegibility;
   line-height: 1.1;
   margin-bottom: 14px;
-  margin-top: 
 }
 
 /*More Information CSS for Transactions Page*/
@@ -1158,4 +1157,8 @@ table.govuk-table {
 
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+.input--error{
+  border: 2px solid #d4351c !important;
 }
