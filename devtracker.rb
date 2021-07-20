@@ -19,6 +19,7 @@ require "sinatra/json"
 require "action_view"
 require 'csv'
 require "sinatra/cookies"
+require "cgi"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -54,6 +55,7 @@ include RecaptchaHelper
 
 # Developer Machine: set global settings
 # set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+# set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
@@ -338,25 +340,22 @@ end
 #####################################################################
 
 # Project summary page
-get '/projects/:proj_id/?' do |n|
+get '/projects/*/summary' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
   	participatingOrgList = get_participating_organisations(project)
-
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
-
   	#get total project budget and spend Data
   	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
-  	
   	projectSectorGraphData = get_project_sector_graph_data(n)
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
-
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_details(n).length
 	#Policy markers
@@ -375,6 +374,7 @@ get '/projects/:proj_id/?' do |n|
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
+			projectId: n,
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
@@ -390,8 +390,9 @@ get '/projects/:proj_id/?' do |n|
 end
 
 # Project documents page
-get '/projects/:proj_id/documents/?' do |n|
+get '/projects/*/documents/?' do
 	#n = sanitize_input(n,"p")
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	# get the project data from the API
 	project = get_h1_project_details(n)
 
@@ -417,7 +418,8 @@ get '/projects/:proj_id/documents/?' do |n|
 end
 
 #Project transactions page
-get '/projects/:proj_id/transactions/?' do |n|
+get '/projects/*/transactions/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -478,7 +480,8 @@ get '/projects/:proj_id/transactions/?' do |n|
 end
 
 #Project partners page
-get '/projects/:proj_id/partners/?' do |n|
+get '/projects/*/partners/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	# get the project data from the API
 	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
@@ -1161,7 +1164,7 @@ get '/rss/country/:country_code/?' do |n|
 	      maker.items.new_item do |item|
 	        #convert lastUpdatedDatetime to UTC
 	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
-	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
+	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + ERB::Util.url_encode(project['iati_identifier']).to_s + "/summary/"
 	        item.title = project['title']['narratives'][0]['text']
 	        item.description = project['descriptions'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
 	        item.updated = lastUpdatedDateTimeUtc

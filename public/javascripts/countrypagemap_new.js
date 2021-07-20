@@ -259,7 +259,7 @@ $(document).ready(function() {
   //Draw each of the markers based on the API data and add them to the main leaflet map
   var markers = L.markerClusterGroup({ chunkedLoading: true });
   $.each(mapMarkers,function(index, marker){
-    var dtUrl = "/projects/" + marker['iati_identifier'];
+    var dtUrl = "/projects/" + encodeURIComponent(marker['iati_identifier']).toString() + "/summary";
     var title = marker['title'];
     var prepAltText = 'Project title: ' + title + '. Project identifier: ' + marker['iati_identifier'] + '. Project location on map: ' + marker['loc'];
     var tempMarker = L.marker(L.latLng(marker.geometry.coordinates[1],marker.geometry.coordinates[0]),{
