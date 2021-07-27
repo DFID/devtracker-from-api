@@ -43,7 +43,7 @@ $(document).ready(function() {
                 items.push([
                     "<div class='row'>", 
                         "<div class='five columns location-label'>", 
-                            "<a href='/projects/", location.id ,"'>", location.id, "</a>",
+                            "<a href='/projects/", encodeURIComponent(location.id).toString() ,"/summary'>", location.id, "</a>",
                         "</div>", 
                         "<div class='seven columns'>", location.title, "</div>",
                     "</div>"
@@ -201,7 +201,7 @@ $(document).ready(function() {
             //iterate through every activity
                 iati.results.forEach(function (d) {
                     var iatiIdentifier = d.iati_identifier;
-                    var dtUrl = "https://devtracker.fcdo.gov.uk/projects/" + iatiIdentifier;
+                    var dtUrl = "https://devtracker.fcdo.gov.uk/projects/" + encodeURIComponent(iatiIdentifier).toString() + "/summary";
                     var title = (d.title.narratives != null) ? d.title.narratives[0].text : "";
                     //iterate over each location
                     d.locations.forEach(function (p) {
