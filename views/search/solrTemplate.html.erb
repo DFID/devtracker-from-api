@@ -134,10 +134,10 @@
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="s1">
+                                            <label class="govuk-label govuk-date-input__label" for="s2">
                                                 Month
                                             </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s2" name="s2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
                                         </div>
                                         <div class="govuk-date-input__item">
                                             <div class="govuk-form-group">
@@ -346,13 +346,16 @@
             {
                 if($('#s'+i).val() != '')
                 {
+                    console.log("x"+i);
                     startDateB = startDateB + 1;
                 }
                 if($('#e'+i).val() != '')
                 {
+                    console.log("y"+i);
                     endDateB = endDateB + 1;
                 }
             }
+            console.log(startDateB);
             if(startDateB > 0 && startDateB < 3)
             {
                 $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
