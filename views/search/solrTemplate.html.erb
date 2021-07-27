@@ -240,7 +240,7 @@
                             <%response['docs'].each do |item|%>
                                 <p class="govuk-body">
                                     <div class="govuk-grid-row">
-                                        <h3 style="color: blue" class="govuk-heading"><a href="/projects/<%=CGI.escape(item['iati_identifier'])%>"><%=item['title_narrative'].first%></a></h3>
+                                        <h3 style="color: blue" class="govuk-heading"><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative'].first%></a></h3>
                                         <p style="color: grey" class="govuk-body">
                                             <%=item['reporting_org_narrative'].first%>
                                         </p>
@@ -346,16 +346,13 @@
             {
                 if($('#s'+i).val() != '')
                 {
-                    console.log("x"+i);
                     startDateB = startDateB + 1;
                 }
                 if($('#e'+i).val() != '')
                 {
-                    console.log("y"+i);
                     endDateB = endDateB + 1;
                 }
             }
-            console.log(startDateB);
             if(startDateB > 0 && startDateB < 3)
             {
                 $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
@@ -451,10 +448,10 @@
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading"><a href="/projects/'+result.iati_identifier+'">' + result.title_narrative[0] + '</a></h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + activityStatus[parseInt(result.activity_status_code) - 1].name + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
+                        prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + activityStatus[parseInt(result.activity_status_code) - 1].name + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading"><a href="/projects/'+result.iati_identifier+'">' + result.title_narrative[0] + '</a></h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + activityStatus[parseInt(result.activity_status_code) - 1].name + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
+                        prepareContainer = prepareContainer + '<p class="govuk-body"><div class="govuk-grid-row"><h3 style="color: blue" class="govuk-heading"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p style="color: grey" class="govuk-body">' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><p class="govuk-body"><b>Project identifier:</b> ' + result.iati_identifier + ' <br />' + '<b>Start Date:</b> ' + result.activity_date_start_actual + ' <br /><b>Activity Status:</b> ' + activityStatus[parseInt(result.activity_status_code) - 1].name + '<br /><b>Total Budget:</b> Feature not yet implemented </p></div></p><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);
