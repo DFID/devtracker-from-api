@@ -775,17 +775,33 @@ Search Results Pages
 			}
 			}
 		}
-		
-		.govuk-checkboxes--small .govuk-checkboxes__label:before {    
-			top: 0;
-    		width: 18px;
-    		height: 18px;
-		}
-		
-		.govuk-checkboxes--small .govuk-checkboxes__label {
-			padding: 2px 15px 10px 1px;
-			font-size: 0.9rem
-		}
+			
+			.govuk-checkboxes__input:focus+.govuk-checkboxes__label:before {
+				border-width: 2px;
+			}
+			
+		.govuk-checkboxes--small { 
+			.govuk-checkboxes__item {
+				.govuk-checkboxes__input {
+					width:30px;
+					height:30px;
+					top:-5px;
+					left:-2px;
+				}
+				label {
+					padding: 2px 15px 10px 1px;
+					font-size: 0.9rem}
+				label:before {    
+						top: 0;
+						width: 18px;
+						height: 18px;
+					}
+				label:after {
+						top:4px;
+						left:3px;
+					}
+				}
+			}
 	}
 	
 	h1 {
