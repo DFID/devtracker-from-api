@@ -344,7 +344,7 @@ end
 
 # Project summary page
 get '/projects/:proj_id/?' do |n|
-	n = sanitize_input(n,"p")
+	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
@@ -396,7 +396,7 @@ end
 
 # Project documents page
 get '/projects/:proj_id/documents/?' do |n|
-	n = sanitize_input(n,"p")
+	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
 
@@ -423,7 +423,7 @@ end
 
 #Project transactions page
 get '/projects/:proj_id/transactions/?' do |n|
-	n = sanitize_input(n,"p")
+	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
 	componentData = get_project_component_data(project)
@@ -485,7 +485,7 @@ end
 #Project partners page
 get '/projects/:proj_id/partners/?' do |n|
 	# get the project data from the API
-	n = sanitize_input(n,"p")
+	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
