@@ -13,7 +13,13 @@
 			"Status": "active"
 		},
 		{
-			"Code": "null",
+			"Code": "RI",
+			"Name": "Research and Innovation (R&I)",
+			"Description": "<p>Research and innovation activities are funded through UK Official Development Assistance (ODA), largely through the Foreign, Commonwealth and Development Office (FCDO), the Department for Business, Energy and Industrial Strategy (BEIS) and the Department of Health and Social Care (DHSC). Research focuses on international development challenge areas such as global health and education to produce evidence informing UK government programming and policy. Investment is made in the delivery of new technologies and innovation, the use of evidence in low- and middle-income countries for poverty reduction and a number of international statistical capacity building or open data initiatives.</p>",
+			"Status": "inactive"
+		},
+		{
+			"Code": "-",
 			"Name": "No explicit priority",
 			"Description": "When used in a sector element, this code can be used to indicate that the rest of an IATI activity is not financially dedicated to a given priority on this list. For instance, if only 25% of a given activity is devoted to supporting low carbon growth, this code can be used and set to 75% to pad the remainder. Activities will not validate otherwise, as sector codes are designed to sum to 100%. This code is not needed when using the Tag element.",
 			"Status": "active"
