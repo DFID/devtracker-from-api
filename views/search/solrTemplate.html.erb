@@ -28,11 +28,17 @@
                                 <label for="query">
                                     <h3>Search Projects</h3>
                                 </label>
+                                <a class="more-info-link move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
+                                <aside id="moreinfo2" class="more-info">            
+                                    <div class="more-info-content">
+                                        Search types are now supported. Ex: Searching for <i><strong>tags:ICF</strong></i> will return all the relevant results that have link to ICF tag. Available search tags are: <i><strong><%solrConfig['SearchTags'].each do |key, val|%><%=key%>, <%end%></strong></i>
+                                     </div>
+                                </aside>
 						</div>
 											<div class="govuk-grid-column-three-quarters">
                             <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
-												<p>Search types are now supported. Ex: Searching for <i><strong>tags:ICF</strong></i> will return all the relevant results that have link to ICF tag. Available search tags are: <i><strong><%solrConfig['SearchTags'].each do |key, val|%><%=key%>, <%end%></strong></i>.</br>
-						<strong>Please note:</strong> The terms that are related to the search tags must align with IATI published standard and data.</p>
+												
+						<!-- <strong>Please note:</strong> The terms that are related to the search tags must align with IATI published standard and data.</p> -->
 								
                                             </div>
 							<div class="govuk-grid-column-one-quarter">
@@ -82,7 +88,7 @@
                         <div class="govuk-grid-row">
 							<div class="govuk-grid-column-full">
 								<h3>Advanced Filters</h3>
-								<p>Lorem ipsum dolor sit amet, sit prima utroque ullamcorper ut. His possit intellegat comprehensam eu, eum movet constituto necessitatibus et.</p>
+								<p>To search for projects in a specific time period, please enter the start and end dates.</p>
 							</div>
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-form-group">
