@@ -241,13 +241,24 @@
                                                 <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
                                                     <%val.each do |item|%>
                                                         <div class="govuk-checkboxes__item">
-                                                            <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                            <label class="govuk-label govuk-checkboxes__label">
-                                                                <%= item['key']%>
-                                                            </label>
+                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == item['value'])%>
+                                                                <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                                <label class="govuk-label govuk-checkboxes__label">
+                                                                    <%= item['key']%>
+                                                                </label>
+                                                            <%else%>
+                                                                <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
+                                                                <label class="govuk-label govuk-checkboxes__label">
+                                                                    <%= item['key']%>
+                                                                </label>
+                                                            <%end%>
                                                         </div>
                                                     <%end%>
-                                                    <input class="selectedFilters" type="hidden">
+                                                    <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
+                                                        <input class="selectedFilters" type="hidden">
+                                                    <%else%>
+                                                        <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>">
+                                                    <%end%>
                                                 </div>
                                             </fieldset>
                                     <%end%>
