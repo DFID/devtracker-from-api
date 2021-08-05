@@ -1,0 +1,478 @@
+
+    <link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
+    <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/formatDate.js"></script>
+    <% if response['numFound'] > 0 %>
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper search-results-page">
+				
+				
+                <div class="govuk-grid-row">
+					<div class="govuk-grid-column-full">
+					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+					</div>
+				</div>
+                       <div class="govuk-grid-row">
+						                               <div class="govuk-grid-column-two-thirds">
+						                       <%if  searchType == 'F'%>
+                        <%if response['numFound'] == -1%>
+                            <h1>
+                                Search Page
+                            </h1>
+                        <%else%>
+                            <h1>
+								<span>Now showing projects related to:</span>
+                                "<%= query %>"
+                            </h1>
+                        <%end%>
+                    <%end%>
+						   </div>
+						                               <div class="govuk-grid-column-one-third text-align-right">
+                        <a href="#" class="show-advance-button"><i class="fas fa-list"></i> Advanced Filters</a>
+						<div class="advance-toggle">
+							<div class="inner">
+                        <div class="govuk-grid-row">
+							<div class="govuk-grid-column-full">
+								<h3>Advanced Filters</h3>
+								<p>To search for projects in a specific time period, please enter the start and end dates.</p>
+							</div>
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-form-group">
+                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+                                            Start Date
+                                        </legend>
+                                        <div id="passport-issued-hint" class="govuk-hint">
+                                        For example, 01 01 2007
+                                        </div>
+                                        <div class="govuk-date-input" id="passport-issued">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="s1">
+                                                Day
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="s2">
+                                                Month
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s2" name="s2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="s3">
+                                                Year
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="s3" name="s3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="govuk-grid-column-one-half">
+                                <div class="govuk-form-group">
+                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+                                           End Date
+                                        </legend>
+                                        <div id="passport-issued-hint" class="govuk-hint">
+                                        For example, 12 11 2007
+                                        </div>
+                                        <div class="govuk-date-input" id="passport-issued">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="e1">
+                                                Day
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e1" name="e1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="e2">
+                                                Month
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e2" name="e2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="e3">
+                                                Year
+                                            </label>
+                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="e3" name="e3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                                        </div>
+                                    </div>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+						<div class="govuk-grid-row">
+							<div class="govuk-grid-column-full">
+								<span id="show-error" style="display: none" class="govuk-error-message">
+									<span class="govuk-visually-hidden">Error:</span> Please enter a valid date or date range.
+								</span>
+							</div>
+						</div>
+						<div class="govuk-grid-row">
+							<div class="govuk-grid-column-one-half">
+								<div class="govuk-form-group">
+									<label class="govuk-label" for="sort">
+										Sort by
+									</label>
+									<select class="govuk-select" id="sort" name="sort">
+										<option value="">Select a sorting option</option>
+										<%solrConfig['SortingOptions'].each do |val|%>
+											<option value="<%=val['field']%>"><%=val['title']%></option>    
+										<%end%>
+									</select>
+								</div>
+								<button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+									Apply Filter
+								</button>
+								<button class="close-advance-button govuk-button govuk-button--secondary">Cancel</button>
+							</div>
+						</div>
+						   </div>
+						   </div>
+						   </div>
+				</div> 
+                       <div class="govuk-grid-row divider">
+						   
+                            <div class="govuk-grid-column-one-third results-number">
+                                <strong>Results:</strong> <span name="afterFilteringAmount" style="display:inline;"></span>
+                                <div id="resultCountHolder">
+                                    <% if (response['numFound'] > solrConfig['PageSize']) %>
+                                        <span id="numberofResults" style="display:inline;">1 - <%= solrConfig['PageSize']%></span> of <%= response['numFound']%>
+                                    <% else %>
+                                        <span id="numberofResults" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
+                                    <%end%>
+                                </div>
+                            </div>
+                            <div class="govuk-grid-column-two-thirds">
+                                <div class="light-pagination"></div>
+                            </div>
+                            <!-- <div class="govuk-grid-column-one-half">
+                                
+                                <div class="govuk-form-group">
+                                  <select class="govuk-select" id="sort" name="sort">
+                                    <option value="20">20</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="80">80</option>
+                                    <option value="100">100</option>
+                                  </select>
+                                </div>
+                            </div> -->
+                        </div>	
+					
+					
+					
+					
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-quarter filters-column">
+						<div>
+                        <h2 class="govuk-heading-m">Filters</h2>
+                        <div class="govuk-body">
+                            <div class="govuk-form-group">
+                                <%filters.each do |key, val|%>
+                                    <%if (val.length > 0)%>
+                                            <fieldset class="govuk-fieldset">
+                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                    <h3 class="govuk-fieldset__heading">
+                                                        <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
+                                                    </h1>
+                                                </legend>
+                                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
+                                                    <%val.each do |item|%>
+                                                        <div class="govuk-checkboxes__item">
+                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == item['value'])%>
+                                                                <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                                <label class="govuk-label govuk-checkboxes__label">
+                                                                    <%= item['key']%>
+                                                                </label>
+                                                            <%else%>
+                                                                <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
+                                                                <label class="govuk-label govuk-checkboxes__label">
+                                                                    <%= item['key']%>
+                                                                </label>
+                                                            <%end%>
+                                                        </div>
+                                                    <%end%>
+                                                    <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
+                                                        <input class="selectedFilters" type="hidden">
+                                                    <%else%>
+                                                        <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
+                                                    <%end%>
+                                                </div>
+                                            </fieldset>
+                                    <%end%>
+                                <%end%>
+                            </div>
+                        </div>
+                    </div> 
+				</div>
+                    <div id="response-container" class="govuk-grid-column-three-quarters">
+
+                        <!-- <h2 class="govuk-heading-l">Results</h2> -->
+                        <!-- <div class="light-pagination"></div> -->
+                            <%response['docs'].each do |item|%>
+                                    <div class="govuk-grid-row divider">
+										<div class="govuk-grid-column-three-quarters">
+                                        <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative'].first%></a></h3>
+                                        <p>
+                                            <%=item['reporting_org_narrative'].first%>
+                                        </p>
+                                        <p class="govuk-body">
+                                            <%begin%>
+                                                <%=item['description_narrative'].first%>
+                                            <%rescue%>
+                                                No Description Available
+                                            <%end%>
+                                        </p>
+											<a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary">Learn more</a>
+										</div>
+										<div class="govuk-grid-column-one-quarter">
+                                            <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
+                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_actual']%></p>
+                                            <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
+                                            <h4>Total Budget:</h4>  <p><%= item['activity_plus_child_aggregation_budget_value']%></p>
+										</div>
+                                    </div>
+                                <br />
+                            <%end%>
+                    </div>
+                </div>
+            </main>
+            </div>
+        <%#=filters%>
+        <br/>
+        <br />
+        <%#=response%>
+    <%elsif response['numFound'] == 0%>
+        <div class="row">
+            <div class="twelve columns">
+                <div class="search-result nine columns push-three">
+                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any projects.</p><p style="margin-top:1em">Suggestions:</p>
+                    <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
+                        <li>Make sure all words are spelled correctly or try different keywords</li>
+                    </ul>
+                    <p>Search results only show active projects. To see projects that have been completed, select the "Include Completed Projects" checkbox and click the Search button.</p>
+                </div>
+                <div class="three columns pull-nine"></div>
+            </div>
+        </div>
+    <%end%>
+</div>
+<script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function (){
+        var activityStatus = <%= activityStatus.to_json%>;
+        // Store a static variable where we will keep the per page item show count
+        var pageSize = <%= solrConfig['PageSize']%>;
+        var dateRange = '';
+        var sortType = '';
+        $('#av').click(function(){
+            dateRange = '';
+            $('#show-error').hide();
+            if($('#s1').val() && $('#s1').val() && $('#s3').val() && $('#e1').val() && $('#e2').val() && $('#e3').val())
+            {
+                if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()) && isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
+                {
+                    var tempStartDate = new Date($('#s1').val() + '/' + $('#s1').val() + '/' + $('#s3').val());
+                    var tempEndDate = new Date($('#e1').val() + '/' + $('#e2').val() + '/' + $('#e3').val());
+                    if(tempStartDate < tempEndDate)
+                    {
+                        dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
+                        + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *] AND activity_date_end_planned:[* TO '
+                        + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                    }
+                    else {
+                        $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> End date cannot be lower than start date range.');
+                        $('#show-error').show();
+                    }
+                }
+            }
+            else if ($('#s1').val() && $('#s1').val() && $('#s3').val() && (!$('#e1').val() || !$('#e2').val() || !$('#e3').val()))
+            {
+                if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()))
+                {
+                    dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
+                    + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *]'
+                }
+                else 
+                {
+                    $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
+                    $('#show-error').show();
+                }
+            }
+            else if ($('#e1').val() && $('#e2').val() && $('#e3').val() && (!$('#s1').val() || !$('#s1').val() || !$('#s3').val()))
+            {
+                if(isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
+                {
+                    dateRange = ' AND activity_date_end_planned:[* TO '
+                    + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                }
+                else 
+                {
+                    $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid end date.');
+                    $('#show-error').show();
+                }
+            }
+            var startDateB = 0;
+            var endDateB = 0;
+            for (var i = 1; i <4; i++)
+            {
+                if($('#s'+i).val() != '')
+                {
+                    startDateB = startDateB + 1;
+                }
+                if($('#e'+i).val() != '')
+                {
+                    endDateB = endDateB + 1;
+                }
+            }
+            if(startDateB > 0 && startDateB < 3)
+            {
+                $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid start date.');
+                $('#show-error').show();
+            }
+            if(endDateB > 0 && endDateB < 3)
+            {
+                $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> Please enter a valid end date.');
+                $('#show-error').show();
+            }
+            
+            if ($('#sort option:selected').val() != '')
+            {
+                sortType = $('#sort option:selected').val() + ' asc';
+            }
+            getFilteredResponse(0, true, 0);
+        });
+        <%filters.each do |key, val|%>
+            <%if (val.length > 0)%>
+                $('.<%= key%>').children('.govuk-checkboxes__item').children('.govuk-checkboxes__input').click(function(){
+                    if($('input[name="<%= key%>"]:checked').length > 0) {
+                        var tempFilters = '<%=key%>:(';
+                        $('input[name="<%= key%>"]:checked').each(function(i, val){
+                            if(i < 1 ){
+                                tempFilters = tempFilters + this.value;
+                            }
+                            else{
+                                tempFilters = tempFilters + ' OR ' + this.value;
+                            }
+                        });
+                        tempFilters = tempFilters.trim() + ')';
+                        $('.<%= key%>').children('.selectedFilters').val(tempFilters);
+                    }
+                    else {
+                        $('.<%= key%>').children('.selectedFilters').val('');
+                    }
+                    //get new set of results
+                    getFilteredResponse(0, true, 0);
+                });
+            <%end%>
+        <%end%>
+        function initiatePagination(projectCount){
+            $('.light-pagination').pagination({
+                items: projectCount,
+                itemsOnPage: pageSize,
+                cssStyle: 'compact-theme',
+                onPageClick: function(pageNumber, event){
+                    getFilteredResponse((pageNumber-1)*pageSize, false, pageNumber)
+                }
+            });
+        }
+        initiatePagination(<%= response['numFound']%>, true);
+        // Post filter changes to the server end and update page with response
+        function getFilteredResponse(page, isResetPagination, pageNumber){
+            var data = {};
+            data['query'] = '<%= query%>';
+            data['queryType'] = '<%= searchType%>';
+            data['page'] = page;
+            data['filters'] = '';
+            data['dateRange'] = dateRange;
+            data['sortType'] = sortType;
+            <%filters.each do |key, val|%>
+                <%if (val.length > 0)%>
+                    if($('.<%= key%>').children('.selectedFilters').val().length > 0){
+                        if(data['filters'].length > 0){
+                            data['filters'] = data['filters'] + ' AND ' + $('.<%= key%>').children('.selectedFilters').val();
+                        }
+                        else{
+                            data['filters'] = data['filters'] + $('.<%= key%>').children('.selectedFilters').val();
+                        }
+                    }
+                <%end%>
+            <%end%>
+            data['filters'] = data['filters'].trim();
+            $.post('/solr-response',{
+                data: data
+            })
+            .done(function(response){
+                $(".close-advance-button").trigger("click");
+                if(isResetPagination){
+                    initiatePagination(response.output.numFound);
+                    if(response.output.numFound > pageSize)
+                    {
+                        $('#resultCountHolder').html('<span id="numberofResults" style="display:inline;">1 - '+pageSize+'</span> of ' + response.output.numFound);
+                    }
+                    else{
+                        $('#resultCountHolder').html('<span id="numberofResults" style="display:inline;">'+response.output.numFound +'</span> of ' + response.output.numFound);
+                    }
+                }
+                else
+                {
+                    if(pageSize*pageNumber >= response.output.numFound){
+                        $('#resultCountHolder').html('<span id="numberofResults" style="display:inline;">'+(1+(pageSize*(pageNumber-1)))+' - '+response.output.numFound+'</span> of ' + response.output.numFound);
+                    }
+                    else{
+                        $('#resultCountHolder').html('<span id="numberofResults" style="display:inline;">'+(1+(pageSize*(pageNumber-1)))+' - '+(pageSize*pageNumber)+'</span> of ' + response.output.numFound);
+                    }
+                }
+				
+	
+                var prepareContainer = '';
+                $.each(response.output.docs,function(i, result){
+                    if(typeof result.description_narrative === 'undefined'){
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'result.activity_plus_child_aggregation_budget_value'</p></div></div><br />';
+                    }
+                    else{
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'result.activity_plus_child_aggregation_budget_value'</p></div></div><br />';
+                    }
+                })
+                $('#response-container').html(prepareContainer);
+            });
+        }
+
+        // Date validator
+        function isValidDate(d, m, y)
+        {
+            var dt = new Date(y + '/' + m + '/' + d);
+            return !!(dt && (dt.getMonth() + 1) == m && dt.getDate() == Number(d));
+        }
+        
+        //Prepare modal
+        // $('#av').click(function (e) {
+        //     e.preventDefault(); 
+        //     $('.modal-overlay').removeClass('fade'); 
+        //     $('.modal-overlay').addClass('active'); 
+        // }); 
+        // $('.modal .close').click(function () { 
+        //     $('.modal-overlay').addClass("fade").delay(700).queue(function () { 
+        //         $(this).removeClass('active'); 
+        //         $(this).removeClass("fade").dequeue(); 
+        //     }); 
+        // }); 
+        // $('.modal-overlay').click(function (event) {      
+        //     // if you click on anything except the modal itself, close the modal      
+        //     if (!$(event.target).closest(".modal").length) {        
+        //         $('.modal-overlay').addClass("fade").delay(700).queue(function(){            
+        //             $(this).removeClass('active');            
+        //             $(this).removeClass("fade").dequeue();        
+        //         });      
+        //     }    
+        // });
+    });
+</script>
