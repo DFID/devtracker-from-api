@@ -739,6 +739,7 @@
                 <%end%>
             <%end%>
             data['filters'] = data['filters'].trim();
+            $('#resultCountHolder').html('<span id="numberofResults" style="display:inline; font-weight: bold">Loading data..</span><img style="width: 10%" src="/images/ajax-loader.gif" alt="Loading data. Please wait.">');
             $.post('/solr-response',{
                 data: data
             })

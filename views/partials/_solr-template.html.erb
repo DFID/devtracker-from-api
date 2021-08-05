@@ -407,6 +407,7 @@
                 <%end%>
             <%end%>
             data['filters'] = data['filters'].trim();
+            $('#resultCountHolder').html('<span id="numberofResults" style="display:inline; font-weight: bold">Loading data..</span><img style="width: 10%" src="/images/ajax-loader.gif" alt="Loading data. Please wait.">');
             $.post('/solr-response',{
                 data: data
             })
@@ -436,10 +437,10 @@
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'result.activity_plus_child_aggregation_budget_value'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'result.activity_plus_child_aggregation_budget_value'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);
