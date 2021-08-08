@@ -222,7 +222,11 @@
 										<div class="govuk-grid-column-three-quarters">
                                         <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative'].first%></a></h3>
                                         <p>
-                                            <%=item['reporting_org_narrative'].first%>
+                                            <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
+                                                UK - Foreign, Commonwealth and Development Office
+                                            <%else%>
+                                                <%=item['reporting_org_narrative'].first%>
+                                            <%end%>
                                         </p>
                                         <p class="govuk-body">
                                             <%begin%>
@@ -436,11 +440,17 @@
 	
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
-                    if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + 'No description available' + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
+                    if (result.reporting_org_narrative[0] != 'UK - Department for International Development (DFID)') {
+                        var reporting_org = result.reporting_org_narrative[0];
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + result.reporting_org_narrative[0] + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
+                        var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
+                    }
+                    if(typeof result.description_narrative === 'undefined'){
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body">' + 'No description available' + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
+                    }
+                    else{
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body">' + result.description_narrative[0] + '</p><a href="/projects/'+result.iati_identifier+'">' + 'Learn more' + '</a></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.activity_plus_child_aggregation_budget_value+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);
