@@ -75,16 +75,22 @@
                                      </div>
                                 </aside>
 						</div>
-											<div class="govuk-grid-column-three-quarters">
+						<div class="govuk-grid-column-three-quarters">
                             <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
-												
-						<!-- <strong>Please note:</strong> The terms that are related to the search tags must align with IATI published standard and data.</p> -->
-								
-                                            </div>
-							<div class="govuk-grid-column-one-quarter">
-                                        <input type="submit" class="govuk-button button" value="Search Again">
-                                    </div>
-						                    </form>
+						    <!-- <strong>Please note:</strong> The terms that are related to the search tags must align with IATI published standard and data.</p> -->
+                            <div class="govuk-checkboxes govuk-checkboxes--small includeClosedProject">
+                                <div class="govuk-checkboxes__item">                            
+                                        <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
+                                        <label style="color: white" class="govuk-label govuk-checkboxes__label">
+                                            Include closed projects
+                                        </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                                    <input type="submit" class="govuk-button button" value="Search Again">
+                        </div>
+					</form>
         
 
                 </div>
@@ -99,8 +105,24 @@
     <% if response['numFound'] > 0 %>
         <div class="govuk-width-container">
             <main class="govuk-main-wrapper search-results-page">
-				
-				
+				<%if searchType == 'F'%>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-full">
+                            <% if !fcdoCountryBudgets.empty? %>
+                                <% fcdoCountryBudgets.each do |results| %>
+                                    <div class="govuk-inset-text" style="font-size: 14px;">
+                                    <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
+                                        <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                        <p></p>
+                                        <h3><em><%= results[1][1]%></em></h3>
+                                        Budget: <em><%= results[1][0]%></em>
+                                        <p></p>
+                                    </div>
+                                <%end%>
+                            <%end%>
+                        </div>
+                    </div>
+                <%end%>
                 <div class="govuk-grid-row">
 					<div class="govuk-grid-column-full">
 					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
@@ -283,17 +305,28 @@
                                                                     <%= item['key']%>
                                                                 </label>
                                                             <%else%>
-                                                                <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
-                                                                <label class="govuk-label govuk-checkboxes__label">
-                                                                    <%= item['key']%>
-                                                                </label>
+                                                                <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
+                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                                    <label class="govuk-label govuk-checkboxes__label">
+                                                                        <%= item['key']%>
+                                                                    </label>
+                                                                <%else%>
+                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
+                                                                    <label class="govuk-label govuk-checkboxes__label">
+                                                                        <%= item['key']%>
+                                                                    </label>
+                                                                <%end%>
                                                             <%end%>
                                                         </div>
                                                     <%end%>
                                                     <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
                                                         <input class="selectedFilters" type="hidden">
                                                     <%else%>
-                                                        <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
+                                                        <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
+                                                            <input class="selectedFilters" type="hidden">
+                                                        <%else%>
+                                                            <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
+                                                        <%end%>
                                                     <%end%>
                                                 </div>
                                             </fieldset>

@@ -789,9 +789,17 @@ end
 
 post '/search/?' do
 	query = params['query']
+	isIncludeClosedProjects = params['includeClosedProject']
+	if(isIncludeClosedProjects.to_i != 1)
+		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3)'
+	else
+		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3 OR 4 OR 5)'
+	end
 	filters = prepareFilters(query.to_s, 'F')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'F', 0, '', '')
+	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
   	settings.devtracker_page_title = 'Search Results For : ' + query
+	didYouMeanQuery = sanitize_input(params['query'],"a")
+	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'1,2,3')
 	#erb :'search/solrSearch',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -805,7 +813,10 @@ post '/search/?' do
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
 		breadcrumbURL: '',
-		breadcrumbText: ''
+		breadcrumbText: '',
+		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
+ 		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		 isIncludeClosedProjects: isIncludeClosedProjects
 	}
 end
 
