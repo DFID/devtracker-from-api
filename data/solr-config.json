@@ -18,7 +18,11 @@
         {
             "title": "Actual Start Date",
             "field": "activity_date_start_actual"
-        }    
+        },
+        {
+            "title": "Total Budget",
+            "field": "activity_plus_child_aggregation_budget_value"
+        }
     ],
     "PageSize": 20,
     "Filters": 
