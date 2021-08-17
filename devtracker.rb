@@ -57,9 +57,9 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://iati.cloud/api/'
+#set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
@@ -166,7 +166,10 @@ get '/countries/:country_code/projects/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	projectData = ''
 	country = get_country_code_name(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Projects Page'
@@ -316,6 +319,9 @@ get '/regions/:region_code/projects/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
@@ -797,6 +803,9 @@ post '/search/?' do
 	end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	didYouMeanQuery = sanitize_input(params['query'],"a")
 	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'1,2,3')
@@ -831,6 +840,9 @@ post '/solr-response' do
 	searchType = params['data']['queryType']
 	startPage = params['data']['page']
 	response = solrResponse(query, filters, searchType, startPage, params['data']['dateRange'], params['data']['sortType'])
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
 	json :output => response
 end
 
@@ -838,7 +850,10 @@ get '/regions/?' do
 	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	
 	region = {}
 	region[:code] = "298,798,89,589,389,189,679,289,380"
@@ -866,7 +881,10 @@ get '/solr-regions/:region_code/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	#erb :'search/solrRegions',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -888,7 +906,10 @@ get '/solr-countries/:country_code/?' do |n|
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
@@ -909,7 +930,10 @@ get '/global/?' do
 	query = '(998)'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
-  	settings.devtracker_page_title = 'Search Results For : ' + query
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	region = {}
 	region[:name] = 'global'
 	#erb :'search/solrRegions',
@@ -955,6 +979,9 @@ get '/department/:dept_id/?' do
 	query = deptIdentifier
 	filters = prepareFilters(query.to_s, 'O')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'O', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
@@ -994,7 +1021,10 @@ get '/sector/:high_level_sector_code/projects/?' do
 	puts query
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
-  	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -1037,7 +1067,10 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	puts query
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
-  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -1077,6 +1110,9 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	query = "(" + sectorJsonData['Code (L3)'].to_s + ")"
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
   	#erb :'search/solrSectors',
