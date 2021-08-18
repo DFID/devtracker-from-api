@@ -58,13 +58,13 @@ include SolrHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
-# set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+ set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 #set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -1429,6 +1429,54 @@ end
 # 	}
 # end
 
+#####################################################################
+#  TEST PAGES
+#####################################################################
+
+get '/testData' do  #homepage
+	#read static data from JSON files for the front page
+  	settings.devtracker_page_title = 'Test data'
+  	# Example of setting up a cookie from server end
+  	# response.set_cookie('my_cookie', 'value_of_cookie')
+	liveData = Oj.load(File.read('data/data-comparison/live-data.json'))
+	solrData = Oj.load(File.read('data/data-comparison/solr-data.json'))
+	activities = {}
+	liveData['results'].each do |val|
+		activities[val['iati_identifier']] = {}
+		activities[val['iati_identifier']]['livebudget_value'] = val['activity_plus_child_aggregation']['activity_children']['budget_value']
+		activities[val['iati_identifier']]['livebudget_currency'] = val['activity_plus_child_aggregation']['activity_children']['budget_currency']
+		activities[val['iati_identifier']]['livedisbursement_currency'] = val['activity_plus_child_aggregation']['activity_children']['disbursement_currency']
+		activities[val['iati_identifier']]['livecommitment_currency'] = val['activity_plus_child_aggregation']['activity_children']['commitment_currency']
+		activities[val['iati_identifier']]['liveexpenditure_currency'] = val['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
+	end
+	solrData['response']['docs'].each do |val|
+		if activities.has_key?(val['iati_identifier'])
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_value'] = val['activity_plus_child_aggregation_budget_value']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_currency'] = val['activity_plus_child_aggregation_budget_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_disbursement_currency'] = val['activity_plus_child_aggregation_disbursement_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_commitment_currency'] = val['activity_plus_child_aggregation_commitment_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_expenditure_currency'] = val['activity_plus_child_aggregation_expenditure_currency']
+		else
+			activities[val['iati_identifier']] = {}
+			activities[val['iati_identifier']]['livebudget_value'] = val['iati_identifier']
+			activities[val['iati_identifier']]['livebudget_currency'] = 'N/A'
+			activities[val['iati_identifier']]['livedisbursement_currency'] = 'N/A'
+			activities[val['iati_identifier']]['livecommitment_currency'] = 'N/A'
+			activities[val['iati_identifier']]['liveexpenditure_currency'] = 'N/A'
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_value'] = val['activity_plus_child_aggregation_budget_value']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_currency'] = val['activity_plus_child_aggregation_budget_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_disbursement_currency'] = val['activity_plus_child_aggregation_disbursement_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_commitment_currency'] = val['activity_plus_child_aggregation_commitment_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_expenditure_currency'] = val['activity_plus_child_aggregation_expenditure_currency']
+		end
+	end
+	erb :'tests/index',
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			oipa_api_url: settings.oipa_api_url,
+			 activities: activities
+ 		}
+end
 
 #####################################################################
 #  STATIC PAGES
