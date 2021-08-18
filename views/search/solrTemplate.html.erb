@@ -691,7 +691,7 @@
             moreLink: 'Read more ...',
             lessLink: 'Read less'
         });
-        </script>
+</script>
 <script>
     $(document).ready(function (){
         var activityStatus = <%= activityStatus.to_json%>;
@@ -876,6 +876,14 @@
                     }
                 })
                 $('#response-container').html(prepareContainer);
+                //Re-initiate the read-more code
+                $readMoreJS.init({
+                    target: '.description',
+                    numOfWords: 25,
+                    toggle: true,
+                    moreLink: 'Read more ...',
+                    lessLink: 'Read less'
+                });
             });
         }
 
