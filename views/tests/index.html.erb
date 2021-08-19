@@ -1,16 +1,60 @@
 <div class="row">
     <div class="twelve columns content">
-        <h2 class="section-group-title">Sector Breakdown</h2>
+        <h2 class="section-group-title">Budget Data Comparison Table</h2>
         <div class="row">
             <div class="twelve columns">
                 <p>Budget data comparison between live OIPA and solr end point data for country</p>
             </div>
             <div class="twelve columns">
-                <table>
-                    
+                <table id="dataTable" class="display" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>iati_identifier</th>
+                            <th>Live Budget</th>
+                            <th>Solr Budget</th>
+                            <th>Live to solr difference</th>
+                            <th>Live Budget Currency</th>
+                            <th>Solr Budget Currency</th>
+                            <th>Live Disbursement Currency</th>
+                            <th>Solr Disbursement Currency</th>
+                            <th>Live Commitment Currency</th>
+                            <th>Solr Commitment Currency</th>
+                            <th>Live Expenditure Currency</th>
+                            <th>Solr Expenditure Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%activities.each do |key, val|%>
+                            <tr>
+                                <td><%= key %></td>
+                                <td><%= val['livebudget_value'] %></td>
+                                <td><%= val['activity_plus_child_aggregation_budget_value'] %></td>
+                                <td><%= val['livebudget_value'].to_f - val['activity_plus_child_aggregation_budget_value'].to_f %></td>
+                                <td><%= val['livebudget_currency'] %></td>
+                                <td><%= val['activity_plus_child_aggregation_budget_currency'] %></td>
+                                <td><%= val['livedisbursement_currency'] %></td>
+                                <td><%= val['activity_plus_child_aggregation_disbursement_currency'] %></td>
+                                <td><%= val['livecommitment_currency'] %></td>
+                                <td><%= val['activity_plus_child_aggregation_commitment_currency'] %></td>
+                                <td><%= val['liveexpenditure_currency'] %></td>
+                                <td><%= val['activity_plus_child_aggregation_expenditure_currency'] %></td>
+                            </tr>
+                        <%end%>
+                    </tbody>
                 </table>
             </div>
         </div>
-
     </div>
 </div>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<script>
+
+$('#dataTable').DataTable({
+      "info": false,
+      "paging": false,
+      "searching": false,
+      "ordering": []
+    });
+</script>
