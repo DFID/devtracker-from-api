@@ -523,6 +523,8 @@ $(document).ready(function() {
                         $('#showResults').append(tmpStr);
                     }
                     $.each(json.results,function(i,result){
+                        if(!checkIfPresent(result.recipient_countries))
+                        {
                         var validResults = {};
                         validResults['iati_identifier'] = !isEmpty(result.iati_identifier) ? result.iati_identifier : "";
                         validResults['id'] = !isEmpty(result.id) ? result.id : "";
@@ -757,6 +759,7 @@ $(document).ready(function() {
                         // }
                         //$('.modal').hide();
                         $('#showResults').append(tempString);
+                        }
                     });
                 })
                 .fail(function(error){
@@ -804,7 +807,25 @@ $(document).ready(function() {
     //         $(this).before(temp_response);
     //     });
     // };
-
+    function checkIfPresent(a)
+    {
+        var count = 0;
+        for(var i = 0; i< a.length; i++)
+        {
+            if(a[i].country.code == 'AF')
+            {
+                count = count + 1
+            }
+        }
+        if(count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     /*generateProjectListAjax function re-populates the project list based on the new api call when clicked on a filter or order*/
 
     function generateProjectListAjax(oipaLink){
@@ -841,6 +862,8 @@ $(document).ready(function() {
                 $('#showResults').append(tmpStr);
             }
             $.each(json.results,function(i,result){
+                if(!checkIfPresent(result.recipient_countries))
+                {
                 var validResults = {};
                 validResults['iati_identifier'] = !isEmpty(result.iati_identifier) ? result.iati_identifier : "";
                 validResults['id'] = !isEmpty(result.id) ? result.id : "";
@@ -1071,6 +1094,7 @@ $(document).ready(function() {
                 //     var tempString = '<div class="search-result"><h3><a href="/projects/'+validResults['iati_identifier']+'">'+validResults['title']+'</a></h3><span>Reporting Organisation: <em>'+validResults['reporting_organisations']+'</em></span><span>Project Identifier: <em>'+ validResults['iati_identifier'] +'</em></span><span>Activity Status: <em>'+validResults['activity_status']+'</em></span><span class="budget">Total Budget: <em> '+'<div class="tpcbcv"><span class="total_plus_child_budget_currency_value_amount">'+validResults['total_plus_child_budget_value']+'</span><span class="total_plus_child_budget_currency_value_cur">'+validResults['total_plus_child_budget_currency']+'</span></div>'+'</em></span><p class="description">'+validResults['description']+'</p></div>';
                 // }
                 $('#showResults').append(tempString);
+                }
             });
             refreshPagination(json.count);
         })

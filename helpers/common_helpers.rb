@@ -258,6 +258,7 @@ module CommonHelpers
     apiList = Array.new
     if(listType == 'C')
       # Total project list API call
+      puts "activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}"
       apiList.push("activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=20&fields=activity_dates,descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=#{activityStatus}&ordering=-activity_plus_child_budget_value&recipient_country=#{listParams}")
       # Sector values JSON API call
       apiList.push("activities/aggregations/?format=json&group_by=sector&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&recipient_country=#{listParams}&activity_status=#{activityStatus}")
@@ -341,6 +342,24 @@ module CommonHelpers
     allProjectsData = {}
     oipa_project_list = RestClient.get settings.oipa_api_url + apiList[0]
     allProjectsData['projects']= JSON.parse(oipa_project_list)
+    # tempData= JSON.parse(oipa_project_list)
+    # tempStorage = []
+    # puts '---------testiongground------'
+    # tempData['results'].each do |item|
+    #   if(item['recipient_countries'].select{|elem| elem['country']['code'].to_s != 'AF'}.length() > 0)
+    #     tempStorage.push(item)
+    #   end
+    # end
+    # allProjectsData['projects'] = {}
+    # allProjectsData['projects']['count'] = tempStorage.length()
+    # allProjectsData['projects']['results'] = tempStorage
+    # puts allProjectsData['projects']
+    # puts '---------testiongground------'
+    #allProjectsData['projects']['results'] = tempStorage
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+    allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
+    #xx = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+    #puts xx
     sectorValuesJSON = RestClient.get settings.oipa_api_url + apiList[1]
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
     allProjectsData['project_budget_higher_bound'] = 0
@@ -353,6 +372,8 @@ module CommonHelpers
     if (apiList[0].include? "recipient_country")
       oipa_project_list = RestClient.get settings.oipa_api_url + apiList[6]
       allProjectsData['projects']= JSON.parse(oipa_project_list)
+      allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+      allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
     end
     begin
       allProjectsData['actualStartDate'] = RestClient.get settings.oipa_api_url + apiList[2]
@@ -469,6 +490,8 @@ module CommonHelpers
     allProjectsData = {}
     oipa_project_list = RestClient.get settings.oipa_api_url + apiLink
     allProjectsData['projects']= JSON.parse(oipa_project_list)
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+    allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
     allProjectsData['project_budget_higher_bound'] = 0
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['activity_children']['budget_value']

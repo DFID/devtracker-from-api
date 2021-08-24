@@ -161,6 +161,7 @@ get '/countries/:country_code/projects/?' do |n|
 	projectData = ''
 	#projectData = get_country_all_projects_data(n)
 	projectData = generate_project_page_data(generate_api_list('C',n,"2"))
+	puts projectData['projects']['count']
 	country = get_country_code_name(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Projects Page'
 	erb :'countries/projects', 
