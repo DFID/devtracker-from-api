@@ -183,13 +183,16 @@ span.language {
     cursor:pointer;
 }
 
+.proj-filter-exp-collapse-text {
+  cursor: pointer;
+}
 .proj-filter-exp-collapse-sign{
     width:22px;
-    height:22px;;
+    height:22px;
     text-align: left;
     vertical-align:top;
     font-size:1.5em;
-    margin: 0px 2px 2px 2px;
+    margin: -4px 2px 2px 2px;
     border: none;
     float:right;
     cursor:pointer;

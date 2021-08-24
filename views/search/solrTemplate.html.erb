@@ -291,10 +291,11 @@
                                 <%filters.each do |key, val|%>
                                     <%if (val.length > 0)%>
                                             <fieldset class="govuk-fieldset">
-                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                    <h3 class="govuk-fieldset__heading">
+                                                <legend style="width: 100%" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                    <h3 style="float: left" class="govuk-fieldset__heading proj-filter-exp-collapse-text">
                                                         <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
                                                     </h3>
+                                                    <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                                                 </legend>
                                                 <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
                                                     <%val.each do |item|%>
@@ -606,10 +607,11 @@
                                     <%filters.each do |key, val|%>
                                         <%if (val.length > 0)%>
                                                 <fieldset class="govuk-fieldset">
-                                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                        <h3 class="govuk-fieldset__heading">
+                                                    <legend style="width: 100%" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                                        <h3 style="float: left" class="govuk-fieldset__heading proj-filter-exp-collapse-text">
                                                             <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                        </h1>
+                                                        </h3>
+                                                        <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
                                                     </legend>
                                                     <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
                                                         <%val.each do |item|%>
@@ -893,27 +895,38 @@
             var dt = new Date(y + '/' + m + '/' + d);
             return !!(dt && (dt.getMonth() + 1) == m && dt.getDate() == Number(d));
         }
+
+        /*This method attaches the +/- sign to the relevant filter expansion label*/
+        function attachFilterExpColClickEvent(){
+        $('.proj-filter-exp-collapse-sign').click(function(){
+            if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
+                $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
+                //$(this).text('-');
+                $(this).parent().parent().find(".govuk-checkboxes").slideDown();
+            }
+            else{
+                $(this).removeClass('proj-filter-exp-collapse-sign-up').addClass('proj-filter-exp-collapse-sign-down');
+                //$(this).text('+');
+                $(this).parent().parent().find(".govuk-checkboxes").slideUp();
+            }
+        });
         
-        //Prepare modal
-        // $('#av').click(function (e) {
-        //     e.preventDefault(); 
-        //     $('.modal-overlay').removeClass('fade'); 
-        //     $('.modal-overlay').addClass('active'); 
-        // }); 
-        // $('.modal .close').click(function () { 
-        //     $('.modal-overlay').addClass("fade").delay(700).queue(function () { 
-        //         $(this).removeClass('active'); 
-        //         $(this).removeClass("fade").dequeue(); 
-        //     }); 
-        // }); 
-        // $('.modal-overlay').click(function (event) {      
-        //     // if you click on anything except the modal itself, close the modal      
-        //     if (!$(event.target).closest(".modal").length) {        
-        //         $('.modal-overlay').addClass("fade").delay(700).queue(function(){            
-        //             $(this).removeClass('active');            
-        //             $(this).removeClass("fade").dequeue();        
-        //         });      
-        //     }    
-        // });
+        $('.proj-filter-exp-collapse-text').click(function(){
+        
+            $(this).parent().find('.proj-filter-exp-collapse-sign').each(function(){
+                if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
+                    $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
+                    //$(this).text('-');
+                    $(this).parent().parent().find(".govuk-checkboxes").slideDown();
+                }
+                else{
+                    $(this).removeClass('proj-filter-exp-collapse-sign-up').addClass('proj-filter-exp-collapse-sign-down');
+                    //$(this).text('+');
+                    $(this).parent().parent().find(".govuk-checkboxes").slideUp();
+                }
+            });
+        });
+        }
+        attachFilterExpColClickEvent();
     });
 </script>
