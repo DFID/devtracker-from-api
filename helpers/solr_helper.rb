@@ -82,6 +82,7 @@ module SolrHelper
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             participatingOrgList = Oj.load(File.read('data/participating-orgs/processed_orgList.json'))
             implementingOrgs  = response['facet_counts']['facet_fields'][filter]
+            puts implementingOrgs
             implementingOrgs.each_with_index do |value, index|
                 # The reason we did a check of this is because, solr engine returns a flat array 
                 # with first position holding the facet data and the second position holding data count.
@@ -97,6 +98,9 @@ module SolrHelper
                 end
             end
             # Sort Data
+            puts 'xxxxxx0000000000000000'
+            puts 'participating  orgss:::::::::::::::::'
+            puts finalData
             finalData = finalData.sort_by {|data| data['key']}
         when 'tag_code'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
@@ -110,6 +114,18 @@ module SolrHelper
                 end
             end
             # Sort Data
+            finalData = finalData.sort_by {|data| data['key']}
+        when 'document_link_category_code'
+            response = Oj.load(RestClient.get api_simple_log(apiUrl))
+            docCats = response['facet_counts']['facet_fields'][filter]
+            mappedDocCats = Oj.load(File.read(mappingFileUrl))['data']
+            docCats.each_with_index do |value, index|
+                if index.even?
+                    if(!mappedDocCats.find{|doc| doc['code'] == value.to_s}.nil?)
+                        finalData.push(populateKeyVal(mappedDocCats.find{|doc| doc['code'] == value.to_s}['name'], value))
+                    end
+                end
+            end
             finalData = finalData.sort_by {|data| data['key']}
         else
             finalData
