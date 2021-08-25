@@ -738,6 +738,9 @@ get '/search/?' do
 	elsif (filterTerm.include? "afgan") then
 		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
 		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
+	elsif (filterTerm.include? "kabu") then
+		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
+		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
 	elsif (filterTerm == 'af' || filterTerm == 'afghanistan') then
 		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
 		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
