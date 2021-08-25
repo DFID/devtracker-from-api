@@ -78,13 +78,15 @@
                 <div>
                     <% if !dfidCountryBudgets.empty? %>
                         <% dfidCountryBudgets.each do |results| %>
-                            <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
-                                <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                                <p></p>
-                                <h3><em><%= results[1][1]%></em></h3>
-                                Budget: <em><%= results[1][0]%></em>
-                                <p></p>
-                            </div>
+                            <%if results[0].to_s != 'AF'%>
+                                <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country">
+                                    <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                    <p></p>
+                                    <h3><em><%= results[1][1]%></em></h3>
+                                    Budget: <em><%= results[1][0]%></em>
+                                    <p></p>
+                                </div>
+                            <%end%>
                         <%end%>
                     <%end%>
                 </div>

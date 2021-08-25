@@ -392,6 +392,7 @@ end
 
 # Project documents page
 get '/projects/:proj_id/documents/?' do |n|
+	check_if_project_exists(n)
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -419,6 +420,7 @@ end
 
 #Project transactions page
 get '/projects/:proj_id/transactions/?' do |n|
+	check_if_project_exists(n)
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -480,6 +482,7 @@ end
 
 #Project partners page
 get '/projects/:proj_id/partners/?' do |n|
+	check_if_project_exists(n)
 	# get the project data from the API
 	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)

@@ -11,6 +11,11 @@ module ProjectHelpers
     def check_if_project_exists(projectId)
         begin
             oipa = RestClient.get settings.oipa_api_url + "activities/#{projectId}/?format=json"
+            response = Oj.load(oipa)
+            tempData = response['recipient_countries'].select{|a| a['country']['code'].to_s == 'AF'}.length()
+            if(tempData != 0)
+                halt 404, "Activity not found"
+            end
         rescue => e
             halt 404, "Activity not found"
         end
@@ -308,23 +313,25 @@ module ProjectHelpers
         
         projectDataHash = {}
         projectCountValues.each do |project|
-            tempBudget = projectBudgetValues.find do |projectBudget|
-                projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
-            end
-            tempCountry = countriesList.find do |source|
-                source["code"].to_s == project["recipient_country"]["code"]
-            end
-            begin
-                projectDataHash[project["recipient_country"]["code"]] = {}
-                projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
-                projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
-                projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
-            #OIPA V2.2
-            #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
-            #OIPA V3.1
-                projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
-                projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
-            rescue
+            if project["recipient_country"]["code"].to_s != 'AF'
+                tempBudget = projectBudgetValues.find do |projectBudget|
+                    projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
+                end
+                tempCountry = countriesList.find do |source|
+                    source["code"].to_s == project["recipient_country"]["code"]
+                end
+                begin
+                    projectDataHash[project["recipient_country"]["code"]] = {}
+                    projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
+                    projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
+                    projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
+                #OIPA V2.2
+                #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
+                #OIPA V3.1
+                    projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
+                    projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
+                rescue
+                end
             end
         end
         finalOutput = Array.new
