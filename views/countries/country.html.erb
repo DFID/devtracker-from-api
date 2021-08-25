@@ -1,3 +1,9 @@
+<% if(country[:code] == 'AF') %>
+<% chartDataRepOrgsSplit2 = []%>
+<% chartDataFinYearsSplit2 = []%>
+<% chartDataColumnDataSplit2 = []%>
+<% countrySectorGraphData = []%>
+<%end%>
 <div class="hero"><div id="page-title" class="row">
     <div class="twelve columns">
         <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
@@ -15,9 +21,18 @@
         </div>
     </div>
 </div>
-<%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects] } %>
+<% if(country[:code] != 'AF') %>
+    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects] } %>
+<%else%>
+    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => 0 } %>
+<%end%>
 </div>
 <div class="row">
+    <% if(country[:code] == 'AF') %>
+        <div class="twelve columns">
+            <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (project title, description and channel of delivery) from Devtracker.</div>
+        </div>
+    <%end%>
     <div class="eight columns summary">
         <h2 class="visually-hidden">Summary</h2>
         <% if country[:description].length > 0%>
@@ -233,7 +248,11 @@
             <div style="text-align: center" class="six columns">
                 <% tempTotalBudget = Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
-                <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                <% if(country[:code] == 'AF') %>
+                    <span style="font-size: 1.5em">£0</span>
+                <%else%>
+                    <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                <%end%>
                 <p><strong><%= current_financial_year %></strong></p>
             </div>
             <div style="text-align: center" class="six columns">
@@ -258,10 +277,12 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <p>Download IATI Activity Data for <%= country[:name]%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
+        <% if(country[:code] != 'AF') %>
+            <p>Download IATI Activity Data for <%= country[:name]%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
+        <%end%>
     </div>
 </div>
-<%if implementingOrgList.length > 0%>
+<%if implementingOrgList.length > 0 && country[:code] != 'AF'%>
     <div class="row">
         <div class="twelve columns">
             <table class="govuk-table">

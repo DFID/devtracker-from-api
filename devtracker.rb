@@ -117,7 +117,10 @@ get '/countries/:country_code/?' do |n|
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
 	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1")
-	Benchmark.bm(7) do |x|
+	if n == 'AF'
+		tempActivityCount['count'] = 0
+	end
+		Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
 	 		results = get_country_results(n)
@@ -727,9 +730,21 @@ get '/search/?' do
 		includeClosed = 0
 		activityStatusList = '2'
 	end
+	filterTerm = query.downcase
 	#results = generate_searched_data(query,activityStatusList)
-	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
-	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
+	if (filterTerm.include? "afghan") then
+		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
+		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
+	elsif (filterTerm.include? "afgan") then
+		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
+		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
+	elsif (filterTerm == 'af' || filterTerm == 'afghanistan') then
+		results = generate_project_page_data(generate_api_list('F',"----",activityStatusList))
+		didYouMeanData = generate_did_you_mean_data("----",activityStatusList)
+	else
+		results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
+		didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
+	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	erb :'search/search',
 	:layout => :'layouts/layout',
