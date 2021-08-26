@@ -98,9 +98,6 @@ module SolrHelper
                 end
             end
             # Sort Data
-            puts 'xxxxxx0000000000000000'
-            puts 'participating  orgss:::::::::::::::::'
-            puts finalData
             finalData = finalData.sort_by {|data| data['key']}
         when 'tag_code'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
@@ -124,6 +121,24 @@ module SolrHelper
                     if(!mappedDocCats.find{|doc| doc['code'] == value.to_s}.nil?)
                         finalData.push(populateKeyVal(mappedDocCats.find{|doc| doc['code'] == value.to_s}['name'], value))
                     end
+                end
+            end
+            finalData = finalData.sort_by {|data| data['key']}
+        when 'recipient_country_name'
+            response = Oj.load(RestClient.get api_simple_log(apiUrl))
+            countries = response['facet_counts']['facet_fields'][filter]
+            countries.each_with_index do |value, index|
+                if index.even?
+                    finalData.push(populateKeyVal(value, value))
+                end
+            end
+            finalData = finalData.sort_by {|data| data['key']}
+        when 'recipient_region_name'
+            response = Oj.load(RestClient.get api_simple_log(apiUrl))
+            regions = response['facet_counts']['facet_fields'][filter]
+            regions.each_with_index do |value, index|
+                if index.even?
+                    finalData.push(populateKeyVal(value, value))
                 end
             end
             finalData = finalData.sort_by {|data| data['key']}

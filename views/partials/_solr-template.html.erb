@@ -370,10 +370,19 @@
                         var tempFilters = '<%=key%>:(';
                         $('input[name="<%= key%>"]:checked').each(function(i, val){
                             if(i < 1 ){
-                                tempFilters = tempFilters + this.value;
+                                <%if(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['isFieldTypeString'] == '0')%>
+                                    tempFilters = tempFilters + this.value;
+                                <%else%>
+                                    tempFilters = tempFilters + '"' + this.value + '"';
+                                <%end%>
+                                
                             }
                             else{
-                                tempFilters = tempFilters + ' OR ' + this.value;
+                                <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['isFieldTypeString'] == '0')%>
+                                    tempFilters = tempFilters + ' OR ' + this.value;
+                                <%else%>
+                                    tempFilters = tempFilters + ' OR "' + this.value + '"';
+                                <%end%>
                             }
                         });
                         tempFilters = tempFilters.trim() + ')';

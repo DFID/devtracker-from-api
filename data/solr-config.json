@@ -32,42 +32,64 @@
             "field": "activity_status_code",
             "url": "search/activity/?facet=on&facet.field=activity_status_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
             "mappingFile": "data/mappingSolrFilters/activity_status.json",
-            "defaultValue": "1 OR 2 OR 3"
+            "defaultValue": "1 OR 2 OR 3",
+            "isFieldTypeString": "0" 
         },
         {
             "title": "Tags",
             "field": "tag_code",
             "url": "search/activity/?facet=on&facet.field=tag_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
             "mappingFile": "data/custom-codes/policy-priorities.json",
-            "defaultValue": ""
+            "defaultValue": "",
+            "isFieldTypeString": "1"
         },
         {
             "title": "Sectors",
             "field": "sector_code",
             "url": "search/activity/?facet=on&facet.field=sector_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
             "mappingFile": "sectorHierarchies.json",
-            "defaultValue": ""
+            "defaultValue": "",
+            "isFieldTypeString": "0"
         },
         {
             "title": "Document Categories",
             "field": "document_link_category_code",
             "url": "search/activity/?facet=on&facet.field=document_link_category_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
             "mappingFile": "data/custom-codes/DocumentCategory.json",
-            "defaultValue": ""
+            "defaultValue": "",
+            "isFieldTypeString": "1"
         },
         {
             "title": "Participating Orgs",
             "field": "participating_org_ref",
             "url": "search/activity/?facet=on&facet.field=participating_org_ref&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND participating_org_role:4 AND ",
             "mappingFile": "iati_publishers_list.json",
-            "defaultValue": ""
+            "defaultValue": "",
+            "isFieldTypeString": "1"
         },
         {
             "title": "Activity Dates",
             "field": "activity_date_iso_date",
             "url": "search/activity/?facet=on&facet.field=activity_date_iso_date&facet.limit=-1&facet.mincount=1&q=participating_org_ref:GB-* AND ",
             "mappingFile": "",
-            "defaultValue": ""
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Benefiting Countries",
+            "field": "recipient_country_name",
+            "url": "search/activity/?facet=on&facet.field=recipient_country_name&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
+            "mappingFile": "",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Benefiting Regions",
+            "field": "recipient_region_name",
+            "url": "search/activity/?facet=on&facet.field=recipient_region_name&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
+            "mappingFile": "",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
         }
     ],
     "QueryCategories":
