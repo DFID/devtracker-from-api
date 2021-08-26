@@ -173,7 +173,10 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-quarter filters-column">
 						<div>
-                        <h2 class="govuk-heading-m">Filters</h2>
+                        <h2 class="govuk-heading-m">
+                            <span>Filters</span>
+                            <span id="clearAll" style="float: right; font-size: 0.9em; font-weight: 100; cursor: pointer;color: #2e3191">Clear all</span>
+                        </h2>
                         <div class="govuk-body">
                             <div class="govuk-form-group">
                                 <%filters.each do |key, val|%>
@@ -281,6 +284,11 @@
 </script>
 <script>
     $(document).ready(function (){
+        $('#clearAll').click(function(){
+            $('.govuk-checkboxes__input').prop("checked", false);
+            $('.selectedFilters').val('');
+            getFilteredResponse(0, true, 0);
+        })
         var activityStatus = <%= activityStatus.to_json%>;
         // Store a static variable where we will keep the per page item show count
         var pageSize = <%= solrConfig['PageSize']%>;
