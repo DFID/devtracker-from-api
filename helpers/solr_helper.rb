@@ -271,6 +271,32 @@ module SolrHelper
                     mainQueryString = queryCategory['fieldDependency'] + ':' + query.to_s
                 end
             end
+            if(solrConfig["Exclusions"]["terms"].length > 0)
+                mainQueryString = mainQueryString + " AND "
+                solrConfig['Exclusions']['fields'].each_with_index do |fieldToBeChecked, index|
+                    if (solrConfig['Exclusions']['fields'].length - 1 == index)
+                        mainQueryString = mainQueryString + '!' + fieldToBeChecked + ':' + '('
+                        solrConfig['Exclusions']['terms'].each_with_index do |term, index|
+                            if (solrConfig['Exclusions']['terms'].length - 1 == index)
+                                mainQueryString = mainQueryString + '"' + term + '"'
+                            else
+                                mainQueryString = mainQueryString + '"' + term + '" OR '
+                            end
+                        end
+                        mainQueryString = mainQueryString + ")"
+                    else
+                        mainQueryString = mainQueryString + '!' + fieldToBeChecked + ':' + '('
+                        solrConfig['Exclusions']['terms'].each_with_index do |term, index|
+                            if (solrConfig['Exclusions']['terms'].length - 1 == index)
+                                mainQueryString = mainQueryString + '"' + term + '"'
+                            else
+                                mainQueryString = mainQueryString + '"' + term + '" OR '
+                            end
+                        end
+                        mainQueryString = mainQueryString + ") AND "
+                    end
+                end
+            end
         end
         puts(mainQueryString)
         mainQueryString

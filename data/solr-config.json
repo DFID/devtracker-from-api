@@ -1,7 +1,8 @@
 {
     "APILink": "https://fcdo.iati.cloud/",
     "DefaultFieldsToReturn": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*",
-    "DefaultFieldsToSearch": [
+    "DefaultFieldsToSearch": 
+    [
         "title_narrative",
         "description_narrative",
         "iati_identifier",
@@ -125,5 +126,35 @@
     {
         "tag": "tag_code",
         "status": "activity_status_code"
+    },
+    "Exclusions": 
+    {
+        "fields": 
+        [
+            "title_narrative",
+            "description_narrative",
+            "iati_identifier",
+            "transaction_description_narrative",
+            "reporting_org_ref",
+            "recipient_country_name",
+            "document_link_title_narrative_text",
+            "transaction",
+            "reporting_org_narrative",
+            "participating_org_narrative"
+        ],
+        "terms":
+        [
+            "Afghanistan",
+            "afghanistan",
+            "Afghanis",
+            "Afghan",
+            "afghan",
+            "afgan",
+            "Afgan",
+            "Kabu",
+            "af",
+            "Af",
+            "kabu"
+        ]
     }
 }
