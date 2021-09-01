@@ -316,7 +316,7 @@ module SolrHelper
 
     def addTotalBudgetWithCurrency(response)
         response['docs'].each do |r|
-            r['totalBudgetWithCurrency'] = Money.new(r['activity_plus_child_aggregation_budget_value'].to_i*100, 
+            r['totalBudgetWithCurrency'] = Money.new(r['activity_plus_child_aggregation_budget_value'].to_f*100, 
                                         if r['activity_plus_child_aggregation_budget_currency'].to_s == 'None'  
                                             if r['activity_plus_child_aggregation_incoming_funds_currency'].to_s == 'None'
                                                 if r['activity_plus_child_aggregation_expenditure_currency'].to_s == 'None'
