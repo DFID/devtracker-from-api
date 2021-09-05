@@ -353,6 +353,10 @@ module CommonHelpers
     allProjectsData = {}
     oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[0])
     allProjectsData['projects']= JSON.parse(oipa_project_list)
+
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+    allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
+
     sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[1])
     allProjectsData['highLevelSectorList'] = high_level_sector_list_filter(sectorValuesJSON)
     allProjectsData['project_budget_higher_bound'] = 0
@@ -365,6 +369,9 @@ module CommonHelpers
     if (apiList[0].include? "recipient_country")
       oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[6])
       allProjectsData['projects']= JSON.parse(oipa_project_list)
+
+      allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+      allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
     end
     begin
       allProjectsData['actualStartDate'] = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[2])
@@ -481,6 +488,10 @@ module CommonHelpers
     allProjectsData = {}
     oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     allProjectsData['projects']= JSON.parse(oipa_project_list)
+
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'AF'}.length() == 0}
+    allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
+
     allProjectsData['project_budget_higher_bound'] = 0
     unless allProjectsData['projects']['results'][0].nil?
       allProjectsData['project_budget_higher_bound'] = allProjectsData['projects']['results'][0]['activity_plus_child_aggregation']['activity_children']['budget_value']

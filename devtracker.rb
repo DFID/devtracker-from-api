@@ -123,6 +123,9 @@ get '/countries/:country_code/?' do |n|
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
 	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	if n == 'AF'
+		tempActivityCount['count'] = 0
+	end
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
@@ -405,6 +408,7 @@ end
 get '/projects/*/documents/?' do
 	#n = sanitize_input(n,"p")
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_details(n)
 
@@ -432,6 +436,7 @@ end
 #Project transactions page
 get '/projects/*/transactions/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -494,6 +499,7 @@ end
 #Project partners page
 get '/projects/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	# get the project data from the API
 	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
