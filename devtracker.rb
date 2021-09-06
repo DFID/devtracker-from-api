@@ -83,8 +83,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, true
-set :show_exceptions, true
+set :raise_errors, false
+set :show_exceptions, false
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -196,34 +196,6 @@ end
 #####################################################################
 #  GLOBAL PAGES
 #####################################################################
-# Global all projects page
-# get '/global' do
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	region = {}
-# 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-# 	#region[:code] = "NS,ZZ"
-# 	region[:code] = "998"
-# 	region[:name] = "All"
-# 	#getRegionProjects = get_region_projects(region[:code])
-# 	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-#   	settings.devtracker_page_title = 'Global All Projects Page'
-# 	erb :'regions/projects-home', 
-# 		:layout => :'layouts/layout',
-# 		:locals => {
-# 			oipa_api_url: settings.oipa_api_url,
-# 	 		region: region,
-# 	 		total_projects: getRegionProjects['projects']['count'],
-# 	 		projects: getRegionProjects['projects']['results'],
-# 	 		countryAllProjectFilters: countryAllProjectFilters,
-# 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-# 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-# 	 		actualStartDate: getRegionProjects['actualStartDate'],
-#  			plannedEndDate: getRegionProjects['plannedEndDate'],
-#  			documentTypes: getRegionProjects['document_types'],
-#  			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
-#  			reportingOrgTypes: getRegionProjects['reportingOrg_types']
-# 		}
-# end
 
 #Global Project List Page
 get '/global/:global_code/projects/?' do |n|
@@ -264,34 +236,6 @@ end
 #####################################################################
 #  REGION PAGES
 #####################################################################
-# Regions all projects page
-# get '/regions' do
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	region = {}
-# 	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-# 	region[:code] = "298,798,89,589,389,189,679,289,380"
-# 	region[:name] = "All"
-# 	#getRegionProjects = get_region_projects(region[:code])
-# 	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-#   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
-# 	erb :'regions/projects-home', 
-# 		:layout => :'layouts/layout',
-# 		:locals => {
-# 			oipa_api_url: settings.oipa_api_url,
-# 	 		region: region,
-# 	 		total_projects: getRegionProjects['projects']['count'],
-# 	 		projects: getRegionProjects['projects']['results'],
-# 	 		countryAllProjectFilters: countryAllProjectFilters,
-# 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-# 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-# 	 		actualStartDate: getRegionProjects['actualStartDate'],
-#  			plannedEndDate: getRegionProjects['plannedEndDate'],
-#  			documentTypes: getRegionProjects['document_types'],
-#  			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
-#  			reportingOrgTypes: getRegionProjects['reportingOrg_types']
-# 		}
-# end
-
 # Region summary page
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
@@ -309,10 +253,6 @@ get '/regions/:region_code/?' do |n|
  			regionYearWiseBudgets: regionYearWiseBudgets,
  			regionSectorGraphData: regionSectorGraphData,
  			mapMarkers: getRegionMapMarkers(region[:code]),
- 			#chartDataRepOrgs: regionYearWiseBudgets[0],
-			#chartDataFinYears: regionYearWiseBudgets[1],
-			#chartDataColumnData: regionYearWiseBudgets[2]
- 			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end
 
@@ -559,42 +499,6 @@ get '/sector/:high_level_sector_code/?' do
 end
 
 # List of all the High level sector projects (e.g. Three Digit DAC Sector) 
-# get '/sector/:high_level_sector_code/projects/?' do
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	sectorData = {}
-# 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-# 	sectorData['sectorCode'] = ""
-# 	sectorJsonData = map_sector_data()
-# 	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
-# 	sectorJsonData.each do |sdata|
-# 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
-# 	end
-# 	sectorData['categoryCode'] = ""
-# 	sectorData['sectorName'] = ""
-# 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-# 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-# 	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-#   	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
-#   	erb :'sector/projects', 
-# 		:layout => :'layouts/layout',
-# 		 :locals => {
-# 		 	oipa_api_url: settings.oipa_api_url,
-#  			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
-#  			sectorData: sectorData,
-#  			locationCountryFilters: locationFilterData["locationCountryFilters"],
-#  			locationRegionFilters: locationFilterData["locationRegionFilters"],
-#  			countryAllProjectFilters: countryAllProjectFilters,
-#  			total_projects: getSectorProjects['projects']['count'],
-# 	 		projects: getSectorProjects['projects']['results'],
-# 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-# 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-# 	 		actualStartDate: getSectorProjects['actualStartDate'],
-#  			plannedEndDate: getSectorProjects['plannedEndDate'],
-#  			documentTypes: getSectorProjects['document_types'],
-#  			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
-#  			reportingOrgTypes: getSectorProjects['reportingOrg_types']
-#  		}	
-# end
 
 # Sector Page (e.g. Five Digit DAC Sector) 
 get '/sector/:high_level_sector_code/categories/:category_code/?' do
@@ -607,80 +511,6 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
-
-# List of all the 3 DAC projects 
-# get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	sectorData = {}
-# 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-# 	sectorData['sectorCode'] = ""
-# 	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
-# 	sectorJsonData = map_sector_data()
-# 	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
-# 	sectorJsonData.each do |sdata|
-# 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
-# 	end
-# 	sectorData['sectorName'] = ""
-# 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-# 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-#   	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
-#   	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-#   	erb :'sector/projects', 
-# 		:layout => :'layouts/layout',
-# 		 :locals => {
-# 		 	oipa_api_url: settings.oipa_api_url,
-#  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
-#  			sectorData: sectorData,
-#  			locationCountryFilters: locationFilterData["locationCountryFilters"],
-#  			locationRegionFilters: locationFilterData["locationRegionFilters"],
-#  			countryAllProjectFilters: countryAllProjectFilters,
-#  			total_projects: getSectorProjects['projects']['count'],
-# 	 		projects: getSectorProjects['projects']['results'],
-# 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-# 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-# 	 		actualStartDate: getSectorProjects['actualStartDate'],
-#  			plannedEndDate: getSectorProjects['plannedEndDate'],
-#  			documentTypes: getSectorProjects['document_types'],
-#  			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
-#  			reportingOrgTypes: getSectorProjects['reportingOrg_types']
-#  		}	
-# end
-
-# Sector All Projects Page (e.g. Five Digit DAC Sector)
-# get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_code/?' do
-# 	# Get the five digit DAC sector project data from the API
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	sectorData = {}
-# 	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-# 	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
-# 	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
-# 	sectorJsonData = map_sector_data()
-# 	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
-# 	sectorData['sectorName'] = sectorJsonData['Name']
-# 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-# 	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-#   	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
-#   	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-#   	erb :'sector/projects', 
-# 		:layout => :'layouts/layout',
-# 		 :locals => {
-# 		 	oipa_api_url: settings.oipa_api_url,
-#  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
-#  			sectorData: sectorData,
-#  			locationCountryFilters: locationFilterData["locationCountryFilters"],
-#  			locationRegionFilters: locationFilterData["locationRegionFilters"],
-#  			countryAllProjectFilters: countryAllProjectFilters,
-#  			total_projects: getSectorProjects['projects']['count'],
-# 	 		projects: getSectorProjects['projects']['results'],
-# 	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-# 	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-# 	 		actualStartDate: getSectorProjects['actualStartDate'],
-#  			plannedEndDate: getSectorProjects['plannedEndDate'],
-#  			documentTypes: getSectorProjects['document_types'],
-#  			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
-#  			reportingOrgTypes: getSectorProjects['reportingOrg_types']
-#  		}		
-# end
 
 #####################################################################
 #  COUNTRY REGION & GLOBAL PROJECT MAP PAGES
@@ -728,46 +558,6 @@ get '/location/global/?' do
 			:dfid_global_projects_data => dfid_regional_projects_data("global")
 		}
 end
-
-#####################################################################
-#  Search PAGE
-#####################################################################
-
-# get '/search/?' do
-# 	countryAllProjectFilters = get_static_filter_list()
-# 	query = sanitize_input(params['query'],"a")
-# 	includeClosed = sanitize_input(params['includeClosed'],"a")
-# 	activityStatusList = ''
-# 	if(includeClosed == "1") then 
-# 		activityStatusList = '1,2,3,4'
-# 	else
-# 		includeClosed = 0
-# 		activityStatusList = '2'
-# 	end
-# 	#results = generate_searched_data(query,activityStatusList)
-# 	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
-# 	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
-#   	settings.devtracker_page_title = 'Search Results For : ' + query
-# 	erb :'search/search',
-# 	:layout => :'layouts/layout',
-# 	:locals => {
-# 		oipa_api_url: settings.oipa_api_url,
-# 		:query => query,
-# 		includeClosed: includeClosed,
-# 		dfidCountryBudgets: didYouMeanData['dfidCountryBudgets'],
-# 		dfidRegionBudgets: didYouMeanData['dfidRegionBudgets'],
-# 		countryAllProjectFilters: countryAllProjectFilters,
-# 		projects: results['projects']['results'],
-# 		project_count: results['projects']['count'],
-# 		budgetHigherBound: results['project_budget_higher_bound'],
-# 		highLevelSectorList: results['highLevelSectorList'],
-# 		actualStartDate: results['actualStartDate'],
-#  		plannedEndDate: results['plannedEndDate'],
-#  		documentTypes: results['document_types'],
-#  		implementingOrgTypes: results['implementingOrg_types'],
-#  		reportingOrgTypes: results['reportingOrg_types']
-# 	}
-# end
 
 #####################################################################
 #  SOLR BASED PAGES
@@ -1376,64 +1166,6 @@ get '/downloadLocationDataCountriesCSV/:countryCode?' do
 	attachment "Export-locations-"+countryCode+".csv"
 	locationData
 end
-
-# get '/department/:dept_id/?' do
-# 	dept_id = sanitize_input(params[:dept_id],"a")
-# 	if dept_id == 'abs'
-# 		redirect '/sector'
-# 	end
-# 	allActivityStatusProjectsCount = 0
-# 	ogds = Oj.load(File.read('data/OGDs.json'))
-# 	deptIdentifier = ''
-# 	if ogds.has_key?(dept_id)
-# 		deptIdentifier = ogds[dept_id]["identifiers"]
-# 	else
-# 		redirect '/department'
-# 	end
-# 	if deptIdentifier == ''
-# 		redirect '/department'
-# 	end
-# 	if(deptIdentifier != 'x')
-# 		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
-# 		if projectData['projects']['count'] == 0
-# 			allActivityStatusProjects = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{deptIdentifier}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4&ordering=-activity_plus_child_budget_value"))
-# 			allActivityStatusProjectsCount = allActivityStatusProjects['count']
-# 		end
-# 	else
-# 		projectData = {}
-# 		projectData['projects'] = {}
-# 		projectData['projects']['count'] = 0
-#  		projectData['projects']['results'] = ''
-#  		projectData['results'] = ''
-#  		projectData['highLevelSectorList'] = ''
-#  		projectData['project_budget_higher_bound'] = ''
-#  		projectData['actualStartDate'] = ''
-#  		projectData['plannedEndDate'] = ''
-#  		projectData['document_types'] = ''
-#  		projectData['implementingOrg_types'] = ''
-#  		projectData['reportingOrg_types'] = ''
-# 	end
-#   	settings.devtracker_page_title = ogds[dept_id]["name"]
-# 	erb :'other-govt-departments/other_govt_departments',
-# 	:layout => :'layouts/layout',
-# 	:locals => {
-# 		oipa_api_url: settings.oipa_api_url,
-# 		ogd_title: settings.devtracker_page_title,
-# 		ogd: deptIdentifier,
-# 		deptName: ogds[dept_id]["name"],
-# 		countryAllProjectFilters: get_static_filter_list(),
-#  		total_projects: projectData['projects']['count'],
-#  		projects: projectData['projects']['results'],
-#  		highLevelSectorList: projectData['highLevelSectorList'],
-#  		budgetHigherBound: projectData['project_budget_higher_bound'],
-#  		actualStartDate: projectData['actualStartDate'],
-#  		plannedEndDate: projectData['plannedEndDate'],
-#  		documentTypes: projectData['document_types'],
-#  		implementingOrgTypes: projectData['implementingOrg_types'],
-#  		allProjectsCount: allActivityStatusProjectsCount,
-#  		reportingOrgTypes: projectData['reportingOrg_types']
-# 	}
-# end
 
 #####################################################################
 #  TEST PAGES
