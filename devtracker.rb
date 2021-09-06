@@ -654,7 +654,6 @@ get '/regions/?' do
 	region = {}
 	region[:code] = "298,798,89,589,389,189,679,289,380"
 	region[:name] = "All"
-	#erb :'regions/projects-home',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
