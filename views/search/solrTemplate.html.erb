@@ -110,14 +110,16 @@
                         <div class="govuk-grid-column-full">
                             <% if !fcdoCountryBudgets.empty? %>
                                 <% fcdoCountryBudgets.each do |results| %>
-                                    <div class="govuk-inset-text" style="font-size: 14px;">
-                                    <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
-                                        <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                                        <p></p>
-                                        <h3><em><%= results[1][1]%></em></h3>
-                                        Budget: <em><%= results[1][0]%></em>
-                                        <p></p>
-                                    </div>
+                                    <%if results[0] != 'AF'%>
+                                        <div class="govuk-inset-text" style="font-size: 14px;">
+                                        <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
+                                            <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                            <p></p>
+                                            <h3><em><%= results[1][1]%></em></h3>
+                                            Budget: <em><%= results[1][0]%></em>
+                                            <p></p>
+                                        </div>
+                                    <%end%>
                                 <%end%>
                             <%end%>
                         </div>
@@ -249,6 +251,17 @@
 									Apply Filter
 								</button>
 								<button class="close-advance-button govuk-button govuk-button--secondary">Cancel</button>
+							</div>
+                            <div class="govuk-grid-column-one-half">
+								<div class="govuk-form-group">
+									<label class="govuk-label" for="orderBy">
+										Order by
+									</label>
+									<select class="govuk-select" id="orderBy" name="orderBy">
+										<option value="asc">Ascending Order</option>
+                                        <option value="desc">Descending Order</option>
+									</select>
+								</div>
 							</div>
 						</div>
 						   </div>
@@ -782,7 +795,7 @@
             
             if ($('#sort option:selected').val() != '')
             {
-                sortType = $('#sort option:selected').val() + ' asc';
+                sortType = $('#sort option:selected').val() + ' ' + $('#orderBy option:selected').val();
             }
             getFilteredResponse(0, true, 0);
         });

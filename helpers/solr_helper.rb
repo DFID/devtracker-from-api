@@ -320,7 +320,7 @@ module SolrHelper
                                         if r['activity_plus_child_aggregation_budget_currency'].to_s == 'None'  
                                             if r['activity_plus_child_aggregation_incoming_funds_currency'].to_s == 'None'
                                                 if r['activity_plus_child_aggregation_expenditure_currency'].to_s == 'None'
-                                                    'GBP'
+                                                    r['default_currency']
                                                 else
                                                     r['activity_plus_child_aggregation_expenditure_currency']
                                                 end
