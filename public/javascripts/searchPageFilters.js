@@ -596,8 +596,8 @@ $(document).ready(function() {
                             }
                             if(actualStartDate.length > 0){
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -620,8 +620,8 @@ $(document).ready(function() {
                             }
                             else if(plannedStartDate.length > 0){
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -644,8 +644,8 @@ $(document).ready(function() {
                             }
                             else{
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -681,8 +681,8 @@ $(document).ready(function() {
                             }
                             if(actualStartDate.length > 0){
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -705,8 +705,8 @@ $(document).ready(function() {
                             }
                             else if(plannedStartDate.length > 0){
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -729,8 +729,8 @@ $(document).ready(function() {
                             }
                             else{
                                 var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -909,8 +909,8 @@ $(document).ready(function() {
                     }
                     if(actualStartDate.length > 0){
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -933,8 +933,8 @@ $(document).ready(function() {
                     }
                     else if(plannedStartDate.length > 0){
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -957,8 +957,8 @@ $(document).ready(function() {
                     }
                     else{
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -996,8 +996,8 @@ $(document).ready(function() {
                     console.log('planned'+plannedStartDate);
                     if(actualStartDate.length > 0){
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -1020,8 +1020,8 @@ $(document).ready(function() {
                     }
                     else if(plannedStartDate.length > 0){
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']
@@ -1044,8 +1044,8 @@ $(document).ready(function() {
                     }
                     else{
                         var tempString = '<div class="eight columns"><h3><a href="/projects/'
-                                +validResults['iati_identifier']
-                                +'">'
+                                +encodeURIComponent(validResults['iati_identifier']).toString()
+                                +'/summary">'
                                 +validResults['title']
                                 +'</a></h3><span class="reporting-org">'
                                 +validResults['reporting_organisations']

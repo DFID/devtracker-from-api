@@ -26,7 +26,7 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json"
+		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json")
 	end
 	
 	def group_hashes arr, group_fields
@@ -90,7 +90,7 @@ module SectorHelpers
 	end
 
 	def map_sector_data()
-		sectorValuesJSON = RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
 		sectorValues  = JSON.parse(sectorValuesJSON)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		sectorValues['results'].each do |elem|
@@ -115,7 +115,7 @@ module SectorHelpers
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
 	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
-		sectorValuesJSON = RestClient.get apiUrl + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json"
+		sectorValuesJSON = RestClient.get  api_simple_log(apiUrl + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
  		sectorValues  = JSON.parse(sectorValuesJSON)
   		sectorValues  = sectorValues['results']
   		#sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -202,9 +202,9 @@ module SectorHelpers
 
 	 def prepare_location_country_region_data(activityStatus, sectorCode)
 	 	data = {}
-	 	locationCountryFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}")
+	 	locationCountryFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
   		locationCountryFilters = locationCountryFilters['results'].sort_by {|key| key["recipient_country"]["name"]}
-  		locationRegionFilters = JSON.parse(RestClient.get settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}")
+  		locationRegionFilters = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?hierarchy=1&format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_region&aggregations=count&related_activity_sector=#{sectorCode}&activity_status=#{activityStatus}"))
   		locationRegionFilters = locationRegionFilters['results'].sort_by {|key| key["recipient_region"]["name"]}
   		data['locationCountryFilters'] = locationCountryFilters
   		data['locationRegionFilters'] = locationRegionFilters

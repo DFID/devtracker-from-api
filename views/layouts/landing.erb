@@ -33,6 +33,7 @@
       <script src="/javascripts/ie-compat.js?1435740689" type="text/javascript"></script>
     <![endif]-->
     <script src="/javascripts/d3.js" type="text/javascript"></script>
+    <script src="/javascripts/design-custom.js" type="text/javascript"></script>
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -112,7 +113,7 @@
       <div class="row">
         <div class="twelve columns">
           <h2><a href="/" title="Go to the homepage">Development Tracker</a></h2>
-          <form style="display: none" id="search" class="site-search" action="/search" method="GET" role="search">
+          <form style="display: none" id="search" class="site-search" action="/search" method="POST" role="search">
            <label for="site-search-text" class="visually-hidden">Search</label>
            <input type="search" name="query" id="site-search-text" title="Search" placeholder="Search Projects"><input class="button" type="submit" value="Search">
            <input name="includeClosed" type="hidden" value="0">

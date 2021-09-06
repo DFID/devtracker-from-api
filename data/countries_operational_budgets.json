@@ -1,13 +1,5 @@
 [
   {
-    "country":"Afghanistan",
-    "code":"AFx",
-    "financialStartDate":"2015-04-01",
-    "financialEndDate":"2016-03-31",
-    "currency":"GBP",
-    "operationalBudget":178000000
-  },
-  {
     "country":"Bangladesh",
     "code":"BDx",
     "financialStartDate":"2015-04-01",

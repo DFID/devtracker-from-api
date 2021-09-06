@@ -74,7 +74,7 @@
         </thead>
         <tbody>
           <%dfid_country_stats_data.each do |key,val|%>
-            <%if val["projects"] > 0 && val["budget"] > 0%>
+            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'AF'%>
               <tr>
                 <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
                 <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>

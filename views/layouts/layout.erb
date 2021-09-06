@@ -37,6 +37,8 @@
     <script src="/javascripts/c3.min-12912fb6.js" type="text/javascript"></script>
    <!-- <script type="text/javascript" src="http://c3js.org/js/c3.min-12912fb6.js"></script> -->
     <script src="/javascripts/jquery.expander.js" type="text/javascript"></script>
+    <script src="/javascripts/design-custom.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/readMoreJS.min.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <link href="/stylesheets/foundation.css" media="screen" rel="stylesheet" type="text/css" />
@@ -50,6 +52,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
     <link type="image/x-icon" href="https://assets.digital.cabinet-office.gov.uk/static/favicon-8d811b8c3badbc0b0e2f6e25d3660a96cc0cca7993e6f32e98785f205fc40907.ico" rel="shortcut icon" />
     <script src="/javascripts/jquery.scrollUp.min.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/f66f68bd8d.js" crossorigin="anonymous"></script>
    <!--  <script>  
         jQuery(function(){
           jQuery('.more-info-link').click( function(){
@@ -144,7 +147,7 @@
       <div class="row">
         <div class="twelve columns">
           <h2><a href="/" title="Go to the homepage">Development Tracker</a></h2>
-          <form id="search" class="site-search" action="/search" method="GET" role="search">
+          <form id="search" class="site-search" action="/search" method="POST" role="search">
             <label for="site-search-text" class="visually-hidden">Search</label>
             <input type="search" name="query" id="site-search-text" title="Search"><input class="button" type="submit" value="Search">
             <input name="includeClosed" type="hidden" value="0">

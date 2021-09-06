@@ -17,6 +17,18 @@
         </div>
     </div>
 
-<%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects } %>
+    <%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects } %>
 </div>
-<%= erb :'partials/_project_list_countries', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes, :reportingOrgTypes => reportingOrgTypes} %>
+<%#= erb :'partials/_project_list_countries', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes, :reportingOrgTypes => reportingOrgTypes} %>
+<%= erb :'partials/_solr-template', 
+    :locals => {
+        :oipa_api_url => oipa_api_url, 
+        :query => query, 
+        :filters => filters,
+        :response => response,
+        :solrConfig => solrConfig,
+        :activityStatus => activityStatus,
+        :searchType => searchType,
+        :breadcrumbURL => breadcrumbURL,
+        :breadcrumbText => breadcrumbText
+}%>

@@ -1,4 +1,5 @@
 #dotenv is used to load the sensitive environment variables for devtracker.
+
 require 'dotenv'
 Dotenv.load('/etc/platform.conf')
 
@@ -19,6 +20,7 @@ require "sinatra/json"
 require "action_view"
 require 'csv'
 require "sinatra/cookies"
+require "cgi"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -38,6 +40,7 @@ require_relative 'helpers/search_helper.rb'
 require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
+require_relative 'helpers/solr_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -51,9 +54,12 @@ include SearchHelper
 include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
+include SolrHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+# set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
+#set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
@@ -94,7 +100,7 @@ get '/' do  #homepage
   	settings.devtracker_page_title = ''
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
- 	erb :index,
+	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
@@ -116,16 +122,19 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1")
+	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	if n == 'AF'
+		tempActivityCount['count'] = 0
+	end
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
 	 		country = get_country_details(n)
 	 		results = get_country_results(n)
 			#oipa v3.1
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")
+			countrySectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
 	 	}
 	end
-	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
 	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
@@ -155,12 +164,16 @@ get '/countries/:country_code/?' do |n|
  		}
 end
 
-#Country Project List Page
+# solr route
 get '/countries/:country_code/projects/?' do |n|
-	n = sanitize_input(n,"p").upcase
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'C')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
 	projectData = ''
-	#projectData = get_country_all_projects_data(n)
-	projectData = generate_project_page_data(generate_api_list('C',n,"2"))
 	country = get_country_code_name(n)
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Projects Page'
 	erb :'countries/projects', 
@@ -168,52 +181,21 @@ get '/countries/:country_code/projects/?' do |n|
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		country: country,
-	 		total_projects: projectData['projects']['count'],
-	 		projects: projectData['projects']['results'],
-	 		highLevelSectorList: projectData['highLevelSectorList'],
-	 		budgetHigherBound: projectData['project_budget_higher_bound'],
-	 		countryAllProjectFilters: get_static_filter_list(),
-	 		actualStartDate: projectData['actualStartDate'],
-	 		plannedEndDate: projectData['plannedEndDate'],
-	 		documentTypes: projectData['document_types'],
-	 		implementingOrgTypes: projectData['implementingOrg_types'],
-	 		reportingOrgTypes: projectData['reportingOrg_types']
-	 	}
-		 			
+	 		total_projects: response['numFound'],
+			query: query,
+			filters: filters,
+			response: response,
+			solrConfig: Oj.load(File.read('data/solr-config.json')),
+			activityStatus: Oj.load(File.read('data/activity_status.json')),
+			searchType: 'C',
+			breadcrumbURL: '/location/country',
+			breadcrumbText: 'Aid by Location'
+	 	}	
 end
-
 
 #####################################################################
 #  GLOBAL PAGES
 #####################################################################
-# Global all projects page
-get '/global' do
-	countryAllProjectFilters = get_static_filter_list()
-	region = {}
-	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-	#region[:code] = "NS,ZZ"
-	region[:code] = "998"
-	region[:name] = "All"
-	#getRegionProjects = get_region_projects(region[:code])
-	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-  	settings.devtracker_page_title = 'Global All Projects Page'
-	erb :'regions/projects-home', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		region: region,
-	 		total_projects: getRegionProjects['projects']['count'],
-	 		projects: getRegionProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
-	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
-		}
-end
 
 #Global Project List Page
 get '/global/:global_code/projects/?' do |n|
@@ -254,42 +236,14 @@ end
 #####################################################################
 #  REGION PAGES
 #####################################################################
-# Regions all projects page
-get '/regions' do
-	countryAllProjectFilters = get_static_filter_list()
-	region = {}
-	#Region code can't be left empty. So we are passing an empty string instead. Same goes with the 'region name'.
-	region[:code] = "298,798,89,589,389,189,679,289,380"
-	region[:name] = "All"
-	#getRegionProjects = get_region_projects(region[:code])
-	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-  	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
-	erb :'regions/projects-home', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		region: region,
-	 		total_projects: getRegionProjects['projects']['count'],
-	 		projects: getRegionProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
-	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
-		}
-end
-
 # Region summary page
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
     region = get_region_details(n)
 	#oipa v3.1
 	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}")
+	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
@@ -299,37 +253,40 @@ get '/regions/:region_code/?' do |n|
  			regionYearWiseBudgets: regionYearWiseBudgets,
  			regionSectorGraphData: regionSectorGraphData,
  			mapMarkers: getRegionMapMarkers(region[:code]),
- 			#chartDataRepOrgs: regionYearWiseBudgets[0],
-			#chartDataFinYears: regionYearWiseBudgets[1],
-			#chartDataColumnData: regionYearWiseBudgets[2]
- 			#getCountryBoundsForRegions: getCountryBoundsForRegions(getCountryListForRegionMap(region[:name]))
  		}
 end
 
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
-	n = sanitize_input(n,"p")
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
-	#getRegionProjects = get_region_projects(n)
-	getRegionProjects = generate_project_page_data(generate_api_list('R',n,"2"))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
+	if n.to_i == 998
+		breadcrumbURL = '/location/global'
+	else
+		breadcrumbURL = '/location/regional'
+	end
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 	 		region: region,
-	 		total_projects: getRegionProjects['projects']['count'],
-	 		projects: getRegionProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
-	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
+	 		total_projects: response['numFound'],
+	 		query: query,
+			filters: filters,
+			response: response,
+			solrConfig: Oj.load(File.read('data/solr-config.json')),
+			activityStatus: Oj.load(File.read('data/activity_status.json')),
+			searchType: 'R',
+			breadcrumbURL: breadcrumbURL,
+			breadcrumbText: 'Aid by Location'
 		}	 			
 end
 
@@ -338,25 +295,22 @@ end
 #####################################################################
 
 # Project summary page
-get '/projects/:proj_id/?' do |n|
+get '/projects/*/summary' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
   	project = get_h1_project_details(n)
   	participatingOrgList = get_participating_organisations(project)
-
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
-
   	#get total project budget and spend Data
   	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
-  	
   	projectSectorGraphData = get_project_sector_graph_data(n)
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
-
 	# get the funded projects Count from the API
 	fundedProjectsCount = get_funded_project_details(n).length
 	#Policy markers
@@ -375,6 +329,7 @@ get '/projects/:proj_id/?' do |n|
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
+			projectId: n,
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
@@ -390,8 +345,10 @@ get '/projects/:proj_id/?' do |n|
 end
 
 # Project documents page
-get '/projects/:proj_id/documents/?' do |n|
+get '/projects/*/documents/?' do
 	#n = sanitize_input(n,"p")
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_details(n)
 
@@ -417,7 +374,9 @@ get '/projects/:proj_id/documents/?' do |n|
 end
 
 #Project transactions page
-get '/projects/:proj_id/transactions/?' do |n|
+get '/projects/*/transactions/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
@@ -478,7 +437,9 @@ get '/projects/:proj_id/transactions/?' do |n|
 end
 
 #Project partners page
-get '/projects/:proj_id/partners/?' do |n|
+get '/projects/*/partners/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
 	# get the project data from the API
 	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
@@ -538,42 +499,6 @@ get '/sector/:high_level_sector_code/?' do
 end
 
 # List of all the High level sector projects (e.g. Three Digit DAC Sector) 
-get '/sector/:high_level_sector_code/projects/?' do
-	countryAllProjectFilters = get_static_filter_list()
-	sectorData = {}
-	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-	sectorData['sectorCode'] = ""
-	sectorJsonData = map_sector_data()
-	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == sectorData['highLevelCode'].to_i}
-	sectorJsonData.each do |sdata|
-		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
-	end
-	sectorData['categoryCode'] = ""
-	sectorData['sectorName'] = ""
-	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-  	settings.devtracker_page_title = 'Sector '+sectorData['highLevelCode']+' Projects Page'
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
-		 :locals => {
-		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
- 			sectorData: sectorData,
- 			locationCountryFilters: locationFilterData["locationCountryFilters"],
- 			locationRegionFilters: locationFilterData["locationRegionFilters"],
- 			countryAllProjectFilters: countryAllProjectFilters,
- 			total_projects: getSectorProjects['projects']['count'],
-	 		projects: getSectorProjects['projects']['results'],
-	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
- 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
- 		}	
-end
 
 # Sector Page (e.g. Five Digit DAC Sector) 
 get '/sector/:high_level_sector_code/categories/:category_code/?' do
@@ -584,80 +509,6 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
- 		}		
-end
-
-# List of all the 3 DAC projects 
-get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
-	countryAllProjectFilters = get_static_filter_list()
-	sectorData = {}
-	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-	sectorData['sectorCode'] = ""
-	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
-	sectorJsonData = map_sector_data()
-	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == sectorData['categoryCode'].to_i}
-	sectorJsonData.each do |sdata|
-		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
-	end
-	sectorData['sectorName'] = ""
-	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
-  	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
-		 :locals => {
-		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
- 			sectorData: sectorData,
- 			locationCountryFilters: locationFilterData["locationCountryFilters"],
- 			locationRegionFilters: locationFilterData["locationRegionFilters"],
- 			countryAllProjectFilters: countryAllProjectFilters,
- 			total_projects: getSectorProjects['projects']['count'],
-	 		projects: getSectorProjects['projects']['results'],
-	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
- 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
- 		}	
-end
-
-# Sector All Projects Page (e.g. Five Digit DAC Sector)
-get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_code/?' do
-	# Get the five digit DAC sector project data from the API
-	countryAllProjectFilters = get_static_filter_list()
-	sectorData = {}
-	sectorData['highLevelCode'] = sanitize_input(params[:high_level_sector_code],"p")
-	sectorData['categoryCode'] = sanitize_input(params[:category_code],"p")
-	sectorData['sectorCode'] = sanitize_input(params[:sector_code],"p")
-	sectorJsonData = map_sector_data()
-	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == sectorData['sectorCode'].to_i}.first
-	sectorData['sectorName'] = sectorJsonData['Name']
-	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-	getSectorProjects = generate_project_page_data(generate_api_list('S',sectorData['sectorCode'],"2"))
-  	settings.devtracker_page_title = 'Sector ' + sectorData['sectorCode'] + ' Projects Page'
-  	locationFilterData = prepare_location_country_region_data("2",sectorData['sectorCode'])
-  	erb :'sector/projects', 
-		:layout => :'layouts/layout',
-		 :locals => {
-		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
- 			sectorData: sectorData,
- 			locationCountryFilters: locationFilterData["locationCountryFilters"],
- 			locationRegionFilters: locationFilterData["locationRegionFilters"],
- 			countryAllProjectFilters: countryAllProjectFilters,
- 			total_projects: getSectorProjects['projects']['count'],
-	 		projects: getSectorProjects['projects']['results'],
-	 		highLevelSectorList: getSectorProjects['highLevelSectorList'],
-	 		budgetHigherBound: getSectorProjects['project_budget_higher_bound'],
-	 		actualStartDate: getSectorProjects['actualStartDate'],
- 			plannedEndDate: getSectorProjects['plannedEndDate'],
- 			documentTypes: getSectorProjects['document_types'],
- 			implementingOrgTypes: getSectorProjects['implementingOrg_types'],
- 			reportingOrgTypes: getSectorProjects['reportingOrg_types']
  		}		
 end
 
@@ -709,43 +560,374 @@ get '/location/global/?' do
 end
 
 #####################################################################
-#  Search PAGE
+#  SOLR BASED PAGES
 #####################################################################
 
 get '/search/?' do
-	countryAllProjectFilters = get_static_filter_list()
-	query = sanitize_input(params['query'],"a")
-	includeClosed = sanitize_input(params['includeClosed'],"a")
-	activityStatusList = ''
-	if(includeClosed == "1") then 
-		activityStatusList = '1,2,3,4'
-	else
-		includeClosed = 0
-		activityStatusList = '2'
-	end
-	#results = generate_searched_data(query,activityStatusList)
-	results = generate_project_page_data(generate_api_list('F',query,activityStatusList))
-	didYouMeanData = generate_did_you_mean_data(query,activityStatusList)
-  	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/search',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		:query => query,
-		includeClosed: includeClosed,
-		dfidCountryBudgets: didYouMeanData['dfidCountryBudgets'],
-		dfidRegionBudgets: didYouMeanData['dfidRegionBudgets'],
-		countryAllProjectFilters: countryAllProjectFilters,
-		projects: results['projects']['results'],
-		project_count: results['projects']['count'],
-		budgetHigherBound: results['project_budget_higher_bound'],
-		highLevelSectorList: results['highLevelSectorList'],
-		actualStartDate: results['actualStartDate'],
- 		plannedEndDate: results['plannedEndDate'],
- 		documentTypes: results['document_types'],
- 		implementingOrgTypes: results['implementingOrg_types'],
- 		reportingOrgTypes: results['reportingOrg_types']
+	query= ''
+	filters = []
+	response = 
+	{
+		'numFound' => -1,
+		'docs' => []
 	}
+  	settings.devtracker_page_title = 'Search Page'
+	#erb :'search/solrSearch',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'F',
+		breadcrumbURL: '',
+		breadcrumbText: ''
+	}
+end
+
+post '/search/?' do
+	query = params['query']
+	isIncludeClosedProjects = params['includeClosedProject']
+	if(isIncludeClosedProjects.to_i != 1)
+		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3)'
+	else
+		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3 OR 4 OR 5)'
+	end
+	filters = prepareFilters(query.to_s, 'F')
+	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+  	settings.devtracker_page_title = 'Search Results For : ' + query
+	didYouMeanQuery = sanitize_input(params['query'],"a")
+	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'1,2,3')
+	#erb :'search/solrSearch',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'F',
+		breadcrumbURL: '',
+		breadcrumbText: '',
+		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
+ 		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		 isIncludeClosedProjects: isIncludeClosedProjects
+	}
+end
+
+post '/solr-response' do
+	query = params['data']['query']
+	if params['data']['filters'].strip.length > 1
+		filters = 'AND ' + params['data']['filters']
+	else
+		filters = ''
+	end
+	puts(filters)
+	searchType = params['data']['queryType']
+	startPage = params['data']['page']
+	response = solrResponse(query, filters, searchType, startPage, params['data']['dateRange'], params['data']['sortType'])
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	json :output => response
+end
+
+get '/regions/?' do
+	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
+	
+	region = {}
+	region[:code] = "298,798,89,589,389,189,679,289,380"
+	region[:name] = "All"
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		region:region,
+		total_projects: response['numFound'],
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/regional',
+		breadcrumbText: 'Aid by Location'
+	}
+end
+
+get '/solr-regions/:region_code/?' do |n|
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
+	#erb :'search/solrRegions',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/regional',
+		breadcrumbText: 'Aid by Location'
+	}
+end
+
+get '/solr-countries/:country_code/?' do |n|
+	query = '('+n+')'
+	filters = prepareFilters(query.to_s, 'C')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'C',
+		breadcrumbURL: '/location/country',
+		breadcrumbText: 'Aid by Location'
+	}
+end
+
+get '/global/?' do
+	query = '(998)'
+	filters = prepareFilters(query.to_s, 'R')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Search Results For : ' + query
+	region = {}
+	region[:name] = 'global'
+	#erb :'search/solrRegions',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'R',
+		breadcrumbURL: '/location/global',
+		breadcrumbText: 'Aid by Location',
+		region: region
+	}
+end
+
+get '/department/:dept_id/?' do
+	dept_id = sanitize_input(params[:dept_id],"a")
+	if dept_id == 'abs'
+		redirect '/sector'
+	end
+	allActivityStatusProjectsCount = 0
+	ogds = Oj.load(File.read('data/OGDs.json'))
+	deptIdentifier = ''
+	if ogds.has_key?(dept_id)
+		deptIdentifier = ogds[dept_id]["identifiers"]
+	else
+		redirect '/department'
+	end
+	if deptIdentifier == ''
+		redirect '/department'
+	end
+	if(deptIdentifier != 'x')
+		query = deptIdentifier
+	else
+		redirect '/department'
+	end
+  	settings.devtracker_page_title = ogds[dept_id]["name"]
+	query = deptIdentifier
+	filters = prepareFilters(query.to_s, 'O')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'O', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		searchType: 'O',
+		breadcrumbURL: '/department',
+		breadcrumbText: 'Aid by Department',
+		ogd_title: settings.devtracker_page_title
+	}
+end
+
+get '/sector/:high_level_sector_code/projects/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	sectorCode = ''
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == highLevelCode.to_i}
+	#Segment
+	sectorData = {}
+	sectorData['highLevelCode'] = highLevelCode
+	sectorData['sectorCode'] = ""
+	#Segment
+	sectorJsonData.each do |sdata|
+		sectorCode.concat(sdata['Code (L3)'].to_s + " OR ")
+		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
+	end
+	#Segment
+	sectorData['categoryCode'] = ""
+	sectorData['sectorName'] = ""
+	#Segment
+	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 1,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Department',
+		sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
+		sectorData: sectorData
+	}
+end
+
+# List of all the 3 DAC projects 
+get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	categoryCode = sanitize_input(params[:category_code],"p")
+	sectorCode = ''
+	#Segment
+	sectorData = {}
+	sectorData['highLevelCode'] = highLevelCode
+	sectorData['sectorCode'] = ""
+	sectorData['categoryCode'] = categoryCode
+	sectorData['sectorName'] = ""
+	#Segment
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == categoryCode.to_i}
+	sectorJsonData.each do |sdata|
+		sectorCode.concat(sdata['Code (L3)'].to_s + " OR ")
+		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
+	end
+	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 2,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Department',
+		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+		sectorData: sectorData
+	}
+end
+
+# Sector All Projects Page (e.g. Five Digit DAC Sector)
+get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_code/?' do
+	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
+	categoryCode = sanitize_input(params[:category_code],"p")
+	dac5Code = sanitize_input(params[:sector_code],"p")
+	#Segment
+	sectorData = {}
+	sectorData['highLevelCode'] = highLevelCode
+	sectorData['categoryCode'] = categoryCode
+	sectorData['sectorCode'] = dac5Code
+	#Segment
+	# Get the five digit DAC sector project data from the API
+	sectorJsonData = map_sector_data()
+	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == dac5Code.to_i}.first
+	dac5SectorName = sectorJsonData['Name']
+	sectorData['sectorName'] = sectorJsonData['Name']
+	query = "(" + sectorJsonData['Code (L3)'].to_s + ")"
+	filters = prepareFilters(query.to_s, 'S')
+	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	if(response['numFound'].to_i > 0)
+		response = addTotalBudgetWithCurrency(response)
+	end
+	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
+  	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
+  	#erb :'search/solrSectors',
+	erb :'search/solrTemplate',
+	:layout => :'layouts/layout',
+	:locals => 
+	{
+		oipa_api_url: settings.oipa_api_url,
+		query: query,
+		filters: filters,
+		response: response,
+		solrConfig: Oj.load(File.read('data/solr-config.json')),
+		activityStatus: Oj.load(File.read('data/activity_status.json')),
+		level: 3,
+		searchType: 'S',
+		breadcrumbURL: '/sector',
+		breadcrumbText: 'Aid by Sector',
+		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+ 		sectorData: sectorData
+	}	
 end
 
 #####################################################################
@@ -925,9 +1107,9 @@ get '/getFTSResponse' do
 	document_link_category = params['document_link_category']
 	participating_organisation = params['participating_organisation']
 	if params['page'] != nil && params['page'] != ''
-		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'];
+		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'])
 	else
-		jsonResponse = RestClient.get settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation;
+		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation)
 	end
 	jsonResponse = Oj.load(jsonResponse)
 	jsonResponse['results'].each do |r|
@@ -984,68 +1166,58 @@ get '/downloadLocationDataCountriesCSV/:countryCode?' do
 	locationData
 end
 
-get '/department/:dept_id/?' do
-	dept_id = sanitize_input(params[:dept_id],"a")
-	# if dept_id == 'DFID'
-	# 	redirect '/'
-	# end
-	if dept_id == 'abs'
-		redirect '/sector'
-	end
-	allActivityStatusProjectsCount = 0
-	ogds = Oj.load(File.read('data/OGDs.json'))
-	deptIdentifier = ''
-	if ogds.has_key?(dept_id)
-		deptIdentifier = ogds[dept_id]["identifiers"]
-	else
-		redirect '/department'
-	end
-	if deptIdentifier == ''
-		redirect '/department'
-	end
-	if(deptIdentifier != 'x')
-		#projectData = get_ogd_all_projects_data(deptIdentifier)
-		projectData = generate_project_page_data(generate_api_list('O',deptIdentifier,"2"))
-		if projectData['projects']['count'] == 0
-			allActivityStatusProjects = JSON.parse(RestClient.get settings.oipa_api_url + "activities/?hierarchy=1&format=json&reporting_organisation_identifier=#{deptIdentifier}&page_size=10&fields=descriptions,activity_status,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4&ordering=-activity_plus_child_budget_value")
-			allActivityStatusProjectsCount = allActivityStatusProjects['count']
-		end
-	else
-		projectData = {}
-		projectData['projects'] = {}
-		projectData['projects']['count'] = 0
- 		projectData['projects']['results'] = ''
- 		projectData['results'] = ''
- 		projectData['highLevelSectorList'] = ''
- 		projectData['project_budget_higher_bound'] = ''
- 		projectData['actualStartDate'] = ''
- 		projectData['plannedEndDate'] = ''
- 		projectData['document_types'] = ''
- 		projectData['implementingOrg_types'] = ''
- 		projectData['reportingOrg_types'] = ''
-	end
-  	settings.devtracker_page_title = ogds[dept_id]["name"]
-	erb :'other-govt-departments/other_govt_departments',
-	:layout => :'layouts/layout',
-	:locals => {
-		oipa_api_url: settings.oipa_api_url,
-		ogd_title: settings.devtracker_page_title,
-		ogd: deptIdentifier,
-		deptName: ogds[dept_id]["name"],
-		countryAllProjectFilters: get_static_filter_list(),
- 		total_projects: projectData['projects']['count'],
- 		projects: projectData['projects']['results'],
- 		highLevelSectorList: projectData['highLevelSectorList'],
- 		budgetHigherBound: projectData['project_budget_higher_bound'],
- 		actualStartDate: projectData['actualStartDate'],
- 		plannedEndDate: projectData['plannedEndDate'],
- 		documentTypes: projectData['document_types'],
- 		implementingOrgTypes: projectData['implementingOrg_types'],
- 		allProjectsCount: allActivityStatusProjectsCount,
- 		reportingOrgTypes: projectData['reportingOrg_types']
-	}
-end
+#####################################################################
+#  TEST PAGES
+#####################################################################
 
+get '/test01' do  #homepage
+	#read static data from JSON files for the front page
+	liveURL = 'https://devtracker-entry.oipa.nl/api/activities/?hierarchy=1&format=json&reporting_organisation_identifier=GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24&page_size=149&fields=activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&recipient_country=BD'
+	solrURL = 'https://fcdo.iati.cloud//search/activity/?q=hierarchy:1%20AND%20participating_org_ref:GB-*%20AND%20recipient_country_code:(BD)%20AND%20reporting_org_ref:(GB-GOV-15%20OR%20GB-GOV-9%20OR%20GB-GOV-6%20OR%20GB-GOV-2%20OR%20GB-GOV-1%20OR%20GB-1%20OR%20GB-GOV-3%20OR%20GB-GOV-13%20OR%20GB-GOV-7%20OR%20GB-GOV-50%20OR%20GB-GOV-52%20OR%20GB-6%20OR%20GB-10%20OR%20GB-GOV-10%20OR%20GB-9%20OR%20GB-GOV-8%20OR%20GB-GOV-5%20OR%20GB-GOV-12%20OR%20GB-COH-RC000346%20OR%20GB-COH-03877777)AND%20activity_status_code:(1%20OR%202%20OR%203%20OR%204%20OR%205)&rows=149&fl=iati_identifier,%20child_aggregation_*,%20activity_plus_child_aggregation*,%20activity_aggregation_*&start=0'
+  	settings.devtracker_page_title = 'Test data'
+  	# Example of setting up a cookie from server end
+  	# response.set_cookie('my_cookie', 'value_of_cookie')
+	#liveData = Oj.load(File.read('data/data-comparison/live-data.json'))
+	liveData = Oj.load(RestClient.get liveURL) 
+	#solrData = Oj.load(File.read('data/data-comparison/solr-data.json'))
+	solrData = Oj.load(RestClient.get solrURL)
+	activities = {}
+	liveData['results'].each do |val|
+		activities[val['iati_identifier']] = {}
+		activities[val['iati_identifier']]['livebudget_value'] = val['activity_plus_child_aggregation']['activity_children']['budget_value']
+		activities[val['iati_identifier']]['livebudget_currency'] = val['activity_plus_child_aggregation']['activity_children']['budget_currency']
+		activities[val['iati_identifier']]['livedisbursement_currency'] = val['activity_plus_child_aggregation']['activity_children']['disbursement_currency']
+		activities[val['iati_identifier']]['livecommitment_currency'] = val['activity_plus_child_aggregation']['activity_children']['commitment_currency']
+		activities[val['iati_identifier']]['liveexpenditure_currency'] = val['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
+	end
+	solrData['response']['docs'].each do |val|
+		if activities.has_key?(val['iati_identifier'])
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_value'] = val['activity_plus_child_aggregation_budget_value']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_currency'] = val['activity_plus_child_aggregation_budget_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_disbursement_currency'] = val['activity_plus_child_aggregation_disbursement_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_commitment_currency'] = val['activity_plus_child_aggregation_commitment_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_expenditure_currency'] = val['activity_plus_child_aggregation_expenditure_currency']
+		else
+			activities[val['iati_identifier']] = {}
+			activities[val['iati_identifier']]['livebudget_value'] = val['iati_identifier']
+			activities[val['iati_identifier']]['livebudget_currency'] = 'N/A'
+			activities[val['iati_identifier']]['livedisbursement_currency'] = 'N/A'
+			activities[val['iati_identifier']]['livecommitment_currency'] = 'N/A'
+			activities[val['iati_identifier']]['liveexpenditure_currency'] = 'N/A'
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_value'] = val['activity_plus_child_aggregation_budget_value']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_budget_currency'] = val['activity_plus_child_aggregation_budget_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_disbursement_currency'] = val['activity_plus_child_aggregation_disbursement_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_commitment_currency'] = val['activity_plus_child_aggregation_commitment_currency']
+			activities[val['iati_identifier']]['activity_plus_child_aggregation_expenditure_currency'] = val['activity_plus_child_aggregation_expenditure_currency']
+		end
+	end
+	erb :'tests/index',
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			oipa_api_url: settings.oipa_api_url,
+			 activities: activities
+ 		}
+end
 
 #####################################################################
 #  STATIC PAGES
@@ -1131,7 +1303,15 @@ end
 # 	end
 # end
 
-
+	get '/test-cache?' do
+		randomNumber = rand(2)
+		puts(randomNumber)
+		if (randomNumber.to_i.even?)
+			json :output => xx['xx']
+		else
+			json :output => randomNumber
+		end
+	end
 
 #####################################################################
 #  RSS FEED
@@ -1161,7 +1341,7 @@ get '/rss/country/:country_code/?' do |n|
 	      maker.items.new_item do |item|
 	        #convert lastUpdatedDatetime to UTC
 	        lastUpdatedDateTimeUtc = Time.strptime(project['last_updated_datetime'], '%Y-%m-%dT%H:%M:%S').utc	        
-	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + project['iati_identifier'] + "/"
+	        item.link = "https://devtracker.fcdo.gov.uk/projects/" + ERB::Util.url_encode(project['iati_identifier']).to_s + "/summary/"
 	        item.title = project['title']['narratives'][0]['text']
 	        item.description = project['descriptions'][0]['narratives'][0]['text'] + " [Last updated: " + lastUpdatedDateTimeUtc.strftime('%Y-%m-%d %H:%M:%S %Z') + "]"
 	        item.updated = lastUpdatedDateTimeUtc

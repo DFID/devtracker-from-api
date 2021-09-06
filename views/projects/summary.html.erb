@@ -74,7 +74,7 @@
         <![endif]-->
         <%# implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
         <% if participatingOrgList == nil %>
-            <% implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
+            <% implementingOrgs=get_implementing_orgs(projectId)%>
             <% if (implementingOrgs.length>0)  %>
 
                 <div class="more-info-container">  
