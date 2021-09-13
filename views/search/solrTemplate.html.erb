@@ -71,7 +71,7 @@
                                 <a style="top: 0px; text-decoration: none" class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img class="more-info-link-middle" src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
                                 <aside id="moreinfo2" class="more-info">            
                                     <div class="more-info-content">
-                                        To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tags:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each do |key, val|%><%=key%>, <%end%></strong></i>
+                                        To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tag:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each_with_index do |(key, val), i|%><%=key%><%if solrConfig['SearchTags'].length - 1 != i%>, <%end%><%end%></strong></i>. To search for a specific project, please use quotations around the search term e.g. "GB-1-204766"
                                      </div>
                                 </aside>
 						</div>
