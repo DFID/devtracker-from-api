@@ -316,7 +316,7 @@
                                                 <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
                                                     <%val.each do |item|%>
                                                         <div class="govuk-checkboxes__item">
-                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == item['value'])%>
+                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
                                                                 <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
                                                                 <label class="govuk-label govuk-checkboxes__label">
                                                                     <%= item['key']%>
@@ -632,7 +632,7 @@
                                                     <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
                                                         <%val.each do |item|%>
                                                             <div class="govuk-checkboxes__item">
-                                                                <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == item['value'])%>
+                                                                <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
                                                                     <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
                                                                     <label class="govuk-label govuk-checkboxes__label">
                                                                         <%= item['key']%>

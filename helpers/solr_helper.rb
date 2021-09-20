@@ -25,7 +25,6 @@ module SolrHelper
         # Activity Status Code filter. 
         # The 'activity_status_code' filter is a supported IATI standard field which is indexed by the iati.cloud solr engine. 
         when 'activity_status_code'
-            puts apiUrl
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             activityStatusCodes  = response['facet_counts']['facet_fields'][filter]
             statusCodeDetails = Oj.load(File.read(mappingFileUrl))
@@ -35,8 +34,14 @@ module SolrHelper
                 # Right now, we are not working with the data count. Hence, that field data is not handled. Only the even positions are being taken care of.
                 if index.even?
                     tempStatus = statusCodeDetails.select{|status| status['code'].include? value.to_i}.first
-                    if finalData.detect{|data| data['key'].to_s == tempStatus['name']}.nil?
-                        finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'].join(' OR ')))
+                    if (!tempStatus.nil?)
+                        if finalData.detect{|data| data['key'].to_s == tempStatus['name']}.nil?
+                            if(tempStatus['code'].length() > 1)
+                                finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'].join(' OR ')))
+                            else
+                                finalData.push(populateKeyVal(tempStatus['name'], tempStatus['code'][0]))
+                            end
+                        end
                     end
                 end
             end
@@ -82,7 +87,6 @@ module SolrHelper
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             participatingOrgList = Oj.load(File.read('data/participating-orgs/processed_orgList.json'))
             implementingOrgs  = response['facet_counts']['facet_fields'][filter]
-            puts implementingOrgs
             implementingOrgs.each_with_index do |value, index|
                 # The reason we did a check of this is because, solr engine returns a flat array 
                 # with first position holding the facet data and the second position holding data count.
@@ -185,15 +189,12 @@ module SolrHelper
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
             # Get response based on the API responses
-            puts ('---xxxx----')
-            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'R')
             queryCategory = solrConfig['QueryCategories'][queryType]
             preparedFilters = filters
             mainQueryString = mainQueryString + ' AND reporting_org_ref:(' + settings.goverment_department_ids.gsub(","," OR ") + ')' + preparedFilters
-            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
@@ -206,7 +207,6 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
-            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'S')
@@ -216,7 +216,6 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
-            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'O')
@@ -226,7 +225,6 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
-            puts (apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s)
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         end
@@ -298,7 +296,6 @@ module SolrHelper
                 end
             end
         end
-        puts(mainQueryString)
         mainQueryString
     end
 

@@ -57,7 +57,6 @@ module SectorHelpers
 			tempData[:budget] = elem["value"].to_i
 			highLevelSectorBudget.push(tempData)
 			rescue
-				puts elem["sector"]["code"]
 				tempData = {}
 				tempData[:code] = 0
 				tempData[:name] = 'Uncategorised'
@@ -132,7 +131,6 @@ module SectorHelpers
 			tempData[:budget] = elem["value"]
 			budgetData.push(tempData)
 			rescue
-				puts elem["sector"]["code"]
 				tempData = {}
 				tempData[:code] = urlCategoryCode
 				tempData[:parentCode] = 0
@@ -158,8 +156,6 @@ module SectorHelpers
 
 	     #TODO - test the input to see that there is no bad data comming in
 		if pageType == "category"
-			puts urlHighLevelSectorCode
-			puts parentCodeType
 	     	inputCode = urlHighLevelSectorCode
 	     	sectorHierarchyPath = {	     
 	     			:highLevelSectorCode => inputCode,			
