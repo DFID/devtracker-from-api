@@ -1,9 +1,10 @@
 {
     "APILink": "https://fcdo.iati.cloud/",
-    "DefaultFieldsToReturn": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*, default_currency",
+    "DefaultFieldsToReturn": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative_first, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*, default_currency, activity_date_start_common_f, activity_date_end_common_f, activity_date_start_common, activity_date_end_common",
     "DefaultFieldsToSearch": 
     [
         "title_narrative",
+        "title_narrative_first",
         "description_narrative",
         "iati_identifier",
         "transaction_description_narrative",
@@ -17,8 +18,13 @@
     "SortingOptions":
     [
         {
-            "title": "Actual Start Date",
-            "field": "activity_date_start_actual"
+            "title": "Activity Title",
+            "field": "title_narrative_first"
+        },
+
+        {
+            "title": "Start Date",
+            "field": "activity_date_start_common_f"
         },
         {
             "title": "Total Budget",
@@ -132,6 +138,7 @@
         "fields": 
         [
             "title_narrative",
+            "title_narrative_first",
             "description_narrative",
             "iati_identifier",
             "transaction_description_narrative",
