@@ -142,7 +142,8 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD('https://devtracker-entry.oipa.nl/api/' + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i') #using OLD OIPA route until the API is fixed
+	puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"
+	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
