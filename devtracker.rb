@@ -71,6 +71,7 @@ set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 Money.locale_backend = :i18n
+Money.default_currency = "GBP"
 
 #####################################################################
 #  Common Variable Assingment
