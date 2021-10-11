@@ -106,7 +106,7 @@ module SolrHelper
             tags.each_with_index do |value, index|
                 if index.even?
                     if(!mappedTags.find{|tag| tag['Code'] == value}.nil?)
-                        finalData.push(populateKeyVal(value, value))
+                        finalData.push(populateKeyVal(mappedTags.find{|tag| tag['Code'] == value}['Name'], value))
                     end
                 end
             end
