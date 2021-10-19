@@ -124,12 +124,15 @@ module SolrHelper
                 end
             end
             finalData = finalData.sort_by {|data| data['key']}
-        when 'recipient_country_name'
+        when 'recipient_country_code'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             countries = response['facet_counts']['facet_fields'][filter]
+            mappedCountries = Oj.load(File.read(mappingFileUrl))
             countries.each_with_index do |value, index|
                 if index.even?
-                    finalData.push(populateKeyVal(value, value))
+                    if(mappedCountries.has_key?(value))
+                        finalData.push(populateKeyVal(mappedCountries[value], value))
+                    end
                 end
             end
             finalData = finalData.sort_by {|data| data['key']}

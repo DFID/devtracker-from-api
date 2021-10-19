@@ -1,0 +1,257 @@
+code,name_en,href,active,name_fr,code_3_digit
+AN,Netherlands Antilles,#iso:code:3166:AN,False,Antilles néerlandaises (les ),ANT
+BU,Burma,#iso:code:3166:BU,False,Birmanie,BUR
+CS,Serbia and Montenegro,#iso:code:3166:CS,False,Serbie-et-Monténégro,SCG
+NT,Neutral Zone,#iso:code:3166:NT,False,Zone neutre,NTZ
+TP,East Timor,#iso:code:3166:TP,False,Timor oriental,TMP
+YU,Yugoslavia,#iso:code:3166:YU,False,Yougoslavie,YUG
+ZR,Zaire,#iso:code:3166:ZR,False,Zaïre,ZAR
+AD,Andorra,#iso:code:3166:AD,True,Andorre (l'),AND
+AE,United Arab Emirates (the),#iso:code:3166:AE,True,Émirats arabes unis (les),ARE
+AF,Afghanistan,#iso:code:3166:AF,True,Afghanistan (l'),AFG
+AG,Antigua and Barbuda,#iso:code:3166:AG,True,Antigua-et-Barbuda,ATG
+AI,Anguilla,#iso:code:3166:AI,True,Anguilla,AIA
+AL,Albania,#iso:code:3166:AL,True,Albanie (l'),ALB
+AM,Armenia,#iso:code:3166:AM,True,Arménie (l'),ARM
+AO,Angola,#iso:code:3166:AO,True,Angola (l'),AGO
+AQ,Antarctica,#iso:code:3166:AQ,True,Antarctique (l'),ATA
+AR,Argentina,#iso:code:3166:AR,True,Argentine (l'),ARG
+AS,American Samoa,#iso:code:3166:AS,True,Samoa américaines (les),ASM
+AT,Austria,#iso:code:3166:AT,True,Autriche (l'),AUT
+AU,Australia,#iso:code:3166:AU,True,Australie (l'),AUS
+AW,Aruba,#iso:code:3166:AW,True,Aruba,ABW
+AX,Åland Islands,#iso:code:3166:AX,True,Åland(les Îles),ALA
+AZ,Azerbaijan,#iso:code:3166:AZ,True,Azerbaïdjan (l'),AZE
+BA,Bosnia and Herzegovina,#iso:code:3166:BA,True,Bosnie-Herzégovine (la),BIH
+BB,Barbados,#iso:code:3166:BB,True,Barbade (la),BRB
+BD,Bangladesh,#iso:code:3166:BD,True,Bangladesh (le),BGD
+BE,Belgium,#iso:code:3166:BE,True,Belgique (la),BEL
+BF,Burkina Faso,#iso:code:3166:BF,True,Burkina Faso (le),BFA
+BG,Bulgaria,#iso:code:3166:BG,True,Bulgarie (la),BGR
+BH,Bahrain,#iso:code:3166:BH,True,Bahreïn,BHR
+BI,Burundi,#iso:code:3166:BI,True,Burundi (le),BDI
+BJ,Benin,#iso:code:3166:BJ,True,Bénin (le),BEN
+BL,Saint Barthélemy,#iso:code:3166:BL,True,Saint-Barthélemy,BLM
+BM,Bermuda,#iso:code:3166:BM,True,Bermudes (les),BMU
+BN,Brunei Darussalam,#iso:code:3166:BN,True,Brunéi Darussalam (le),BRN
+BO,Bolivia (Plurinational State of),#iso:code:3166:BO,True,Bolivie (État plurinational de),BOL
+BQ,"Bonaire, Sint Eustatius and Saba",#iso:code:3166:BQ,True,"Bonaire, Saint-Eustache et Saba",BES
+BR,Brazil,#iso:code:3166:BR,True,Brésil (le),BRA
+BS,Bahamas (the),#iso:code:3166:BS,True,Bahamas (les),BHS
+BT,Bhutan,#iso:code:3166:BT,True,Bhoutan (le),BTN
+BV,Bouvet Island,#iso:code:3166:BV,True,Bouvet (l'Île),BVT
+BW,Botswana,#iso:code:3166:BW,True,Botswana (le),BWA
+BY,Belarus,#iso:code:3166:BY,True,Bélarus (le),BLR
+BZ,Belize,#iso:code:3166:BZ,True,Belize (le),BLZ
+CA,Canada,#iso:code:3166:CA,True,Canada (le),CAN
+CC,Cocos (Keeling) Islands (the),#iso:code:3166:CC,True,Cocos (les Îles)/ Keeling (les Îles),CCK
+CD,Congo (the Democratic Republic of the),#iso:code:3166:CD,True,Congo (la République démocratique du),COD
+CF,Central African Republic (the),#iso:code:3166:CF,True,République centrafricaine (la),CAF
+CG,Congo (the),#iso:code:3166:CG,True,Congo (le),COG
+CH,Switzerland,#iso:code:3166:CH,True,Suisse (la),CHE
+CI,Côte d'Ivoire,#iso:code:3166:CI,True,Côte d'Ivoire (la),CIV
+CK,Cook Islands (the),#iso:code:3166:CK,True,Cook (les Îles),COK
+CL,Chile,#iso:code:3166:CL,True,Chili (le),CHL
+CM,Cameroon,#iso:code:3166:CM,True,Cameroun (le),CMR
+CN,China,#iso:code:3166:CN,True,Chine (la),CHN
+CO,Colombia,#iso:code:3166:CO,True,Colombie (la),COL
+CR,Costa Rica,#iso:code:3166:CR,True,Costa Rica (le),CRI
+CU,Cuba,#iso:code:3166:CU,True,Cuba,CUB
+CV,Cabo Verde,#iso:code:3166:CV,True,Cabo Verde,CPV
+CW,Curaçao,#iso:code:3166:CW,True,Curaçao,CUW
+CX,Christmas Island,#iso:code:3166:CX,True,Christmas (l'Île),CXR
+CY,Cyprus,#iso:code:3166:CY,True,Chypre,CYP
+CZ,Czechia,#iso:code:3166:CZ,True,Tchéquie (la),CZE
+DE,Germany,#iso:code:3166:DE,True,Allemagne (l'),DEU
+DJ,Djibouti,#iso:code:3166:DJ,True,Djibouti,DJI
+DK,Denmark,#iso:code:3166:DK,True,Danemark (le),DNK
+DM,Dominica,#iso:code:3166:DM,True,Dominique (la),DMA
+DO,Dominican Republic (the),#iso:code:3166:DO,True,dominicaine (la République),DOM
+DZ,Algeria,#iso:code:3166:DZ,True,Algérie (l'),DZA
+EC,Ecuador,#iso:code:3166:EC,True,Équateur (l'),ECU
+EE,Estonia,#iso:code:3166:EE,True,Estonie (l'),EST
+EG,Egypt,#iso:code:3166:EG,True,Égypte (l'),EGY
+EH,Western Sahara,#iso:code:3166:EH,True,Sahara occidental (le),ESH
+ER,Eritrea,#iso:code:3166:ER,True,Érythrée (l'),ERI
+ES,Spain,#iso:code:3166:ES,True,Espagne (l'),ESP
+ET,Ethiopia,#iso:code:3166:ET,True,Éthiopie (l'),ETH
+FI,Finland,#iso:code:3166:FI,True,Finlande (la),FIN
+FJ,Fiji,#iso:code:3166:FJ,True,Fidji (les),FJI
+FK,Falkland Islands (the) [Malvinas],#iso:code:3166:FK,True,Falkland (les Îles)/Malouines (les Îles),FLK
+FM,Micronesia (Federated States of),#iso:code:3166:FM,True,Micronésie (États fédérés de),FSM
+FO,Faroe Islands (the),#iso:code:3166:FO,True,Féroé (les Îles),FRO
+FR,France,#iso:code:3166:FR,True,France (la),FRA
+GA,Gabon,#iso:code:3166:GA,True,Gabon (le),GAB
+GB,United Kingdom of Great Britain and Northern Ireland (the),#iso:code:3166:GB,True,Royaume-Uni de Grande-Bretagne et d'Irlande du Nord (le),GBR
+GD,Grenada,#iso:code:3166:GD,True,Grenade (la),GRD
+GE,Georgia,#iso:code:3166:GE,True,Géorgie (la),GEO
+GF,French Guiana,#iso:code:3166:GF,True,Guyane française (la ),GUF
+GG,Guernsey,#iso:code:3166:GG,True,Guernesey,GGY
+GH,Ghana,#iso:code:3166:GH,True,Ghana (le),GHA
+GI,Gibraltar,#iso:code:3166:GI,True,Gibraltar,GIB
+GL,Greenland,#iso:code:3166:GL,True,Groenland (le),GRL
+GM,Gambia (the),#iso:code:3166:GM,True,Gambie (la),GMB
+GN,Guinea,#iso:code:3166:GN,True,Guinée (la),GIN
+GP,Guadeloupe,#iso:code:3166:GP,True,Guadeloupe (la),GLP
+GQ,Equatorial Guinea,#iso:code:3166:GQ,True,Guinée équatoriale (la),GNQ
+GR,Greece,#iso:code:3166:GR,True,Grèce (la),GRC
+GS,South Georgia and the South Sandwich Islands,#iso:code:3166:GS,True,Géorgie du Sud-et-les Îles Sandwich du Sud (la),SGS
+GT,Guatemala,#iso:code:3166:GT,True,Guatemala (le),GTM
+GU,Guam,#iso:code:3166:GU,True,Guam,GUM
+GW,Guinea-Bissau,#iso:code:3166:GW,True,Guinée-Bissau (la),GNB
+GY,Guyana,#iso:code:3166:GY,True,Guyana (le),GUY
+HK,Hong Kong,#iso:code:3166:HK,True,Hong Kong,HKG
+HM,Heard Island and McDonald Islands,#iso:code:3166:HM,True,Heard-et-Îles MacDonald (l'Île),HMD
+HN,Honduras,#iso:code:3166:HN,True,Honduras (le),HND
+HR,Croatia,#iso:code:3166:HR,True,Croatie (la),HRV
+HT,Haiti,#iso:code:3166:HT,True,Haïti,HTI
+HU,Hungary,#iso:code:3166:HU,True,Hongrie (la),HUN
+ID,Indonesia,#iso:code:3166:ID,True,Indonésie (l'),IDN
+IE,Ireland,#iso:code:3166:IE,True,Irlande (l'),IRL
+IL,Israel,#iso:code:3166:IL,True,Israël,ISR
+IM,Isle of Man,#iso:code:3166:IM,True,Île de Man,IMN
+IN,India,#iso:code:3166:IN,True,Inde (l'),IND
+IO,British Indian Ocean Territory (the),#iso:code:3166:IO,True,Indien (le Territoire britannique de l'océan),IOT
+IQ,Iraq,#iso:code:3166:IQ,True,Iraq (l'),IRQ
+IR,Iran (Islamic Republic of),#iso:code:3166:IR,True,Iran (République Islamique d'),IRN
+IS,Iceland,#iso:code:3166:IS,True,Islande (l'),ISL
+IT,Italy,#iso:code:3166:IT,True,Italie (l'),ITA
+JE,Jersey,#iso:code:3166:JE,True,Jersey,JEY
+JM,Jamaica,#iso:code:3166:JM,True,Jamaïque (la),JAM
+JO,Jordan,#iso:code:3166:JO,True,Jordanie (la),JOR
+JP,Japan,#iso:code:3166:JP,True,Japon (le),JPN
+KE,Kenya,#iso:code:3166:KE,True,Kenya (le),KEN
+KG,Kyrgyzstan,#iso:code:3166:KG,True,Kirghizistan (le),KGZ
+KH,Cambodia,#iso:code:3166:KH,True,Cambodge (le),KHM
+KI,Kiribati,#iso:code:3166:KI,True,Kiribati,KIR
+KM,Comoros (the),#iso:code:3166:KM,True,Comores (les),COM
+KN,Saint Kitts and Nevis,#iso:code:3166:KN,True,Saint-Kitts-et-Nevis,KNA
+KP,Korea (the Democratic People's Republic of),#iso:code:3166:KP,True,Corée (la République populaire démocratique de),PRK
+KR,Korea (the Republic of),#iso:code:3166:KR,True,Corée (la République de),KOR
+KW,Kuwait,#iso:code:3166:KW,True,Koweït (le),KWT
+KY,Cayman Islands (the),#iso:code:3166:KY,True,Caïmans (les Îles),CYM
+KZ,Kazakhstan,#iso:code:3166:KZ,True,Kazakhstan (le),KAZ
+LA,Lao People's Democratic Republic (the),#iso:code:3166:LA,True,Lao (la République démocratique populaire),LAO
+LB,Lebanon,#iso:code:3166:LB,True,Liban (le),LBN
+LC,Saint Lucia,#iso:code:3166:LC,True,Sainte-Lucie,LCA
+LI,Liechtenstein,#iso:code:3166:LI,True,Liechtenstein (le),LIE
+LK,Sri Lanka,#iso:code:3166:LK,True,Sri Lanka,LKA
+LR,Liberia,#iso:code:3166:LR,True,Libéria (le),LBR
+LS,Lesotho,#iso:code:3166:LS,True,Lesotho (le),LSO
+LT,Lithuania,#iso:code:3166:LT,True,Lituanie (la),LTU
+LU,Luxembourg,#iso:code:3166:LU,True,Luxembourg (le),LUX
+LV,Latvia,#iso:code:3166:LV,True,Lettonie (la),LVA
+LY,Libya,#iso:code:3166:LY,True,Libye (la),LBY
+MA,Morocco,#iso:code:3166:MA,True,Maroc (le),MAR
+MC,Monaco,#iso:code:3166:MC,True,Monaco,MCO
+MD,Moldova (the Republic of),#iso:code:3166:MD,True,Moldova (la République de),MDA
+ME,Montenegro,#iso:code:3166:ME,True,Monténégro (le),MNE
+MF,Saint Martin (French part),#iso:code:3166:MF,True,Saint-Martin (partie française),MAF
+MG,Madagascar,#iso:code:3166:MG,True,Madagascar,MDG
+MH,Marshall Islands (the),#iso:code:3166:MH,True,Marshall (les Îles),MHL
+MK,North Macedonia,#iso:code:3166:MK,True,Macédoine du Nord (la),MKD
+ML,Mali,#iso:code:3166:ML,True,Mali (le),MLI
+MM,Myanmar,#iso:code:3166:MM,True,Myanmar (le),MMR
+MN,Mongolia,#iso:code:3166:MN,True,Mongolie (la),MNG
+MO,Macao,#iso:code:3166:MO,True,Macao,MAC
+MP,Northern Mariana Islands (the),#iso:code:3166:MP,True,Mariannes du Nord (les Îles),MNP
+MQ,Martinique,#iso:code:3166:MQ,True,Martinique (la),MTQ
+MR,Mauritania,#iso:code:3166:MR,True,Mauritanie (la),MRT
+MS,Montserrat,#iso:code:3166:MS,True,Montserrat,MSR
+MT,Malta,#iso:code:3166:MT,True,Malte,MLT
+MU,Mauritius,#iso:code:3166:MU,True,Maurice,MUS
+MV,Maldives,#iso:code:3166:MV,True,Maldives (les),MDV
+MW,Malawi,#iso:code:3166:MW,True,Malawi (le),MWI
+MX,Mexico,#iso:code:3166:MX,True,Mexique (le),MEX
+MY,Malaysia,#iso:code:3166:MY,True,Malaisie (la),MYS
+MZ,Mozambique,#iso:code:3166:MZ,True,Mozambique (le),MOZ
+NA,Namibia,#iso:code:3166:NA,True,Namibie (la),NAM
+NC,New Caledonia,#iso:code:3166:NC,True,Nouvelle-Calédonie (la),NCL
+NE,Niger (the),#iso:code:3166:NE,True,Niger (le),NER
+NF,Norfolk Island,#iso:code:3166:NF,True,Norfolk (l'Île),NFK
+NG,Nigeria,#iso:code:3166:NG,True,Nigéria (le),NGA
+NI,Nicaragua,#iso:code:3166:NI,True,Nicaragua (le),NIC
+NL,Netherlands (the),#iso:code:3166:NL,True,Pays-Bas (les),NLD
+NO,Norway,#iso:code:3166:NO,True,Norvège (la),NOR
+NP,Nepal,#iso:code:3166:NP,True,Népal (le),NPL
+NR,Nauru,#iso:code:3166:NR,True,Nauru,NRU
+NU,Niue,#iso:code:3166:NU,True,Niue,NIU
+NZ,New Zealand,#iso:code:3166:NZ,True,Nouvelle-Zélande (la),NZL
+OM,Oman,#iso:code:3166:OM,True,Oman,OMN
+PA,Panama,#iso:code:3166:PA,True,Panama (le),PAN
+PE,Peru,#iso:code:3166:PE,True,Pérou (le),PER
+PF,French Polynesia,#iso:code:3166:PF,True,Polynésie française (la),PYF
+PG,Papua New Guinea,#iso:code:3166:PG,True,Papouasie-Nouvelle-Guinée (la),PNG
+PH,Philippines (the),#iso:code:3166:PH,True,Philippines (les),PHL
+PK,Pakistan,#iso:code:3166:PK,True,Pakistan (le),PAK
+PL,Poland,#iso:code:3166:PL,True,Pologne (la),POL
+PM,Saint Pierre and Miquelon,#iso:code:3166:PM,True,Saint-Pierre-et-Miquelon,SPM
+PN,Pitcairn,#iso:code:3166:PN,True,Pitcairn,PCN
+PR,Puerto Rico,#iso:code:3166:PR,True,Porto Rico,PRI
+PS,"Palestine, State of",#iso:code:3166:PS,True,"Palestine, État de",PSE
+PT,Portugal,#iso:code:3166:PT,True,Portugal (le),PRT
+PW,Palau,#iso:code:3166:PW,True,Palaos (les),PLW
+PY,Paraguay,#iso:code:3166:PY,True,Paraguay (le),PRY
+QA,Qatar,#iso:code:3166:QA,True,Qatar (le),QAT
+RE,Réunion,#iso:code:3166:RE,True,Réunion (La),REU
+RO,Romania,#iso:code:3166:RO,True,Roumanie (la),ROU
+RS,Serbia,#iso:code:3166:RS,True,Serbie (la),SRB
+RU,Russian Federation (the),#iso:code:3166:RU,True,Russie (la Fédération de),RUS
+RW,Rwanda,#iso:code:3166:RW,True,Rwanda (le),RWA
+SA,Saudi Arabia,#iso:code:3166:SA,True,Arabie saoudite (l'),SAU
+SB,Solomon Islands,#iso:code:3166:SB,True,Salomon (les Îles),SLB
+SC,Seychelles,#iso:code:3166:SC,True,Seychelles (les),SYC
+SD,Sudan (the),#iso:code:3166:SD,True,Soudan (le),SDN
+SE,Sweden,#iso:code:3166:SE,True,Suède (la),SWE
+SG,Singapore,#iso:code:3166:SG,True,Singapour,SGP
+SH,"Saint Helena, Ascension and Tristan da Cunha",#iso:code:3166:SH,True,"Sainte-Hélène, Ascension et Tristan da Cunha",SHN
+SI,Slovenia,#iso:code:3166:SI,True,Slovénie (la),SVN
+SJ,Svalbard and Jan Mayen,#iso:code:3166:SJ,True,Svalbard et l'Île Jan Mayen (le),SJM
+SK,Slovakia,#iso:code:3166:SK,True,Slovaquie (la),SVK
+SL,Sierra Leone,#iso:code:3166:SL,True,Sierra Leone (la),SLE
+SM,San Marino,#iso:code:3166:SM,True,Saint-Marin,SMR
+SN,Senegal,#iso:code:3166:SN,True,Sénégal (le),SEN
+SO,Somalia,#iso:code:3166:SO,True,Somalie (la),SOM
+SR,Suriname,#iso:code:3166:SR,True,Suriname (le),SUR
+SS,South Sudan,#iso:code:3166:SS,True,Soudan du Sud (le),SSD
+ST,Sao Tome and Principe,#iso:code:3166:ST,True,Sao Tomé-et-Principe,STP
+SV,El Salvador,#iso:code:3166:SV,True,El Salvador,SLV
+SX,Sint Maarten (Dutch part),#iso:code:3166:SX,True,Saint-Martin (partie néerlandaise),SXM
+SY,Syrian Arab Republic (the),#iso:code:3166:SY,True,République arabe syrienne (la),SYR
+SZ,Eswatini,#iso:code:3166:SZ,True,Eswatini (l'),SWZ
+TC,Turks and Caicos Islands (the),#iso:code:3166:TC,True,Turks-et-Caïcos (les Îles),TCA
+TD,Chad,#iso:code:3166:TD,True,Tchad (le),TCD
+TF,French Southern Territories (the),#iso:code:3166:TF,True,Terres australes françaises (les),ATF
+TG,Togo,#iso:code:3166:TG,True,Togo (le),TGO
+TH,Thailand,#iso:code:3166:TH,True,Thaïlande (la),THA
+TJ,Tajikistan,#iso:code:3166:TJ,True,Tadjikistan (le),TJK
+TK,Tokelau,#iso:code:3166:TK,True,Tokelau (les),TKL
+TL,Timor-Leste,#iso:code:3166:TL,True,Timor-Leste (le),TLS
+TM,Turkmenistan,#iso:code:3166:TM,True,Turkménistan (le),TKM
+TN,Tunisia,#iso:code:3166:TN,True,Tunisie (la),TUN
+TO,Tonga,#iso:code:3166:TO,True,Tonga (les),TON
+TR,Turkey,#iso:code:3166:TR,True,Turquie (la),TUR
+TT,Trinidad and Tobago,#iso:code:3166:TT,True,Trinité-et-Tobago (la),TTO
+TV,Tuvalu,#iso:code:3166:TV,True,Tuvalu (les),TUV
+TW,Taiwan (Province of China),#iso:code:3166:TW,True,Taïwan (Province de Chine),TWN
+TZ,"Tanzania, the United Republic of",#iso:code:3166:TZ,True,Tanzanie (la République-Unie de),TZA
+UA,Ukraine,#iso:code:3166:UA,True,Ukraine (l'),UKR
+UG,Uganda,#iso:code:3166:UG,True,Ouganda (l'),UGA
+UM,United States Minor Outlying Islands (the),#iso:code:3166:UM,True,Îles mineures éloignées des États-Unis (les),UMI
+US,United States of America (the),#iso:code:3166:US,True,États-Unis d'Amérique (les),USA
+UY,Uruguay,#iso:code:3166:UY,True,Uruguay (l'),URY
+UZ,Uzbekistan,#iso:code:3166:UZ,True,Ouzbékistan (l'),UZB
+VA,Holy See (the),#iso:code:3166:VA,True,Saint-Siège (le),VAT
+VC,Saint Vincent and the Grenadines,#iso:code:3166:VC,True,Saint-Vincent-et-les Grenadines,VCT
+VE,Venezuela (Bolivarian Republic of),#iso:code:3166:VE,True,Venezuela (République bolivarienne du),VEN
+VG,Virgin Islands (British),#iso:code:3166:VG,True,Vierges britanniques (les Îles),VGB
+VI,Virgin Islands (U.S.),#iso:code:3166:VI,True,Vierges des États-Unis (les Îles),VIR
+VN,Viet Nam,#iso:code:3166:VN,True,Viet Nam (le),VNM
+VU,Vanuatu,#iso:code:3166:VU,True,Vanuatu (le),VUT
+WF,Wallis and Futuna,#iso:code:3166:WF,True,Wallis-et-Futuna,WLF
+WS,Samoa,#iso:code:3166:WS,True,Samoa (le),WSM
+YE,Yemen,#iso:code:3166:YE,True,Yémen (le),YEM
+YT,Mayotte,#iso:code:3166:YT,True,Mayotte,MYT
+ZA,South Africa,#iso:code:3166:ZA,True,Afrique du Sud (l'),ZAF
+ZM,Zambia,#iso:code:3166:ZM,True,Zambie (la),ZMB
+ZW,Zimbabwe,#iso:code:3166:ZW,True,Zimbabwe (le),ZWE
