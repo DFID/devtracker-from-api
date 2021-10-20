@@ -128,10 +128,16 @@ module SolrHelper
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             countries = response['facet_counts']['facet_fields'][filter]
             mappedCountries = Oj.load(File.read(mappingFileUrl))
+            countriesInfo = JSON.parse(File.read('data/countries.json'))
             countries.each_with_index do |value, index|
                 if index.even?
                     if(mappedCountries.has_key?(value))
-                        finalData.push(populateKeyVal(mappedCountries[value], value))
+                        selectedCountry = countriesInfo.select {|country| country['code'] == value}.first
+                        if selectedCountry
+                            finalData.push(populateKeyVal(selectedCountry['name'], value))
+                        else
+                            finalData.push(populateKeyVal(mappedCountries[value], value))
+                        end
                     end
                 end
             end
