@@ -142,12 +142,22 @@ module SolrHelper
                 end
             end
             finalData = finalData.sort_by {|data| data['key']}
-        when 'recipient_region_name'
+        when 'recipient_region_code'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
             regions = response['facet_counts']['facet_fields'][filter]
+            mappedRegions = Oj.load(File.read(mappingFileUrl))
+            regionsInfo = Oj.load(File.read('data/dfidRegions.json'))
             regions.each_with_index do |value, index|
                 if index.even?
-                    finalData.push(populateKeyVal(value, value))
+                    tempRegion = mappedRegions['data'].select {|region| region['code'].to_s == value.to_s}.first
+                    if(tempRegion)
+                        selectedRegion = regionsInfo.select {|region| region['code'].to_s == value.to_s}.first
+                        if selectedRegion
+                            finalData.push(populateKeyVal(selectedRegion['name'], value))
+                        else
+                            finalData.push(populateKeyVal(tempRegion['name'], value))
+                        end
+                    end
                 end
             end
             finalData = finalData.sort_by {|data| data['key']}
