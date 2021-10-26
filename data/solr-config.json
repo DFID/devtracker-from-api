@@ -76,17 +76,17 @@
         },
         {
             "title": "Benefiting Countries",
-            "field": "recipient_country_name",
-            "url": "search/activity/?facet=on&facet.field=recipient_country_name&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
-            "mappingFile": "",
+            "field": "recipient_country_code",
+            "url": "search/activity/?facet=on&facet.field=recipient_country_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
+            "mappingFile": "data/country-codes/country_codes.json",
             "defaultValue": "",
             "isFieldTypeString": "1"
         },
         {
             "title": "Benefiting Regions",
-            "field": "recipient_region_name",
-            "url": "search/activity/?facet=on&facet.field=recipient_region_name&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
-            "mappingFile": "",
+            "field": "recipient_region_code",
+            "url": "search/activity/?facet=on&facet.field=recipient_region_code&facet.limit=-1&facet.mincount=1&q=hierarchy:1 AND participating_org_ref:GB-* AND ",
+            "mappingFile": "data/regionCodes.json",
             "defaultValue": "",
             "isFieldTypeString": "1"
         },
