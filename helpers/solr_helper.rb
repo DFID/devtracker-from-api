@@ -204,7 +204,6 @@ module SolrHelper
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
             # Get response based on the API responses
-            puts ('---xxxx----')
             puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
