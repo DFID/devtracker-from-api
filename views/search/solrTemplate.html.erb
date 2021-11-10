@@ -404,7 +404,7 @@
                             <%response['docs'].each do |item|%>
                                     <div class="govuk-grid-row divider">
 										<div class="govuk-grid-column-three-quarters">
-                                        <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative'].first%></a></h3>
+                                        <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative_first']%></a></h3>
                                         <p>
                                             <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
                                                 UK - Foreign, Commonwealth and Development Office
@@ -423,7 +423,7 @@
 										</div>
 										<div class="govuk-grid-column-one-quarter">
                                             <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_actual']%></p>
+                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
                                             <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                             <h4>Total Budget:</h4>  <p><%=item['totalBudgetWithCurrency']%></p>
 										</div>
@@ -665,7 +665,7 @@
                                 <%response['docs'].each do |item|%>
                                         <div class="govuk-grid-row divider">
                                             <div class="govuk-grid-column-three-quarters">
-                                            <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative'].first%></a></h3>
+                                            <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative_first'].first%></a></h3>
                                             <p>
                                                 <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
                                                     UK - Foreign, Commonwealth and Development Office
@@ -684,7 +684,7 @@
                                             </div>
                                             <div class="govuk-grid-column-one-quarter">
                                                 <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                                <h4>Start Date:</h4>  <p><%=item['activity_date_start_actual']%></p>
+                                                <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
                                                 <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                                 <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
                                             </div>
@@ -733,8 +733,8 @@
                     var tempEndDate = new Date($('#e1').val() + '/' + $('#e2').val() + '/' + $('#e3').val());
                     if(tempStartDate < tempEndDate)
                     {
-                        dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
-                        + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *] AND activity_date_end_planned:[* TO '
+                        dateRange = ' AND activity_date_start_common_f:[' + $('#s3').val()
+                        + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *] AND activity_date_end_common_f:[* TO '
                         + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
                     }
                     else {
@@ -747,7 +747,7 @@
             {
                 if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()))
                 {
-                    dateRange = ' AND activity_date_start_actual:[' + $('#s3').val()
+                    dateRange = ' AND activity_date_start_common_f:[' + $('#s3').val()
                     + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *]'
                 }
                 else 
@@ -760,7 +760,7 @@
             {
                 if(isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
                 {
-                    dateRange = ' AND activity_date_end_planned:[* TO '
+                    dateRange = ' AND activity_date_end_common_f:[* TO '
                     + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
                 }
                 else 
@@ -900,10 +900,10 @@
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative[0] + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_actual + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);

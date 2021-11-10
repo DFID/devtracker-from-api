@@ -71,6 +71,7 @@ set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 Money.locale_backend = :i18n
+Money.default_currency = "GBP"
 
 #####################################################################
 #  Common Variable Assingment
@@ -610,8 +611,9 @@ get '/search/?' do
 end
 
 post '/search/?' do
-	query = params['query']
-	isIncludeClosedProjects = params['includeClosedProject']
+	#query = params['query']
+	query = sanitize_input(params['query'],"newId")
+	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
 		activityStatuses = 'AND activity_status_code:(2)'
 	else
@@ -964,196 +966,196 @@ end
 #  LHS Filters API
 #####################################################################
 
-get '/getCountryFilters/?' do
-	countryCode = sanitize_input(params['countryCode'],"p")
-	projectStatus = params['projectStatus']
-	projectData = generate_project_page_data(generate_api_list('C',countryCode,projectStatus))
-	projectData['countryAllProjectFilters'] = get_static_filter_list()
-	projectData["country"] = get_country_code_name(countryCode)
-	json :output => projectData
-end
+# get '/getCountryFilters/?' do
+# 	countryCode = sanitize_input(params['countryCode'],"p")
+# 	projectStatus = params['projectStatus']
+# 	projectData = generate_project_page_data(generate_api_list('C',countryCode,projectStatus))
+# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
+# 	projectData["country"] = get_country_code_name(countryCode)
+# 	json :output => projectData
+# end
 
-get '/getSectorFilters' do
-	sectorCode = params['sectorCode']
-	projectStatus = params['projectStatus']
-	projectData = generate_project_page_data(generate_api_list('S',sectorCode,projectStatus))
-	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
-	projectData["LocationCountries"] = locationFilterData["locationCountryFilters"]
-	projectData["LocationRegions"] = locationFilterData["locationRegionFilters"]
-	#json :output => get_sector_projects_json(params['sectorCode'], params['projectStatus'])
-	json :output => projectData
-end
+# get '/getSectorFilters' do
+# 	sectorCode = params['sectorCode']
+# 	projectStatus = params['projectStatus']
+# 	projectData = generate_project_page_data(generate_api_list('S',sectorCode,projectStatus))
+# 	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
+# 	projectData["LocationCountries"] = locationFilterData["locationCountryFilters"]
+# 	projectData["LocationRegions"] = locationFilterData["locationRegionFilters"]
+# 	#json :output => get_sector_projects_json(params['sectorCode'], params['projectStatus'])
+# 	json :output => projectData
+# end
 
-get '/getRegionFilters' do
-	regionCode = params['regionCode']
-	projectStatus = params['projectStatus']
-	projectData = generate_project_page_data(generate_api_list('R',regionCode,projectStatus))
-	projectData['countryAllProjectFilters'] = get_static_filter_list()
-	#json :output => get_region_projects_json(params['regionCode'], params['projectStatus'])
-	json :output => projectData
-end
+# get '/getRegionFilters' do
+# 	regionCode = params['regionCode']
+# 	projectStatus = params['projectStatus']
+# 	projectData = generate_project_page_data(generate_api_list('R',regionCode,projectStatus))
+# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
+# 	#json :output => get_region_projects_json(params['regionCode'], params['projectStatus'])
+# 	json :output => projectData
+# end
 
-get '/getFTSFilters' do
-	query = sanitize_input(params['query'],"a")
-	projectStatus = params['projectStatus']
-	projectData = generate_project_page_data(generate_api_list('F',query,projectStatus))
-	projectData["projects"] = projectData["projects"]["results"]
-	#json :output => generate_searched_data(sanitize_input(params['query'],"a"), params['projectStatus'])
-	json :output => projectData
-end
+# get '/getFTSFilters' do
+# 	query = sanitize_input(params['query'],"a")
+# 	projectStatus = params['projectStatus']
+# 	projectData = generate_project_page_data(generate_api_list('F',query,projectStatus))
+# 	projectData["projects"] = projectData["projects"]["results"]
+# 	#json :output => generate_searched_data(sanitize_input(params['query'],"a"), params['projectStatus'])
+# 	json :output => projectData
+# end
 
-get '/getOGDFilters' do
-	ogd = params['ogd']
-	projectStatus = params['projectStatus']
-	projectData = generate_project_page_data(generate_api_list('O',ogd,projectStatus))
-	#json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
-	projectData['countryAllProjectFilters'] = get_static_filter_list()
-	json :output => projectData
-end
+# get '/getOGDFilters' do
+# 	ogd = params['ogd']
+# 	projectStatus = params['projectStatus']
+# 	projectData = generate_project_page_data(generate_api_list('O',ogd,projectStatus))
+# 	#json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
+# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
+# 	json :output => projectData
+# end
 
 #Returns the designated API list based on an active project page type - Not needed
-get '/getapiurls' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	json :output => generate_api_list(apiType,apiParams,projectStatus)
-end
+# get '/getapiurls' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	json :output => generate_api_list(apiType,apiParams,projectStatus)
+# end
 
 ############################################################
 ## Methods for returning LHS filters - Parallel API calls ##
 ############################################################
 
 #Returns the project list and the budget higher bound
-get '/getProjectListWithBudgetHi' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateProjectListWithBudgetHiBound(apiList[0])
-end
+# get '/getProjectListWithBudgetHi' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateProjectListWithBudgetHiBound(apiList[0])
+# end
 
-#Returns the budget higher bound
-get '/getBudgetHi' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateBudgetHiBound(apiList[0])
-end
+# #Returns the budget higher bound
+# get '/getBudgetHi' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateBudgetHiBound(apiList[0])
+# end
 
-#Returns the Sector List for LHS
-get '/getHiLvlSectorList' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateSectorList(apiList[1])
-end
+# #Returns the Sector List for LHS
+# get '/getHiLvlSectorList' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateSectorList(apiList[1])
+# end
 
 #Returns the LHS start date
-get '/getStartDate' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateProjectStartDate(apiList[2])
-end
+# get '/getStartDate' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateProjectStartDate(apiList[2])
+# end
 
 #Returns the LHS end date
-get '/getEndDate' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateProjectEndDate(apiList[3])
-end
+# get '/getEndDate' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateProjectEndDate(apiList[3])
+# end
 
 #Returns the LHS Document List
-get '/getDocumentTypeList' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateDocumentTypeList(apiList[4])
-end
+# get '/getDocumentTypeList' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateDocumentTypeList(apiList[4])
+# end
 
 #Returns the LHS Implementing Org List
-get '/getImplOrgList' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	json :output => generateImplOrgList(apiList[5])
-end
+# get '/getImplOrgList' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	json :output => generateImplOrgList(apiList[5])
+# end
 
-#Returns the LHS Reporting Org List
-get '/getReportingOrgList' do
-	apiType = params['apiType']
-	apiParams = params['apiParams']
-	projectStatus = params['projectStatus']
-	apiList = generate_api_list(apiType,apiParams,projectStatus)
-	if(apiType == 'C')
-		json :output => generateReportingOrgList(apiList[7])
-	else
-		json :output => generateReportingOrgList(apiList[6])
-	end
-end
+# #Returns the LHS Reporting Org List
+# get '/getReportingOrgList' do
+# 	apiType = params['apiType']
+# 	apiParams = params['apiParams']
+# 	projectStatus = params['projectStatus']
+# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
+# 	if(apiType == 'C')
+# 		json :output => generateReportingOrgList(apiList[7])
+# 	else
+# 		json :output => generateReportingOrgList(apiList[6])
+# 	end
+# end
 
 #Returns the LHS Filters (Sector Page Specific)
-get '/getSectorSpecificFilters' do
-	sectorCode = params['sectorCode']
-	projectStatus = params['projectStatus']
-	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
-	sectorData = {}
-	sectorData["LocationCountries"] = locationFilterData["locationCountryFilters"]
-	sectorData["LocationRegions"] = locationFilterData["locationRegionFilters"]
-	json :output => sectorData
-end
+# get '/getSectorSpecificFilters' do
+# 	sectorCode = params['sectorCode']
+# 	projectStatus = params['projectStatus']
+# 	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
+# 	sectorData = {}
+# 	sectorData["LocationCountries"] = locationFilterData["locationCountryFilters"]
+# 	sectorData["LocationRegions"] = locationFilterData["locationRegionFilters"]
+# 	json :output => sectorData
+# end
 
 # FTS API call wrapper
 
-get '/getFTSResponse' do
-	searchQuery = params['searchQuery']
-	activity_status = params['activity_status']
-	ordering = params['ordering']
-	budgetLowerBound = params['budgetLowerBound']
-	budgetHigherBound = params['budgetHigherBound']
-	actual_start_date_gte = params['actual_start_date_gte']
-	planned_end_date_lte = params['planned_end_date_lte']
-	sector = params['sector']
-	document_link_category = params['document_link_category']
-	participating_organisation = params['participating_organisation']
-	if params['page'] != nil && params['page'] != ''
-		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'])
-	else
-		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation)
-	end
-	jsonResponse = Oj.load(jsonResponse)
-	jsonResponse['results'].each do |r|
-		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
-                                    if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
-                                        if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
-                                            if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
-                                                'GBP'
-                                            else
-                                                r['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
-                                            end
-                                        else
-                                            r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency']
-                                        end
-                                    else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
-                                    end
-                                        ).round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
-	end
-	json :output => jsonResponse
-end
+# get '/getFTSResponse' do
+# 	searchQuery = params['searchQuery']
+# 	activity_status = params['activity_status']
+# 	ordering = params['ordering']
+# 	budgetLowerBound = params['budgetLowerBound']
+# 	budgetHigherBound = params['budgetHigherBound']
+# 	actual_start_date_gte = params['actual_start_date_gte']
+# 	planned_end_date_lte = params['planned_end_date_lte']
+# 	sector = params['sector']
+# 	document_link_category = params['document_link_category']
+# 	participating_organisation = params['participating_organisation']
+# 	if params['page'] != nil && params['page'] != ''
+# 		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'])
+# 	else
+# 		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation)
+# 	end
+# 	jsonResponse = Oj.load(jsonResponse)
+# 	jsonResponse['results'].each do |r|
+# 		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
+#                                     if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
+#                                         if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
+#                                             if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
+#                                                 'GBP'
+#                                             else
+#                                                 r['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
+#                                             end
+#                                         else
+#                                             r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency']
+#                                         end
+#                                     else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
+#                                     end
+#                                         ).round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
+# 	end
+# 	json :output => jsonResponse
+# end
 #####################################################################
 #  CSV HANDLER
 #####################################################################
 
 
 get '/downloadCSV/:proj_id/:transaction_type?' do
-	projID = sanitize_input(params[:proj_id],"p")
+	projID = sanitize_input(params[:proj_id],"newId")
 	transactionType = sanitize_input(params[:transaction_type],"p")
 	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
 	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
@@ -1168,7 +1170,7 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 end
 
 get '/downloadLocationDataCSV/:proj_id?' do
-	projID = sanitize_input(params[:proj_id],"p")
+	projID = sanitize_input(params[:proj_id],"newId")
 	locationData = location_data_for_csv(projID)
 	content_type 'text/csv'
 	attachment "Export-locations-"+projID+".csv"
