@@ -249,7 +249,7 @@ module RegionHelpers
       response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2"))
       rawMapMarkers = response['results']
       if(response['count'] > 20)
-        pages = (response['count'].to_i/20).ceil
+        pages = (response['count'].to_f/20).ceil
         for page in 2..pages do
           tempData = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2&page=#{page}"))
           tempData['results'].each do |item|

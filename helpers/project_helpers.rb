@@ -212,7 +212,7 @@ module ProjectHelpers
         transactionsJSON = initialPull['results']
         # Process remaining transactions if transaction count is more than 20
         if (initialPull['count'] > 20)
-            pages = (initialPull['count'].to_i/20).ceil
+            pages = (initialPull['count'].to_f/20).ceil
             for page in 2..pages do
               tempData = JSON.parse(RestClient.get  oipaTransactionURL + "&page_size=20&page=#{page}")
               tempData['results'].each do |item|

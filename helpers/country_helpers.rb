@@ -783,7 +783,7 @@ module CountryHelpers
     allActivities = []
     allActivities = response['results']
     if (response['count'] > 20)
-      pages = (response['count'].to_i/20).ceil
+      pages = (response['count'].to_f/20).ceil
       for page in 2..pages do
         tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
         tempData['results'].each do |item|
