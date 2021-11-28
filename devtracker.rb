@@ -675,56 +675,56 @@ get '/regions/?' do
 	}
 end
 
-get '/solr-regions/:region_code/?' do |n|
-	n = sanitize_input(n, "p")
-	query = '('+n+')'
-	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
-	end
-	settings.devtracker_page_title = 'Search Results For : ' + query
-	#erb :'search/solrRegions',
-	erb :'search/solrTemplate',
-	:layout => :'layouts/layout',
-	:locals => 
-	{
-		oipa_api_url: settings.oipa_api_url,
-		query: query,
-		filters: filters,
-		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json')),
-		searchType: 'R',
-		breadcrumbURL: '/location/regional',
-		breadcrumbText: 'Aid by Location'
-	}
-end
+# get '/solr-regions/:region_code/?' do |n|
+# 	n = sanitize_input(n, "p")
+# 	query = '('+n+')'
+# 	filters = prepareFilters(query.to_s, 'R')
+# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+# 	if(response['numFound'].to_i > 0)
+# 		response = addTotalBudgetWithCurrency(response)
+# 	end
+# 	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	#erb :'search/solrRegions',
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response,
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'R',
+# 		breadcrumbURL: '/location/regional',
+# 		breadcrumbText: 'Aid by Location'
+# 	}
+# end
 
-get '/solr-countries/:country_code/?' do |n|
-	n = sanitize_input(n, "p")
-	query = '('+n+')'
-	filters = prepareFilters(query.to_s, 'C')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
-	end
-	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrTemplate',
-	:layout => :'layouts/layout',
-	:locals => 
-	{
-		oipa_api_url: settings.oipa_api_url,
-		query: query,
-		filters: filters,
-		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json')),
-		searchType: 'C',
-		breadcrumbURL: '/location/country',
-		breadcrumbText: 'Aid by Location'
-	}
-end
+# get '/solr-countries/:country_code/?' do |n|
+# 	n = sanitize_input(n, "p")
+# 	query = '('+n+')'
+# 	filters = prepareFilters(query.to_s, 'C')
+# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
+# 	if(response['numFound'].to_i > 0)
+# 		response = addTotalBudgetWithCurrency(response)
+# 	end
+# 	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response,
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'C',
+# 		breadcrumbURL: '/location/country',
+# 		breadcrumbText: 'Aid by Location'
+# 	}
+# end
 
 get '/global/?' do
 	query = '(998)'
