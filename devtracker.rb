@@ -167,6 +167,7 @@ end
 
 # solr route
 get '/countries/:country_code/projects/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
@@ -260,6 +261,7 @@ end
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
@@ -628,16 +630,15 @@ post '/search/?' do
 end
 
 post '/solr-response' do
-	query = params['data']['query']
+	query = sanitize_input(params['data']['query'],"newId")
 	if params['data']['filters'].strip.length > 1
-		filters = 'AND ' + params['data']['filters']
+		filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
 	else
 		filters = ''
 	end
-	puts(filters)
-	searchType = params['data']['queryType']
-	startPage = params['data']['page']
-	response = solrResponse(query, filters, searchType, startPage, params['data']['dateRange'], params['data']['sortType'])
+	searchType = sanitize_input(params['data']['queryType'],"newId")
+	startPage = sanitize_input(params['data']['page'],"newId")
+	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -675,6 +676,7 @@ get '/regions/?' do
 end
 
 get '/solr-regions/:region_code/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
@@ -700,6 +702,7 @@ get '/solr-regions/:region_code/?' do |n|
 end
 
 get '/solr-countries/:country_code/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
