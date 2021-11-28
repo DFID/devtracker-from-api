@@ -168,6 +168,7 @@ end
 
 # solr route
 get '/countries/:country_code/projects/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'C', 0, '', '')
@@ -261,6 +262,7 @@ end
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
+	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
@@ -648,15 +650,15 @@ post '/search/?' do
 end
 
 post '/solr-response' do
-	query = params['data']['query']
+	query = sanitize_input(params['data']['query'],"newId")
 	if params['data']['filters'].strip.length > 1
-		filters = 'AND ' + params['data']['filters']
+		filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
 	else
 		filters = ''
 	end
-	searchType = params['data']['queryType']
-	startPage = params['data']['page']
-	response = solrResponse(query, filters, searchType, startPage, params['data']['dateRange'], params['data']['sortType'])
+	searchType = sanitize_input(params['data']['queryType'],"newId")
+	startPage = sanitize_input(params['data']['page'],"newId")
+	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -693,54 +695,56 @@ get '/regions/?' do
 	}
 end
 
-get '/solr-regions/:region_code/?' do |n|
-	query = '('+n+')'
-	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
-	end
-	settings.devtracker_page_title = 'Search Results For : ' + query
-	#erb :'search/solrRegions',
-	erb :'search/solrTemplate',
-	:layout => :'layouts/layout',
-	:locals => 
-	{
-		oipa_api_url: settings.oipa_api_url,
-		query: query,
-		filters: filters,
-		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json')),
-		searchType: 'R',
-		breadcrumbURL: '/location/regional',
-		breadcrumbText: 'Aid by Location'
-	}
-end
+# get '/solr-regions/:region_code/?' do |n|
+# 	n = sanitize_input(n, "p")
+# 	query = '('+n+')'
+# 	filters = prepareFilters(query.to_s, 'R')
+# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+# 	if(response['numFound'].to_i > 0)
+# 		response = addTotalBudgetWithCurrency(response)
+# 	end
+# 	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	#erb :'search/solrRegions',
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response,
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'R',
+# 		breadcrumbURL: '/location/regional',
+# 		breadcrumbText: 'Aid by Location'
+# 	}
+# end
 
-get '/solr-countries/:country_code/?' do |n|
-	query = '('+n+')'
-	filters = prepareFilters(query.to_s, 'C')
-	response = solrResponse(query, 'AND activity_status_code:(2)', 'C', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
-	end
-	settings.devtracker_page_title = 'Search Results For : ' + query
-	erb :'search/solrTemplate',
-	:layout => :'layouts/layout',
-	:locals => 
-	{
-		oipa_api_url: settings.oipa_api_url,
-		query: query,
-		filters: filters,
-		response: response,
-		solrConfig: Oj.load(File.read('data/solr-config.json')),
-		activityStatus: Oj.load(File.read('data/activity_status.json')),
-		searchType: 'C',
-		breadcrumbURL: '/location/country',
-		breadcrumbText: 'Aid by Location'
-	}
-end
+# get '/solr-countries/:country_code/?' do |n|
+# 	n = sanitize_input(n, "p")
+# 	query = '('+n+')'
+# 	filters = prepareFilters(query.to_s, 'C')
+# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
+# 	if(response['numFound'].to_i > 0)
+# 		response = addTotalBudgetWithCurrency(response)
+# 	end
+# 	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response,
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'C',
+# 		breadcrumbURL: '/location/country',
+# 		breadcrumbText: 'Aid by Location'
+# 	}
+# end
 
 get '/global/?' do
 	query = '(998)'

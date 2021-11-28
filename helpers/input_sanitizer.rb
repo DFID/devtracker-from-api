@@ -17,6 +17,7 @@ module InputSanitizer
 			#Converts slashes to dashes and removes spaces from project IDs
 			return string.gsub(/[\/']/,'-').gsub(/[\s]/,'').gsub(/[&]/,'-')
 		when "newId"
+			#Removes angle brackets and left ticks from the string to break possible code injection
 			return string.to_s.gsub(/[\<\>\`]/, '')
 		else
 			#anything other than those specified will act similar to the case 'a' by default
