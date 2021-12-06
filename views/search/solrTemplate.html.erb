@@ -110,7 +110,7 @@
                         <div class="govuk-grid-column-full">
                             <% if !fcdoCountryBudgets.empty? %>
                                 <% fcdoCountryBudgets.each do |results| %>
-                                    <%if results[0] != 'AF'%>
+                                    <%if results[0] != 'AF2'%>
                                         <div class="govuk-inset-text" style="font-size: 14px;">
                                         <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
                                             <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
@@ -734,8 +734,8 @@
                     if(tempStartDate < tempEndDate)
                     {
                         dateRange = ' AND activity_date_start_common_f:[' + $('#s3').val()
-                        + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *] AND activity_date_end_common_f:[* TO '
-                        + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                        + '-' + $('#s1').val() + '-' + $('#s1').val() + 'T00:00:0Z TO *] AND activity_date_end_common_f:[* TO '
+                        + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + 'T00:00:0Z]'
                     }
                     else {
                         $('#show-error').html('<span class="govuk-visually-hidden">Error:</span> End date cannot be lower than start date range.');
@@ -748,7 +748,7 @@
                 if(isValidDate($('#s1').val(), $('#s1').val(), $('#s3').val()))
                 {
                     dateRange = ' AND activity_date_start_common_f:[' + $('#s3').val()
-                    + '-' + $('#s1').val() + '-' + $('#s1').val() + ' TO *]'
+                    + '-' + $('#s1').val() + '-' + $('#s1').val() + 'T00:00:0Z TO *]'
                 }
                 else 
                 {
@@ -761,7 +761,7 @@
                 if(isValidDate($('#e1').val(), $('#e2').val(), $('#e3').val()))
                 {
                     dateRange = ' AND activity_date_end_common_f:[* TO '
-                    + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + ']'
+                    + $('#e3').val() + '-' + $('#e2').val() + '-' + $('#e1').val() + 'T00:00:0Z]'
                 }
                 else 
                 {
