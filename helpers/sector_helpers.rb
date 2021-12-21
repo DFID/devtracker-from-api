@@ -43,7 +43,11 @@ module SectorHelpers
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
   		sectorValues  = JSON.parse(apiUrl)
-  		sectorValues  = sectorValues['results'] 
+  		sectorValues  = sectorValues['results']
+		iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
+		sectorValues.each do |sector|
+			sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
+		end
 		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSector = map_sector_data()
 		#Create a data structure to map each DAC 5 sector code to a high level sector code

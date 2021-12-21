@@ -440,7 +440,11 @@ module ProjectHelpers
         c3ReadyStackBarData = Array.new
         
         if projectSectorGraph['count'] > 0
-            projectSector= projectSectorGraph['results'] 
+            iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
+            projectSector= projectSectorGraph['results']
+            projectSector.each do |sector|
+                sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
+            end
             totalBudgets = projectSector.reduce(0) {|memo, t| memo + t['value'].to_f} 
             c3ReadyStackBarData[0] = ''
             c3ReadyStackBarData[1] = '['
