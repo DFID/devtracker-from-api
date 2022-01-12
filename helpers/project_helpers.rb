@@ -313,7 +313,7 @@ module ProjectHelpers
         oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country")
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['results']
-        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&activity_status=2")
+        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_organisation_identifier=#{settings.goverment_department_ids}&activity_status=2")
         projectValues = JSON.parse(oipaCountryProjectCountJSON)
         projectCountValues = projectValues['results']
         countriesList = JSON.parse(File.read('data/countries.json'))
@@ -702,7 +702,7 @@ module ProjectHelpers
     #End TODO
 
     def location_data_for_csv(projectId)
-        oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location")
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title")
         project = JSON.parse(oipa)
         locationArray = Array.new
         project['location'].each do |location|
@@ -938,7 +938,7 @@ module ProjectHelpers
 
     #Get a list of map markers for visualisation for project
     def getProjectMapMarkers(projectId)
-        rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location"))
+        rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title"))
         begin
             projectTitle = rawMapMarkers['title']['narrative'][0]['text']
         rescue

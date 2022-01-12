@@ -736,12 +736,12 @@ module CountryHelpers
               tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
               tempStorage['iati_identifier'] = location['iati_identifier']
               begin
-                tempStorage['loc'] = location['name']['narratives'][0]['text']
+                tempStorage['loc'] = location['name']['narrative'][0]['text']
               rescue
                 tempStorage['loc'] = 'N/A'
               end
               begin
-                tempStorage['title'] = data['title']['narratives'][0]['text']
+                tempStorage['title'] = data['title']['narrative'][0]['text']
               rescue
                 tempStorage['title'] = 'N/A'
               end
