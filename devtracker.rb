@@ -1405,3 +1405,17 @@ end
 #    redirect to('/')
 #end
 
+#####################################################################
+#  Project Validator
+#####################################################################
+
+get '/validator' do  #homepage
+	# For publisher based data: https://fcdo.iati.cloud/search/activity/?q=hierarchy:1 AND reporting_org_ref:GB-GOV-1&rows=1&start=0&fl=*
+	# For project specific data: https://fcdo.iati.cloud/search/activity/?q=hierarchy:1 AND iati_identifier:GB-1-202035&fl=*
+	settings.devtracker_page_title = 'IATI data validator'
+	erb :'validator/index',
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			oipa_api_url: settings.oipa_api_url
+ 		}
+end
