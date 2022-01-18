@@ -41,6 +41,7 @@ require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
 require_relative 'helpers/solr_helper.rb'
+require_relative 'helpers/validator_helper.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -55,6 +56,7 @@ include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
 include SolrHelper
+include ValidatorHelper
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
@@ -1418,4 +1420,25 @@ get '/validator' do  #homepage
  		:locals => {
  			oipa_api_url: settings.oipa_api_url
  		}
+end
+
+#Returns the LHS Filters (Sector Page Specific)
+get '/getProjectIdentifiers' do
+	#reportingOrgID = ERB::Util.url_encode (params['splat'][0]).to_s
+	reportingOrgID = 'GB-GOV-1'
+	response = Oj.load(RestClient.get  api_simple_log("https://fcdo.iati.cloud/search/activity/?q=hierarchy:1 AND reporting_org_ref:#{reportingOrgID} AND iati_identifier:GB-GOV-3-*&rows=1&start=0&fl=iati_identifier"))
+	totalDataCount = response['response']['numFound']
+	pageSize = 300
+	pages = (totalDataCount.to_f/pageSize.to_f).ceil
+	projectIds = Array.new
+	puts 'number of pages: ' + pages.to_s
+	for a in 0..pages do
+		puts 'Processing Page number: ' + a.to_s
+		response = Oj.load(RestClient.get  api_simple_log("https://fcdo.iati.cloud/search/activity/?q=hierarchy:1 AND reporting_org_ref:#{reportingOrgID} AND iati_identifier:GB-GOV-3-*&rows=#{pageSize}&start=#{a}&fl=iati_identifier"))
+		response['response']['docs'].each do |activity|
+			projectIds.push(activity['iati_identifier']);
+		end
+	end
+	projectIds.sort_by{|k| k}
+	json :output => projectIds
 end

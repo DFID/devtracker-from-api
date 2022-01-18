@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="twelve columns">
-                <table id="dataTable" class="display" style="width: 100%">
+                <table id="dataTable" class="display" style="width: 100%; display: none">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -42,7 +42,7 @@
                             <th>Locations?</th>
                             <th>Documents?</th>
                             <th>Default currency?</th>
-                            <th></th>
+                            <th>Issues</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,15 +65,36 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 <script>
+$(document).ready(function() 
+{
+    $('#generateData').click(function()
+    {
+        if($('#searchType option:selected').val() != '')
+        {
+            if($('#searchType option:selected').val() == '0')
+            {
+                var publisherId = $('#query').val();
+                var url = 'https://fcdo.iati.cloud/search/activity/?q=hierarchy:1 AND reporting_org_ref:'+publisherId+'&rows=1&start=0&fl=iati_identifier'
+                $.post(url)
+                .done(function(response){
+                    console.log(response)
+                });
+            }
+            else
+            {
 
-$('#dataTable').DataTable({
-      "info": false,
-      "paging": false,
-      "searching": false,
-      "ordering": [],
-      "dom": "Bfrtip", 
-      "buttons": [
-            'csv', 'excel', 'pdf'
-        ]
+            }
+        }
     });
+    // $('#dataTable').DataTable({
+    //   "info": false,
+    //   "paging": false,
+    //   "searching": false,
+    //   "ordering": [],
+    //   "dom": "Bfrtip", 
+    //   "buttons": [
+    //         'csv', 'excel', 'pdf'
+    //     ]
+    // });
+});
 </script>
