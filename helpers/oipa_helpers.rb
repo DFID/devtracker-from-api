@@ -9,7 +9,7 @@ module OipaHelpers
 
   def activityUrlOipa(projectCode,format)
    #settings.oipa_api_url + "activities/" + projectCode + "?format=" + format
-   "/api/activities/" + projectCode + "/?format=" + format
+   "/api/activities/" + projectCode + "/?fields=all&format=" + format
   end
 
 end

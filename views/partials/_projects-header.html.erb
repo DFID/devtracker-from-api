@@ -45,14 +45,14 @@
                         <%#if countryOrRegion[:projectType] == "country" %>
                             <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
                         <%# end %>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title']['narratives'][0]['text'] %>"><%= project['title']['narratives'][0]['text'] %></li>
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title']['narrative'][0]['text'] %>"><%= project['title']['narrative'][0]['text'] %></li>
                     </ol>
                 </div>
                 <h2 style="color: rgba(255,255,255,0.5);font-size: 1em;clear: left;margin: 0px 0px -10px 0px;padding-top: 20px;font-weight: normal">
                     <%= reporting_organisation(project) %>
                 </h2>
                 <h1 style="font-size:1.5em">
-                    <%= project['title']['narratives'][0]['text'] %>
+                    <%= project['title']['narrative'][0]['text'] %>
                 </h1>
             </div>
             <div class="two columns">
@@ -94,7 +94,7 @@
     <div class="twelve columns">
         <% if(!is_dfid_project(project['iati_identifier'])) %>
         <div class="govuk-inset-text" style="font-size: 14px;">
-          <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project['reporting_organisation']['narratives'][0]['text'] || "" %></strong>. 
+          <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project['reporting_org']['narrative'][0]['text'] || "" %></strong>. 
              <% if (!project['contact_info'][0].nil? && project['contact_info'][0]['email'].length > 0) %>
                 Please contact them (<span id='showEmail' style='color: blue; cursor: pointer'>Show Email Address</span>) if you have any questions about their data.
             <% else %>

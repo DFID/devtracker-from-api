@@ -597,7 +597,6 @@ module CommonHelpers
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
     current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-    puts (settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}")
     sectorBudgets = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}"))
     sectorHierarchies = Oj.load(File.read('data/sectorHierarchies.json'))
     sectorBudgets = sectorBudgets["results"]
@@ -674,13 +673,13 @@ module CommonHelpers
 
   def get_project_component_data(project)
     components = Array.new
-    project['related_activities'].each do |component|
+    project['related_activity'].each do |component|
       if(component['ref'].to_s.include? project['iati_identifier'].to_s)
         begin
           pullActivityData = get_h1_project_details(component['ref'])
           componentData = {}
           begin
-            componentData['title'] = pullActivityData['title']['narratives'][0]['text']
+            componentData['title'] = pullActivityData['title']['narrative'][0]['text']
           rescue
             componentData['title'] = 'N/A'
           end
@@ -689,7 +688,7 @@ module CommonHelpers
           rescue
             componentData['title'] = 'N/A'
           end
-          dates = pullActivityData['activity_dates']
+          dates = pullActivityData['activity_date']
           if (dates.length > 0)
             begin
               if(!dates.select{|activityDate| activityDate['type']['code'] == '2'}.first.nil?)

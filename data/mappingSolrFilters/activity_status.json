@@ -2,18 +2,16 @@
     {
         "code":
         [
-            1,
-            2,
-            3
+            2
         ],
         "name":"Active"
     },
     {
         "code":
         [
+            3,
             4,
-            5,
-            6
+            5
         ],
         "name":"Closed"
     }

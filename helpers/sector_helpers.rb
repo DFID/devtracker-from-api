@@ -43,7 +43,11 @@ module SectorHelpers
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
   		sectorValues  = JSON.parse(apiUrl)
-  		sectorValues  = sectorValues['results'] 
+  		sectorValues  = sectorValues['results']
+		iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
+		sectorValues.each do |sector|
+			sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
+		end
 		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSector = map_sector_data()
 		#Create a data structure to map each DAC 5 sector code to a high level sector code
@@ -57,7 +61,6 @@ module SectorHelpers
 			tempData[:budget] = elem["value"].to_i
 			highLevelSectorBudget.push(tempData)
 			rescue
-				puts elem["sector"]["code"]
 				tempData = {}
 				tempData[:code] = 0
 				tempData[:name] = 'Uncategorised'
@@ -132,7 +135,6 @@ module SectorHelpers
 			tempData[:budget] = elem["value"]
 			budgetData.push(tempData)
 			rescue
-				puts elem["sector"]["code"]
 				tempData = {}
 				tempData[:code] = urlCategoryCode
 				tempData[:parentCode] = 0
@@ -158,8 +160,6 @@ module SectorHelpers
 
 	     #TODO - test the input to see that there is no bad data comming in
 		if pageType == "category"
-			puts urlHighLevelSectorCode
-			puts parentCodeType
 	     	inputCode = urlHighLevelSectorCode
 	     	sectorHierarchyPath = {	     
 	     			:highLevelSectorCode => inputCode,			

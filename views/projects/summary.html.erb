@@ -2,27 +2,27 @@
 
 <div class="row">
     <div class="twelve columns summary">
-        <%if project['descriptions'].length == 1%>
+        <%if project['description'].length == 1%>
             <b class="more-info-title">Description</b>
             <%begin%>
-                <p class="project-description"><%= project['descriptions'][0]['narratives'][0]['text'] %></p>
+                <p class="project-description"><%= project['description'][0]['narrative'][0]['text'] %></p>
             <%rescue%>
                 <p class="project-description">N/A</p>
             <%end%>
         <%else%>
-            <%project['descriptions'].sort_by{|item| item['type']['code']}.each do |description|%>
+            <%project['description'].sort_by{|item| item['type']['code']}.each do |description|%>
                 <%if description['type']['code'] == '1'%>
                     <b class="more-info-title">Description</b>
-                    <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
                 <%elsif description['type']['code'] == '2'%>
                     <b class="more-info-title">Objectives</b>
-                    <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
                 <%elsif description['type']['code'] == '3'%>
                     <b class="more-info-title">Target Groups</b>
-                    <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
                 <%elsif description['type']['code'] == '4'%>
                     <b class="more-info-title">Other</b>
-                    <p class="project-description"><%= description['narratives'][0]['text'] %></p>
+                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
                 <%end%> 
             <%end%>
         <%end%>
@@ -119,7 +119,7 @@
                                 <td>
                                     <% participatingOrgData.each_with_index { |org, index| %>
                                         <% begin %>
-                                            <a target="_BLANK" href="/search?query=<%= org['narratives'][0]['text']%>&includeClosed=0"><%= org['narratives'][0]['text']%></a>
+                                            <a target="_BLANK" href="/search?query=<%= org['narrative'][0]['text']%>&includeClosed=0"><%= org['narrative'][0]['text']%></a>
                                         <% rescue %>
                                             Name not available
                                         <% end %>
@@ -142,7 +142,7 @@
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
         <div style="margin-top: 15px" class="project-country-title"> 
           <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
-          <%if project['locations'].length > 0%>
+          <%if project['location'].length > 0%>
             <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link button" style="position: absolute;right: 30px;">CSV</a>
           <%end%>
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
@@ -179,7 +179,7 @@
         <script type="text/javascript">
             var mapType = "project";
             window.mainMarkers = <%= mapMarkers.to_json%>;
-            var ProjectTitle = "<%= project['title']['narratives'][0]['text'] %>";
+            var ProjectTitle = "<%= project['title']['narrative'][0]['text'] %>";
             var countryCount = <%= countryOrRegion[:countriesCount]%>;
             var regionCount = <%= countryOrRegion[:regionsCount]%>;
         </script>
@@ -254,15 +254,15 @@
             <%end%>
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
-            var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])) %> Start",
-                          text: "<%= format_date(choose_better_date(actualStartDate(project['activity_dates']),plannedStartDate(project['activity_dates'])))%>",
-                          value: <%= choose_better_date(actualStartDate(project['activity_dates']), plannedStartDate(project['activity_dates'])) %>},
+            var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_date']),plannedStartDate(project['activity_date'])) %> Start",
+                          text: "<%= format_date(choose_better_date(actualStartDate(project['activity_date']),plannedStartDate(project['activity_date'])))%>",
+                          value: <%= choose_better_date(actualStartDate(project['activity_date']), plannedStartDate(project['activity_date'])) %>},
                          {label: "Progress by time",
                           text: "",
                           value: new Date().getTime()},
-                         {label: "<%=choose_better_date_label(actualEndDate(project['activity_dates']),plannedEndDate(project['activity_dates'])) %> End",
-                          text: "<%= format_date(choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates']))) %>",
-                          value: <%= choose_better_date(actualEndDate(project['activity_dates']), plannedEndDate(project['activity_dates'])) %>}];
+                         {label: "<%=choose_better_date_label(actualEndDate(project['activity_date']),plannedEndDate(project['activity_date'])) %> End",
+                          text: "<%= format_date(choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date']))) %>",
+                          value: <%= choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date'])) %>}];
             charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
             //var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;

@@ -80,7 +80,6 @@ Money.default_currency = "GBP"
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
- 
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -123,7 +122,7 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_organisation_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
 	if n == 'AF2'
 		tempActivityCount['count'] = 0
 	end
@@ -143,6 +142,7 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
+	puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"
 	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
@@ -170,7 +170,7 @@ get '/countries/:country_code/projects/?' do |n|
 	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'C')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'C', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -264,7 +264,7 @@ get '/regions/:region_code/projects/?' do |n|
 	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -315,10 +315,11 @@ get '/projects/*/summary' do
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
 	#Policy markers
 	begin
 		getPolicyMarkers = get_policy_markers(n)
+		puts 'policy markers grabbed'
 	rescue
 		getPolicyMarkers = Array.new
 	end
@@ -362,7 +363,7 @@ get '/projects/*/documents/?' do
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -416,7 +417,7 @@ get '/projects/*/transactions/?' do
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = get_funded_project_details(n).length
+	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -567,15 +568,30 @@ end
 #####################################################################
 
 get '/search/?' do
-	query= ''
-	filters = []
-	response = 
-	{
-		'numFound' => -1,
-		'docs' => []
-	}
-  	settings.devtracker_page_title = 'Search Page'
-	#erb :'search/solrSearch',
+	if (!params['query'])
+		query= ''
+		filters = []
+		response = 
+		{
+			'numFound' => -1,
+			'docs' => []
+		}
+		settings.devtracker_page_title = 'Search Page'
+		didYouMeanData = {}
+		didYouMeanData['dfidCountryBudgets'] = 0
+		didYouMeanData['dfidRegionBudgets'] = 0
+	else
+		query = params['query']
+		activityStatuses = 'AND activity_status_code:(2)'
+		filters = prepareFilters(query.to_s, 'F')
+		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+		if(response['numFound'].to_i > 0)
+			response = addTotalBudgetWithCurrency(response)
+		end
+		settings.devtracker_page_title = 'Search Results For : ' + query
+		didYouMeanQuery = sanitize_input(params['query'],"a")
+		didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
+	end
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
@@ -588,7 +604,10 @@ get '/search/?' do
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
 		breadcrumbURL: '',
-		breadcrumbText: ''
+		breadcrumbText: '',
+		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
+ 		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		isIncludeClosedProjects: 0
 	}
 end
 
@@ -597,9 +616,9 @@ post '/search/?' do
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
-		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3)'
+		activityStatuses = 'AND activity_status_code:(2)'
 	else
-		activityStatuses = 'AND activity_status_code:(1 OR 2 OR 3 OR 4 OR 5)'
+		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
 	end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
@@ -608,7 +627,7 @@ post '/search/?' do
 	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	didYouMeanQuery = sanitize_input(params['query'],"a")
-	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'1,2,3')
+	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
 	#erb :'search/solrSearch',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -625,7 +644,7 @@ post '/search/?' do
 		breadcrumbText: '',
 		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
  		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
-		 isIncludeClosedProjects: isIncludeClosedProjects
+		isIncludeClosedProjects: isIncludeClosedProjects
 	}
 end
 
@@ -648,7 +667,7 @@ end
 get '/regions/?' do
 	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -729,7 +748,7 @@ end
 get '/global/?' do
 	query = '(998)'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -778,7 +797,7 @@ get '/department/:dept_id/?' do
   	settings.devtracker_page_title = ogds[dept_id]["name"]
 	query = deptIdentifier
 	filters = prepareFilters(query.to_s, 'O')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'O', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'O', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -818,9 +837,8 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData['sectorName'] = ""
 	#Segment
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
-	puts query
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'S', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -864,9 +882,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		sectorData['sectorCode'].concat(sdata['Code (L3)'].to_s + ",")
 	end
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
-	puts query
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'S', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -909,7 +926,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['sectorName'] = sectorJsonData['Name']
 	query = "(" + sectorJsonData['Code (L3)'].to_s + ")"
 	filters = prepareFilters(query.to_s, 'S')
-	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'S', 0, '', '')
+	response = solrResponse(query, 'AND activity_status_code:(2)', 'S', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end

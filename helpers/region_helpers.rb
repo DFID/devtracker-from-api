@@ -25,7 +25,7 @@ module RegionHelpers
       #oipa v3.1
       currentTotalRegionBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=value&recipient_region=#{regionCode}"))
       currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value"))
-      totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&format=json&fields=activity_status&page_size=2500&activity_status=2"))
+      totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&format=json&fields=activity_status&page_size=2500&activity_status=2"))
       totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
       totalActiveProjects = totalProjectsDetails['results'].length
       
@@ -81,8 +81,8 @@ module RegionHelpers
         elsif (regionType == "regionAll")
           regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380,998")
         else
-            #oipa v3.1
-            regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998")
+          #oipa v3.1
+          regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998")
         end
 
         # aggregates budgets of the dfid regional projects that are active in the current FY
@@ -246,12 +246,21 @@ module RegionHelpers
 
     #Get a list of map markers for visualisation
     def getRegionMapMarkers(regionCode)
-      rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,locations&page_size=500&activity_status=2"))
-      rawMapMarkers = rawMapMarkers['results']
+      response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2"))
+      rawMapMarkers = response['results']
+      if(response['count'] > 20)
+        pages = (response['count'].to_f/20).ceil
+        for page in 2..pages do
+          tempData = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2&page=#{page}"))
+          tempData['results'].each do |item|
+            rawMapMarkers.push(item)
+          end
+        end
+      end
       mapMarkers = Array.new
       ar = 0
       rawMapMarkers.each do |data|
-        data['locations'].each do |location|
+        data['location'].each do |location|
           begin
             tempStorage = {}
             tempStorage["geometry"] = {}
@@ -261,12 +270,12 @@ module RegionHelpers
             tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
             tempStorage['iati_identifier'] = location['iati_identifier']
             begin
-              tempStorage['loc'] = location['name']['narratives'][0]['text']
+              tempStorage['loc'] = location['name']['narrative'][0]['text']
             rescue
               tempStorage['loc'] = 'N/A'
             end
             begin
-              tempStorage['title'] = data['title']['narratives'][0]['text']
+              tempStorage['title'] = data['title']['narrative'][0]['text']
             rescue
               tempStorage['title'] = 'N/A'
             end
