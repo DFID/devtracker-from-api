@@ -795,7 +795,7 @@ get '/department/:dept_id/?' do
 		redirect '/department'
 	end
   	settings.devtracker_page_title = ogds[dept_id]["name"]
-	query = deptIdentifier
+	query = "(" + deptIdentifier.gsub(","," OR ") + ")"
 	filters = prepareFilters(query.to_s, 'O')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'O', 0, '', '')
 	if(response['numFound'].to_i > 0)
