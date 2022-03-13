@@ -12,7 +12,7 @@ module ProjectHelpers
         begin
             oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=recipient_country")
             response = Oj.load(oipa)
-            tempData = response['recipient_country'].select{|a| a['country']['code'].to_s == 'AF2'}.length()
+            tempData = response['recipient_country'].select{|a| a['country']['code'].to_s == 'UA'}.length()
             if(tempData != 0)
                 halt 404, "Activity not found"
             end    
@@ -320,7 +320,7 @@ module ProjectHelpers
         
         projectDataHash = {}
         projectCountValues.each do |project|
-            if project["recipient_country"]["code"].to_s != 'AF2'
+            if project["recipient_country"]["code"].to_s != 'UA'
                 tempBudget = projectBudgetValues.find do |projectBudget|
                     projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
                 end
