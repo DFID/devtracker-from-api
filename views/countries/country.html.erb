@@ -33,6 +33,11 @@
             <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (project title, description and channel of delivery) from Devtracker. As projects are reviewed and republished, the project and financial information will become available on DevTracker.</div>
         </div>
     <%end%>
+    <% if(country[:code] == 'UA') %>
+        <div class="twelve columns">
+            <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA project information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
+        </div>
+    <%end%>
     <div class="eight columns summary">
         <h2 class="visually-hidden">Summary</h2>
         <% if country[:description].length > 0%>
