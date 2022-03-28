@@ -194,7 +194,7 @@ module ProjectHelpers
         end
         projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
         combinedResponse = {}
-        combinedResponse['projectIdentifierList'] = projectIdentifierList[0,projectIdentifierList.length-1]
+        combinedResponse['projectIdentifierList'] = projectIdentifierList
         combinedResponse['projectIdentifierListArray'] = projectIdentifierListArray
         combinedResponse
     end
@@ -360,7 +360,7 @@ module ProjectHelpers
 
     def get_funding_project(projectId)
         begin
-            fundingProjectDetailsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json" )
+            fundingProjectDetailsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=all" )
             fundingProjectDetails = JSON.parse(fundingProjectDetailsJSON)
         rescue
             return ''
