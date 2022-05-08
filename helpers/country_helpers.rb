@@ -68,19 +68,16 @@ module CountryHelpers
 
       countriesInfo = JSON.parse(File.read('data/countries.json'))
       #Old DJANGO endpoint below
-      top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
+      #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
       # Solr endpoint below
-      top5countriesJSON2 = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO #{lastDayOfFinYear}T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":10,"offset":0,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":10},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
-      puts settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO #{lastDayOfFinYear}T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":10,"offset":0,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":10},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0'
+      top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":10,"offset":0,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
       top5countries = JSON.parse(top5countriesJSON)
-      puts json.parse(top5countriesJSON2)
-      top5countriesBudget = top5countries["results"].map do |elem| 
+
+      top5countriesBudget = top5countries['facets']['items']['buckets'].map do |elem| 
          {  
-            :code     => elem["recipient_country"]["code"],  
-            :name     => countriesInfo.find do |source|
-                           source["code"].to_s == elem["recipient_country"]["code"]
-                         end["name"],
-            :budget   => elem["value"].to_i                                                                                  
+            :code     => elem['val'],  
+            :name     => elem['name']['buckets'][0]['val'],
+            :budget   => elem['value'].to_i
          } 
       end
   end

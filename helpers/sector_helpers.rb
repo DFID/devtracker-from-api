@@ -29,6 +29,45 @@ module SectorHelpers
 		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json")
 	end
 	
+	def top_5_sectors_data()
+		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+      	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+		apiResponse = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		parsedResponse = JSON.parse(apiResponse)
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+		highLevelSectorData = {}
+		parsedResponse['facets']['items']['buckets'].each do |elem|
+			selectedData = {}
+			begin
+				selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem['val']}
+			rescue
+				tempData = {}
+				tempData["Code (L3)"] = elem['sector']['code']
+				tempData["High Level Code (L1)"] = 0
+				tempData["High Level Sector Description"] = "Uncategorised"
+				tempData["Name"] = elem['sector']['name']
+				selectedData = tempData
+				elem['value'] = 0
+			end
+			if !highLevelSectorData.has_key?(selectedData['High Level Code (L1)'])
+				highLevelSectorData[selectedData['High Level Code (L1)']] = {}
+				highLevelSectorData[selectedData['High Level Code (L1)']]['code'] = selectedData['High Level Code (L1)']
+				highLevelSectorData[selectedData['High Level Code (L1)']]['name'] = selectedData['High Level Sector Description']
+				highLevelSectorData[selectedData['High Level Code (L1)']]['budget'] = elem['value']
+			else
+				highLevelSectorData[selectedData['High Level Code (L1)']]['budget'] = highLevelSectorData[selectedData['High Level Code (L1)']]['budget'] + elem['value']
+			end
+		end
+		highLevelSectorDataSorted = highLevelSectorData.sort_by{|key, val| val['budget']}.reverse
+		mappedData = []
+		highLevelSectorDataSorted.each do |key, val|
+			if key != 22 && key != 0
+				mappedData.push(val)
+			end
+		end
+		mappedData
+	end
+
 	def group_hashes arr, group_fields
 			  arr.group_by {|hash| hash.values_at(*group_fields).join ":" }.values.map do |grouped|
 			    grouped.inject do |merged, n|

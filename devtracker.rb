@@ -100,14 +100,12 @@ get '/' do  #homepage
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
   	settings.devtracker_page_title = ''
-  	# Example of setting up a cookie from server end
-  	# response.set_cookie('my_cookie', 'value_of_cookie')
 	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
- 			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
- 			what_we_achieve: top5results,
+ 			top_5_countries: top5countries,
+ 			what_we_do: top_5_sectors_data(),
+			what_we_achieve: top5results,
  			odas: odas,
  			oipa_api_url: settings.oipa_api_url
  		}
