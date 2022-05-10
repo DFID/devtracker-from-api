@@ -70,7 +70,7 @@ module CountryHelpers
       #Old DJANGO endpoint below
       #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
       # Solr endpoint below
-      top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":10,"offset":0,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
+      top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":10,"offset":0,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
       top5countries = JSON.parse(top5countriesJSON)
 
       top5countriesBudget = top5countries['facets']['items']['buckets'].map do |elem| 
@@ -103,11 +103,14 @@ module CountryHelpers
       countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
       
       #oipa v3.1
-      currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value"))
-
-      totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2"))
-      totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
+      #currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
+      currentTotalCountryBudget = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z] AND recipient_country_code:'+countryCode+'&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0'))
+      #currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value"))
+      # currentTotalDFIDBudget = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"reporting_org_ref","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0'))
+      
+      #totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2"))
+      totalProjectsDetails = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2 AND hierarchy:1&rows=1&fl=iati_identifier'))
+      totalActiveProjects = totalProjectsDetails['response']['numFound']
 
       if countryOperationalBudget.length > 0 then
           operationalBudget = countryOperationalBudget[0]['operationalBudget']
@@ -117,11 +120,11 @@ module CountryHelpers
           operationalBudgetCurrency = "GBP"
       end
 
-      if currentTotalCountryBudget['count'] > 0 then
+      if currentTotalCountryBudget['facets']['count'] > 0 then
           #oipa v2.2
           #countryBudget = currentTotalCountryBudget['results'][0]['budget']
           #oipa v3.1
-          countryBudget = currentTotalCountryBudget['results'][0]['value']
+          countryBudget = currentTotalCountryBudget['facets']['items']['buckets'][0]['value']
       else
           countryBudget = 0
       end
@@ -129,12 +132,12 @@ module CountryHelpers
       #oipa v2.2
       #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
       #oipa v3.1
-      totalDfidBudget = 0
-      currentTotalDFIDBudget['results'].each do |budget|
-        totalDfidBudget = totalDfidBudget + budget['value'].to_i
-      end
+      # totalDfidBudget = 0
+      # currentTotalDFIDBudget['facets']['items']['buckets'].each do |budget|
+      #   totalDfidBudget = totalDfidBudget + budget['value'].to_i
+      # end
       #totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
-      projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
+      ####projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
 
     
       returnObject = {
@@ -151,13 +154,13 @@ module CountryHelpers
             :fertilityRate_year => country['fertilityRate_year'],
             :gdpGrowthRate => country['gdpGrowthRate'],
             :gdpGrowthRate_year => country['gdpGrowthRate_year'],
-            :totalProjects => totalProjectsDetails['count'],
+            :totalProjects => totalProjectsDetails['response']['numFound'],
             :totalActiveProjects => totalActiveProjects,
             :operationalBudget => operationalBudget,
             :operationalBudgetCurrency => operationalBudgetCurrency,
             :countryBudget => countryBudget,
             :countryBudgetCurrency => "GBP",
-            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget
+            # :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget
             }
   end
 
@@ -444,7 +447,7 @@ module CountryHelpers
       budgetArray = Array.new
       resultCount = Oj.load(countrySpecificsectorValuesJSONLink)
       c3ReadyDonutData = Array.new
-      if resultCount["count"] > 0
+      if resultCount['facets']['count'] > 0
           highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
           sectorWithTopBudgetHash = {}
           highLevelSectorListData[:sectorsData].each do |sector|
@@ -721,28 +724,31 @@ module CountryHelpers
 
     #Get a list of map markers for visualisation
     def getCountryMapMarkers(countryCode)
-      rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
-      rawMapMarkers = rawMapMarkers['results']
+      #rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
+      rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_name_narrative,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
+      rawMapMarkers = rawMapMarkers['response']['docs']
       mapMarkers = Array.new
       ar = 0
       rawMapMarkers.each do |data|
-        if(data['recipient_country'].count == 1)
-          data['location'].each do |location|
+        if(data['recipient_country_code'].count == 1 && data.key?('location_point_pos'))
+          data['location_point_pos'].each_with_index do |location, index|
+            location = location.to_s.gsub("(",'').gsub(")","")
+            location = location.split(",")
             begin
               tempStorage = {}
               tempStorage["geometry"] = {}
               tempStorage['geometry']['type'] = 'Point'
               tempStorage['geometry']['coordinates'] = Array.new
-              tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-              tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-              tempStorage['iati_identifier'] = location['iati_identifier']
+              tempStorage['geometry']['coordinates'].push(location[0].to_f)
+              tempStorage['geometry']['coordinates'].push(location[1].to_f)
+              tempStorage['iati_identifier'] = data['iati_identifier']
               begin
-                tempStorage['loc'] = location['name']['narrative'][0]['text']
+                tempStorage['loc'] = data['location_name_narrative'][index].to_s
               rescue
                 tempStorage['loc'] = 'N/A'
               end
               begin
-                tempStorage['title'] = data['title']['narrative'][0]['text']
+                tempStorage['title'] = data['title_narrative_first']
               rescue
                 tempStorage['title'] = 'N/A'
               end
@@ -780,34 +786,37 @@ module CountryHelpers
     
   # Returns the country level implementing organisations
   def getCountryLevelImplOrgs(countryCode, activityCount)
-    response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20"))
+    #response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20"))
+    response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2&rows=20&fl=iati_identifier,participating_org,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,sector_vocabulary,sector_code,sector_percentage,sector_narrative_lang,sector_narrative_text'))
     allActivities = []
-    allActivities = response['results']
-    if (response['count'] > 20)
+    allActivities = response['response']['docs']
+    if (response['response']['numFound'] > 20)
       pages = (response['count'].to_f/20).ceil
-      for page in 2..pages do
-        tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
-        tempData['results'].each do |item|
+      for page in 1..pages do
+        #tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
+        tempData = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2&rows=20&fl=iati_identifier,participating_org_ref,participating_org_type,participating_org_role,participating_org_narrative_lang,participating_org_narrative_text,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,sector_vocabulary,sector_code,sector_percentage,sector_narrative_lang,sector_narrative_text&start='+page))
+        tempData['response']['docs'].each do |item|
           allActivities.push(item)
         end
       end
     end
     implementingOrgs = {}
     allActivities.each do |activity|
-      if(activity['recipient_country'].count == 1)
-        if(activity['recipient_country'][0]['country']['code'].to_s == countryCode)
+      if(activity['recipient_country_code'].count == 1)
+        if(activity['recipient_country_code'][0].to_s == countryCode)
           activity['participating_org'].each do |org|
+            convertedData = JSON.parse(org)
             begin
-              if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
-                if(implementingOrgs.has_key?(org['ref'].to_s))
-                  if(org['role']['code'].to_s == '4')
-                    implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
+              if(convertedData['ref'] != '' && convertedData['ref'] != 'NULL' && convertedData['ref'] != 'null')
+                if(implementingOrgs.has_key?(convertedData['ref'].to_s))
+                  if(convertedData['role']['code'].to_s == '4')
+                    implementingOrgs[convertedData['ref']]['count'] = implementingOrgs[convertedData['ref']]['count'] + 1
                   end
                 else
-                  if(org['role']['code'].to_s == '4')
-                    implementingOrgs[org['ref']] = {}
-                    implementingOrgs[org['ref']]['orgName'] = org['narrative'][0]['text']
-                    implementingOrgs[org['ref']]['count'] = 1
+                  if(convertedData['role']['code'].to_s == '4')
+                    implementingOrgs[convertedData['ref']] = {}
+                    implementingOrgs[convertedData['ref']]['orgName'] = convertedData['narrative'][0]['text']
+                    implementingOrgs[convertedData['ref']]['count'] = 1
                   end
                 end
               end

@@ -32,7 +32,7 @@ module SectorHelpers
 	def top_5_sectors_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		apiResponse = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		apiResponse = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
 		parsedResponse = JSON.parse(apiResponse)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSectorData = {}
@@ -82,10 +82,10 @@ module SectorHelpers
 	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
 
   		sectorValues  = JSON.parse(apiUrl)
-  		sectorValues  = sectorValues['results']
+  		sectorValues  = sectorValues['facets']['items']['buckets']
 		iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
 		sectorValues.each do |sector|
-			sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
+			sector['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['val'].to_i}[0]['name']
 		end
 		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSector = map_sector_data()
@@ -93,7 +93,7 @@ module SectorHelpers
 		highLevelSectorBudget = []
 		sectorValues.each do |elem|
 			begin
-			selectedData = highLevelSector.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+			selectedData = highLevelSector.find {|item| item['Code (L3)'].to_s == elem["val"]}
 			tempData = {}
 			tempData[:code] = selectedData[codeType]
 			tempData[:name] = selectedData[sectorDescription]
@@ -132,19 +132,20 @@ module SectorHelpers
 	end
 
 	def map_sector_data()
-		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
+		#sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
+		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+settings.current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+settings.current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
 		sectorValues  = JSON.parse(sectorValuesJSON)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
-		sectorValues['results'].each do |elem|
+		sectorValues['facets']['items']['buckets'].each do |elem|
 			begin
-				selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+				selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["val"]}
 				td = selectedData["Code (L3)"]
 			rescue
 				tempData = {}
-				tempData["Code (L3)"] = elem['sector']['code']
+				tempData["Code (L3)"] = elem['val']
 				tempData["High Level Code (L1)"] = 0
 				tempData["High Level Sector Description"] = "Uncategorised"
-				tempData["Name"] = elem['sector']['name']
+				tempData["Name"] = "Not mapped"
 				tempData["Description"] = 'Not yet mapped'
 				tempData["Category (L2)"] = 0
 				tempData["Category Name"] = "Not yet mapped"

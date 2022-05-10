@@ -22,7 +22,7 @@
     </div>
 </div>
 <% if(country[:code] != 'UA') %>
-    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects] } %>
+    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => activityCount } %>
 <%else%>
     <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => 0 } %>
 <%end%>
