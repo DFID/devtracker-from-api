@@ -496,10 +496,11 @@ module CountryHelpers
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
     #oipa 3.1
-    totalCountryBudgetLocation = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value")
+    #totalCountryBudgetLocation = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=GB-GOV-1&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value")
+    totalCountryBudgetLocation = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
     totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
     totalAmount = 0.0
-    totalCountryBudgetLocation['results'].each do |countryBudgets|
+    totalCountryBudgetLocation['facets']['items']['buckets'].each do |countryBudgets|
       #oipa 2.2
       #totalAmount = totalAmount + countryBudgets['budget'].to_f
       #oipa 3.1

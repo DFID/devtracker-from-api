@@ -631,35 +631,56 @@ module CommonHelpers
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
     current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-    sectorBudgets = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}"))
+    #sectorBudgets = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=recipient_country&group_by=sector,recipient_country&aggregations=value&format=json&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}"))
+    sectorBudgets = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"sort":"value asc","facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"sectors":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0'))
     sectorHierarchies = Oj.load(File.read('data/sectorHierarchies.json'))
-    sectorBudgets = sectorBudgets["results"]
-    sectorBudgets = sectorBudgets.group_by{|key| key["recipient_country"]["code"]}
-    sectorBudgets.each do |countryData|
-      sectorBudgets[countryData[0]].each do |countryLevelSectorData|
-        tempDAC5Code = countryLevelSectorData['sector']['code']
-        pullHighLevelSectorData = sectorHierarchies.select{|key| key["Code (L3)"] == tempDAC5Code.to_i}.first
-        countryLevelSectorData['sector']['code'] = pullHighLevelSectorData["High Level Code (L1)"]
-        countryLevelSectorData['sector']['name'] = pullHighLevelSectorData["High Level Sector Description"]
-      end
-    end
+    sectorBudgets = sectorBudgets["facets"]['items']['buckets']
+    sectorBudgets = sectorBudgets.group_by{|key| key["val"]}
     countryHash = {}
     sectorBudgets.each do |countryData|
       countryHash[countryData[0]] = {}
-      sectorBudgets[countryData[0]].each do |countryLevelSectorData|
-        if !countryHash[countryData[0]].key?(countryLevelSectorData['sector']['name'])
-          countryHash[countryData[0]][countryLevelSectorData['sector']['name']] = {}
-          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['code'] = countryLevelSectorData['sector']['code']
-          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['name'] = countryLevelSectorData['sector']['name']
-          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryLevelSectorData['value'].to_i
-        else
-          countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'].to_i + countryLevelSectorData['value'].to_i
+      begin
+        countryData[1][0]['sectors']['buckets'].each do |sectorData|
+          pullHighLevelSectorInfo = sectorHierarchies.select{|key| key["Code (L3)"] == sectorData['val'].to_i}.first
+          if !countryHash[countryData[0]].key?(pullHighLevelSectorInfo['High Level Sector Description'])
+            countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']] = {}
+            countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']]['code'] = pullHighLevelSectorInfo['High Level Code (L1)']
+            countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']]['name'] = pullHighLevelSectorInfo['High Level Sector Description']
+            countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']]['budget'] = sectorData['value'].to_i
+          else
+            countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']]['budget'] = countryHash[countryData[0]][pullHighLevelSectorInfo['High Level Sector Description']]['budget'].to_i + sectorData['value'].to_i
+          end
         end
+      rescue
+        #puts 'rescued from empty array'
       end
     end
+    # sectorBudgets.each do |countryData|
+    #   sectorBudgets[countryData[0]].each do |countryLevelSectorData|
+    #     tempDAC5Code = countryLevelSectorData['sectors']['buckets'][0]['val']
+    #     pullHighLevelSectorData = sectorHierarchies.select{|key| key["Code (L3)"] == tempDAC5Code.to_i}.first
+    #     countryLevelSectorData['sector']['code'] = pullHighLevelSectorData["High Level Code (L1)"]
+    #     countryLevelSectorData['sector']['name'] = pullHighLevelSectorData["High Level Sector Description"]
+    #   end
+    # end
+    # countryHash = {}
+    # sectorBudgets.each do |countryData|
+    #   countryHash[countryData[0]] = {}
+    #   sectorBudgets[countryData[0]].each do |countryLevelSectorData|
+    #     if !countryHash[countryData[0]].key?(countryLevelSectorData['sector']['name'])
+    #       countryHash[countryData[0]][countryLevelSectorData['sector']['name']] = {}
+    #       countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['code'] = countryLevelSectorData['sector']['code']
+    #       countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['name'] = countryLevelSectorData['sector']['name']
+    #       countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryLevelSectorData['value'].to_i
+    #     else
+    #       countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'] = countryHash[countryData[0]][countryLevelSectorData['sector']['name']]['budget'].to_i + countryLevelSectorData['value'].to_i
+    #     end
+    #   end
+    # end
     countryHash.each do |key|
       countryHash[key[0]] = key[1].sort_by{ |x, y| -y["budget"] }
     end
+    puts countryHash
     countryHash
   end
 

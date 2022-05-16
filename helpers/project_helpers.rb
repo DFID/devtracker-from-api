@@ -310,33 +310,35 @@ module ProjectHelpers
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         #OIPA V3.1
-        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country")
+        #oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country")
+        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
-        projectBudgetValues = projectBudgetValues['results']
-        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2")
+        projectBudgetValues = projectBudgetValues['facets']['items']['buckets']
+        #oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2")
+        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND activity_status_code:(2) AND hierarchy:(1)&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         projectValues = JSON.parse(oipaCountryProjectCountJSON)
-        projectCountValues = projectValues['results']
+        projectCountValues = projectValues['facets']['items']['buckets']
         countriesList = JSON.parse(File.read('data/countries.json'))
         
         projectDataHash = {}
         projectCountValues.each do |project|
-            if project["recipient_country"]["code"].to_s != 'UA'
+            if project["val"].to_s != 'UA'
                 tempBudget = projectBudgetValues.find do |projectBudget|
-                    projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
+                    projectBudget["val"].to_s == project["val"]
                 end
                 tempCountry = countriesList.find do |source|
-                    source["code"].to_s == project["recipient_country"]["code"]
+                    source["code"].to_s == project["val"]
                 end
                 begin
-                    projectDataHash[project["recipient_country"]["code"]] = {}
-                    projectDataHash[project["recipient_country"]["code"]]["country"] = tempCountry["name"]
-                    projectDataHash[project["recipient_country"]["code"]]["id"] = project["recipient_country"]["code"]
-                    projectDataHash[project["recipient_country"]["code"]]["projects"] = project["count"]
+                    projectDataHash[project["val"]] = {}
+                    projectDataHash[project["val"]]["country"] = tempCountry["name"]
+                    projectDataHash[project["val"]]["id"] = project["val"]
+                    projectDataHash[project["val"]]["projects"] = project["count"]
                 #OIPA V2.2
                 #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
                 #OIPA V3.1
-                    projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
-                    projectDataHash[project["recipient_country"]["code"]]["flag"] = '/images/flags/' + project["recipient_country"]["code"].downcase + '.png'
+                    projectDataHash[project["val"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
+                    projectDataHash[project["val"]]["flag"] = '/images/flags/' + project["val"].downcase + '.png'
                 rescue
                 end
             end
