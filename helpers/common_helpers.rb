@@ -680,7 +680,6 @@ module CommonHelpers
     countryHash.each do |key|
       countryHash[key[0]] = key[1].sort_by{ |x, y| -y["budget"] }
     end
-    puts countryHash
     countryHash
   end
 

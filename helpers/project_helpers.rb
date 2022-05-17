@@ -277,20 +277,21 @@ module ProjectHelpers
         staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
+        #oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
+        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z] AND activity_status_code:(1 2)&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
-        countriesList = countriesList['results']
+        countriesList = countriesList['facets']['items']['buckets']
         countriesList.each do |country|
-            tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["recipient_country"]["code"]}
+            tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["val"]}
             if tempCountryDetails.length>0
-                 country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
-             elsif country["recipient_country"]["code"].to_s == 'VG'
-                country["recipient_country"]["name"] =  'Virgin Islands (British)'
+                 country["name"]["buckets"][0]['val'] =  tempCountryDetails[0]['name']
+             elsif country["val"].to_s == 'VG'
+                country["name"]["buckets"][0]['val'] =  'Virgin Islands (British)'
              end
-            tempCode = country['recipient_country']['code'].to_s
+            tempCode = country['val'].to_s
             if countryHash.has_key?(tempCode)
                 countryHash[tempCode]['activeProjects'] = country['count']
-                countryHash[tempCode]['name'] = country["recipient_country"]["name"]
+                countryHash[tempCode]['name'] = country["name"]["buckets"][0]['val']
             end
         end
         sortedCountries = {}
