@@ -201,40 +201,40 @@ end
 #####################################################################
 
 #Global Project List Page
-get '/global/:global_code/projects/?' do |n|
-	n = sanitize_input(n,"p")
-	countryAllProjectFilters = get_static_filter_list()
-	region = {}
-	if n == 'ZZ'
-		region[:code] = "ZZ"
-		region[:name] = "Multilateral Organisation"
-	elsif n == 'NS'
-		region[:code] = "NS"
-		region[:name] = "Non Specific Country"
-	else
-		region[:code] = ""
-		region[:name] = "ALL"
-	end
-	#getRegionProjects = get_region_projects(region[:code])
-	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-	settings.devtracker_page_title = 'Global '+region[:name]+' Projects Page'
-	erb :'regions/projects', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-	 		region: region,
-	 		total_projects: getRegionProjects['projects']['count'],
-	 		projects: getRegionProjects['projects']['results'],
-	 		countryAllProjectFilters: countryAllProjectFilters,
-	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
-	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
-	 		actualStartDate: getRegionProjects['actualStartDate'],
- 			plannedEndDate: getRegionProjects['plannedEndDate'],
- 			documentTypes: getRegionProjects['document_types'],
- 			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
- 			reportingOrgTypes: getRegionProjects['reportingOrg_types']
-		}	 			
-end
+# get '/global/:global_code/projects/?' do |n|
+# 	n = sanitize_input(n,"p")
+# 	countryAllProjectFilters = get_static_filter_list()
+# 	region = {}
+# 	if n == 'ZZ'
+# 		region[:code] = "ZZ"
+# 		region[:name] = "Multilateral Organisation"
+# 	elsif n == 'NS'
+# 		region[:code] = "NS"
+# 		region[:name] = "Non Specific Country"
+# 	else
+# 		region[:code] = ""
+# 		region[:name] = "ALL"
+# 	end
+# 	#getRegionProjects = get_region_projects(region[:code])
+# 	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
+# 	settings.devtracker_page_title = 'Global '+region[:name]+' Projects Page'
+# 	erb :'regions/projects', 
+# 		:layout => :'layouts/layout',
+# 		:locals => {
+# 			oipa_api_url: settings.oipa_api_url,
+# 	 		region: region,
+# 	 		total_projects: getRegionProjects['projects']['count'],
+# 	 		projects: getRegionProjects['projects']['results'],
+# 	 		countryAllProjectFilters: countryAllProjectFilters,
+# 	 		highLevelSectorList: getRegionProjects['highLevelSectorList'],
+# 	 		budgetHigherBound: getRegionProjects['project_budget_higher_bound'],
+# 	 		actualStartDate: getRegionProjects['actualStartDate'],
+#  			plannedEndDate: getRegionProjects['plannedEndDate'],
+#  			documentTypes: getRegionProjects['document_types'],
+#  			implementingOrgTypes: getRegionProjects['implementingOrg_types'],
+#  			reportingOrgTypes: getRegionProjects['reportingOrg_types']
+# 		}	 			
+# end
 
 #####################################################################
 #  REGION PAGES
@@ -245,8 +245,10 @@ get '/regions/:region_code/?' do |n|
     region = get_region_details(n)
 	#oipa v3.1
 	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
+	# Solr endpoint for this API call has not been implemented yet
 	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
+	# regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_region_code:('+n+')&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)"}}}&rows=0'))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
