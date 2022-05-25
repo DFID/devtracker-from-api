@@ -4,7 +4,8 @@
     $(document).ready(function() {
         <% if (!project['contact_info'][0].nil? && project['contact_info'][0]['email'].length > 0) %>
             <%
-            tempMail = project['contact_info'][0]['email']
+            tempData = Oj.load(project['contact_info'].first)
+            tempMail = tempData['email']
             tempMailFirst = Array.new
             tempMailSecond = Array.new
             tempMailFirst = tempMail.split('@')
@@ -45,14 +46,14 @@
                         <%#if countryOrRegion[:projectType] == "country" %>
                             <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
                         <%# end %>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title']['narrative'][0]['text'] %>"><%= project['title']['narrative'][0]['text'] %></li>
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title_narrative_first'] %>"><%= project['title_narrative_first'] %></li>
                     </ol>
                 </div>
                 <h2 style="color: rgba(255,255,255,0.5);font-size: 1em;clear: left;margin: 0px 0px -10px 0px;padding-top: 20px;font-weight: normal">
                     <%= reporting_organisation(project) %>
                 </h2>
                 <h1 style="font-size:1.5em">
-                    <%= project['title']['narrative'][0]['text'] %>
+                    <%= project['title_narrative_first'] %>
                 </h1>
             </div>
             <div class="two columns">
@@ -70,7 +71,7 @@
                         <nav>
                             <ul class="tab-bar">
                                 <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
-                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_link'].count %>)</a></li>
                                 <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
                                 <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                     <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>

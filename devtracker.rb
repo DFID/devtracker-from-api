@@ -318,14 +318,15 @@ get '/projects/*/summary' do
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	#fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?fl=iati_identifier,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,sector_vocabulary,sector_code,sector_percentage,sector_narrative_lang,sector_narrative_text,&q=transaction_provider_org_provider_activity_id:('+getProjectIdentifierList(n)['projectIdentifierList']+')&sort=title_narrative_first asc'))['response']['numFound']
 	#Policy markers
-	begin
-		getPolicyMarkers = get_policy_markers(n)
-		puts 'policy markers grabbed'
-	rescue
-		getPolicyMarkers = Array.new
-	end
+	getPolicyMarkers = get_policy_markers(n)
+	# begin
+	# 	getPolicyMarkers = get_policy_markers(n)
+	# rescue
+	# 	getPolicyMarkers = Array.new
+	# end
 	policyMarkerCount = 0
 	getPolicyMarkers.each do |marker|
 		if(marker['significance']['code'].to_i != 0)
@@ -339,7 +340,7 @@ get '/projects/*/summary' do
 			projectId: n,
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
- 			countryOrRegion: countryOrRegion,	 					 			
+ 			countryOrRegion: countryOrRegion,	#check at view level 					 			
  			fundedProjectsCount: fundedProjectsCount,
  			fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,

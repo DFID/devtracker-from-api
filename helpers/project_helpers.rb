@@ -10,12 +10,15 @@ module ProjectHelpers
 
     def check_if_project_exists(projectId)
         begin
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=recipient_country")
+            #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=recipient_country")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=*')
             response = Oj.load(oipa)
-            tempData = response['recipient_country'].select{|a| a['country']['code'].to_s == 'UA'}.length()
-            if(tempData != 0)
-                halt 404, "Activity not found"
-            end    
+            if response['response']['docs'][0].has_key?('recipient_country_code')
+                tempData = response['response']['docs'][0]['recipient_country_code'].select{|a| a.to_s == 'UA'}.length()
+                if(tempData != 0)
+                    halt 404, "Activity not found"
+                end
+            end   
         rescue => e
             halt 404, "Activity not found"
         end
@@ -23,17 +26,18 @@ module ProjectHelpers
     end
 
     def get_h1_project_details(projectId)
-        oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=all")
+        #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=all")
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=*')
         project = JSON.parse(oipa)
-        project['document_links'] = get_h1_project_document_details(projectId,project)
+        #project['document_links'] = get_h1_project_document_details(projectId,project)
         #project['local_document_links'] = get_document_links_local(projectId)
-        puts 'project details grabbed.'
-        project
+        #puts 'project details grabbed.'
+        project['response']['docs'][0]
     end
     
     def get_funded_by_organisations(project)
         #if(is_dfid_project(project['id']))
-            if(is_hmg_project(project['reporting_org']['ref']))
+            if(is_hmg_project(project['response']['']['reporting_org_ref']))
                 fundingOrgs = {}
                 fundingOrgs['orgList'] = project['participating_org'].select{|org| org['role']['code'] == '1'}
                 if(fundingOrgs['orgList'].length > 0)
@@ -56,13 +60,29 @@ module ProjectHelpers
     end
 
     def get_participating_organisations(project)
-        if(is_hmg_project(project['reporting_org']['ref']))
+        if(is_hmg_project(project['reporting_org_ref']))
             participatingOrgs = {}
-            participatingOrgs['Funding'] = project['participating_org'].select{|org| org['role']['code'] == '1'}
-            participatingOrgs['Accountable'] = project['participating_org'].select{|org| org['role']['code'] == '2'}
-            participatingOrgs['Extending'] = project['participating_org'].select{|org| org['role']['code'] == '3'}
-            participatingOrgs['Implementing'] = project['participating_org'].select{|org| org['role']['code'] == '4'}
-            puts 'org list grabbed'
+            participatingOrgs['Funding'] = []
+            participatingOrgs['Accountable'] = []
+            participatingOrgs['Extending'] = []
+            participatingOrgs['Implementing'] = []
+            if project.has_key?('participating_org_narrative')
+                project['participating_org_narrative'].each_with_index do |val, i|
+                    if project['participating_org_role'][i].to_i == 1
+                        participatingOrgs['Funding'].push(val)
+                    elsif project['participating_org_role'][i].to_i == 2
+                        participatingOrgs['Accountable'].push(val)
+                    elsif project['participating_org_role'][i].to_i == 3
+                        participatingOrgs['Extending'].push(val)
+                    elsif project['participating_org_role'][i].to_i == 4
+                        participatingOrgs['Implementing'].push(val)
+                    end
+                end
+            end
+            # participatingOrgs['Funding'] = project['participating_org'].select{|org| org['role']['code'].to_i == '1'}
+            # participatingOrgs['Accountable'] = project['participating_org'].select{|org| org['role']['code'].to_i == '2'}
+            # participatingOrgs['Extending'] = project['participating_org'].select{|org| org['role']['code'].to_i == '3'}
+            # participatingOrgs['Implementing'] = project['participating_org'].select{|org| org['role']['code'].to_i == '4'}
             participatingOrgs
         else
             nil
@@ -106,10 +126,10 @@ module ProjectHelpers
 
     def get_funding_project_count(projectId)
         begin
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
+            #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+projectId+' AND transaction_type:1&rows=1000')
             project = JSON.parse(oipa)
-            puts 'funding project count grabbed'
-            project = project['count']
+            project = project['response']['numFound']
         rescue
             puts 'API error for get_funding_project_count method'
             project = 0
@@ -175,9 +195,10 @@ module ProjectHelpers
     end
 
     def getProjectIdentifierList(projectId)
-        activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activity")
+        #activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activity")
+        activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=related_activity')
         activityDetails = JSON.parse(activityDetails)
-        activityDetails = activityDetails['related_activity']
+        activityDetails = activityDetails['response']['docs'].first['related_activity']
         projectIdentifierList = projectId + ','
         projectIdentifierListArray = Array.new
         projectIdentifierListArray.push(projectId.to_s)
@@ -185,7 +206,7 @@ module ProjectHelpers
             activityDetails.each do |activity|
                 begin
                     if(activity['type']['code'].to_i == 2)
-                        projectIdentifierList = projectIdentifierList + activity['ref'] + ','
+                        projectIdentifierList = projectIdentifierList + activity['ref'] + ' '
                         projectIdentifierListArray.push(activity['ref'].to_s)
                     end
                 rescue
@@ -372,42 +393,53 @@ module ProjectHelpers
 
     def reporting_organisation(project)
         begin
-            organisation = project['reporting_org']['narrative'][0]['text']
+            if project['reporting_org_narrative'].first == 'UK - Department for International Development (DFID)'
+                organisation = 'UK - Foreign, Commonwealth and Development Office (FCDO)'
+            else
+                organisation = project['reporting_org_narrative'].first
+            end
         rescue
-            organisation = project['reporting_org']['type']['name']
+            organisation = 'Not available'
         end
     end
 
     def get_policy_markers(projectID)
-        activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectID}/?format=json")
+        #activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectID}/?format=json")
+        activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectID+'&fl=policy_marker')
         activityDetails = JSON.parse(activityDetails)
-        policyMarkers = activityDetails['policy_markers']
-        if(policyMarkers.length == 0)
-            if(activityDetails['related_activities'].length > 0)
-                activityDetails = activityDetails['related_activities']
-                projectIdentifierList = ''
-                if(activityDetails.length > 0)
-                    activityDetails.each do |activity|
-                        begin
-                            if(activity['type']['code'].to_i == 2)
-                                projectIdentifierList = activity['ref']
-                                break
-                            end
-                        rescue
-                            puts 'rescued'
-                        end
-                    end
-                end
-                getH2LevelData = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectIdentifierList}/?format=json")
-                getH2LevelData = JSON.parse(getH2LevelData)
-                getH2LevelData['policy_markers']
-            else
-                policyMarkers = []
-                policyMarkers
-            end
+        if activityDetails['response']['docs'].first.has_key?('policy_marker')
+            policyMarkers = activityDetails['response']['docs'].first['policy_marker']
+            policyMarkers
         else
+            policyMarkers = []
             policyMarkers
         end
+        # if(policyMarkers.length == 0)
+        #     tempIDList = getProjectIdentifierList(n)['projectIdentifierListArray']
+        #     if(tempIDList.length > 0)///////////////////////////////////////////////
+        #         projectIdentifierList = ''
+        #         if(activityDetails.length > 0)
+        #             tempIDList.each do |activity|
+        #                 begin
+        #                     if(activity['type']['code'].to_i == 2)
+        #                         projectIdentifierList = activity['ref']
+        #                         break
+        #                     end
+        #                 rescue
+        #                     puts 'rescued'
+        #                 end
+        #             end
+        #         end
+        #         getH2LevelData = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectIdentifierList}/?format=json")
+        #         getH2LevelData = JSON.parse(getH2LevelData)
+        #         getH2LevelData['policy_markers']
+        #     else
+        #         policyMarkers = []
+        #         policyMarkers
+        #     end
+        # else
+        #     policyMarkers
+        # end
     end
 
     def get_implementing_orgs(projectId)
@@ -432,21 +464,20 @@ module ProjectHelpers
     end
 
     def get_project_sector_graph_data(projectId)
-        if is_dfid_project(projectId) then
-            puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000"
-            projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
-        else
-            projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
-        end
-        
+        # if is_dfid_project(projectId) then
+        #     projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
+        # else
+        #     projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
+        # end
+        projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND iati_identifier:('+projectId+')&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)"}}}&rows=0')
         projectSectorGraph = JSON.parse(projectSectorGraphJSON)
         c3ReadyStackBarData = Array.new
         
-        if projectSectorGraph['count'] > 0
+        if projectSectorGraph['facets']['count'] > 0
             iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
-            projectSector= projectSectorGraph['results']
+            projectSector= projectSectorGraph['facets']['items']['buckets']
             projectSector.each do |sector|
-                sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
+                sector['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['val'].to_i}[0]['name']
             end
             totalBudgets = projectSector.reduce(0) {|memo, t| memo + t['value'].to_f} 
             c3ReadyStackBarData[0] = ''
@@ -456,8 +487,8 @@ module ProjectHelpers
             projectSector.each do |sector|
                 if topFiveCounter < 11
                     sectorGroupPercentage = (100*sector['value'].to_f/totalBudgets.to_f).round(2)
-                    c3ReadyStackBarData[0].concat('["'+sector['sector']['name']+'",'+sectorGroupPercentage.to_s+"],")
-                    c3ReadyStackBarData[1].concat('"'+sector['sector']['name']+'",')
+                    c3ReadyStackBarData[0].concat('["'+sector['name']+'",'+sectorGroupPercentage.to_s+"],")
+                    c3ReadyStackBarData[1].concat('"'+sector['name']+'",')
                 else
                     totalOtherBudget = totalOtherBudget + sector['value'].to_f
                 end
@@ -941,41 +972,59 @@ module ProjectHelpers
 
     #Get a list of map markers for visualisation for project
     def getProjectMapMarkers(projectId)
-        rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title"))
-        begin
-            projectTitle = rawMapMarkers['title']['narrative'][0]['text']
-        rescue
-            projectTitle = 'N/A'
-        end
-        rawMapMarkers = rawMapMarkers['location']
+        #rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title"))
+        rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=location,title_narrative_first,location_point_pos,location_name_narrative_text'))['response']['docs'].first
         mapMarkers = Array.new
-        ar = 0
-        rawMapMarkers.each do |location|
-            begin
-                tempStorage = {}
-                tempStorage["geometry"] = {}
-                tempStorage['geometry']['type'] = 'Point'
-                tempStorage['geometry']['coordinates'] = Array.new
-                tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-                tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-                tempStorage['iati_identifier'] = location['iati_identifier']
+        if rawMapMarkers.has_key?('location')
+            rawMapMarkers['location'].each_with_index do |val, i|
                 begin
-                    tempStorage['loc'] = location['name']['narrative'][0]['text']
+                    iati_identifier = JSON.parse(val)['iati_identifier']
+                    location = rawMapMarkers['location_point_pos'][i].to_s.gsub("(",'').gsub(")","").split(",")
+                    tempStorage = {}
+                    tempStorage["geometry"] = {}
+                    tempStorage['geometry']['type'] = 'Point'
+                    tempStorage['geometry']['coordinates'] = Array.new
+                    tempStorage['geometry']['coordinates'].push(location[0].to_f)
+                    tempStorage['geometry']['coordinates'].push(location[1].to_f)
+                    tempStorage['iati_identifier'] = iati_identifier
+                    tempStorage['loc'] = rawMapMarkers['location_name_narrative_text'][i]
+                    tempStorage['title'] = rawMapMarkers['title_narrative_first']
+                    mapMarkers.push(tempStorage)
                 rescue
-                    tempStorage['loc'] = 'N/A'
+                    puts 'Data missing in API response.'
                 end
-                begin
-                tempStorage['title'] = projectTitle
-                rescue
-                tempStorage['title'] = 'N/A'
-                end
-                mapMarkers.push(tempStorage)
-                ar = ar + 1
-            rescue
-                puts 'Data missing in API response.'
             end
         end
-        puts 'map markers grabbed'
+        ########
+        # rawMapMarkers = rawMapMarkers['response']['docs'].first['location']
+        # mapMarkers = Array.new
+        # ar = 0
+        # rawMapMarkers.each do |location|
+        #     begin
+        #         tempStorage = {}
+        #         tempStorage["geometry"] = {}
+        #         tempStorage['geometry']['type'] = 'Point'
+        #         tempStorage['geometry']['coordinates'] = Array.new
+        #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+        #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+        #         tempStorage['iati_identifier'] = location['iati_identifier']
+        #         begin
+        #             tempStorage['loc'] = location['name']['narrative'][0]['text']
+        #         rescue
+        #             tempStorage['loc'] = 'N/A'
+        #         end
+        #         begin
+        #         tempStorage['title'] = projectTitle
+        #         rescue
+        #         tempStorage['title'] = 'N/A'
+        #         end
+        #         mapMarkers.push(tempStorage)
+        #         ar = ar + 1
+        #     rescue
+        #         puts 'Data missing in API response.'
+        #     end
+        # end
+        #########
         mapMarkers
     end
 end

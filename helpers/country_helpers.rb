@@ -179,28 +179,46 @@ module CountryHelpers
       # else
       #    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500")
       # end
-      countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_country,recipient_region&format=json&page_size=500")
+      #countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_country,recipient_region&format=json&page_size=500")
+      countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=iati_identifier,recipient_country,recipient_country_*,recipient_region,recipient_region_*')
       countryOrRegionData = JSON.parse(countryOrRegionAPI)
-      data = countryOrRegionData['results']
-      data.each do |d|
-        begin
-          d['recipient_country'][0].delete('id')
-          #This is a special check in place because the API is returning a different name
-          if(d['recipient_country'][0]['country']['code'].to_s == 'PS')
-            d['recipient_country'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
-          end
-        rescue
-        end
-        begin
-          d['recipient_region'][0].delete('id')
-        rescue
-        end
-      end
+      data = countryOrRegionData['response']['docs'][0]
+      # data.each do |d|
+      #   begin
+      #     d['recipient_country'][0].delete('id')
+      #     #This is a special check in place because the API is returning a different name
+      #     if(d['recipient_country'][0]['country']['code'].to_s == 'PS')
+      #       d['recipient_country'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
+      #     end
+      #   rescue
+      #   end
+      #   begin
+      #     d['recipient_region'][0].delete('id')
+      #   rescue
+      #   end
+      # end
       #iterate through the array
       #countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
       #regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
-      countries = data[0]['recipient_country']
-      regions = data[0]['recipient_region']
+
+      if data.has_key?('recipient_country')
+        data['recipient_country'].each do |countryData|
+          countryData = JSON.parse(countryData)
+        end
+        countries = data['recipient_country']
+      else
+        countries = []
+      end
+      if data.has_key?('recipient_region')
+        data['recipient_region'].each do |regionData|
+          regionData = JSON.parse(regionData)
+        end
+        regions = data['recipient_region']
+      else
+        regions = []
+      end
+      # countries = data[0]['recipient_country']
+      #regions = data[0]['recipient_region']
       #project type logic
       if(!countries.empty?) then 
         numberOfCountries = countries.count
@@ -216,15 +234,15 @@ module CountryHelpers
       #single country case
       if(numberOfCountries == 1 && numberOfRegions == 0) then 
         projectType = "country"
-        name = countries[0]['country']['name']
-        code = countries[0]['country']['code']
+        name = data['recipient_country_name'].first
+        code = data['recipient_country_code'].first
         breadcrumbLabel = name
         breadcrumbUrl = "/countries/" + code
       #single region case
       elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
         projectType = "region"
-        name = regions[0]['region']['name']
-        code = regions[0]['region']['code']
+        name = data['recipient_region_name'].first
+        code = data['recipient_region_code'].first
         breadcrumbLabel = name
         breadcrumbUrl = "/regions/" + code
       #other cases - multiple countries/regions
@@ -238,13 +256,24 @@ module CountryHelpers
 
       #generate the text label for the country or region
       globalLabel = []
-      countries.map do |c|
-        country = get_country_code_name(c['country']['code'])
-        globalLabel << country[:name]
+      # countries.map do |c|
+      #   country = get_country_code_name(c['country']['code'])
+      #   globalLabel << country[:name]
+      # end
+      if data.has_key?('recipient_country_code')  
+        data['recipient_country_code'].each do |c|
+          country = get_country_code_name(c)
+          globalLabel << country[:name]
+        end
       end
-      regions.map do |r|
-        globalLabel << r['region']['name']
+      if data.has_key?('recipient_region_name')
+        data['recipient_region_name'].each do |r|
+          globalLabel << r
+        end
       end
+      # regions.map do |r|
+      #   globalLabel << r['region']['name']
+      # end
       label = globalLabel.sort.join(", ")
 
       if (label.length == 0 && projectType == "global") then 
@@ -252,8 +281,8 @@ module CountryHelpers
       end
       puts 'country or region details sgrabbed'
       returnObject = {
-            :recipient_countries  => countries,
-            :recipient_regions => regions,
+            #:recipient_countries  => countries,
+            #:recipient_regions => regions,
             :name => name,
             :code => code,
             :projectType => projectType,

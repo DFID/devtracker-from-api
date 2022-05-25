@@ -230,9 +230,17 @@ module CommonHelpers
 
   def plannedStartDate(dates)
       begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "1"
-        end["iso_date"]
+        # dates.find do |s|
+        #   s["type"]["code"].to_s == "1"
+        # end["iso_date"]
+        td = ''
+        dates.each do |d|
+          d = JSON.parse(d)
+          if d['type']['code'].to_i == 1
+            td = d['iso_date']
+          end
+        end
+        td
       rescue
         nil
       end
@@ -240,9 +248,17 @@ module CommonHelpers
 
   def actualStartDate(dates)
       begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "2"
-        end["iso_date"]
+        # dates.find do |s|
+        #   s["type"]["code"].to_s == "2"
+        # end["iso_date"]
+        td = ''
+        dates.each do |d|
+          d = JSON.parse(d)
+          if d['type']['code'].to_i == 2
+            td = d['iso_date']
+          end
+        end
+        td
       rescue
         nil
       end
@@ -250,9 +266,17 @@ module CommonHelpers
 
     def plannedEndDate(dates)
       begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "3"
-        end["iso_date"]
+        # dates.find do |s|
+        #   s["type"]["code"].to_s == "3"
+        # end["iso_date"]
+        td = ''
+        dates.each do |d|
+          d = JSON.parse(d)
+          if d['type']['code'].to_i == 3
+            td = d['iso_date']
+          end
+        end
+        td
       rescue
         nil
     end   
@@ -260,9 +284,17 @@ module CommonHelpers
 
   def actualEndDate(dates)
       begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "4"
-        end["iso_date"]
+        # dates.find do |s|
+        #   s["type"]["code"].to_s == "4"
+        # end["iso_date"]
+        td = ''
+        dates.each do |d|
+          d = JSON.parse(d)
+          if d['type']['code'].to_i == 4
+            td = d['iso_date']
+          end
+        end
+        td
       rescue
         nil
       end
