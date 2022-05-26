@@ -18,6 +18,12 @@ module CommonHelpers
     return apiLink
   end
 
+  def doc_category_name(catCode)
+    categoryData = Oj.load(File.read('data/DocumentCategory.json'))['data']
+    selectedCategoryName = categoryData.select{|data| data['code'].to_s == catCode.to_s}
+    selectedCategoryName.first['name']
+  end
+
   def add_exclusions_to_solr()
     query = ''
     solrConfig = Oj.load(File.read('data/solr-config.json'))

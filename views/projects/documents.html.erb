@@ -19,16 +19,17 @@
                 </tr>
             </thead>
             <tbody>
-                <% project['document_links'].each do |document| %>
+              <%if project.has_key?('document_link')%>
+                <% project['document_link'].each_with_index do |document, i| %>
                   <%begin%>
                     <%
-                    t_url = document['url']
+                    t_url = project['document_link_url'][i]
                     if t_url.include? "http://iati.fcdo."
                       t_url = t_url.sub! 'http:', 'https:'
                     end
-                    t_url_txt = document['title']['narrative'][0]['text'].gsub(/\.[^.]*$/, '')
-                    t_code = document['title']['narrative'][0]['lang']['code']
-                    t_title = document['title']['narrative'][0]['lang']['name']
+                    t_url_txt = project['document_link_title_narrative_text'][i].gsub(/\.[^.]*$/, '')
+                    t_code = project['document_link_title_narrative_lang'][i]
+                    t_title = project['document_link_title_narrative_text'][i]
                     %>
                     <tr class="result-list-row">
                         <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
@@ -42,10 +43,14 @@
                         <!-- <td scope="col">
                           <%#= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
                         </td> -->
+                        <%
+                          extractedItem = Nokogiri::XML(project['document_link_xml'][i])
+                      		categories = extractedItem.xpath('//category')
+                        %>
                         <td scope="col">
-                          <% document['category'].each do |category| %>
+                          <% categories.each do |category| %>
                             <span class="category">
-                              <%= category['category']['name']%>
+                              <%= doc_category_name(category.attr('code'))%>
                             </span>
                           <% end %>
                         </td>
@@ -54,6 +59,7 @@
                     <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk">site admins</a> know of this.</p>
                   <%end%>
                 <% end %>
+              <%end%>
                 <!-- This part is to handle documents with application/mail formats -->
                 <%# project['local_document_links'].each do |document| %>
                <!-- <tr class="result-list-row">

@@ -21,6 +21,7 @@ require "action_view"
 require 'csv'
 require "sinatra/cookies"
 require "cgi"
+require "nokogiri"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -367,8 +368,9 @@ get '/projects/*/documents/?' do
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
-  	
+	#fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?fl=iati_identifier,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,sector_vocabulary,sector_code,sector_percentage,sector_narrative_lang,sector_narrative_text,&q=transaction_provider_org_provider_activity_id:('+getProjectIdentifierList(n)['projectIdentifierList']+')&sort=title_narrative_first asc'))['response']['numFound']
+	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',

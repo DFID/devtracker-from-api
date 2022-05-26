@@ -30,9 +30,10 @@ module ProjectHelpers
         oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=*')
         project = JSON.parse(oipa)
         #project['document_links'] = get_h1_project_document_details(projectId,project)
-        #project['local_document_links'] = get_document_links_local(projectId)
+        project = project['response']['docs'][0]
+        project['local_document_links'] = get_document_links_local(projectId)
         #puts 'project details grabbed.'
-        project['response']['docs'][0]
+        project
     end
     
     def get_funded_by_organisations(project)
