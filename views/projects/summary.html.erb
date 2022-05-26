@@ -146,7 +146,7 @@
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
         <div style="margin-top: 15px" class="project-country-title"> 
           <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
-          <%if project['location'].length > 0%>
+          <%if project.has_key?('location')%>
             <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link button" style="position: absolute;right: 30px;">CSV</a>
           <%end%>
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
@@ -350,8 +350,8 @@
 
         <% if !budgetYearData.nil? then %>
             <% begin %>
-                <%if !project["default_currency"]["code"].nil? %>
-                    var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
+                <%if !project["default_currency"].nil? %>
+                    var graphCurrency = '<%= Money.new(0,project["default_currency"]).format %>'
                     //var graphCurrency = '<%#= Money.new(0,"GBP").format %>'
                 <% elsif !project["aggregations"]["activity_children"]["budget_currency"].nil? %>
                     var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["budget_currency"]).format %>'
@@ -443,7 +443,7 @@
 
     <div class="row">
         <div class="twelve columns download-link">
-            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
+            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+project['iati_identifier']+'&fl=*'%>" class="api-link button" target="_blank">JSON</a></p>
             <%if !project['last_updated_datetime'].nil?%>
                 <p>Project data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
             <% end %>

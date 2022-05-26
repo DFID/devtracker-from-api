@@ -198,12 +198,17 @@ module ProjectHelpers
         #activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activity")
         activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=related_activity')
         activityDetails = JSON.parse(activityDetails)
-        activityDetails = activityDetails['response']['docs'].first['related_activity']
+        if activityDetails['response']['docs'].first.has_key?('related_activity')
+            activityDetails = activityDetails['response']['docs'].first['related_activity']
+        else
+            activityDetails = []
+        end
         projectIdentifierList = projectId + ','
         projectIdentifierListArray = Array.new
         projectIdentifierListArray.push(projectId.to_s)
         if(activityDetails.length > 0)
             activityDetails.each do |activity|
+                activity = JSON.parse(activity)
                 begin
                     if(activity['type']['code'].to_i == 2)
                         projectIdentifierList = projectIdentifierList + activity['ref'] + ' '
@@ -469,7 +474,7 @@ module ProjectHelpers
         # else
         #     projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
         # end
-        projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND iati_identifier:('+projectId+')&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)"}}}&rows=0')
+        projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND iati_identifier:('+getProjectIdentifierList(projectId)['projectIdentifierList']+')&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"sort":"value desc","facet":{"value":"sum(budget_value)"}}}&rows=0')
         projectSectorGraph = JSON.parse(projectSectorGraphJSON)
         c3ReadyStackBarData = Array.new
         
@@ -736,10 +741,12 @@ module ProjectHelpers
     #End TODO
 
     def location_data_for_csv(projectId)
-        oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title")
-        project = JSON.parse(oipa)
+        #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=location,title")
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + "/activity?q=iati_identifier:"+projectId+"&fl=title_narrative_first,location")
+        project = JSON.parse(oipa)['response']['docs'].first
         locationArray = Array.new
         project['location'].each do |location|
+            location = JSON.parse(location)
             locationHash = {}
             begin
                 locationHash['IATI Identifier'] = location['iati_identifier']
@@ -747,7 +754,7 @@ module ProjectHelpers
                 locationHash['IATI Identifier'] = 'N/A'
             end
             begin
-                locationHash['Activity Title'] = project['title']['narrative'][0]['text']
+                locationHash['Activity Title'] = project['title_narrative_first']
             rescue
                 locationHash['Activity Title'] = 'N/A'
             end
@@ -757,17 +764,17 @@ module ProjectHelpers
                 locationHash['Location Reach'] = 'N/A'
             end
             begin
-               locationHash['Location Name'] = location['name']['narrative'][0]['text'] 
+               locationHash['Location Name'] = location['name']['narrative'].first['text'] 
             rescue
                 locationHash['Location Name'] = 'N/A'
             end
             begin
-                locationHash['Location Description'] = location['description']['narrative'][0]['text']
+                locationHash['Location Description'] = location['description']['narrative'].first['text']
             rescue
                 locationHash['Location Description'] = 'N/A'
             end
             begin
-                locationHash['Administrative Vocabulary'] = location['administrative'][0]['code']
+                locationHash['Administrative Vocabulary'] = location['administrative'].first['code']
             rescue
                 locationHash['Administrative Vocabulary'] = 'N/A'
             end
