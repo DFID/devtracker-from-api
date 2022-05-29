@@ -765,13 +765,13 @@ module CommonHelpers
 
   def get_project_component_data(project)
     components = Array.new
-    project['related_activity'].each do |component|
-      if(component['ref'].to_s.include? project['iati_identifier'].to_s)
+    project['related_activity_ref'].each do |component|
+      if(component.to_s.include? project['iati_identifier'].to_s)
         begin
-          pullActivityData = get_h1_project_details(component['ref'])
+          pullActivityData = get_h1_project_details(component)
           componentData = {}
           begin
-            componentData['title'] = pullActivityData['title']['narrative'][0]['text']
+            componentData['title'] = pullActivityData['title_narrative_first']
           rescue
             componentData['title'] = 'N/A'
           end
