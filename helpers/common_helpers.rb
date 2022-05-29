@@ -780,28 +780,15 @@ module CommonHelpers
           rescue
             componentData['title'] = 'N/A'
           end
-          dates = pullActivityData['activity_date']
-          if (dates.length > 0)
-            begin
-              if(!dates.select{|activityDate| activityDate['type']['code'] == '2'}.first.nil?)
-                componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '2'}.first['iso_date']
-              elsif(!dates.select{|activityDate| activityDate['type']['code'] == '1'}.first.nil?)
-                componentData['startDate'] = dates.select{|activityDate| activityDate['type']['code'] == '1'}.first['iso_date']
-              else
-                componentData['startDate'] = 'N/A'  
-              end
-            rescue
+          if (pullActivityData.has_key?('activity_date'))
+            if pullActivityData.has_key?('activity_date_start_common')
+              componentData['startDate'] = pullActivityData['activity_date_start_common']
+            else
               componentData['startDate'] = 'N/A'
             end
-            begin
-              if(!dates.select{|activityDate| activityDate['type']['code'] == '4'}.first.nil?)
-                componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '4'}.first['iso_date']
-              elsif(!dates.select{|activityDate| activityDate['type']['code'] == '3'}.first.nil?)
-                componentData['endDate'] = dates.select{|activityDate| activityDate['type']['code'] == '3'}.first['iso_date']
-              else
-                componentData['endDate'] = 'N/A'  
-              end
-            rescue
+            if pullActivityData.has_key?('activity_date_end_common')
+              componentData['endDate'] = pullActivityData['activity_date_end_common']
+            else
               componentData['endDate'] = 'N/A'
             end
           else
