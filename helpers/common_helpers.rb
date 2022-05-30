@@ -330,11 +330,11 @@ module CommonHelpers
     end
   end
 
-  def convert_transactions_for_csv(proj_id,transaction_type)
+  def convert_transactions_for_csv(proj_id,transaction_type,componentListAsString)
     if transaction_type == '0'
       get_project_yearwise_budget(proj_id)
     else
-      get_transaction_details(proj_id,transaction_type)
+      get_transaction_details(proj_id,transaction_type,componentListAsString)
     end
   end
 
@@ -805,6 +805,20 @@ module CommonHelpers
     components
   end
 
+  def get_componentListAsString(projectid, componentData)
+    componentListAsString = '(' + projectid + ' '
+    puts '-------'
+    puts componentData.length 
+    if componentData.length > 0
+      componentData.each do |c|
+        componentListAsString = componentListAsString + c['activityID'] + ' '
+      end
+    end
+    componentListAsString = componentListAsString + ')'
+    puts componentListAsString
+    componentListAsString
+  end
+
   # Get country bounds for location country page
     def getCountryBoundsForLocation(countryList)
       countryMappedFile = JSON.parse(File.read('data/country_ISO3166_mapping.json'))
@@ -834,5 +848,10 @@ module CommonHelpers
         end
       end
       geoJsonData
+    end
+
+    def get_financial_year(transactionDate)
+      td = Date.new(transactionDate)
+      puts td.month
     end
 end

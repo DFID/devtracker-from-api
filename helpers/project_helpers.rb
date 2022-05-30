@@ -25,6 +25,22 @@ module ProjectHelpers
         return true
     end
 
+    def get_org_text(transaction)
+        begin
+          if transaction.has_key?('transaction_receiver_org_ref')
+            i = transaction['participating_org_ref'].find_index(transaction['transaction_receiver_org_ref'])
+            participating_org_type = transaction['participating_org_type'][i]
+            orgData = Oj.load(File.read('data/OrganisationType.json'))['data']
+            selectedOrgData = orgData.select{|data| data['code'].to_s == participating_org_type.to_s}
+            selectedOrgData.first['name']
+          else
+            'N/A'
+          end
+        rescue
+          'N/A'
+        end
+      end
+
     def get_h1_project_details(projectId)
         #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=all")
         oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectId+'&fl=*')
@@ -128,34 +144,23 @@ module ProjectHelpers
     def get_funding_project_count(projectId)
         begin
             #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+projectId+' AND transaction_type:1&rows=1000')
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+projectId+' AND transaction_type:1')
             project = JSON.parse(oipa)
             project = project['response']['numFound']
         rescue
-            puts 'API error for get_funding_project_count method'
             project = 0
         end
     end
 
     def get_funded_project_count(projectId)
-        activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json")
-        activityDetails = JSON.parse(activityDetails)
-        activityDetails = activityDetails['related_activities']
-        projectIdentifierList = projectId + ','
-        if(activityDetails.length > 0)
-            activityDetails.each do |activity|
-                begin
-                    if(activity['type']['code'].to_i == 2)
-                        projectIdentifierList = projectIdentifierList + activity['ref'] + ','
-                    end
-                rescue
-                end
-            end
+        begin
+            #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+projectId+' AND transaction_type:3')
+            project = JSON.parse(oipa)
+            project = project['response']['numFound']
+        rescue
+            project = 0
         end
-        projectIdentifierList = projectIdentifierList[0,projectIdentifierList.length-1]
-        oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&fields=url")
-        project = JSON.parse(oipa)
-        project = project['count']
     end
 
     def get_funding_project_details(projectId)
@@ -226,7 +231,7 @@ module ProjectHelpers
         combinedResponse
     end
 
-    def get_transaction_details(projectId,transactionType)
+    def get_transaction_details(projectId,transactionType,componentListAsString)
         if is_dfid_project(projectId) then
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
@@ -234,21 +239,23 @@ module ProjectHelpers
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
+        oipaTransactionURL = settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+componentListAsString+' AND transaction_type:('+transactionType+')&fl=*'
         # Get the initial transaction count based on above API call
-        initialPull = JSON.parse(RestClient.get oipaTransactionURL + "&page_size=20")
-        transactionsJSON = initialPull['results']
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL + "&rows=20")
+        transactionsJSON = initialPull['response']['docs']
         # Process remaining transactions if transaction count is more than 20
-        if (initialPull['count'] > 20)
-            pages = (initialPull['count'].to_f/20).ceil
+        if (initialPull['response']['numFound'] > 20)
+            pages = (initialPull['response']['numFound'].to_f/20).ceil
             for page in 2..pages do
-              tempData = JSON.parse(RestClient.get  oipaTransactionURL + "&page_size=20&page=#{page}")
-              tempData['results'].each do |item|
+              tempData = JSON.parse(RestClient.get  oipaTransactionURL + "&rows=20&page=#{page}")
+              tempData['response']['docs'].each do |item|
                 transactionsJSON.push(item)
               end
             end
         end
         # Filter out wrong transaction types
-        transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+        #transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+        transactionsJSON
     end
 
     def get_project_yearwise_budget(projectId)
@@ -650,8 +657,13 @@ module ProjectHelpers
     end
 
     
-    def get_sum_transaction(transactionType)
-        summedBudgets = transactionType.reduce(0) {|memo, t| memo + t['value'].to_f}
+    def get_sum_transaction(transactions)
+        #summedBudgets = transactions.reduce(0) {|memo, t| memo + t['value'].to_f}
+        summedBudgets = 0
+        transactions.each do |t|
+            summedBudgets = summedBudgets + t['transaction_value']
+        end
+        summedBudgets
     end
 
     def get_sum_budget(projectBudgets)
@@ -817,118 +829,74 @@ module ProjectHelpers
     def transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
         if transactionType == '3'
             tempStorage = Array.new
-            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+            transactionsForCSV.sort{ |a,b| b['transaction_date_iso_date']  <=> a['transaction_date_iso_date'] }.each do |transaction|
                 tempHash = {}
                 project2 = get_h1_project_details(projID)
-                if !transaction['receiver_organisation'].nil?
-                    if transaction['receiver_organisation']['ref'] == 'Excluded' || transaction['receiver_organisation']['ref'] == 'Not available'
-                        tempHash['Receiver Organisation'] = transaction['receiver_organisation']['narrative'][0]['text']
-                    elsif transaction['receiver_organisation']['ref'] != ''
-                        tempOrg = project2['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s} 
-                        if !tempOrg.nil? && tempOrg.length > 0
-                           tempHash['Receiver Organisation'] = tempOrg[0]['narrative'][0]['text']
-                        else
-                            tempHash['Receiver Organisation'] = "N/A"
-                        end
-                    else
-                        begin
-                             tempHash['Receiver Organisation'] = transaction['receiver_organisation']['narrative'][0]['text']
-                         rescue 
-                            tempHash['Receiver Organisation'] = "N/A" 
-                         end 
-                    end 
+                if transaction.has_key?('transaction_receiver_org_narrative')
+                    tempHash['Receiver Organisation'] = transaction['transaction_receiver_org_narrative']
                 else
                     tempHash['Receiver Organisation'] = "N/A"
                 end
-                if !transaction['receiver_organisation'].nil?
-                    if !transaction['receiver_organisation']['type'].nil?
-                        tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
-                    else
-                        tempOrg = project2['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
-                        if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
-                            tempHash['Organisation Type'] = tempOrg[0]['type']['name']
-                        else
-                            tempHash['Organisation Type'] = "N/A"    
-                        end
-                   end
+                if transaction.has_key?('transaction_receiver_org_narrative')
+                    tempHash['Organisation Type'] = get_org_text(transaction) 
                 else
                    tempHash['Organisation Type'] = "N/A" 
                 end
-                if is_dfid_project(transaction['activity']['iati_identifier'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
+                if is_dfid_project(transaction['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
-                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = transaction['value']
-                tempHash['Currency'] = transaction['currency']['code']
+                tempHash['Date'] = Date.parse(transaction['transaction_date_iso_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['transaction_value']
+                tempHash['Currency'] = transaction['transaction_value_currency']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
         elsif transactionType == '2'
             tempStorage = Array.new
-            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+            transactionsForCSV.sort{ |a,b| b['transaction_date_iso_date']  <=> a['transaction_date_iso_date'] }.each do |transaction|
                 tempHash = {}
                 project2 = get_h1_project_details(projID)
-                if !transaction['receiver_organisation'].nil?
-                    if !transaction['receiver_organisation']['ref'] != ''
-                        tempOrg = project2['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s} 
-                        if !tempOrg.nil? && tempOrg.length > 0
-                           tempHash['Receiver Organisation'] = tempOrg[0]['narrative'][0]['text']
-                        else
-                            tempHash['Receiver Organisation'] = "N/A"
-                        end
-                    else 
-                        tempHash['Receiver Organisation'] = "N/A" 
-                    end 
+                if transaction.has_key?('transaction_receiver_org_narrative')
+                    tempHash['Receiver Organisation'] = transaction['transaction_receiver_org_narrative']
                 else
                     tempHash['Receiver Organisation'] = "N/A"
                 end
-                if !transaction['receiver_organisation'].nil?
-                    if !transaction['receiver_organisation']['type'].nil?
-                        tempHash['Organisation Type'] = transaction['receiver_organisation']['type']['name']
-                    else
-                        tempOrg = project2['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}
-                        if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s.length != 0 && transaction['receiver_organisation']['ref'].to_s != 'NULL'
-                            tempHash['Organisation Type'] = tempOrg[0]['type']['name']
-                        else
-                            tempHash['Organisation Type'] = "N/A"    
-                        end
-                   end
+                if transaction.has_key?('transaction_receiver_org_narrative')
+                    tempHash['Organisation Type'] = get_org_text(transaction) 
                 else
                    tempHash['Organisation Type'] = "N/A" 
                 end
                 #tempHash['Activity Description'] = get_h2Activity_title(h2Activities,transaction['activity']['iati_identifier'])
-                if is_dfid_project(transaction['activity']['iati_identifier'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
+                if is_dfid_project(transaction['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
-                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = transaction['value']
-                tempHash['Currency'] = transaction['currency']['code']
+                tempHash['Date'] = Date.parse(transaction['transaction_date_iso_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['transaction_value']
+                tempHash['Currency'] = transaction['transaction_value_currency']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
         elsif transactionType == '1'
             tempStorage = Array.new
-            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+            transactionsForCSV.sort{ |a,b| b['transaction_date_iso_date']  <=> a['transaction_date_iso_date'] }.each do |transaction|
                 tempHash = {}
-                if !transaction['description'].nil?
-                    tempHash['Activity Description'] = transaction['description']['narrative'][0]['text']
+                if transaction.has_key?('activity_description_narrative')
+                    tempHash['Activity Description'] = transaction['activity_description_narrative']
                 else
                     tempHash['Activity Description'] = "N/A"
                 end
-                if transaction['provider_organisation'].nil?
-                    tempHash['Provider'] = 'N/A'
-                elsif transaction['provider_organisation']['narrative'][0].nil?
-                    tempHash['Provider'] = 'N/A'
+                if transaction.has_key?('transaction_provider_org_narrative')
+                    tempHash['Provider'] = transaction['transaction_provider_org_narrative']
                 else
-                    tempHash['Provider'] = transaction['provider_organisation']['narrative'][0]['text']
+                    tempHash['Provider'] = "N/A"
                 end
-                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = transaction['value']
-                tempHash['Currency'] = transaction['currency']['code']
+                tempHash['Date'] = Date.parse(transaction['transaction_date_iso_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['transaction_value']
+                tempHash['Currency'] = transaction['transaction_value_currency']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)
@@ -946,31 +914,27 @@ module ProjectHelpers
             tempTransactions = hash_to_csv(tempStorage)
         else
             tempStorage = Array.new
-            transactionsForCSV.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction|
+            transactionsForCSV.sort{ |a,b| b['transaction_date_iso_date']  <=> a['transaction_date_iso_date'] }.each do |transaction|
                 tempHash = {}
-                if !transaction['description'].nil?
-                    tempHash['Activity Description'] = transaction['description']['narrative'][0]['text']
+                if transaction.has_key?('activity_description_narrative')
+                    tempHash['Activity Description'] = transaction['activity_description_narrative']
                 else
                     tempHash['Activity Description'] = "N/A"
                 end
                 #tempHash['Activity Description'] = transaction['description']
-                if !transaction['receiver_organisation'].nil?
-                    if transaction['receiver_organisation']['narrative'].length > 0 
-                        tempHash['Receiver Organisation'] = transaction['receiver_organisation']['narrative'][0]['text']
-                    else 
-                        tempHash['Receiver Organisation'] = "N/A" 
-                    end 
+                if transaction.has_key?('transaction_receiver_org_narrative')
+                    tempHash['Receiver Organisation'] = transaction['transaction_receiver_org_narrative']
                 else
                     tempHash['Receiver Organisation'] = "N/A"
                 end
-                if is_dfid_project(transaction['activity']['iati_identifier'])
-                    tempHash['IATI Activity ID'] = transaction['activity']['iati_identifier']
+                if is_dfid_project(transaction['iati_identifier'])
+                    tempHash['IATI Activity ID'] = transaction['iati_identifier']
                 else
                     tempHash['IATI Activity ID'] = 'N/A'
                 end
-                tempHash['Date'] = Date.parse(transaction['transaction_date']).strftime("%d %b %Y")
-                tempHash['Value'] = transaction['value']
-                tempHash['Currency'] = transaction['currency']['code']
+                tempHash['Date'] = Date.parse(transaction['transaction_date_iso_date']).strftime("%d %b %Y")
+                tempHash['Value'] = transaction['transaction_value']
+                tempHash['Currency'] = transaction['transaction_value_currency']
                 tempStorage.push(tempHash)
             end
             tempTransactions = hash_to_csv(tempStorage)

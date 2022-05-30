@@ -391,40 +391,42 @@ get '/projects/*/transactions/?' do
 	# get the project data from the API
 	project = get_h1_project_details(n)
 	componentData = get_project_component_data(project)
-		
+	componentListAsString = get_componentListAsString(n, componentData)
+
 	# get the transactions from the API
-  	incomingFunds = get_transaction_details(n,"1")
+  	incomingFunds = get_transaction_details(n,"1", componentListAsString)
 
   	# get the incomingFund transactions from the API
-  	commitments = get_transaction_details(n,"2")
+  	commitments = get_transaction_details(n,"2", componentListAsString)
 
   	# get the disbursement transactions from the API
-  	disbursements = get_transaction_details(n,"3")
+  	disbursements = get_transaction_details(n,"3", componentListAsString)
 
   	# get the expenditure transactions from the API
-  	expenditures = get_transaction_details(n,"4")
+  	expenditures = get_transaction_details(n,"4", componentListAsString)
 
   	# get the Interest Repayment transactions from the API
-  	interestRepayment = get_transaction_details(n,"5")
+  	interestRepayment = get_transaction_details(n,"5", componentListAsString)
 
   	# get the Loan Repayment transactions from the API
-  	loanRepayment = get_transaction_details(n,"6")
+  	loanRepayment = get_transaction_details(n,"6", componentListAsString)
 
   	# get the Purchase of Equity transactions from the API
-  	purchaseEquity = get_transaction_details(n,"8")
+  	purchaseEquity = get_transaction_details(n,"8", componentListAsString)
 
   	# get yearly budget for H1 Activity from the API
-	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	projectYearWiseBudgets= get_project_yearwise_budget(n) #Not yet implemented at solr end
 
 	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
     # get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	fundingProjectsCount = get_funding_project_count(componentListAsString)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
-	
+	#fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = get_funded_project_count(componentListAsString)
+
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',

@@ -16,15 +16,15 @@
            </div>  
 
            <div class="trans-header-right">
-              <% if transactionsList.uniq{|m| m['currency']['code']}.count == 1%>
+              <%# if transactionsList.uniq{|m| m['currency']['code']}.count == 1%>
                 <% totalTransactionValue=get_sum_transaction(transactionsList).to_f %>
                 <div class="<%= totalTransactionValue.round(0) < 0 ? 'negative' : ''%> float-right trans-type-value">
                   <%begin%>
-                  <%= Money.new(totalTransactionValue.round(0)*100, project['activity_plus_child_aggregation']['activity_children'][transactionCurrencyParameter]).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
+                  <%= Money.new(totalTransactionValue.round(0)*100, transactionsList.first['transaction_value_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false)%>
                   <%rescue
                   end%><a href="<%= csvurl%>" class="api-link button">CSV</a>
                 </div>
-              <%end%>
+              <%#end%>
            </div>        
       </div> 
       <table class="transactions-tablev2 display" style="width:100%; display: none">
@@ -50,55 +50,52 @@
           </tr>
         </thead>
         <tbody>
-          <% transactionsList.sort{ |a,b| b['transaction_date']  <=> a['transaction_date'] }.each do |transaction| %>
+          <% transactionsList.sort{ |a,b| b['transaction_date_iso_date']  <=> a['transaction_date_iso_date'] }.each do |transaction| %>
             <tr>
               <%if transactionTypeTitle == 'Commitments' %>                
               <%elsif transactionTypeTitle == 'Disbursements'%>
               <%else%>
-                <td><%= if !transaction['description'].nil? then transaction['description']['narrative'][0]['text'] else "" end %></td>
+                <td><%= if transaction.has_key?('transaction_description_narrative') then transaction['transaction_description_narrative'].first else "" end %></td>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' && transactionTypeTitle != 'Commitments' && transactionTypeTitle != 'Disbursements'%>
-                <td><%= if !transaction['receiver_organisation'].nil? then if transaction['receiver_organisation']['narrative'].length > 0 then transaction['receiver_organisation']['narrative'][0]['text'] else "" end else "" end %></td>
+                <td><%= if transaction.has_key?('transaction_receiver_org_narrative_text') then transaction['transaction_receiver_org_narrative_text'].first else "" end %></td>
               <%end%>
               <%if transactionTypeTitle == 'Disbursements' || transactionTypeTitle == 'Commitments' %>
-                <%if !transaction['receiver_organisation'].nil?%>
-                  <%if transaction['receiver_organisation']['ref'] == 'Excluded' || transaction['receiver_organisation']['ref'] == 'Not available'%>
-                    <td><%= transaction['receiver_organisation']['narrative'][0]['text'] %></td>
-                  <%elsif transaction['receiver_organisation']['ref'] != ''%>
-                    <%tempOrg = project['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
-                    <td><%if !tempOrg.nil? && tempOrg.length > 0%><%= tempOrg[0]['narrative'][0]['text']%><%else%><%= "N/A" %><%end%></td>
+                <%if transaction.has_key?('transaction_receiver_org_narrative_text')%>
+                  <%if transaction['transaction_receiver_org_narrative_text'].first == 'Excluded' || transaction['transaction_receiver_org_narrative_text'].first == 'Not available'%>
+                    <td><%= transaction['transaction_receiver_org_narrative_text'].first %></td>
+                  <%elsif transaction.has_key?('transaction_receiver_org_ref')%>
+                    <td><%= transaction['transaction_receiver_org_narrative_text'].first %></td>
                   <%else%>
-                    <td><%= if transaction['receiver_organisation']['narrative'].length > 0 then transaction['receiver_organisation']['narrative'][0]['text'] else "" end %></td>
+                    <td></td>
                   <%end%>
                 <%else%>
                   <td>N/A</td>
                 <%end%>
-                <%if !transaction['receiver_organisation'].nil? %>
-                  <%if !transaction['receiver_organisation']['type'].nil? %>
-                    <td><%= transaction['receiver_organisation']['type']['name'] %></td>
-                  <%else%>
-                    <%tempOrg = project['participating_org'].select{|p| p['ref'].to_s == transaction['receiver_organisation']['ref'].to_s}%>
-                    <td><%begin%>
-                      <%if !tempOrg.nil? && tempOrg.length > 0 && transaction['receiver_organisation']['ref'].to_s != ''%><%= tempOrg[0]['type']['name']%><%else%><%= "N/A" %><%end%><%rescue%><%= "N/A" %><%end%></td>  
+                <%if transaction.has_key?('transaction_receiver_org_narrative_text') %>
+                  <%begin%>
+                    <td><%= get_org_text(transaction) %></td>
+                  <%rescue%>
+                    <td>N/A</td>
                   <%end%>
                 <%else%>
                   <td>N/A</td>
                 <%end%>
               <%end%>
               <%if transactionTypeTitle != 'Incoming Funds' %> 
-                <td><%= is_dfid_project(transaction['activity']['iati_identifier']) ? transaction['activity']['iati_identifier'] : ''  %></td>
+                <td><%= is_dfid_project(transaction['iati_identifier']) ? transaction['iati_identifier'] : ''  %></td>
               <%end%>
               <%if transactionTypeTitle == 'Incoming Funds' %>
               <td><%= 
-              if transaction['provider_organisation'].nil? then '' 
-                else if transaction['provider_organisation']['narrative'][0].nil? then '' 
-                else transaction['provider_organisation']['narrative'][0]['text'] end + 
-              if transaction['provider_organisation']['provider_activity_id'].nil? then '' else " (" + transaction['provider_organisation']['provider_activity_id'] + ")" end  end   %></td>
+              if !transaction.has_key?('transaction_provider_org_ref') then '' 
+              else if !transaction.has_key?('transaction_provider_org_narrative') then '' 
+              else transaction['transaction_provider_org_narrative'] end + 
+              if transaction.has_key?('transaction_provider_org_ref') then " (" + transaction['transaction_provider_org_ref'] + ")" else '' end  end   %></td>
               <%end%>
-              <td data-order="<%= Date.parse(transaction['transaction_date']).strftime("%Q")%>"><%= Date.parse(transaction['transaction_date']).strftime("%d %b %Y")%></td>
-              <td class="<%= transaction['value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
+              <td data-order="<%= Date.parse(transaction['transaction_date_iso_date']).strftime("%Q")%>"><%= Date.parse(transaction['transaction_date_iso_date']).strftime("%d %b %Y")%></td>
+              <td class="<%= transaction['transaction_value'].to_f.round(0) < 0 ? 'negative' : ''%>" style="text-align:right;">
               <%begin%>
-                <%= Money.new(transaction['value'].to_f.round(0)*100, transaction['currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <%= Money.new(transaction['transaction_value'].to_f.round(0)*100, transaction['transaction_value_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 <%rescue
                 end%>
               </td>
