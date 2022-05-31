@@ -497,7 +497,7 @@ end
 get '/sector/?' do
 	# Get the high level sector data from the API
   	settings.devtracker_page_title = 'Sector Page'
-  	erb :'sector/index', 
+  	erb :'sector/index',
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
@@ -513,7 +513,7 @@ get '/sector/:high_level_sector_code/?' do
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+ 			category_list: sector_parent_data_list("category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
  		}		
 end
 
@@ -527,7 +527,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+ 			sector_list: sector_parent_data_list("sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
 
@@ -918,7 +918,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		searchType: 'S',
 		breadcrumbURL: '/sector',
 		breadcrumbText: 'Aid by Department',
-		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+		sector_list: sector_parent_data_list("sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
 		sectorData: sectorData
 	}
 end
@@ -962,7 +962,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 		searchType: 'S',
 		breadcrumbURL: '/sector',
 		breadcrumbText: 'Aid by Sector',
-		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+		sector_list: sector_parent_data_list("sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  		sectorData: sectorData
 	}	
 end

@@ -26,13 +26,17 @@ module SectorHelpers
 	def get_5_dac_sector_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json")
+		#sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json")
+		sectorValuesJSON = RestClient.get api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		#parsedResponse = JSON.parse(sectorValuesJSON)
+		#sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+		sectorValuesJSON
 	end
 	
 	def top_5_sectors_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		apiResponse = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		apiResponse = RestClient.get api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
 		parsedResponse = JSON.parse(apiResponse)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSectorData = {}
@@ -157,17 +161,18 @@ module SectorHelpers
 	end
 
 	# Return all of the DAC Sector codes associated with the parent sector code	- can be used for 3 digit (category) or 5 digit sector codes
-	def sector_parent_data_list(apiUrl, pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
-		sectorValuesJSON = RestClient.get  api_simple_log(apiUrl + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
- 		sectorValues  = JSON.parse(sectorValuesJSON)
-  		sectorValues  = sectorValues['results']
+	def sector_parent_data_list(pageType, code, description, parentCodeType, parentDescriptionType, urlHighLevelSectorCode, urlCategoryCode)
+		#sectorValuesJSON = RestClient.get  api_simple_log(apiUrl + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
+		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+settings.current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+settings.current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		sectorValues  = JSON.parse(sectorValuesJSON)
+  		sectorValues  = sectorValues['facets']['items']['buckets']
   		#sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		sectorHierarchy = map_sector_data()
 		# Create a data structure that holds: budget, child code, child description & parent code
 		budgetData = []
 		sectorValues.each do |elem|
 			begin
-			selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
+			selectedData = sectorHierarchy.find {|item| item['Code (L3)'].to_s == elem["val"]}
 			tempData = {}
 			tempData[:code] = selectedData[code]
 			tempData[:name] = selectedData[description]
@@ -183,20 +188,6 @@ module SectorHelpers
 				budgetData.push(tempData)
 			end
 		end
-        # budgetData = sectorValues.map do |elem|
-		# 	{  
-		# 		:code 		 => sectorHierarchy.find do |source|
-		# 							source["Code (L3)"].to_s == elem["sector"]["code"] 
-		# 						end[code],   
-		# 		:name 		 => sectorHierarchy.find do |source|
-		# 							source["Code (L3)"].to_s == elem["sector"]["code"]
-		# 						end[description], 
-		# 		:parentCode   => sectorHierarchy.find do |source|
-		# 							source["Code (L3)"].to_s == elem["sector"]["code"]
-		# 						end[parentCodeType],                      			
-		# 		:budget       => elem["value"]      			                         			           			                          
-		# 	} 
-	    #  end
 
 	     #TODO - test the input to see that there is no bad data comming in
 		if pageType == "category"
