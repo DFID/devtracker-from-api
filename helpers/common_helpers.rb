@@ -765,43 +765,45 @@ module CommonHelpers
 
   def get_project_component_data(project)
     components = Array.new
-    project['related_activity_ref'].each do |component|
-      if(component.to_s.include? project['iati_identifier'].to_s)
-        begin
-          pullActivityData = get_h1_project_details(component)
-          componentData = {}
+    if project.has_key?('related_activity_ref')
+      project['related_activity_ref'].each do |component|
+        if(component.to_s.include? project['iati_identifier'].to_s)
           begin
-            componentData['title'] = pullActivityData['title_narrative_first']
-          rescue
-            componentData['title'] = 'N/A'
-          end
-          begin
-            componentData['activityID'] = pullActivityData['iati_identifier']
-          rescue
-            componentData['title'] = 'N/A'
-          end
-          if (pullActivityData.has_key?('activity_date'))
-            if pullActivityData.has_key?('activity_date_start_common')
-              componentData['startDate'] = pullActivityData['activity_date_start_common']
+            pullActivityData = get_h1_project_details(component)
+            componentData = {}
+            begin
+              componentData['title'] = pullActivityData['title_narrative_first']
+            rescue
+              componentData['title'] = 'N/A'
+            end
+            begin
+              componentData['activityID'] = pullActivityData['iati_identifier']
+            rescue
+              componentData['title'] = 'N/A'
+            end
+            if (pullActivityData.has_key?('activity_date'))
+              if pullActivityData.has_key?('activity_date_start_common')
+                componentData['startDate'] = pullActivityData['activity_date_start_common']
+              else
+                componentData['startDate'] = 'N/A'
+              end
+              if pullActivityData.has_key?('activity_date_end_common')
+                componentData['endDate'] = pullActivityData['activity_date_end_common']
+              else
+                componentData['endDate'] = 'N/A'
+              end
             else
               componentData['startDate'] = 'N/A'
-            end
-            if pullActivityData.has_key?('activity_date_end_common')
-              componentData['endDate'] = pullActivityData['activity_date_end_common']
-            else
               componentData['endDate'] = 'N/A'
             end
-          else
-            componentData['startDate'] = 'N/A'
-            componentData['endDate'] = 'N/A'
+            components.push(componentData)
+          rescue
+            puts 'Component does not exist in OIPA yet.'
           end
-          components.push(componentData)
-        rescue
-          puts 'Component does not exist in OIPA yet.'
         end
       end
+      components = components.sort_by{|component| component['activityID'].to_s}
     end
-    components = components.sort_by{|component| component['activityID'].to_s}
     components
   end
 

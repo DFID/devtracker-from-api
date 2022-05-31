@@ -456,15 +456,20 @@ get '/projects/*/partners/?' do
 	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
 
+	# Get component lists as well
+	componentData = get_project_component_data(project)
+	componentListAsString = get_componentListAsString(n, componentData)
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
-  	# get the funding projects from the API
-  	fundingProjectsData = get_funding_project_details(n)
-  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+  	# get the funding projects from the API. This API returns project(s) that is/are funding this target project
+  	#fundingProjectsData = get_funding_project_details(n, componentListAsString)
+  	#fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+	fundingProjects = get_funding_project_details2(n, componentListAsString)
 
-	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n)
+	# get the partner/funded projects from the API. This API returns project(s) that is/are being funded by this project
+	#fundedProjectsData = get_funded_project_details(n)
+	fundedProjectsData = get_funded_project_details2(n, componentListAsString)
 
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
@@ -473,10 +478,12 @@ get '/projects/*/partners/?' do
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
 			countryOrRegion: countryOrRegion, 			
- 			fundedProjects: fundedProjectsData,
+ 			#fundedProjects: fundedProjectsData,
+			fundedProjects2: fundedProjectsData,
  			fundedProjectsCount: fundedProjectsData.length,
- 			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']
+ 			#fundingProjects: fundingProjects,
+			fundingProjects2: fundingProjects,
+ 			fundingProjectsCount: fundingProjects.length
  		}
 end
 

@@ -141,6 +141,12 @@ module ProjectHelpers
         project = project['results']
     end
 
+    def get_project_title_description(projectID)
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=iati_identifier:'+projectID+'&fl=iati_identifier,reporting_org_ref,reporting_org_narrative,title_narrative_first,description_narrative_text,default_currency')
+        project = JSON.parse(oipa)
+        project = project['response']['docs'][0]
+    end
+
     def get_funding_project_count(projectId)
         begin
             #oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
@@ -163,9 +169,53 @@ module ProjectHelpers
         end
     end
 
-    def get_funding_project_details(projectId)
+    def get_funding_project_details(projectId, componentListAsString)
         fundingProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" )
+        #fundingProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+componentListAsString+' AND transaction_type:1&rows=1000' )
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
+    end
+
+    def get_funding_project_details2(projectId, componentListAsString)
+        fundingProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'transaction?q=iati_identifier:'+componentListAsString+' AND transaction_type:1&rows=1000&fl=*' )
+        fundingProjectsData = JSON.parse(fundingProjectsAPI)['response']['docs']
+        finalProjectsList = {}
+        fundingProjectsData.each do |p|
+            if p.has_key?('transaction_provider_org_provider_activity_id')
+                if !finalProjectsList.has_key?('transaction_provider_org_provider_activity_id')
+                    fundingProjectDetails = get_project_title_description(p['transaction_provider_org_provider_activity_id'])
+                    if !fundingProjectDetails.nil?
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']] = {}
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingProjectId'] = fundingProjectDetails['iati_identifier']
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingProjectTitle'] = fundingProjectDetails.has_key?('title_narrative_first') ? fundingProjectDetails['title_narrative_first'] : 'N/A'
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingProjectDescription'] = fundingProjectDetails.has_key?('description_narrative_text') ? fundingProjectDetails['description_narrative_text'].first : 'N/A'
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingOrg'] = fundingProjectDetails['reporting_org_narrative'].first == 'UK - Department for International Development (DFID)' ? 'UK - Foreign, Commonwealth and Development Office (FCDO)' : fundingProjectDetails['reporting_org_narrative'].first
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingAmount'] = p['transaction_value'].to_f
+                        finalProjectsList[p['transaction_provider_org_provider_activity_id']]['default_currency'] = fundingProjectDetails['default_currency']
+                    end
+                else
+                    finalProjectsList[p['transaction_provider_org_provider_activity_id']]['fundingAmount'] = finalProjectsList['transaction_provider_org_provider_activity_id']['fundingAmount'] + p['transaction_value'].to_f
+                end
+            end
+        end
+        finalProjectsList
+    end
+
+    def get_funded_project_details2(projectId, componentListAsString)
+        fundedProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?fl=reporting_org_narrative,iati_identifier,title_narrative_first,description_narrative_text,budget_value,transaction_value,transaction_provider_org_provider_activity_id,transaction&q=transaction_provider_org_provider_activity_id:'+componentListAsString+'&sort=title_narrative_first asc&rows=500')
+        fundedProjectsData = JSON.parse(fundedProjectsAPI)['response']['docs']
+        fundedProjectsList = []
+        fundedProjectsData.each do |p|
+            if !p['iati_identifier'].include?(projectId)
+                tempData = {}
+                tempData['iati_identifier'] = p['iati_identifier']
+                tempData['reportingOrg'] = p.has_key?('reporting_org_narrative') ? p['reporting_org_narrative'].first : 'N/A'
+                tempData['title'] = p.has_key?('title_narrative_first') ? p['title_narrative_first'] : 'N/A'
+                tempData['description'] = p.has_key?('description_narrative_text') ? p['description_narrative_text'].first : 'N/A'
+                tempData['budget'] = p.has_key?('budget_value') ? p['budget_value'].first.to_f : 0.0
+                fundedProjectsList.push(tempData)
+            end
+        end
+        fundedProjectsList
     end
 
     def get_funded_project_details(projectId)
