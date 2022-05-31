@@ -56,6 +56,22 @@ module CommonHelpers
     query
   end
 
+  def get_region_name(regionCode)
+    mappedRegions = Oj.load(File.read('data/regionCodes.json'))
+    regionsInfo = Oj.load(File.read('data/dfidRegions.json'))
+    tempRegion = mappedRegions['data'].select {|region| region['code'].to_s == regionCode.to_s}.first
+    if(tempRegion)
+        selectedRegion = regionsInfo.select {|region| region['code'].to_s == regionCode.to_s}.first
+        if selectedRegion
+            selectedRegion['name']
+        else
+            tempRegion['name']
+        end
+      else
+        'N/A'
+    end
+  end
+
   def get_current_total_budget(apiLink)
       currentTotalBudget= JSON.parse(apiLink)
   end
@@ -747,7 +763,6 @@ module CommonHelpers
       tempOgd = ogds.select{|key, hash| hash["identifiers"].split(",").include?(deptCode)}
       tempOgd.values[0]['name']
     rescue
-      puts deptCode
       'N/A'
     end
   end
@@ -809,15 +824,12 @@ module CommonHelpers
 
   def get_componentListAsString(projectid, componentData)
     componentListAsString = '(' + projectid + ' '
-    puts '-------'
-    puts componentData.length 
     if componentData.length > 0
       componentData.each do |c|
         componentListAsString = componentListAsString + c['activityID'] + ' '
       end
     end
     componentListAsString = componentListAsString + ')'
-    puts componentListAsString
     componentListAsString
   end
 

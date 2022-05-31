@@ -79,23 +79,26 @@ module RegionHelpers
         lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
         if (regionType=="region")
             #oipa v3.1
-            regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380")
+            #regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380")
+            regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND hierarchy:1 AND recipient_region_code:(298 798 89 589 389 189 679 289 380) AND activity_status_code:2&json.facet={"items":{"type":"terms","field":"recipient_region_code","limit":-1,"sort":"value asc","facet":{"value":"sum(budget_value)"}}}&rows=0')
         elsif (regionType == "regionAll")
-          regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380,998")
+          #regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380,998")
+          regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND hierarchy:1 AND recipient_region_code:(298 798 89 589 389 189 679 289 380 998) AND activity_status_code:2&json.facet={"items":{"type":"terms","field":"recipient_region_code","limit":-1,"sort":"value asc","facet":{"value":"sum(budget_value)"}}}&rows=0')
         else
           #oipa v3.1
-          regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998")
+          #regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998")
+          regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND hierarchy:1 AND recipient_region_code:(998) AND activity_status_code:2&json.facet={"items":{"type":"terms","field":"recipient_region_code","limit":-1,"sort":"value asc","facet":{"value":"sum(budget_value)"}}}&rows=0')
         end
 
         # aggregates budgets of the dfid regional projects that are active in the current FY
         allCurrentRegions = JSON.parse(regionsDataJSON)
-        allCurrentRegions = allCurrentRegions['results']
+        allCurrentRegions = allCurrentRegions['facets']['items']['buckets']
 
         # Map the input data structure so that it matches the required input for the Regions map
         allRegionsChartData = allCurrentRegions.map do |elem|
         {
-            "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
-            "code" => elem["recipient_region"]["code"],
+            "region" => get_region_name(elem['val']).to_s.gsub(", regional",""),#elem["recipient_region"]["name"].to_s.gsub(", regional",""),
+            "code" => elem['val'],
             #oipa v2.2
             ###"budget" => elem["budget"]
             #oipa v3.1

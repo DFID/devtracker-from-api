@@ -563,7 +563,7 @@ get '/location/regional/?' do
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
 			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
-			:generateRegionData => generateRegionData()	
+			#:generateRegionData => generateRegionData()	
 		}
 end
 
