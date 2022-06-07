@@ -1175,12 +1175,17 @@ end
 get '/downloadCSV/:proj_id/:transaction_type?' do
 	projID = sanitize_input(params[:proj_id],"newId")
 	transactionType = sanitize_input(params[:transaction_type],"p")
-	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
+	
+	project = get_h1_project_details(projID)
+	componentData = get_project_component_data(project)
+	componentListAsString = get_componentListAsString(projID, componentData)
+
+	transactionsForCSV = convert_transactions_for_csv(projID,transactionType,componentListAsString)
 	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
 	tempTitle = transactionsForCSV.first
 	content_type 'text/csv'
 	if transactionType != '0'
-		attachment "Export-" +tempTitle['transaction_type']['name']+ "s.csv"
+		attachment "Export-" +get_transaction_type_name(transactionType)+ "s.csv"
 	else
 		attachment "Export-Budgets.csv"
 	end

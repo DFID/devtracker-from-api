@@ -72,6 +72,16 @@ module CommonHelpers
     end
   end
 
+  def get_transaction_type_name(transactionCode)
+    mappedTransaction = Oj.load(File.read('data/TransactionType.json'))
+    tempTransaction = mappedTransaction['data'].select {|t| t['code'].to_s == transactionCode.to_s}.first
+    if(tempTransaction)
+      tempTransaction['name']
+    else
+        'N/A'
+    end
+  end
+
   def get_current_total_budget(apiLink)
       currentTotalBudget= JSON.parse(apiLink)
   end
