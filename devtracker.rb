@@ -1406,3 +1406,38 @@ end
 #    redirect to('/')
 #end
 
+#####################################################################
+#  DELIVERY CHAIN MAPPING
+#####################################################################
+
+# Project delivery chain mapping page
+get '/projects/*/dcm/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
+	# get the project data from the API
+	#n = sanitize_input(n,"p")
+	project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	countryOrRegion = get_country_or_region(n)
+
+  	# get the funding projects from the API
+  	fundingProjectsData = get_funding_project_details(n)
+  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+
+	# get the funded projects from the API
+	fundedProjectsData = get_funded_project_details(n)
+
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain Mapping'
+	erb :'projects/dcm',
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+			countryOrRegion: countryOrRegion, 			
+ 			fundedProjects: fundedProjectsData,
+ 			fundedProjectsCount: fundedProjectsData.length,
+ 			fundingProjects: fundingProjects,
+ 			fundingProjectsCount: fundingProjectsData['count']
+ 		}
+end

@@ -74,6 +74,7 @@
                                 <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
                                 <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
                                     <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
+                                    <li <%= active=="dcm" ? "class='active'" : ""%>><a id='dcm' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/dcm">DCM</a></li>
                                 <% end %>
 
                                 <!-- TODO: bring back in r4dDocs element -->
