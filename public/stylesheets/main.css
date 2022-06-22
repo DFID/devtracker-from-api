@@ -1165,3 +1165,14 @@ table.govuk-table {
 .input--error{
   border: 2px solid #d4351c !important;
 }
+
+.link {
+  fill: none;
+  stroke-width: 2;
+}
+
+.node path {
+  stroke: black;
+  stroke-width: 3;
+  fill: white;
+}

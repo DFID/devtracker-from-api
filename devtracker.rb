@@ -41,6 +41,7 @@ require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
 require_relative 'helpers/solr_helper.rb'
+require_relative 'helpers/dcm_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -55,16 +56,18 @@ include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
 include SolrHelper
+include DCMHelper
 
 # Developer Machine: set global settings
 # set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+ set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -83,8 +86,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -1421,23 +1424,18 @@ get '/projects/*/dcm/?' do
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
 
-  	# get the funding projects from the API
-  	fundingProjectsData = get_funding_project_details(n)
-  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+	data = build_data(n)
 
-	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n)
-
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain Mapping'
+  	#settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain Mapping'
+	#  json :output => data
 	erb :'projects/dcm',
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
-			countryOrRegion: countryOrRegion, 			
- 			fundedProjects: fundedProjectsData,
- 			fundedProjectsCount: fundedProjectsData.length,
- 			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']
+			countryOrRegion: countryOrRegion,
+ 			fundedProjectsCount: 1,
+ 			fundingProjectsCount: 1,
+			data: data
  		}
 end
