@@ -1,0 +1,42 @@
+<script>
+$(document).ready(function() {
+    function process(){
+        console.log('reading data..');
+        $.getJSON('/assets/e.json', {
+            format: "json"
+        })
+        .done(function(d){
+            console.log('Reading completed!');
+            console.log('Processing each project...');
+            $.each(d, function(index, val){
+                $.getJSON('/activityDetails/'+val+'/solr', {
+                    format: "json"
+                })
+                .done(function(d){
+                    $('#data-tab').append('<tr><td>'+index+'</td><td>'+d.output.iati_identifier+'</td><td>'+d.output.secondTierCount+'</td><td>'+d.output.thirdTierCount+'</td></tr>');
+                })
+            });
+            console.log('Processing completed!');
+        })
+        .fail(function(){
+            console.log("An error has occurred.");
+        });
+    }
+    $('#click').click(function(){
+        process();
+    })
+});
+</script>
+<div class="row">
+    <div>
+        <button id="click">click me</button>
+        <table id='data-tab'>
+            <tr>
+                <th>Item count</th>
+                <th>Activity Title</th>
+                <th>Second tier data count</th>
+                <th>Third tier data count</th>
+            </tr>
+        </table>
+    </div>
+</div>

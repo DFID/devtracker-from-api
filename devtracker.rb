@@ -1426,7 +1426,7 @@ get '/projects/*/dcm/?' do
 
 	data = build_data(n)
 
-  	#settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain Mapping'
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Delivery Chain Mapping'
 	#  json :output => data
 	erb :'projects/dcm',
 		:layout => :'layouts/layout',
@@ -1439,3 +1439,54 @@ get '/projects/*/dcm/?' do
 			data: data
  		}
 end
+
+# Project delivery chain mapping page
+get '/report/?' do
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#check_if_project_exists(n)
+	# get the project data from the API
+	#n = sanitize_input(n,"p")
+	#project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	#countryOrRegion = get_country_or_region(n)
+
+  	settings.devtracker_page_title = 'Data report'
+	#  json :output => data
+	erb :'projects/report',
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+	#		project: project,
+	#		countryOrRegion: countryOrRegion,
+ 	#		fundedProjectsCount: 1,
+ 	#		fundingProjectsCount: 1,
+	#		data: data
+ 		}
+end
+
+get '/activityDetails/*/solr?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
+	# get the project data from the API
+	n = sanitize_input(n,"p")
+	#project = get_h1_project_details(n)
+
+  	#get the country/region data from the API
+  	#countryOrRegion = get_country_or_region(n)
+
+	data = build_data_lite(n)
+
+  	#settings.devtracker_page_title = 'Data report'
+	  json :output => data
+	# erb :'projects/report',
+	# 	:layout => :'layouts/layout',
+	# 	:locals => {
+	# 		oipa_api_url: settings.oipa_api_url,
+	# #		project: project,
+	# #		countryOrRegion: countryOrRegion,
+ 	# #		fundedProjectsCount: 1,
+ 	# #		fundingProjectsCount: 1,
+	# 		data: data
+ 	# 	}
+end 

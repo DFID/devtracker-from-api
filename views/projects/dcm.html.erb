@@ -11,8 +11,8 @@
             right: 100,
         };
 
-        const height = 900;
-        const width = 900;
+        const height = 10000;
+        const width = 10000;
 
         const totalWidth = width + margins.left + margins.right;
         const totalHeight = height + margins.top + margins.bottom;
@@ -21,6 +21,9 @@
         .append('svg')
         .attr('width', totalWidth)
         .attr('height', totalHeight);
+        // .call(d3.zoom().on("zoom", function(){
+        //     svg.attr("transform", d3.event.transform)
+        // }));
 
         const graphGroup = svg.append('g')
         .attr('transform', "translate(" + margins.left + "," + margins.top + ")");
@@ -247,5 +250,5 @@
 </script>
 
 <div class="row">
-    <div id="myDiagramDiv"  style="background-color: white; border: 1px solid black; width: auto; height: auto; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"></div>
+    <div id="myDiagramDiv"  style="background-color: white; border: 1px solid black; width: 1024px; height: 800px; overflow: scroll; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"></div>
 </div>
