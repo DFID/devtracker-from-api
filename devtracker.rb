@@ -57,15 +57,15 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
- set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -136,6 +136,8 @@ get '/countries/:country_code/?' do |n|
 			countrySectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
 	 	}
 	end
+	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
+	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
 	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
 	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
