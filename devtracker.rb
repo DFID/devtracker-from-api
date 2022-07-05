@@ -57,14 +57,15 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+ set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -524,7 +525,7 @@ end
 #Aid By Location Page
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
-  	map_data = dfid_country_map_data()
+  	map_data = dfid_country_map_data2()
   	getMaxBudget = map_data[1].sort_by{|k,val| val['budget']}.reverse!.first
   	getMaxBudget = getMaxBudget[1]['budget']
 	erb :'location/country/index', 
