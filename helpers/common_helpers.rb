@@ -759,3 +759,36 @@ module CommonHelpers
       geoJsonData
     end
 end
+
+#----------To be redacted when merger with main solr branch will happen------------
+def add_exclusions_to_solr2()
+  query = ''
+  solrConfig = Oj.load(File.read('data/solr-config.json'))
+  if(solrConfig["Exclusions"]["terms"].length > 0)
+    query = query + " AND "
+    solrConfig['Exclusions']['fields'].each_with_index do |fieldToBeChecked, index|
+        if (solrConfig['Exclusions']['fields'].length - 1 == index)
+          query = query + '!' + fieldToBeChecked + ':' + '('
+            solrConfig['Exclusions']['terms'].each_with_index do |term, index|
+                if (solrConfig['Exclusions']['terms'].length - 1 == index)
+                  query = query + '"' + term + '"'
+                else
+                  query = query + '"' + term + '" OR '
+                end
+            end
+            query = query + ")"
+        else
+          query = query + '!' + fieldToBeChecked + ':' + '('
+            solrConfig['Exclusions']['terms'].each_with_index do |term, index|
+                if (solrConfig['Exclusions']['terms'].length - 1 == index)
+                  query = query + '"' + term + '"'
+                else
+                  query = query + '"' + term + '" OR '
+                end
+            end
+            query = query + ") AND "
+        end
+    end
+  end
+  query
+end
