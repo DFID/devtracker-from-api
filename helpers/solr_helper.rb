@@ -105,13 +105,9 @@ module SolrHelper
             finalData = finalData.sort_by {|data| data['key']}
         when 'reporting_org_ref'
             response = Oj.load(RestClient.get api_simple_log(apiUrl))
-            #reportingOrgList = Oj.load(File.read('data/participating-orgs/processed_orgList.json'))
             mappedOGDs = Oj.load(File.read(mappingFileUrl))
             reportingOrgs  = response['facet_counts']['facet_fields'][filter]
             reportingOrgs.each_with_index do |value, index|
-                # The reason we did a check of this is because, solr engine returns a flat array 
-                # with first position holding the facet data and the second position holding data count.
-                # Right now, we are not working with the data count. Hence, that field data is not handled. Only the even positions are being taken care of.
                 if index.even?
                     puts value
                     if(mappedOGDs.has_key?(value))
