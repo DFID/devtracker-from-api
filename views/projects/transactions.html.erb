@@ -82,8 +82,8 @@ title: Development Tracker
             <tr>
               <td><%= component['title'] %></td>
               <td><%= component['activityID'] %></td>
-              <td><%= Date.parse(component['startDate']).strftime("%d %b %Y") %></td>
-              <td><%= Date.parse(component['endDate']).strftime("%d %b %Y") %></td>
+              <td><%= begin Date.parse(component['startDate']).strftime("%d %b %Y") rescue 'N/A' end %></td>
+              <td><%= begin Date.parse(component['endDate']).strftime("%d %b %Y") rescue 'N/A' end %></td>
             </tr>
           <% end %>
         </tbody>

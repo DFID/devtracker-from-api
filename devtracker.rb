@@ -319,7 +319,14 @@ get '/projects/*/summary' do
 	# get the funding projects Count from the API
   	fundingProjectsCount = get_funding_project_count(n)
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = 0
+	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+		begin
+			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+		rescue
+			puts id
+		end
+	end
 	#Policy markers
 	begin
 		getPolicyMarkers = get_policy_markers(n)
@@ -367,7 +374,14 @@ get '/projects/*/documents/?' do
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = 0
+	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+		begin
+			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+		rescue
+			puts id
+		end
+	end
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -421,7 +435,14 @@ get '/projects/*/transactions/?' do
   	fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{getProjectIdentifierList(n)['projectIdentifierList']}&page_size=1&fields=id&ordering=title"))['count']
+	fundedProjectsCount = 0
+	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+		begin
+			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+		rescue
+			puts id
+		end
+	end
 	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
