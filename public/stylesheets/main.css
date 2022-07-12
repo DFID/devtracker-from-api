@@ -879,9 +879,9 @@ g.c3-axis-y > g:last-child {
 
 .logo .uk-gov-logo-cdc {
   background-image: url(/images/cdc.png);
-  background-size: 110px;
-  top: 5px;
-  left: 16px;
+  background-size: 150px;
+  top: 19px;
+  left: 0px;
 }
 
 .logo,
