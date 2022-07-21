@@ -1006,7 +1006,7 @@ module ProjectHelpers
                 #OIPA V2.2
                 #projectDataHash[project["recipient_country"]["code"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["budget"]
                 #OIPA V3.1
-                    projectDataHash[project["val"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"]
+                    projectDataHash[project["val"]]["budget"] = tempBudget.nil? ? 0 : tempBudget["value"].round(1)
                     projectDataHash[project["val"]]["flag"] = '/images/flags/' + project["val"].downcase + '.png'
                 rescue
                 end
