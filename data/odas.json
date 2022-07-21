@@ -152,5 +152,27 @@
             "shortName": "HMT",
             "note": ""
         }
+    ],
+    "ONS":
+    [
+        {
+            "name":"Office for National Statistics",
+            "year":"2021",
+            "value": 2,
+            "percentage": 0.0,
+            "shortName": "ONS",
+            "note": ""
+        }
+    ],
+    "DIT":
+    [
+        {
+            "name":"Department of International Trade",
+            "year":"2021",
+            "value": 0.4,
+            "percentage": 0.0,
+            "shortName": "DIT",
+            "note": ""
+        }
     ]
 }

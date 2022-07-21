@@ -116,6 +116,7 @@ layout: cw_landing
             <div id="top5Sectors"></div>     
         <%end%>
         <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+        <p>Source: <a style="display: inline" href="https://iatistandard.org/en/" target="_blank">IATI Data</a></p>
     </div>
     <div class="four columns" id="top-5-countries">
         <div class="top-five-header">        
@@ -131,6 +132,7 @@ layout: cw_landing
         <ol>
         </ol>
         <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+        <p>Source: <a style="display: inline" href="https://iatistandard.org/en/" target="_blank">IATI Data</a></p>
     </div>
     <div class="four columns" id="top-5-achiee">
         <%if !what_we_achieve.nil?  %>
@@ -165,7 +167,7 @@ layout: cw_landing
         </table>
         <%end%>
         <p>UK Government Department Spend [CY21]</p>
-        <p>Source: <a href="https://www.gov.uk/government/collections/statistics-on-international-development" target="_blank">Statistics in Development</a></p>
+        <p>Source: <a style="display: inline" href="https://www.gov.uk/government/collections/statistics-on-international-development" target="_blank">Statistics in Development</a></p>
     </div>
 </div>
 <div style="display: none; height: 0px">Using OIPA URL: <%= oipa_api_url %></div>
