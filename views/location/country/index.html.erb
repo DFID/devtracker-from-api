@@ -59,7 +59,7 @@
               </span>
           </summary>
           <div class="govuk-details__text">
-              Country project budgets are aggregated from project level data. Project budgets tied to specific locations for the current financial year are aggregated and the total is shown. These figures are updated monthly from all available data sources. Please note that Cross-government allocations such as prosperity Fund and Conflict, Stability and Security Fund are known to duplicate budgets published by other departments, as well as using multi-year budgets.
+          Project budgets benefiting specific countries are totaled for the current financial year across all UK government departments. Sector groups are calculated as a percentage of country budgets according to OECD Development Assistance Committee (DAC) classifications.
           </div>
       </details>
     </div>
@@ -80,7 +80,7 @@
                 <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
                 <td>
                 <% if sectorData.key?(key) %>
-                  <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(3) %>%)
+                  <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)
                 <%end%>
               </td>
               </tr>

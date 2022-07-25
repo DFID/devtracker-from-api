@@ -147,7 +147,7 @@ $(document).ready(function() {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<span>Total Country Project Budget for ' + finYear + ': ' + TotalCountryBudget + '</span>';
+        this._div.innerHTML = '<span>Total Country Project Budget for ' + finYear + ': £' + TotalCountryBudget + '</span>';
     };
 
     info.addTo(map);
