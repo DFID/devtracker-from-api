@@ -84,8 +84,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -402,39 +402,151 @@ get '/projects/*/transactions/?' do
 	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
-	componentData = get_project_component_data(project)
+	#componentData = get_project_component_data(project)
 		
 	# get the transactions from the API
-  	incomingFunds = get_transaction_details(n,"1")
+  	# incomingFunds = get_transaction_details(n,"1")
 
-  	# get the incomingFund transactions from the API
-  	commitments = get_transaction_details(n,"2")
+  	# # get the incomingFund transactions from the API
+  	# commitments = get_transaction_details(n,"2")
 
-  	# get the disbursement transactions from the API
-  	disbursements = get_transaction_details(n,"3")
+  	# # get the disbursement transactions from the API
+  	# disbursements = get_transaction_details(n,"3")
 
-  	# get the expenditure transactions from the API
-  	expenditures = get_transaction_details(n,"4")
+  	# # get the expenditure transactions from the API
+  	# expenditures = get_transaction_details(n,"4")
 
-  	# get the Interest Repayment transactions from the API
-  	interestRepayment = get_transaction_details(n,"5")
+  	# # get the Interest Repayment transactions from the API
+  	# interestRepayment = get_transaction_details(n,"5")
 
-  	# get the Loan Repayment transactions from the API
-  	loanRepayment = get_transaction_details(n,"6")
+  	# # get the Loan Repayment transactions from the API
+  	# loanRepayment = get_transaction_details(n,"6")
 
-  	# get the Purchase of Equity transactions from the API
-  	purchaseEquity = get_transaction_details(n,"8")
+  	# # get the Purchase of Equity transactions from the API
+  	# purchaseEquity = get_transaction_details(n,"8")
 
   	# get yearly budget for H1 Activity from the API
-	projectYearWiseBudgets= get_project_yearwise_budget(n)
-
-	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
-
-    # get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+	#projectYearWiseBudgets= get_project_yearwise_budget(n)
 
 	# get the funded projects Count from the API
+		
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
+	erb :'projects/transactions', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+ 			# incomingFunds: incomingFunds,
+ 			# commitments: commitments,
+ 			# disbursements: disbursements,
+ 			# expenditures: expenditures,
+ 			# interestRepayments: interestRepayment,
+ 			# loanRepayments: loanRepayment,
+ 			# purchaseEquities: purchaseEquity,
+ 		}
+end
+
+#Project transactions page
+get '/projects/*/components/?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	check_if_project_exists(n)
+	#n = sanitize_input(n,"p")
+	# get the project data from the API
+	project = get_h1_project_details(n)
+	#componentData = get_project_component_data(project)
+
+  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
+	erb :'projects/components', 
+		:layout => :'layouts/layout',
+		:locals => {
+			oipa_api_url: settings.oipa_api_url,
+			project: project,
+			components: [1]
+ 		}
+end
+######################################################################
+################## PROJECT  PAGE RELATED API CALLS ###################
+######################################################################
+
+post '/transaction-details' do
+	project = sanitize_input(params['data']['projectID'].to_s,"newId")
+	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
+
+	json :output => get_transaction_details(project,transactionType)
+end
+get '/component-list/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
+    project = JSON.parse(oipa)
+	tempData = []
+	project['related_activity'].each do |item|
+		if(item['type']['code'].to_i == 2)
+			tempData.push(item['ref'])
+		end
+	end
+	json :output => tempData
+end
+
+# Get yearly budget for H1 Activity from the API
+get '/project-yearwise-budget/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	json :output=> projectYearWiseBudgets
+end
+
+# Convert number to proper currency data
+post '/number-to-currency' do
+	number = sanitize_input(params['data']['number'].to_s,"a")
+	currency = sanitize_input(params['data']['currency'].to_s, "newId")
+	begin
+		data = Money.new(number.to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	rescue
+		data = "£#{number}"
+	end
+	json :output=> data
+end
+
+# Get total project budget
+get '/total-project-budget/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	project = get_h1_project_details(n)
+	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f
+	begin
+		data = Money.new(totalProjectBudget.round(0)*100, if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	rescue
+		data = "£#{totalProjectBudget}"
+	end
+	json :output=> data
+end
+
+get '/project-details/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
+	oipa = JSON.parse(oipa)
+	tempData = {}
+	tempData['iati_identifier'] = oipa['iati_identifier']
+	tempData['title'] = begin oipa['title']['narrative'][0]['text'] rescue 'N/A' end
+	tempData['description'] = begin oipa['description'][0]['narrative'][0]['text'] rescue 'N/A' end
+	tempData['activity_date'] = {}
+	tempData['activity_dates'] = bestActivityDate(oipa['activity_date'])
+	json :output=> tempData
+end
+
+get '/country-or-region/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	json :output=> get_country_or_region(n)
+end
+
+# Get the funding projects Count from the API
+get '/get-funding-projects/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	json :output=> get_funding_project_count(n)
+end
+
+# Get funded project counts
+get '/get-funded-projects/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	fundedProjectsCount = 0
 	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
 		begin
@@ -443,28 +555,10 @@ get '/projects/*/transactions/?' do
 			puts id
 		end
 	end
-	
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
-	erb :'projects/transactions', 
-		:layout => :'layouts/layout',
-		:locals => {
-			oipa_api_url: settings.oipa_api_url,
-			project: project,
-			countryOrRegion: countryOrRegion,
- 			incomingFunds: incomingFunds,
- 			commitments: commitments,
- 			disbursements: disbursements,
- 			expenditures: expenditures,
- 			interestRepayments: interestRepayment,
- 			loanRepayments: loanRepayment,
- 			purchaseEquities: purchaseEquity,
- 			projectYearWiseBudgets: projectYearWiseBudgets, 			
- 			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount,
- 			components: componentData
- 		}
+	json :output=> fundedProjectsCount
 end
-
+######################################################################
+######################################################################
 #Project partners page
 get '/projects/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s

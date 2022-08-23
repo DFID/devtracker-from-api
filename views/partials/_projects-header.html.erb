@@ -42,9 +42,7 @@
                 <div class="govuk-breadcrumbs">
                     <ol class="govuk-breadcrumbs__list">
                         <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                        <%#if countryOrRegion[:projectType] == "country" %>
-                            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="<%= countryOrRegion[:breadcrumbUrl] %>/"><%= countryOrRegion[:breadcrumbLabel] || "" %></a></li>
-                        <%# end %>
+                        <li id="countryOrRegion" style="display: none" class="govuk-breadcrumbs__list-item"></li>
                         <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title']['narrative'][0]['text'] %>"><%= project['title']['narrative'][0]['text'] %></li>
                     </ol>
                 </div>
@@ -66,21 +64,19 @@
         <div class="twelve columns">
             <div class="tab-bar-container">
                 <div class="row">
-                    <div class="projects-nav six columns">
+                    <div class="projects-nav seven columns">
                         <nav>
                             <ul class="tab-bar">
                                 <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
                                 <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                                <li <%= active=="components" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components">Components</a></li>
                                 <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
-                                <% if fundedProjectsCount > 0 || fundingProjectsCount > 0 then %>
-                                    <li <%= active=="partners" ? "class='active'" : ""%>><a id='Partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
-                                <% end %>
-
+                                <li <%= active=="partners" ? "class='active partner-tab'" : "class='partner-tab'"%> style="display: none"><a id='Partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
                                 <!-- TODO: bring back in r4dDocs element -->
                             </ul>
                         </nav>
                     </div>
-                    <div class="button-row six columns">
+                    <div class="button-row five columns">
                         <span>
                             
                         </span>

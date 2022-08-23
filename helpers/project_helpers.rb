@@ -201,9 +201,11 @@ module ProjectHelpers
 
     def get_transaction_details(projectId,transactionType)
         if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
         else
+            puts 'This is not a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
