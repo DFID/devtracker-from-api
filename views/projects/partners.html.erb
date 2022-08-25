@@ -1,93 +1,181 @@
 <!-- title: Development Tracker -->
 
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "partners"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "partners"} %>
+<div class="row">
+  <div id="waiting" class="twelve columns" style="display: none;"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Data.. Please wait..</strong></p></div>
+</div>
+<div id="fundedProjects" class="row"></div>
 
-  <% if fundingProjectsCount > 0 then %>
-      <div class="row">
-          <div class="twelve columns results-info">
-            <h3 class="section-group-title">Funding Project</h3>
-            <% fundingProjects=fundingProjects.group_by{|b| b['provider_organisation']['provider_activity_id'].to_s.strip}.map{|provider_activity_id, budgets|
-                    summedBudgets = budgets.reduce(0) {|memo, budget| memo + budget['value'].to_f}
-                    [provider_activity_id, summedBudgets]} %>
-            <% fundingProjects.each do |fundingProject| %>
-                <% if is_valid_project(fundingProject[0]) %>
-                  <% fundingProjectDetails= get_funding_project(fundingProject[0])%>
-                  <%if fundingProjectDetails != '' %>
-                    <% fundingProjectDetailsCurrency= get_funding_project(project['iati_identifier'])%>
-                    <div class="row">        
-                      <div class="four columns summary">
-                          <h4><%= fundingProjectDetails['reporting_org']['narrative'][0]['text'] %></h4>         
-                      </div>
-                      <div class="eight columns">
-                          <ul>
-                              <li><a href="/projects/<%=ERB::Util.url_encode(fundingProjectDetails['iati_identifier']).to_s%>/summary"><%=fundingProjectDetails['title']['narrative'][0]['text']%></a><%=fundingProjectDetails['description'][0]['narrative'][0]['text']%>
-                                  <span>
-                                     <%# If the default currency value is undefined do not show a value for the project%>
-                                     <%=begin
-                                         Money.new(fundingProject[1].to_f.round(0)*100, fundingProjectDetailsCurrency['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
-                                      rescue
-                                               
-                                      end %>
-                                  </span>    
-                              </li>
-                          </ul> 
-                      </div>
-                    </div>
-                  <%end%>
-                <% end %>
-            <% end %>
-          </div>
-      </div>
-  <% end %>
 
-  <% if fundedProjectsCount > 0 then %>
-      <div class="row">
-          <div class="twelve columns results-info">                 
-              <% if is_dfid_project(project['iati_identifier']) then %>
-                <h3 class="section-group-title">Partner Projects</h3>
-              <%else%>
-                 <h3 class="section-group-title">Funded Projects</h3>
-              <%end%>
-                <% fundedProjects.each do |key, fundedProject| %>
-                  <%if (fundedProject['iati_identifier'].to_s != project['iati_identifier'].to_s)%>
-                    <div class="row">
-                        <div class="four columns summary">
-                            <h4><%= begin 
-                              fundedProject['reporting_org']['narrative'][0]['text'] 
-                              rescue 
-                                end%></h4>
-                        </div>
-                        <div class="eight columns">
-                            <ul>
-                               <%# TODO - deal with the situation where we have multiple languages %>
-                               <li><a href="/projects/<%=ERB::Util.url_encode(fundedProject['iati_identifier']).to_s%>/summary"><%=fundedProject['title']['narrative'][0]['text']%></a>
-                                 <%=if fundedProject['description'].length==0 then '' else fundedProject['description'][0]['narrative'][0]['text'] end  %>
-                                 <span>
-                                     <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
-                                     Total Project Budget:
-                                     <%=begin       
-                                              Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
-                                        rescue
-                                        end %>    
-                                  </span>
-
-                                  <% if is_dfid_project(project['iati_identifier']) then %>
-                                     <span>
-                                     <%# If the default currency and incoming funds currency variables both are undefined do not show a value for the project%>
-                                         Total Funding:
-                                         <%=begin       
-                                                  Money.new(fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then fundedProject['default_currency']['code'] else fundedProject['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) 
-                                            rescue
-                                            end %>    
-                                    </span> 
-                                  <%end%>
-                                 <%#= get_implementing_orgs_as_label(fundedProject['id'])%>
-                               </li>
-                            </ul> 
-                        </div>
-                    </div>
-                  <%end%>
-              <% end %>
-          </div>
-      </div>
-  <% end %>
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.html5.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    jq3('.partner-tab').show();
+    function isFCDOProj(project) {
+      if(project.toLowerCase().search('gb-1') == 0 || project.toLowerCase().search('gb-gov-1') == 0 || project.toLowerCase().search('gb-gov-3') == 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    var projectID = "<%= project['iati_identifier'] %>";
+    //Process for generating component details
+    $('#waiting').slideDown('slow');
+    jq3.get('/country-or-region/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.projectType == 'country'){
+        jq3('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
+      }
+    });
+    function fundedProjects(isFirstTime,nextPage) {
+      $('#waiting').slideDown('slow');
+      if(isFirstTime) {
+        jq3.get('/get-funded-projects-page/'+nextPage+'/'+projectID)
+        .done(function(response){
+          res = response.output['projectsByKeys'];
+          var htmlString = '';
+          if (Object.keys(res).length > 0) {
+            if (isFCDOProj(projectID)){
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Partner Projects</h3>';
+            }
+            else {
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Funded Projects</h3>';
+            }
+            jq3.each(res, function(i, data){
+              if(data.iati_identifier.toString() !=  projectID.toString()){
+                var fp_reporting_org = '';
+                var fp_title = '';
+                var fp_description = '';
+                try {
+                  fp_reporting_org = data.reporting_org.narrative[0].text;
+                }
+                catch {
+                  fp_reporting_org = 'N/A';
+                }
+                try {
+                  fp_title = data.title.narrative[0].text;
+                }
+                catch {
+                  fp_title = 'N/A';
+                }
+                try {
+                  fp_description = data.description[0].narrative[0].text;
+                }
+                catch {
+                  fp_description = 'N/A';
+                }
+                if (isFCDOProj(projectID)) {
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
+                  + '<li><a href="/projects/'
+                  +encodeURI(data.iati_identifier)+'/summary">'
+                  +fp_title+'</a>'
+                  +fp_description
+                  +'<span>Total Project Budget: '
+                  +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
+                }
+                else {
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
+                  + '<li><a href="/projects/'
+                  +encodeURI(data.iati_identifier)+'/summary">'
+                  +fp_title+'</a>'
+                  +fp_description
+                  +'<span>Total Project Budget: '
+                  +data.total_project_budget + '</span></li></ul></div></div>';
+                }
+              }
+            });
+            if(response.output['hasNext'] != null){
+              htmlString = htmlString + '</div></div>'
+              +'<div class="twelve columns"><button '
+              +'id="fundedProjects_more" class="govuk-button" data-module="govuk-button"' 
+              +'style="margin-top: 10px; float: right;">Load more</button>'
+              +'<input id="fundedProjects_more_data" type="hidden" value="1" /></div>';
+            }
+            else {
+              htmlString = htmlString + '</div></div>';
+            }
+            jq3('#fundedProjects').html(htmlString);
+            jq3('#fundedProjects_more').click(function(){
+                var p = parseInt(jq3('#fundedProjects_more_data').val()) + 1;
+                jq3('#fundedProjects_more_data').val(p);
+                fundedProjects(false,p);
+            });
+            $('#waiting').slideUp('slow');
+          }
+        });
+      }
+      else {
+        $('#waiting').slideDown('slow');
+        jq3.get('/get-funded-projects-page/'+nextPage+'/'+projectID)
+        .done(function(response){
+          res = response.output['projectsByKeys'];
+          var htmlString = '';
+          if (Object.keys(res).length > 0) {
+            if(response.output['hasNext'] == null){
+              jq3('#fundedProjects_more').hide();
+            }
+            jq3.each(res, function(i, data){
+              if(data.iati_identifier.toString() !=  projectID.toString()){
+                var fp_reporting_org = '';
+                var fp_title = '';
+                var fp_description = '';
+                try {
+                  fp_reporting_org = data.reporting_org.narrative[0].text;
+                }
+                catch {
+                  fp_reporting_org = 'N/A';
+                }
+                try {
+                  fp_title = data.title.narrative[0].text;
+                }
+                catch {
+                  fp_title = 'N/A';
+                }
+                try {
+                  fp_description = data.description[0].narrative[0].text;
+                }
+                catch {
+                  fp_description = 'N/A';
+                }
+                if (isFCDOProj(projectID)) {
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
+                  + '<li><a href="/projects/'
+                  +encodeURI(data.iati_identifier)+'/summary">'
+                  +fp_title+'</a>'
+                  +fp_description
+                  +'<span>Total Project Budget: '
+                  +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
+                }
+                else {
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
+                  + '<li><a href="/projects/'
+                  +encodeURI(data.iati_identifier)+'/summary">'
+                  +fp_title+'</a>'
+                  +fp_description
+                  +'<span>Total Project Budget: '
+                  +data.total_project_budget + '</span></li></ul></div></div>';
+                }
+              }
+            });
+            jq3('#fundedProjList').append(htmlString);
+            $('#waiting').slideUp('slow');
+          }
+        });
+      }
+    }
+    fundedProjects(true,1);
+  })
+</script>

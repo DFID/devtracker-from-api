@@ -59,13 +59,13 @@ include SolrHelper
 # Developer Machine: set global settings
 # set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+ set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -317,16 +317,16 @@ get '/projects/*/summary' do
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_data(n)
 	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	#fundingProjectsCount = get_funding_project_count(n)
 	# get the funded projects Count from the API
-	fundedProjectsCount = 0
-	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-		begin
-			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-		rescue
-			puts id
-		end
-	end
+	#fundedProjectsCount = 0
+	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+	# 	begin
+	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+	# 	rescue
+	# 		puts id
+	# 	end
+	# end
 	#Policy markers
 	begin
 		getPolicyMarkers = get_policy_markers(n)
@@ -348,8 +348,8 @@ get '/projects/*/summary' do
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
- 			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount,
+ 			#fundedProjectsCount: fundedProjectsCount,
+ 			#fundingProjectsCount: fundingProjectsCount,
  			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
@@ -368,20 +368,20 @@ get '/projects/*/documents/?' do
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	#countryOrRegion = get_country_or_region(n)
 
   	# get the funding projects Count from the API
-  	fundingProjectsCount = get_funding_project_count(n)
+  	#fundingProjectsCount = get_funding_project_count(n)
 
 	# get the funded projects Count from the API
-	fundedProjectsCount = 0
-	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-		begin
-			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-		rescue
-			puts id
-		end
-	end
+	# fundedProjectsCount = 0
+	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+	# 	begin
+	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+	# 	rescue
+	# 		puts id
+	# 	end
+	# end
   	
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -389,9 +389,9 @@ get '/projects/*/documents/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			project: project,
- 			countryOrRegion: countryOrRegion,
- 			fundedProjectsCount: fundedProjectsCount,
- 			fundingProjectsCount: fundingProjectsCount 
+ 			# countryOrRegion: countryOrRegion,
+ 			# fundedProjectsCount: fundedProjectsCount,
+ 			# fundingProjectsCount: fundingProjectsCount 
  		}
 end
 
@@ -467,6 +467,11 @@ end
 ######################################################################
 ################## PROJECT  PAGE RELATED API CALLS ###################
 ######################################################################
+post 'get-participating-orgs' do
+	project = sanitize_input(params['data']['project'].to_s,"newId")
+
+	json :output => get_participating_organisations(project)
+end
 
 post '/transaction-details' do
 	project = sanitize_input(params['data']['projectID'].to_s,"newId")
@@ -474,6 +479,22 @@ post '/transaction-details' do
 
 	json :output => get_transaction_details(project,transactionType)
 end
+
+post '/transaction-details-page' do
+	project = sanitize_input(params['data']['projectID'].to_s,"newId")
+	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
+	resultCount = 20
+	nextPage = sanitize_input(params['data']['nextPage'].to_s, "a")
+	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
+end
+
+post '/transaction-total' do
+	project = sanitize_input(params['data']['project'].to_s,"newId")
+	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
+	currency = sanitize_input(params['data']['currency'].to_s, "newId")
+	json :output => get_transaction_total(project,transactionType, currency)
+end
+
 get '/component-list/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
@@ -557,6 +578,14 @@ get '/get-funded-projects/*?' do
 	end
 	json :output=> fundedProjectsCount
 end
+
+get '/get-funded-projects-page/:page/*?' do
+	puts params
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	page = ERB::Util.url_encode params[:page].to_s
+	json :output=> get_funded_project_details_page(n, page, 20)
+end
+
 ######################################################################
 ######################################################################
 #Project partners page
@@ -568,14 +597,14 @@ get '/projects/*/partners/?' do
 	project = get_h1_project_details(n)
 
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
+  	#countryOrRegion = get_country_or_region(n)
 
   	# get the funding projects from the API
-  	fundingProjectsData = get_funding_project_details(n)
-  	fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
+  	# fundingProjectsData = get_funding_project_details(n)
+  	# fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
 
 	# get the funded projects from the API
-	fundedProjectsData = get_funded_project_details(n)
+#	fundedProjectsData = get_funded_project_details(n)
 
   	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
@@ -583,11 +612,11 @@ get '/projects/*/partners/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
-			countryOrRegion: countryOrRegion, 			
- 			fundedProjects: fundedProjectsData,
- 			fundedProjectsCount: fundedProjectsData.length,
- 			fundingProjects: fundingProjects,
- 			fundingProjectsCount: fundingProjectsData['count']
+			#countryOrRegion: countryOrRegion, 			
+ 			# fundedProjects: fundedProjectsData,
+ 			# fundedProjectsCount: fundedProjectsData.length,
+ 			# fundingProjects: fundingProjects,
+ 			# fundingProjectsCount: fundingProjectsData['count']
  		}
 end
 

@@ -1,0 +1,91 @@
+<!--
+title: Development Tracker
+ -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "transactions"} %>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   I N C O M I N G   F U N D S   T A B L E                %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => incomingFunds, :transactionTypeTitle => 'Incoming Funds', :transactionTypeDetails => 'Funds that originate from a source other than the donor(s) reported in the activity.', :transactionTypeDetails2 => '(Funds received from an external funding source)', :project => project, :transactionValueParameter => 'incoming_funds_value', :transactionCurrencyParameter => 'incoming_funds_currency', :cssId => 'incomingFunds' , :fifthcolumn=> 'Receiver Organisation', :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/1"} %>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   C O M M I T M E N T S   T A B L E                      %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => commitments, :transactionTypeTitle => 'Commitments', :transactionTypeDetails => 'A firm obligation to provide resources of a specified amount.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'commitment_value', :transactionCurrencyParameter => 'commitment_currency' , :cssId => 'commitments', :fifthcolumn=> 'Receiver Organisation' ,:active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/2"} %>
+
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   D I S B U R S E M E N T S   T A B L E                  %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => disbursements, :transactionTypeTitle => 'Disbursements', :transactionTypeDetails => 'The amount placed at the disposal of a recipient country or agency.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'disbursement_value', :transactionCurrencyParameter => 'disbursement_currency', :cssId => 'disbursements', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/3"} %>
+
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   E X P E N D I T U R E   T A B L E                      %>
+<%# ------------------------------------------------------------------------ %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => expenditures, :transactionTypeTitle => 'Expenditure', :transactionTypeDetails => 'Funds spent on goods and services.', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'expenditure_value', :transactionCurrencyParameter => 'expenditure_currency', :cssId => 'expenditures', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/4"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   I N T E R E S T  R E P A Y M E N T   T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => interestRepayments, :transactionTypeTitle => 'Interest Repayment', :transactionTypeDetails => 'Amount of interest paid on a loan or line of credit, including fees', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'interest_payment_value', :transactionCurrencyParameter => 'interest_payment_currency', :cssId => 'interestRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/5"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   L O A N  R E P A Y M E N T   T A B L E                              %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => loanRepayments, :transactionTypeTitle => 'Loan Repayment', :transactionTypeDetails => 'The actual amount of principal (amortisation) repaid, including any arrears', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'loan_repayment_value', :transactionCurrencyParameter => 'loan_repayment_currency', :cssId => 'loanRepayments', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/6"} %>
+
+<%# ------------------------------------------------------------------------------------- %>
+<%#                   P U R C H A S E  O F  E Q U I T Y    T A B L E                      %>
+<%# ------------------------------------------------------------------------------------- %>
+
+<%= erb :'partials/_transaction-type-wise-listing', :locals => { :transactionsList => purchaseEquities, :transactionTypeTitle => 'Purchase of Equity', :transactionTypeDetails => 'Outgoing funds to purchase equity', :transactionTypeDetails2 => '', :project => project, :transactionValueParameter => 'purchase_of_equity_value', :cssId => 'purchaseEquities', :transactionCurrencyParameter => 'purchase_of_equity_currency', :fifthcolumn=> 'Receiver Organisation' , :active => "transactions", :csvurl => "/downloadCSV/"+project['iati_identifier']+"/8"} %>
+
+
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.html5.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    jq3('#transactionsv3').DataTable({
+      "info":false,
+      "paging":false,
+      "searching":false,
+      "order":[1,"asc"]
+    });
+    jq3('.transactions-tablev2').DataTable({
+      retrieve: true,
+      "info": false,
+      "paging": false,
+      "searching": false,
+      dom: 'Bfrtip',
+      buttons: [
+        'csvHtml5'
+      ],
+      initComplete: function(){
+        var $buttons = jq3('.dt-buttons').hide();
+        $buttons.parent().parent().children('.downloadInCSV').click(function(){
+          $buttons.find('.button-csv').click();
+        });
+        // jq3('.downloadInCSV').click(function(){
+        //   jq3(this).parent().parent().parent().children('.dt-buttons').children('.buttons-csv').click();
+        // });
+      }
+    });
+    jq3('.transactions-tablev2').show();
+    jq3('#transactionsv3').show();
+  })
+</script>

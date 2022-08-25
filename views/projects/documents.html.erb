@@ -1,4 +1,4 @@
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "documents"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "documents"} %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -90,31 +90,6 @@
 <script type="text/javascript">
   var jq3 = jQuery.noConflict(true);
   jq3(document).ready(function() {
-    var tab1 = jq3('#transactionsv3').DataTable({
-      "info":false,
-      "paging":false,
-      "searching":false,
-      "order":[1,"asc"]
-    });
-    var tab2 = jq3('.transactions-tablev2').DataTable({
-      retrieve: true,
-      "info": false,
-      "paging": false,
-      "searching": false,
-      dom: 'Bfrtip',
-      buttons: [
-        'csvHtml5'
-      ],
-      initComplete: function(){
-        var $buttons = jq3('.dt-buttons').hide();
-        $buttons.parent().parent().children('.downloadInCSV').click(function(){
-          $buttons.find('.button-csv').click();
-        });
-        // jq3('.downloadInCSV').click(function(){
-        //   jq3(this).parent().parent().parent().children('.dt-buttons').children('.buttons-csv').click();
-        // });
-      }
-    });
     jq3('.transactions-tablev2').show();
     //Process for generating component details
     var components = [];
@@ -123,45 +98,6 @@
       if(response.projectType == 'country'){
         $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
       }
-    });
-    jq3('#genComList').slideDown('slow');
-    jq3.get('/component-list/<%= project["iati_identifier"]%>')
-    .done(function(response){
-      jq3('#genComList').slideUp('slow');
-      jq3('#genComDetails').slideDown('slow');
-      components = response.output;
-      jq3.each(components, function(i, data){
-        jq3.get('/project-details/'.concat(data))
-        .done(function(res){
-          tab1.row.add([res.output.title,res.output.iati_identifier,res.output.activity_dates.start_date,res.output.activity_dates.end_date]);
-          tab1.draw();
-          jq3('#genComDetails').html('(Processed: '.concat(i+1,' out of ', components.length, ' components data.)'))
-          if(components.length == i+1) {
-            jq3('#genComDetails').slideUp('slow');
-          }
-        })
-      });
-    });
-    jq3('#transactionsv3').show();
-    jq3.get('/total-project-budget/<%= project["iati_identifier"]%>')
-    .done(function(response){
-      $('#totalProjectBudget').html(response.output);
-    });
-    jq3.get('/project-yearwise-budget/<%= project["iati_identifier"]%>')
-    .done(function(response){
-      res = response.output;
-      jq3.each(res, function(i, data){
-        var d = {}
-        d['number'] = data['value'];
-        d['currency'] = "<%= begin project['default_currency']['code'] rescue '£' end%>";
-        jq3.post('/number-to-currency', {
-          data: d
-        })
-        .done(function(res2){
-          tab2.row.add([data.fy,res2.output]);
-          tab2.draw();
-        })
-      });
     });
 
     jq3.get('/get-funding-projects/<%= project["iati_identifier"]%>')

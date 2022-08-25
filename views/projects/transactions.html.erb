@@ -4,6 +4,19 @@ title: Development Tracker
 
 <%= erb :'partials/_projects-header', :locals => { :project => project, :active => "transactions"} %>
 <div class="row">
+  <div id="waiting" class="twelve columns" style="display: none;"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Data.. Please wait..</strong></p></div>
+<!-- <div style="display: none;" class="twelve columns">
+  <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+        Loading Data..
+      </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+      Please wait while we generate the transactions data table(s) for you.
+    </div>
+  </div>
+</div> -->
 <%# ------------------------------------------------------------------------ %>
 <%#                   I N C O M I N G   F U N D S   T A B L E                %>
 <%# ------------------------------------------------------------------------ %>
@@ -50,6 +63,12 @@ title: Development Tracker
           <tbody>
           </tbody>
         </table>
+    </div>
+    <div class="twelve columns">
+      <button id="incomingFunds_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+        Load more
+      </button>
+      <input id="incomingFunds_more_data" type="hidden" value="1" />
     </div>
   </div>
     </div>
@@ -105,6 +124,12 @@ title: Development Tracker
         <tbody>
         </tbody>
       </table>
+  </div>
+  <div class="twelve columns">
+    <button id="commitments_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+      Load more
+    </button>
+    <input id="commitments_more_data" type="hidden" value="1" />
   </div>
 </div>
 </div>
@@ -162,6 +187,12 @@ title: Development Tracker
         </tbody>
       </table>
   </div>
+  <div class="twelve columns">
+    <button id="disbursements_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+      Load more
+    </button>
+    <input id="disbursements_more_data" type="hidden" value="1" />
+  </div>
 </div>
           </div>
       </details>
@@ -180,44 +211,50 @@ title: Development Tracker
               </span>
           </summary>
           <div class="govuk-details__text">
-          <div class="row">
-  <div class="twelve columns transactions" style="margin-top: 15px">
-     <div class="section-group-title trans-header-container">
-          <div class="trans-header-left">
-            <span class="trans-type-title">Expenditure</span>
-            <a class="more-info-link more-info-link-spacer" id="moreinfolinkexpenditures" target="2">
-               <img src="/images/icon-information.png" alt="More information about expenditures" class="more-info-link-middle"/>
-            </a> 
-            <aside id="moreinfoexpenditures" class="more-info">  
-                  <div class="more-info-content trans-more-info-box-limiter">
-                    Funds spent on goods and services.
-                  </div>
-            </aside>   
-            <p style="margin-bottom:2px;"></p>
-           </div>  
+            <div class="row">
+              <div class="twelve columns transactions" style="margin-top: 15px">
+                <div class="section-group-title trans-header-container">
+                      <div class="trans-header-left">
+                        <span class="trans-type-title">Expenditure</span>
+                        <a class="more-info-link more-info-link-spacer" id="moreinfolinkexpenditures" target="2">
+                          <img src="/images/icon-information.png" alt="More information about expenditures" class="more-info-link-middle"/>
+                        </a> 
+                        <aside id="moreinfoexpenditures" class="more-info">  
+                              <div class="more-info-content trans-more-info-box-limiter">
+                                Funds spent on goods and services.
+                              </div>
+                        </aside>   
+                        <p style="margin-bottom:2px;"></p>
+                      </div>  
 
-           <div class="trans-header-right">
-              <div class="float-right trans-type-value">
-                <span id="totalExpenditureValue">Calculating..</span>
-                <a href="/downloadCSV/<%= project['iati_identifier']%>/4" class="api-link button">CSV</a>
+                      <div class="trans-header-right">
+                          <div class="float-right trans-type-value">
+                            <span id="totalExpenditureValue">Calculating..</span>
+                            <a href="/downloadCSV/<%= project['iati_identifier']%>/4" class="api-link button">CSV</a>
+                          </div>
+                      </div>        
+                  </div> 
+                  <table id="expenditures" class="transactions-tablev2 display" style="width:100%; display: none">
+                    <thead>
+                      <tr>
+                        <th>Activity Description</th>
+                        <th>Receiver Organisation</th>
+                        <th>IATI Activity ID</th>
+                        <th>Date</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
               </div>
-           </div>        
-      </div> 
-      <table id="expenditures" class="transactions-tablev2 display" style="width:100%; display: none">
-        <thead>
-          <tr>
-            <th>Activity Description</th>
-            <th>Receiver Organisation</th>
-            <th>IATI Activity ID</th>
-            <th>Date</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-  </div>
-</div>
+              <div class="twelve columns">
+                <button id="expenditures_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+                  Load more
+                </button>
+                <input id="expenditures_more_data" type="hidden" value="1" />
+              </div>
+            </div>
           </div>
       </details>
     </div>
@@ -270,6 +307,12 @@ title: Development Tracker
         <tbody>
         </tbody>
       </table>
+  </div>
+  <div class="twelve columns">
+    <button id="interestRepayments_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+      Load more
+    </button>
+    <input id="interestRepayments_more_data" type="hidden" value="1" />
   </div>
 </div>
           </div>
@@ -325,6 +368,12 @@ title: Development Tracker
         </tbody>
       </table>
   </div>
+  <div class="twelve columns">
+    <button id="loanRepayments_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+      Load more
+    </button>
+    <input id="loanRepayments_more_data" type="hidden" value="1" />
+  </div>
 </div>
           </div>
       </details>
@@ -379,6 +428,12 @@ title: Development Tracker
         </tbody>
       </table>
   </div>
+  <div class="twelve columns">
+    <button id="purchaseEquities_more" class="govuk-button" data-module="govuk-button" style="margin-top: 10px; float: right;">
+      Load more
+    </button>
+    <input id="purchaseEquities_more_data" type="hidden" value="1" />
+  </div>
 </div>
           </div>
       </details>
@@ -392,10 +447,12 @@ title: Development Tracker
 <script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script src="/javascripts/dinero.min.js" type="text/javascript"></script>
 <script type="text/javascript">
   var jq3 = jQuery.noConflict(true);
   jq3(document).ready(function() {
     // Handle partners tab button
+    $('#waiting').slideDown('slow');
     jq3.get('/get-funding-projects/<%= project["iati_identifier"]%>')
     .done(function(response){
       if(response.output > 0) {
@@ -410,7 +467,19 @@ title: Development Tracker
         })
       }
     });
+    let dollarUSLocale = Intl.NumberFormat('en-US');
     var projectInfo = <%= project['participating_org'].to_json %>;
+    var projectCurrency = "<%= begin project['default_currency']['code'] rescue 'GBP' end%>" ;
+    function convertCurrency(value) {
+      var tempData = {};
+      tempData['precPoint'] = 0;
+      tempData['amount'] = value;
+      if(tempData['amount'].toString().search('.') != -1) {
+        tempData['precPoint'] = 2;
+        tempData['amount'] = parseInt(tempData['amount'].toString().replace('.', ''));
+      }
+      return tempData;
+    }
     const months = [
       'Jan',
       'Feb',
@@ -424,542 +493,588 @@ title: Development Tracker
       'Oct',
       'Nov',
       'Dec'
-    ]
+    ];
     // The following is for commitments
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 2
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_commitments = 0.00;
-        var tabCommitments = jq3('#commitments').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    function a7(nextPage){
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 2,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#commitments_more').hide();
           }
-        });
-        jq3('#commitments_container').slideDown();
-        jq3('#commitments').show();
-        jq3.each(res, function(i, data){
-          total_commitments = total_commitments + parseFloat(data.value);
-          var receiver_org = '';
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          var receiver_org_type = '';
-          try {
-            jq3.each(projectInfo, function(i, d){
-              if(d.ref == data.receiver_organisation.ref){
-                receiver_org_type = d.type.name;
-              }
-            });
-          }
-          catch {
-            receiver_org_type = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          var total_commitments = 0.00;
+          var tabCommitments = jq3('#commitments').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          })
-          .done(function(res2){
-            tabCommitments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, res2.output]);
+          });
+          jq3('#commitments_container').slideDown();
+          jq3('#commitments').show();
+          jq3.each(res, function(i, data){
+            total_commitments = total_commitments + parseFloat(data.value);
+            var receiver_org = '';
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            var receiver_org_type = '';
+            try {
+              jq3.each(projectInfo, function(i, d){
+                if(d.ref == data.receiver_organisation.ref){
+                  receiver_org_type = d.type.name;
+                }
+              });
+            }
+            catch {
+              receiver_org_type = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabCommitments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabCommitments.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_commitments,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalCommitmentValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Incoming Funds logic starts here
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 1
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if(res.length > 0){
-        var total_incoming_funds = 0.00;
-        var tabincomingFunds = jq3('#incomingFunds').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    
+    function a6(nextPage) {
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 1,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if(res.length > 0){
+          if(response.output['hasNext'] == null){
+            $('#incomingFunds_more').hide();
           }
-        });
-        jq3('#incoming_funds_container').slideDown();
-        jq3('#incomingFunds').show();
-        jq3.each(res, function(i, data){
-          total_incoming_funds = total_incoming_funds + parseFloat(data.value);
-          var activity_description = '';
-          var provider_org = '';
-          var provider_activity_id = '';
-          try {
-            provider_activity_id = ' (' + data.provider_organisation.provider_activity_id + ')';
-          }
-          catch {
-            provider_activity_id = 'N/A';
-          }
-          try {
-            activity_description = data.description.narrative[0].text;
-          }
-          catch {
-            activity_description = '';
-          }
-          try {
-            provider_org = data.provider_organisation.narrative[0].text + provider_activity_id;
-          }
-          catch {
-            provider_org = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          var total_incoming_funds = 0.00;
+          var tabincomingFunds = jq3('#incomingFunds').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          })
-          .done(function(res2){
-            tabincomingFunds.row.add([activity_description, provider_org, final_date, res2.output]);
+          });
+          jq3('#incoming_funds_container').slideDown();
+          jq3('#incomingFunds').show();
+          jq3.each(res, function(i, data){
+            total_incoming_funds = total_incoming_funds + parseFloat(data.value);
+            var activity_description = '';
+            var provider_org = '';
+            var provider_activity_id = '';
+            try {
+              provider_activity_id = ' (' + data.provider_organisation.provider_activity_id + ')';
+            }
+            catch {
+              provider_activity_id = 'N/A';
+            }
+            try {
+              activity_description = data.description.narrative[0].text;
+            }
+            catch {
+              activity_description = '';
+            }
+            try {
+              provider_org = data.provider_organisation.narrative[0].text + provider_activity_id;
+            }
+            catch {
+              provider_org = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabincomingFunds.row.add([activity_description, provider_org, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabincomingFunds.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_incoming_funds,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalIncomingFundsValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Incoming Funds logic ends here
     
     // Disbursment logic starts here
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 3
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_disbursments = 0.00;
-        var tabDisbursments = jq3('#disbursements').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    function a5(nextPage){
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 3,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#disbursements_more').hide();
           }
-        });
-        jq3('#disbursements_container').slideDown();
-        jq3('#disbursements').show();
-        jq3.each(res, function(i, data){
-          total_disbursments = total_disbursments + parseFloat(data.value);
-          var receiver_org = '';
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          var receiver_org_type = '';
-          try {
-            jq3.each(projectInfo, function(i, d){
-              if(d.ref == data.receiver_organisation.ref){
-                receiver_org_type = d.type.name;
-              }
-            });
-          }
-          catch {
-            receiver_org_type = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          var total_disbursments = 0.00;
+          var tabDisbursments = jq3('#disbursements').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          })
-          .done(function(res2){
-            tabDisbursments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, res2.output]);
+          });
+          jq3('#disbursements_container').slideDown();
+          jq3('#disbursements').show();
+          jq3.each(res, function(i, data){
+            total_disbursments = total_disbursments + parseFloat(data.value);
+            var receiver_org = '';
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            var receiver_org_type = '';
+            try {
+              jq3.each(projectInfo, function(i, d){
+                if(d.ref == data.receiver_organisation.ref){
+                  receiver_org_type = d.type.name;
+                }
+              });
+            }
+            catch {
+              receiver_org_type = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabDisbursments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabDisbursments.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_disbursments,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalDisbursementsValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Disbursment logic ends here
 
     // Expenditure logic starts here
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 4
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_expenditures = 0.00;
-        var tabExpenditures = jq3('#expenditures').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    
+    function a4(nextPage) {
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 4,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#expenditures_more').hide();
           }
-        });
-        jq3('#expenditures_container').slideDown();
-        jq3('#expenditures').show();
-        jq3.each(res, function(i, data){
-          total_expenditures = total_expenditures + parseFloat(data.value);
-          var receiver_org = '';
-          var activity_description = '';
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          try {
-            activity_description = data.description.narrative[0].text;
-          }
-          catch {
-            activity_description = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          var total_expenditures = 0.00;
+          var tabExpenditures = jq3('#expenditures').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            //"ordering": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          })
-          .done(function(res2){
-            tabExpenditures.row.add([activity_description, receiver_org, data.activity.iati_identifier, final_date, res2.output]);
+          });
+          jq3('#expenditures_container').slideDown();
+          jq3('#expenditures').show();
+          jq3.each(res, function(i, data){
+            total_expenditures = total_expenditures + parseFloat(data.value);
+            var receiver_org = '';
+            var activity_description = '';
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            try {
+              activity_description = data.description.narrative[0].text;
+            }
+            catch {
+              activity_description = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabExpenditures.row.add([activity_description, receiver_org, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabExpenditures.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_expenditures,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalExpenditureValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Expenditure logic ends here
 
     //Interest Repayment logic starts here
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 5
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_interestRepayments = 0.00;
-        var tabInterestRepayments = jq3('#interestRepayments').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    function a3(nextPage) {
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 5,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#interestRepayments_more').hide();
           }
-        });
-        jq3('#interestRepayments_container').slideDown();
-        jq3('#interestRepayments').show();
-        jq3.each(res, function(i, data){
-          total_interestRepayments = total_interestRepayments + parseFloat(data.value);
-          var receiver_org = '';
-          var activity_description = '';
-          var receiver_activity_id = '';
-          try {
-            receiver_activity_id = data.receiver_organisation.receiver_activity_id;
-          }
-          catch {
-            receiver_activity_id = 'N/A';
-          }
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          try {
-            activity_description = data.description.narrative[0].text;
-          }
-          catch {
-            activity_description = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          var total_interestRepayments = 0.00;
+          var tabInterestRepayments = jq3('#interestRepayments').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          })
-          .done(function(res2){
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, res2.output]);
+          });
+          jq3('#interestRepayments_container').slideDown();
+          jq3('#interestRepayments').show();
+          jq3.each(res, function(i, data){
+            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            var receiver_org = '';
+            var activity_description = '';
+            var receiver_activity_id = '';
+            try {
+              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
+            }
+            catch {
+              receiver_activity_id = 'N/A';
+            }
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            try {
+              activity_description = data.description.narrative[0].text;
+            }
+            catch {
+              activity_description = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabInterestRepayments.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_interestRepayments,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalInterestRepaymentsValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     //Interest Repayment logic ends here
 
     //Loan Repayment logic starts here
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 6
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_interestRepayments = 0.00;
-        var tabInterestRepayments = jq3('#loanRepayments').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    
+    function a2(nextPage) {
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 6,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#loanRepayments_more').hide();
           }
-        });
-        jq3('#loanRepayments_container').slideDown();
-        jq3('#loanRepayments').show();
-        jq3.each(res, function(i, data){
-          total_interestRepayments = total_interestRepayments + parseFloat(data.value);
-          var receiver_org = '';
-          var activity_description = '';
-          var receiver_activity_id = '';
-          try {
-            receiver_activity_id = data.receiver_organisation.receiver_activity_id;
-          }
-          catch {
-            receiver_activity_id = 'N/A';
-          }
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-            if (receiver_org == 'Journal Transaction') {
-              receiver_activity_id = data.iati_identifier;
+          var total_interestRepayments = 0.00;
+          var tabInterestRepayments = jq3('#loanRepayments').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          try {
-            activity_description = data.description.narrative[0].text;
-          }
-          catch {
-            activity_description = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          });
+          jq3('#loanRepayments_container').slideDown();
+          jq3('#loanRepayments').show();
+          jq3.each(res, function(i, data){
+            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            var receiver_org = '';
+            var activity_description = '';
+            var receiver_activity_id = '';
+            try {
+              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
             }
-          })
-          .done(function(res2){
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, res2.output]);
+            catch {
+              receiver_activity_id = 'N/A';
+            }
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+              if (receiver_org == 'Journal Transaction') {
+                receiver_activity_id = data.iati_identifier;
+              }
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            try {
+              activity_description = data.description.narrative[0].text;
+            }
+            catch {
+              activity_description = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabInterestRepayments.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_interestRepayments,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalLoanRepaymentsValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Loan Repayment logic ends here
 
     // Purchase of equities
-    jq3.post('/transaction-details', {
-      data: {
-        'projectID': "<%= project['iati_identifier'] %>",
-        'transactionType': 8
-      }
-    })
-    .done(function(response){
-      res = response.output;
-      if (res.length > 0) {
-        var total_interestRepayments = 0.00;
-        var tabInterestRepayments = jq3('#purchaseEquities').DataTable({
-          retrieve: true,
-          "info": false,
-          "paging": false,
-          "searching": false,
-          dom: 'Bfrtip',
-          buttons: [
-            'csvHtml5'
-          ],
-          initComplete: function(){
-            var $buttons = jq3('.dt-buttons').hide();
-            $buttons.parent().parent().children('.downloadInCSV').click(function(){
-              $buttons.find('.button-csv').click();
-            });
+    function a1(nextPage) {
+      return jq3.post('/transaction-details-page', {
+        data: {
+          'projectID': "<%= project['iati_identifier'] %>",
+          'transactionType': 8,
+          'nextPage': nextPage
+        }
+      })
+      .done(function(response){
+        res = response.output['transactions'];
+        if (res.length > 0) {
+          if(response.output['hasNext'] == null){
+            $('#purchaseEquities_more').hide();
           }
-        });
-        jq3('#purchaseEquities_container').slideDown();
-        jq3('#purchaseEquities').show();
-        jq3.each(res, function(i, data){
-          total_interestRepayments = total_interestRepayments + parseFloat(data.value);
-          var receiver_org = '';
-          var activity_description = '';
-          var receiver_activity_id = '';
-          try {
-            receiver_activity_id = data.receiver_organisation.receiver_activity_id;
-          }
-          catch {
-            receiver_activity_id = 'N/A';
-          }
-          try {
-            receiver_org = data.receiver_organisation.narrative[0].text;
-            if (receiver_org == 'Journal Transaction') {
-              receiver_activity_id = data.iati_identifier;
+          var total_interestRepayments = 0.00;
+          var tabInterestRepayments = jq3('#purchaseEquities').DataTable({
+            retrieve: true,
+            "info": false,
+            "paging": false,
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+              'csvHtml5'
+            ],
+            initComplete: function(){
+              var $buttons = jq3('.dt-buttons').hide();
+              $buttons.parent().parent().children('.downloadInCSV').click(function(){
+                $buttons.find('.button-csv').click();
+              });
             }
-          }
-          catch {
-            receiver_org = 'N/A';
-          }
-          try {
-            activity_description = data.description.narrative[0].text;
-          }
-          catch {
-            activity_description = 'N/A';
-          }
-          var transaction_date = new Date(data.transaction_date);
-          var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-          jq3.post('/number-to-currency', {
-            data: {
-              number: data.value,
-              currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+          });
+          jq3('#purchaseEquities_container').slideDown();
+          jq3('#purchaseEquities').show();
+          jq3.each(res, function(i, data){
+            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            var receiver_org = '';
+            var activity_description = '';
+            var receiver_activity_id = '';
+            try {
+              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
             }
-          })
-          .done(function(res2){
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, res2.output]);
+            catch {
+              receiver_activity_id = 'N/A';
+            }
+            try {
+              receiver_org = data.receiver_organisation.narrative[0].text;
+              if (receiver_org == 'Journal Transaction') {
+                receiver_activity_id = data.iati_identifier;
+              }
+            }
+            catch {
+              receiver_org = 'N/A';
+            }
+            try {
+              activity_description = data.description.narrative[0].text;
+            }
+            catch {
+              activity_description = 'N/A';
+            }
+            var transaction_date = new Date(data.transaction_date);
+            var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
+            var amount = convertCurrency(data.value);
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
             tabInterestRepayments.draw();
           });
-        });
-        jq3.post('/number-to-currency', {
-          data: {
-            number: total_interestRepayments,
-            currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
-          }
-        })
-        .done(function(res2){
-          jq3('#totalPurchaseEquitiesValue').html(res2.output);
-        });
-      }
-    });
+        }
+      });
+    }
     // Purchase of equity logic ends here
+    function allDone() {
+      $('#waiting').slideUp('slow');
+    }
+    function someFailed() {
+      console.log('Some failed!');
+    }
+    $.when(a7(1), a6(1), a5(1), a4(1), a3(1), a2(1), a1(1)).then(allDone, someFailed);
+    $('#expenditures_more').click(function(){
+      var page = parseInt($('#expenditures_more_data').val()) + 1;
+      $('#expenditures_more_data').val(page);
+      a4(page);
+    });
+    $('#purchaseEquities_more').click(function(){
+      var page = parseInt($('#purchaseEquities_more_data').val()) + 1;
+      $('#purchaseEquities_more_data').val(page);
+      a1(page);
+    });
+    $('#loanRepayments_more').click(function(){
+      var page = parseInt($('#loanRepayments_more_data').val()) + 1;
+      $('#loanRepayments_more_data').val(page);
+      a2(page);
+    });
+    $('#interestRepayments_more').click(function(){
+      var page = parseInt($('#interestRepayments_more_data').val()) + 1;
+      $('#interestRepayments_more_data').val(page);
+      a3(page);
+    });
+    $('#disbursements_more').click(function(){
+      var page = parseInt($('#disbursements_more_data').val()) + 1;
+      $('#disbursements_more_data').val(page);
+      a5(page);
+    });
+    $('#incomingFunds_more').click(function(){
+      var page = parseInt($('#incomingFunds_more_data').val()) + 1;
+      $('#incomingFunds_more_data').val(page);
+      a6(page);
+    });
+    $('#commitments_more').click(function(){
+      var page = parseInt($('#commitments_more_data').val()) + 1;
+      $('#commitments_more_data').val(page);
+      a7(page);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier']%>",
+        transactionType: 2,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalCommitmentValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier']%>",
+        transactionType: 1,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalIncomingFundsValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier']%>",
+        transactionType: 3,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalDisbursementsValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier']%>",
+        transactionType: 5,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalInterestRepaymentsValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier'] %>",
+        transactionType: 8,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalPurchaseEquitiesValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier'] %>",
+        transactionType: 6,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalLoanRepaymentsValue').html(res.output);
+    });
+    jq3.post('/transaction-total', {
+      data: {
+        project: "<%= project['iati_identifier']%>",
+        transactionType: 4,
+        currency: "<%= begin project['default_currency']['code'] rescue 'GBP' end%>"
+      }
+    })
+    .done(function(res){
+      jq3('#totalExpenditureValue').html(res.output);
+    });
   })
 </script>
