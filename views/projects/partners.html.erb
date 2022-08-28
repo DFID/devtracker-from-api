@@ -4,6 +4,7 @@
 <div class="row">
   <div id="waiting" class="twelve columns" style="display: none;"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Data.. Please wait..</strong></p></div>
 </div>
+<div id="fundingProjects" class="row"></div>
 <div id="fundedProjects" class="row"></div>
 
 
@@ -176,6 +177,30 @@
         });
       }
     }
+    function fundingProjects() {
+      $('#waiting').slideDown('slow');
+      jq3.get('/get-funding-projects-details/'+projectID)
+        .done(function(response){
+          res = response.output;
+          var htmlString = '';
+          if (res.length > 0) {
+            var htmlString = '';
+            // 2 divs open
+            htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Project</h3>';
+            jq3.each(res, function(i, data){
+              htmlString = htmlString + '<div class="row"><div class="four columns summary">'
+              + '<h4>'+data[2]+'</h4>'
+              + '</div><div class="eight columns"><ul><li>'
+              + '<a href="/projects/'+encodeURI(data[0])+'/summary">'+data[3]+'</a>' + data[4]
+              + '<span>'+data[1]+'</span></li></ul></div></div>';
+            });
+            htmlString = htmlString + '</div></div>';
+            jq3('#fundingProjects').html(htmlString);
+          }
+          $('#waiting').slideUp('slow');
+        });
+    }
     fundedProjects(true,1);
+    fundingProjects();
   })
 </script>

@@ -140,6 +140,46 @@ module ProjectHelpers
     def get_funding_project_details(projectId)
         fundingProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" )
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
+        fundingProjectsData = fundingProjectsData['results']
+        begin
+            fundingProjects=fundingProjectsData
+            .group_by{|b| b['provider_organisation']['provider_activity_id'].to_s.strip}
+            .map{|provider_activity_id, budgets, currency|
+                summedBudgets = budgets.reduce(0) {|memo, budget| memo.to_f + budget['value'].to_f}
+                [provider_activity_id, summedBudgets]}
+            refinedFundingProjects = []
+            fundingProjects.each do |item|
+                if is_valid_project(item[0])
+                    targetData = fundingProjectsData.select{|d| d['provider_organisation'].to_s == item[0].to_s}.first
+                    apiData = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{item[0]}/?format=json&fields=title,description,reporting_org,default_currency" )
+                    apiData = JSON.parse(apiData)
+                    begin
+                        item.push(apiData['reporting_org']['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item.push(apiData['title']['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item.push(apiData['description'][0]['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item[1] = Money.new(item[1].to_f.round(0)*100, apiData['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    rescue
+                        item[1] = Money.new(item[1].to_f.round(0)*100, 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    end
+                    refinedFundingProjects.push(item)
+                end
+            end
+            refinedFundingProjects
+        rescue
+            []
+        end
     end
 
     def get_funded_project_details(projectId)
@@ -530,7 +570,6 @@ module ProjectHelpers
 
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
-            puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000"
             projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
         else
             projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")

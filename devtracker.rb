@@ -59,13 +59,13 @@ include SolrHelper
 # Developer Machine: set global settings
 # set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
- set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+# set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
- set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -460,8 +460,7 @@ get '/projects/*/components/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			project: project,
-			components: [1]
+			project: project
  		}
 end
 ######################################################################
@@ -584,6 +583,12 @@ get '/get-funded-projects-page/:page/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	page = ERB::Util.url_encode params[:page].to_s
 	json :output=> get_funded_project_details_page(n, page, 20)
+end
+
+get '/get-funding-projects-details/*?' do
+	puts params
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	json :output=> get_funding_project_details(n)
 end
 
 ######################################################################
