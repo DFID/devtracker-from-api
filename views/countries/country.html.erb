@@ -30,12 +30,12 @@
 <div class="row">
     <% if(country[:code] == 'AF') %>
         <div class="twelve columns">
-            <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (project title, description and channel of delivery) from Devtracker. As projects are reviewed and republished, the project and financial information will become available on DevTracker.</div>
+            <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (Programme title, description and channel of delivery) from Devtracker. As Programmes are reviewed and republished, the Programme and financial information will become available on DevTracker.</div>
         </div>
     <%end%>
     <% if(country[:code] == 'UA') %>
         <div class="twelve columns">
-            <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA project information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
+            <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
         </div>
     <%end%>
     <div class="eight columns summary">
@@ -238,14 +238,14 @@
          <div class="country-info-container">  
             <div class="more-info-container">  
                 <span class="more-info-title">Budget</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+                <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme status" class="more-info-link-middle"/></a>
                 <aside id="moreinfo3" class="more-info">            
                         <div class="more-info-content">
                             Please note that although budgets are generally split by year, some departments publish budgets that span multiple years. These are represented in the first year of their allocation.
                         </div>
                 </aside>
             </div>
-            <p>Project budget total by year approved at the project level to date.</p>
+            <p>Programme budget total by year approved at the Programme level to date.</p>
          </div>
          <div id="budget-year-chart5" style="height: 300px; width: 100%;" class="row"></div>
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
@@ -295,7 +295,7 @@
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Partner(s)</th>
-                  <th scope="col" class="govuk-table__header">Active Projects</th>
+                  <th scope="col" class="govuk-table__header">Active Programmes</th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">

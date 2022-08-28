@@ -181,7 +181,7 @@ get '/countries/:country_code/projects/?' do |n|
 	settings.devtracker_page_title = 'Search Results For : ' + query
 	projectData = ''
 	country = get_country_code_name(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Projects Page'
+  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Programmes Page'
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -196,7 +196,7 @@ get '/countries/:country_code/projects/?' do |n|
 			searchType: 'C',
 			breadcrumbURL: '/location/country',
 			breadcrumbText: 'Aid by Location'
-	 	}	
+	 	}
 end
 
 #####################################################################
@@ -220,7 +220,7 @@ get '/global/:global_code/projects/?' do |n|
 	end
 	#getRegionProjects = get_region_projects(region[:code])
 	getRegionProjects = generate_project_page_data(generate_api_list('R',region[:code],"2"))
-	settings.devtracker_page_title = 'Global '+region[:name]+' Projects Page'
+	settings.devtracker_page_title = 'Global '+region[:name]+' Programme Page'
 	erb :'regions/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -274,7 +274,7 @@ get '/regions/:region_code/projects/?' do |n|
 	end
 	countryAllProjectFilters = get_static_filter_list()
 	region = get_region_code_name(n)
-  	settings.devtracker_page_title = 'Region '+region[:name]+' Projects Page'
+  	settings.devtracker_page_title = 'Region '+region[:name]+' Programmes Page'
 	if n.to_i == 998
 		breadcrumbURL = '/location/global'
 	else
@@ -340,7 +340,7 @@ get '/projects/*/summary' do
 			policyMarkerCount += 1
 		end
 	end
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']
+  	settings.devtracker_page_title = 'Programme '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
 		 :locals => {
@@ -383,7 +383,7 @@ get '/projects/*/documents/?' do
 	# 	end
 	# end
   	
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Documents'
+  	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -430,7 +430,7 @@ get '/projects/*/transactions/?' do
 
 	# get the funded projects Count from the API
 		
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
+  	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -455,7 +455,7 @@ get '/projects/*/components/?' do
 	project = get_h1_project_details(n)
 	#componentData = get_project_component_data(project)
 
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Transactions'
+  	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/components', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -611,7 +611,7 @@ get '/projects/*/partners/?' do
 	# get the funded projects from the API
 #	fundedProjectsData = get_funded_project_details(n)
 
-  	settings.devtracker_page_title = 'Project '+project['iati_identifier']+' Partners'
+  	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -995,7 +995,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
-	settings.devtracker_page_title = 'Sector '+highLevelCode+' Projects Page'
+	settings.devtracker_page_title = 'Sector '+highLevelCode+' Programmes Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -1040,7 +1040,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
-	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Projects Page'
+	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Programmes Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -1084,7 +1084,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 		response = addTotalBudgetWithCurrency(response)
 	end
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
-  	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Projects Page'
+  	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Programmes Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -1508,8 +1508,8 @@ get '/rss/country/:country_code/?' do |n|
 
 	    maker.channel.author = "Department for International Development"
 	    maker.channel.updated = Time.now.to_s
-	    maker.channel.about = "A breakdown of all the projects that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
-	    maker.channel.title = "FCDO projects feed for #{countryName[:name]}"
+	    maker.channel.about = "A breakdown of all the Programmes that have changed for #{countryName[:name]} on DevTracker in reverse chronological order"
+	    maker.channel.title = "FCDO Programmes feed for #{countryName[:name]}"
 	    maker.channel.link = "https://devtracker.fcdo.gov.uk/countries/#{n}/projects/"
 
 	    projects.each do |project|

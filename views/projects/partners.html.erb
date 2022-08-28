@@ -46,10 +46,10 @@
           var htmlString = '';
           if (Object.keys(res).length > 0) {
             if (isFCDOProj(projectID)){
-              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Partner Projects</h3>';
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Partner Programmes</h3>';
             }
             else {
-              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Funded Projects</h3>';
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Funded Programmes</h3>';
             }
             jq3.each(res, function(i, data){
               if(data.iati_identifier.toString() !=  projectID.toString()){
@@ -81,7 +81,7 @@
                   +encodeURI(data.iati_identifier)+'/summary">'
                   +fp_title+'</a>'
                   +fp_description
-                  +'<span>Total Project Budget: '
+                  +'<span>Total Programme Budget: '
                   +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
                 }
                 else {
@@ -91,7 +91,7 @@
                   +encodeURI(data.iati_identifier)+'/summary">'
                   +fp_title+'</a>'
                   +fp_description
-                  +'<span>Total Project Budget: '
+                  +'<span>Total Programme Budget: '
                   +data.total_project_budget + '</span></li></ul></div></div>';
                 }
               }
@@ -156,7 +156,7 @@
                   +encodeURI(data.iati_identifier)+'/summary">'
                   +fp_title+'</a>'
                   +fp_description
-                  +'<span>Total Project Budget: '
+                  +'<span>Total Programme Budget: '
                   +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
                 }
                 else {
@@ -166,7 +166,7 @@
                   +encodeURI(data.iati_identifier)+'/summary">'
                   +fp_title+'</a>'
                   +fp_description
-                  +'<span>Total Project Budget: '
+                  +'<span>Total Programme Budget: '
                   +data.total_project_budget + '</span></li></ul></div></div>';
                 }
               }
@@ -186,7 +186,7 @@
           if (res.length > 0) {
             var htmlString = '';
             // 2 divs open
-            htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Project</h3>';
+            htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Programme</h3>';
             jq3.each(res, function(i, data){
               htmlString = htmlString + '<div class="row"><div class="four columns summary">'
               + '<h4>'+data[2]+'</h4>'
