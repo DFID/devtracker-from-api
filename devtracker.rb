@@ -137,7 +137,7 @@ get '/countries/:country_code/?' do |n|
 	 	}
 	end
 	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
-	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
+	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
 	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
 	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
 	ogds = Oj.load(File.read('data/OGDs.json'))
@@ -1220,7 +1220,7 @@ end
 get '/test01' do  #homepage
 	#read static data from JSON files for the front page
 	liveURL = 'https://devtracker-entry.oipa.nl/api/activities/?hierarchy=1&format=json&reporting_organisation_identifier=GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-GOV-50,GB-GOV-52,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24&page_size=149&fields=activity_plus_child_aggregation,aggregations&activity_status=1,2,3,4,5&ordering=-activity_plus_child_budget_value&recipient_country=BD'
-	solrURL = 'https://fcdo.iati.cloud//search/activity/?q=hierarchy:1%20AND%20participating_org_ref:GB-*%20AND%20recipient_country_code:(BD)%20AND%20reporting_org_ref:(GB-GOV-15%20OR%20GB-GOV-9%20OR%20GB-GOV-6%20OR%20GB-GOV-2%20OR%20GB-GOV-1%20OR%20GB-1%20OR%20GB-GOV-3%20OR%20GB-GOV-13%20OR%20GB-GOV-7%20OR%20GB-GOV-50%20OR%20GB-GOV-52%20OR%20GB-6%20OR%20GB-10%20OR%20GB-GOV-10%20OR%20GB-9%20OR%20GB-GOV-8%20OR%20GB-GOV-5%20OR%20GB-GOV-12%20OR%20GB-COH-RC000346%20OR%20GB-COH-03877777)AND%20activity_status_code:(1%20OR%202%20OR%203%20OR%204%20OR%205)&rows=149&fl=iati_identifier,%20child_aggregation_*,%20activity_plus_child_aggregation*,%20activity_aggregation_*&start=0'
+	solrURL = 'https://fcdo.iati.cloud//search/activity/?q=hierarchy:1%20AND%20participating_org_ref:GB-GOV-*%20AND%20recipient_country_code:(BD)%20AND%20reporting_org_ref:(GB-GOV-15%20OR%20GB-GOV-9%20OR%20GB-GOV-6%20OR%20GB-GOV-2%20OR%20GB-GOV-1%20OR%20GB-1%20OR%20GB-GOV-3%20OR%20GB-GOV-13%20OR%20GB-GOV-7%20OR%20GB-GOV-50%20OR%20GB-GOV-52%20OR%20GB-6%20OR%20GB-10%20OR%20GB-GOV-10%20OR%20GB-9%20OR%20GB-GOV-8%20OR%20GB-GOV-5%20OR%20GB-GOV-12%20OR%20GB-COH-RC000346%20OR%20GB-COH-03877777)AND%20activity_status_code:(1%20OR%202%20OR%203%20OR%204%20OR%205)&rows=149&fl=iati_identifier,%20child_aggregation_*,%20activity_plus_child_aggregation*,%20activity_aggregation_*&start=0'
   	settings.devtracker_page_title = 'Test data'
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
