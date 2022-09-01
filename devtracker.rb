@@ -146,7 +146,6 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-	puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"
 	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
@@ -316,7 +315,6 @@ get '/projects/*/summary' do
   	projectSectorGraphData = get_project_sector_graph_data(n)
 	begin
 		getPolicyMarkers = get_policy_markers(n)
-		puts 'policy markers grabbed'
 	rescue
 		getPolicyMarkers = Array.new
 	end
@@ -510,14 +508,12 @@ get '/get-funded-projects/*?' do
 end
 
 get '/get-funded-projects-page/:page/*?' do
-	puts params
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	page = ERB::Util.url_encode params[:page].to_s
 	json :output=> get_funded_project_details_page(n, page, 20)
 end
 
 get '/get-funding-projects-details/*?' do
-	puts params
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	json :output=> get_funding_project_details(n)
 end
@@ -1158,7 +1154,6 @@ end
 
 	get '/test-cache?' do
 		randomNumber = rand(2)
-		puts(randomNumber)
 		if (randomNumber.to_i.even?)
 			json :output => xx['xx']
 		else

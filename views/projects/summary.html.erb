@@ -195,22 +195,22 @@
 
 <div class="row">
     <div class="six columns">
-        <div class="country-info-container">  
+        <div style="display: none" class="country-info-container sector_chart_container">  
             <span class="country-info">Sectors</span> 
                 <p>Sector groups as a percentage of total Programme budget according to the OECD Development Assistance Committee (DAC) classifications.</p>
         </div>
         <div class="row">
-            <div class="twelve columns">
+            <div style="display: none" class="twelve columns sector_chart_container">
                 <div id="sectorChart"></div>
             </div>
         </div>
     </div>
     <div class="six columns">
-        <div class="country-info-container">  
+        <div style="display: none" class="country-info-container budget_container">  
                 <span class="country-info">Budget</span> 
                 <p>A comparison across financial years of forecast budget and spend to date on the Programme.</p>
         </div>
-        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
+        <div id="budget-plan-spend" style="height: 300px; width: 100%" class="row budget_container"></div>
     </div>
     <div style="display: none" class="twelve columns">
         <%if policyMarkersCount > 0%>
@@ -299,6 +299,12 @@
         }
         //Prepare color codes to be used for the bar graph
         var graphData = [<%= projectSectorGraphData[0] %>];
+        if (graphData[0][0] == 'No data available for this view'){
+            $('.sector_chart_container').hide();
+        }
+        else {
+            $('.sector_chart_container').slideDown('slow');
+        }
         var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
         var fColors = {};
         for(i = 0; i<graphData.length; i++){
@@ -346,8 +352,8 @@
             }
         });
         <% budgetYearData = project_budget_per_fy(project['iati_identifier']) %>
-
-        <% if !budgetYearData.nil? then %>
+        <% if !budgetYearData.nil? && budgetYearData[0].length>0 then %>
+            $('.budget_container').slideDown('slow');
             <% begin %>
                 <%if !project["default_currency"]["code"].nil? %>
                     var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
@@ -430,7 +436,7 @@
                 $('#budget-plan-spend').append('<span style="text-align: center; margin: 0 60px;">Please note: No Valid currency present in the above data.</span>');
             }            
             <% else %>
-
+            $('.budget_container').hide();
             $('#budget-plan-spend').html("Data not found");
 
             <% end %>

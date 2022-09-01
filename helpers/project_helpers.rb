@@ -754,7 +754,6 @@ module ProjectHelpers
             returnGraphData[0] = tempFYear
             returnGraphData[1] = tempBudgetAmount
             returnGraphData[2] = tempSpendAmount
-
             return returnGraphData  
 
         rescue
