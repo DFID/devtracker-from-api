@@ -67,11 +67,11 @@
                     <div class="projects-nav seven columns">
                         <nav>
                             <ul class="tab-bar">
-                                <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
-                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='Documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
-                                <li <%= active=="components" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components">Projects</a></li>
-                                <li <%= active=="transactions" ? "class='active'" : ""%>><a id='Transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
-                                <li <%= active=="partners" ? "class='active partner-tab'" : "class='partner-tab'"%> style="display: none"><a id='Partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
+                                <li <%= active=="summary" ? "class='active'" : ""%>><a id='summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
+                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                                <li <%= active=="components" ? "class='active'" : ""%>><a id='components' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components">Projects</a></li>
+                                <li <%= active=="transactions" ? "class='active transactions-tab'" : "class='transactions-tab'"%> style="display: none"><a id='transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
+                                <li <%= active=="partners" ? "class='active partner-tab'" : "class='partner-tab'"%> style="display: none"><a id='partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
                                 <!-- TODO: bring back in r4dDocs element -->
                             </ul>
                         </nav>

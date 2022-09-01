@@ -282,7 +282,6 @@
         }
         function graphCurrencyHandlerFront(string){
             if(string.search("0") != 0){
-                console.log(string.slice(0,string.search("0") - 1));
                 return string.slice(0,string.search("0"));
             }
             else{
@@ -294,7 +293,6 @@
                 return '';
             }
             else{
-                console.log(string.slice(4,string.length));
                 //return string.slice(4,string.length);
                 return string.replace(/[0.]*/,"");
             }
@@ -484,6 +482,13 @@
           }
         })
       }
+    })
+
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+        if(response.output > 0) {
+            $('.transactions-tab').show();
+        }
     })
   })
 </script>

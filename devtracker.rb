@@ -311,23 +311,9 @@ get '/projects/*/summary' do
   	participatingOrgList = get_participating_organisations(project)
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
-  	#get total project budget and spend Data
-  	#projectBudget = get_project_budget(n)
 
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_data(n)
-	# get the funding projects Count from the API
-  	#fundingProjectsCount = get_funding_project_count(n)
-	# get the funded projects Count from the API
-	#fundedProjectsCount = 0
-	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-	# 	begin
-	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-	# 	rescue
-	# 		puts id
-	# 	end
-	# end
-	#Policy markers
 	begin
 		getPolicyMarkers = get_policy_markers(n)
 		puts 'policy markers grabbed'
@@ -348,9 +334,6 @@ get '/projects/*/summary' do
 		 	oipa_api_url: settings.oipa_api_url,
  			project: project,
  			countryOrRegion: countryOrRegion,	 					 			
- 			#fundedProjectsCount: fundedProjectsCount,
- 			#fundingProjectsCount: fundingProjectsCount,
- 			#projectBudget: projectBudget,
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
  			policyMarkers: getPolicyMarkers,
@@ -361,27 +344,10 @@ end
 
 # Project documents page
 get '/projects/*/documents/?' do
-	#n = sanitize_input(n,"p")
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_details(n)
-
-  	#get the country/region data from the API
-  	#countryOrRegion = get_country_or_region(n)
-
-  	# get the funding projects Count from the API
-  	#fundingProjectsCount = get_funding_project_count(n)
-
-	# get the funded projects Count from the API
-	# fundedProjectsCount = 0
-	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-	# 	begin
-	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-	# 	rescue
-	# 		puts id
-	# 	end
-	# end
   	
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
@@ -389,9 +355,6 @@ get '/projects/*/documents/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			project: project,
- 			# countryOrRegion: countryOrRegion,
- 			# fundedProjectsCount: fundedProjectsCount,
- 			# fundingProjectsCount: fundingProjectsCount 
  		}
 end
 
@@ -399,36 +362,8 @@ end
 get '/projects/*/transactions/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
-	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
-	#componentData = get_project_component_data(project)
-		
-	# get the transactions from the API
-  	# incomingFunds = get_transaction_details(n,"1")
-
-  	# # get the incomingFund transactions from the API
-  	# commitments = get_transaction_details(n,"2")
-
-  	# # get the disbursement transactions from the API
-  	# disbursements = get_transaction_details(n,"3")
-
-  	# # get the expenditure transactions from the API
-  	# expenditures = get_transaction_details(n,"4")
-
-  	# # get the Interest Repayment transactions from the API
-  	# interestRepayment = get_transaction_details(n,"5")
-
-  	# # get the Loan Repayment transactions from the API
-  	# loanRepayment = get_transaction_details(n,"6")
-
-  	# # get the Purchase of Equity transactions from the API
-  	# purchaseEquity = get_transaction_details(n,"8")
-
-  	# get yearly budget for H1 Activity from the API
-	#projectYearWiseBudgets= get_project_yearwise_budget(n)
-
-	# get the funded projects Count from the API
 		
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -436,13 +371,6 @@ get '/projects/*/transactions/?' do
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			project: project,
- 			# incomingFunds: incomingFunds,
- 			# commitments: commitments,
- 			# disbursements: disbursements,
- 			# expenditures: expenditures,
- 			# interestRepayments: interestRepayment,
- 			# loanRepayments: loanRepayment,
- 			# purchaseEquities: purchaseEquity,
  		}
 end
 
@@ -450,10 +378,8 @@ end
 get '/projects/*/components/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
-	#n = sanitize_input(n,"p")
 	# get the project data from the API
 	project = get_h1_project_details(n)
-	#componentData = get_project_component_data(project)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/components', 
@@ -477,6 +403,11 @@ post '/transaction-details' do
 	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
 
 	json :output => get_transaction_details(project,transactionType)
+end
+
+get '/transaction-count/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	json :output => get_transaction_count(n)
 end
 
 post '/transaction-details-page' do
@@ -598,30 +529,14 @@ get '/projects/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	#n = sanitize_input(n,"p")
 	project = get_h1_project_details(n)
-
-  	#get the country/region data from the API
-  	#countryOrRegion = get_country_or_region(n)
-
-  	# get the funding projects from the API
-  	# fundingProjectsData = get_funding_project_details(n)
-  	# fundingProjects = fundingProjectsData['results'].select {|project| !project['provider_organisation'].nil? }	
-
-	# get the funded projects from the API
-#	fundedProjectsData = get_funded_project_details(n)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Partners'
 	erb :'projects/partners', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			project: project,
-			#countryOrRegion: countryOrRegion, 			
- 			# fundedProjects: fundedProjectsData,
- 			# fundedProjectsCount: fundedProjectsData.length,
- 			# fundingProjects: fundingProjects,
- 			# fundingProjectsCount: fundingProjectsData['count']
+			project: project
  		}
 end
 
@@ -847,57 +762,6 @@ get '/regions/?' do
 	}
 end
 
-# get '/solr-regions/:region_code/?' do |n|
-# 	n = sanitize_input(n, "p")
-# 	query = '('+n+')'
-# 	filters = prepareFilters(query.to_s, 'R')
-# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'R', 0, '', '')
-# 	if(response['numFound'].to_i > 0)
-# 		response = addTotalBudgetWithCurrency(response)
-# 	end
-# 	settings.devtracker_page_title = 'Search Results For : ' + query
-# 	#erb :'search/solrRegions',
-# 	erb :'search/solrTemplate',
-# 	:layout => :'layouts/layout',
-# 	:locals => 
-# 	{
-# 		oipa_api_url: settings.oipa_api_url,
-# 		query: query,
-# 		filters: filters,
-# 		response: response,
-# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
-# 		searchType: 'R',
-# 		breadcrumbURL: '/location/regional',
-# 		breadcrumbText: 'Aid by Location'
-# 	}
-# end
-
-# get '/solr-countries/:country_code/?' do |n|
-# 	n = sanitize_input(n, "p")
-# 	query = '('+n+')'
-# 	filters = prepareFilters(query.to_s, 'C')
-# 	response = solrResponse(query, 'AND activity_status_code:(1 OR 2 OR 3)', 'C', 0, '', '')
-# 	if(response['numFound'].to_i > 0)
-# 		response = addTotalBudgetWithCurrency(response)
-# 	end
-# 	settings.devtracker_page_title = 'Search Results For : ' + query
-# 	erb :'search/solrTemplate',
-# 	:layout => :'layouts/layout',
-# 	:locals => 
-# 	{
-# 		oipa_api_url: settings.oipa_api_url,
-# 		query: query,
-# 		filters: filters,
-# 		response: response,
-# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
-# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
-# 		searchType: 'C',
-# 		breadcrumbURL: '/location/country',
-# 		breadcrumbText: 'Aid by Location'
-# 	}
-# end
-
 get '/global/?' do
 	query = '(998)'
 	filters = prepareFilters(query.to_s, 'R')
@@ -1118,193 +982,7 @@ get '/currency/?' do
 	json :output => returnCurrency
 end
 
-#####################################################################
-#  LHS Filters API
-#####################################################################
 
-# get '/getCountryFilters/?' do
-# 	countryCode = sanitize_input(params['countryCode'],"p")
-# 	projectStatus = params['projectStatus']
-# 	projectData = generate_project_page_data(generate_api_list('C',countryCode,projectStatus))
-# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
-# 	projectData["country"] = get_country_code_name(countryCode)
-# 	json :output => projectData
-# end
-
-# get '/getSectorFilters' do
-# 	sectorCode = params['sectorCode']
-# 	projectStatus = params['projectStatus']
-# 	projectData = generate_project_page_data(generate_api_list('S',sectorCode,projectStatus))
-# 	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
-# 	projectData["LocationCountries"] = locationFilterData["locationCountryFilters"]
-# 	projectData["LocationRegions"] = locationFilterData["locationRegionFilters"]
-# 	#json :output => get_sector_projects_json(params['sectorCode'], params['projectStatus'])
-# 	json :output => projectData
-# end
-
-# get '/getRegionFilters' do
-# 	regionCode = params['regionCode']
-# 	projectStatus = params['projectStatus']
-# 	projectData = generate_project_page_data(generate_api_list('R',regionCode,projectStatus))
-# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
-# 	#json :output => get_region_projects_json(params['regionCode'], params['projectStatus'])
-# 	json :output => projectData
-# end
-
-# get '/getFTSFilters' do
-# 	query = sanitize_input(params['query'],"a")
-# 	projectStatus = params['projectStatus']
-# 	projectData = generate_project_page_data(generate_api_list('F',query,projectStatus))
-# 	projectData["projects"] = projectData["projects"]["results"]
-# 	#json :output => generate_searched_data(sanitize_input(params['query'],"a"), params['projectStatus'])
-# 	json :output => projectData
-# end
-
-# get '/getOGDFilters' do
-# 	ogd = params['ogd']
-# 	projectStatus = params['projectStatus']
-# 	projectData = generate_project_page_data(generate_api_list('O',ogd,projectStatus))
-# 	#json :output => get_ogd_all_projects_data_json(params['ogd'], params['projectStatus'])
-# 	projectData['countryAllProjectFilters'] = get_static_filter_list()
-# 	json :output => projectData
-# end
-
-#Returns the designated API list based on an active project page type - Not needed
-# get '/getapiurls' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	json :output => generate_api_list(apiType,apiParams,projectStatus)
-# end
-
-############################################################
-## Methods for returning LHS filters - Parallel API calls ##
-############################################################
-
-#Returns the project list and the budget higher bound
-# get '/getProjectListWithBudgetHi' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateProjectListWithBudgetHiBound(apiList[0])
-# end
-
-# #Returns the budget higher bound
-# get '/getBudgetHi' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateBudgetHiBound(apiList[0])
-# end
-
-# #Returns the Sector List for LHS
-# get '/getHiLvlSectorList' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateSectorList(apiList[1])
-# end
-
-#Returns the LHS start date
-# get '/getStartDate' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateProjectStartDate(apiList[2])
-# end
-
-#Returns the LHS end date
-# get '/getEndDate' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateProjectEndDate(apiList[3])
-# end
-
-#Returns the LHS Document List
-# get '/getDocumentTypeList' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateDocumentTypeList(apiList[4])
-# end
-
-#Returns the LHS Implementing Org List
-# get '/getImplOrgList' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	json :output => generateImplOrgList(apiList[5])
-# end
-
-# #Returns the LHS Reporting Org List
-# get '/getReportingOrgList' do
-# 	apiType = params['apiType']
-# 	apiParams = params['apiParams']
-# 	projectStatus = params['projectStatus']
-# 	apiList = generate_api_list(apiType,apiParams,projectStatus)
-# 	if(apiType == 'C')
-# 		json :output => generateReportingOrgList(apiList[7])
-# 	else
-# 		json :output => generateReportingOrgList(apiList[6])
-# 	end
-# end
-
-#Returns the LHS Filters (Sector Page Specific)
-# get '/getSectorSpecificFilters' do
-# 	sectorCode = params['sectorCode']
-# 	projectStatus = params['projectStatus']
-# 	locationFilterData = prepare_location_country_region_data(projectStatus,sectorCode)
-# 	sectorData = {}
-# 	sectorData["LocationCountries"] = locationFilterData["locationCountryFilters"]
-# 	sectorData["LocationRegions"] = locationFilterData["locationRegionFilters"]
-# 	json :output => sectorData
-# end
-
-# FTS API call wrapper
-
-# get '/getFTSResponse' do
-# 	searchQuery = params['searchQuery']
-# 	activity_status = params['activity_status']
-# 	ordering = params['ordering']
-# 	budgetLowerBound = params['budgetLowerBound']
-# 	budgetHigherBound = params['budgetHigherBound']
-# 	actual_start_date_gte = params['actual_start_date_gte']
-# 	planned_end_date_lte = params['planned_end_date_lte']
-# 	sector = params['sector']
-# 	document_link_category = params['document_link_category']
-# 	participating_organisation = params['participating_organisation']
-# 	if params['page'] != nil && params['page'] != ''
-# 		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation+'&page='+params['page'])
-# 	else
-# 		jsonResponse = RestClient.get  api_simple_log(settings.oipa_api_url + 'activities/?hierarchy=1&page_size=20&format=json&fields=activity_dates,aggregations,activity_status,id,iati_identifier,url,title,reporting_organisation,activity_plus_child_aggregation,descriptions&q='+searchQuery+'&activity_status='+activity_status+'&ordering='+ordering+'&total_hierarchy_budget_gte='+budgetLowerBound+'&total_hierarchy_budget_lte='+budgetHigherBound+'&actual_start_date_gte='+actual_start_date_gte+'&planned_end_date_lte='+planned_end_date_lte+'&sector='+sector+'&document_link_category='+document_link_category +'&participating_organisation='+participating_organisation)
-# 	end
-# 	jsonResponse = Oj.load(jsonResponse)
-# 	jsonResponse['results'].each do |r|
-# 		r['activity_plus_child_aggregation']['totalBudget'] = Money.new(r['activity_plus_child_aggregation']['activity_children']['budget_value'].to_i*100, 
-#                                     if r['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil?  
-#                                         if r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil?
-#                                             if r['activity_plus_child_aggregation']['activity_children']['expenditure_currency'].nil?
-#                                                 'GBP'
-#                                             else
-#                                                 r['activity_plus_child_aggregation']['activity_children']['expenditure_currency']
-#                                             end
-#                                         else
-#                                             r['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency']
-#                                         end
-#                                     else r['activity_plus_child_aggregation']['activity_children']['budget_currency'] 
-#                                     end
-#                                         ).round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
-# 	end
-# 	json :output => jsonResponse
-# end
 #####################################################################
 #  CSV HANDLER
 #####################################################################

@@ -308,6 +308,21 @@ module ProjectHelpers
         transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
     end
 
+    def get_transaction_count(projectId)
+        if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
+        else
+            puts 'This is not a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
+        end
+        # Get the initial transaction count based on above API call
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL)
+        initialPull['count']
+    end
+
     def get_transaction_total(projectId,transactionType, currency)
         if is_dfid_project(projectId) then
             puts 'This is a FCDO project'

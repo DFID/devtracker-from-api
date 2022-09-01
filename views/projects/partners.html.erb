@@ -200,6 +200,12 @@
           $('#waiting').slideUp('slow');
         });
     }
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.output > 0) {
+          $('.transactions-tab').show();
+      }
+    })
     fundedProjects(true,1);
     fundingProjects();
   })

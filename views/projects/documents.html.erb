@@ -99,7 +99,12 @@
         $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
       }
     });
-
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+        if(response.output > 0) {
+            $('.transactions-tab').show();
+        }
+    })
     jq3.get('/get-funding-projects/<%= project["iati_identifier"]%>')
     .done(function(response){
       if(response.output > 0) {

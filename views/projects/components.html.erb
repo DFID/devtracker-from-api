@@ -9,6 +9,8 @@ title: Development Tracker
 <%# ------------------------------------------------------------------------ %>
 <div class="row">
   <div id="waiting" class="twelve columns" style="display: none;"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Data.. Please wait..</strong></p></div>
+</div>
+<div id="budget_container" style="display: none" class="row">
   <div class="twelve columns transactions">
 
     <div class="section-group-title trans-header-container">
@@ -161,6 +163,9 @@ title: Development Tracker
     var call4 = jq3.get('/project-yearwise-budget/<%= project["iati_identifier"]%>')
     .done(function(response){
       res = response.output;
+      if (res.length > 0) {
+        jq3('#budget_container').slideDown('slow');
+      }
       jq3.each(res, function(i, data){
         var amount = convertCurrency(data['value']);
         tab2.row.add([data.fy,Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
@@ -181,6 +186,12 @@ title: Development Tracker
           }
         })
       }
+    })
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+        if(response.output > 0) {
+            $('.transactions-tab').show();
+        }
     })
     function allDone() {
       $('#waiting').slideUp('slow');
