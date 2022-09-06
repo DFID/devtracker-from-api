@@ -39,9 +39,6 @@
                               </span>
                            </td>
                         <% end %>
-                        <!-- <td scope="col">
-                          <%#= if !document['format'].nil? then iati_mime_type document['format']['code'] else "" end %> 
-                        </td> -->
                         <td scope="col">
                           <% document['category'].each do |category| %>
                             <span class="category">
@@ -54,26 +51,6 @@
                     <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk">site admins</a> know of this.</p>
                   <%end%>
                 <% end %>
-                <!-- This part is to handle documents with application/mail formats -->
-                <%# project['local_document_links'].each do |document| %>
-               <!-- <tr class="result-list-row">
-                        <th scope="row"><a href="<%#= document['url']%>"><%#= document['title']%></a></th>
-                        
-                        <td scope="col">
-                          <%#= iati_mime_type document['format']%>
-                        </td>
-                        <td scope="col">
-                          <%# tempCategories = document['category'].split(",") %>
-                          <%# tempDocCategories = JSON.parse(File.read('data/doc_category_list.json')) %>
-                          <%#tempCategories.each do |category|%>
-                          <%# matchedCategory = tempDocCategories.select{|c| c['code'] == category} %>
-                            <span class="category">
-                              <%#= matchedCategory[0]["text"]%>
-                            </span>
-                          <%# end %>
-                        </td>
-                    </tr> -->
-                  <%#end%>
             </tbody>
         </table>
     </div>
