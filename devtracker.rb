@@ -133,41 +133,48 @@ get '/countries/:country_code/?' do |n|
 	 		country = get_country_details(n)
 	 		results = get_country_results(n)
 			#oipa v3.1
-			countrySectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
 	 	}
 	end
+
 	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
 	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
-	#countryYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
-	implementingOrgList = getCountryLevelImplOrgs(n,tempActivityCount['count'])
+
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
 	#Geo Location data of country
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-	countryBudgetBarGraphDataSplit2 = budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
-	#puts countryBudgetBarGraphDataD
   	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
  			country: country,
- 			#countryYearWiseBudgets: countryYearWiseBudgets,
- 			countrySectorGraphData: countrySectorGraphData,
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount['count'],
- 			implementingOrgList: implementingOrgList,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
-			chartDataRepOrgsSplit2: countryBudgetBarGraphDataSplit2[0],
-			chartDataFinYearsSplit2: countryBudgetBarGraphDataSplit2[1],
-			chartDataColumnDataSplit2: countryBudgetBarGraphDataSplit2[2],
  		}
 end
+## country summary page related api calls
+get '/country-implementing-org-list/:country_code/:activity_count/?' do
+	n = sanitize_input(params[:country_code],"p").upcase
+	count = sanitize_input(params[:activity_count],"p")
+	json :output => getCountryLevelImplOrgs(n,count)
+end
 
+get '/country-sector-graph-data/:country_code/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	json :output => get_country_sector_graph_data_jsCompatible(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
+end
+
+get '/country-budget-bar-graph-data/:country_code/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	json :output => budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
+end 
+##
 # solr route
 get '/countries/:country_code/projects/?' do |n|
 	n = sanitize_input(n, "p")
