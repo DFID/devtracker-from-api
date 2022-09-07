@@ -3,7 +3,7 @@
     "status":0,
     "QTime":2,
     "params":{
-      "q":"hierarchy:1 AND participating_org_ref:GB-* AND recipient_country_code:(BD) AND reporting_org_ref:(GB-GOV-15 OR GB-GOV-9 OR GB-GOV-6 OR GB-GOV-2 OR GB-GOV-1 OR GB-1 OR GB-GOV-3 OR GB-GOV-13 OR GB-GOV-7 OR GB-GOV-50 OR GB-GOV-52 OR GB-6 OR GB-10 OR GB-GOV-10 OR GB-9 OR GB-GOV-8 OR GB-GOV-5 OR GB-GOV-12 OR GB-COH-RC000346 OR GB-COH-03877777)AND activity_status_code:(1 OR 2 OR 3 OR 4 OR 5)",
+      "q":"hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:(BD) AND reporting_org_ref:(GB-GOV-15 OR GB-GOV-9 OR GB-GOV-6 OR GB-GOV-2 OR GB-GOV-1 OR GB-1 OR GB-GOV-3 OR GB-GOV-13 OR GB-GOV-7 OR GB-GOV-50 OR GB-GOV-52 OR GB-6 OR GB-10 OR GB-GOV-10 OR GB-9 OR GB-GOV-8 OR GB-GOV-5 OR GB-GOV-12 OR GB-COH-RC000346 OR GB-COH-03877777)AND activity_status_code:(1 OR 2 OR 3 OR 4 OR 5)",
       "fl":"iati_identifier, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*",
       "start":"0",
       "rows":"149"}},
