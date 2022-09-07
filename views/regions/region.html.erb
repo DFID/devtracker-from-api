@@ -44,13 +44,13 @@
         <h3>Key Info</h3>
         <ul class="info-list vertical">
             <li id='approved-project-budget-info' class="fact-item">
-                Project budget approved for <strong><%= current_financial_year %></strong>
+                Programme budget approved for <strong><%= current_financial_year %></strong>
                 <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
+                    <img src="/images/icon-information.png" alt="More information about the total Programme budget"/>
                 </a>
                 <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content">
-                       Sum of project budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if projects are in an active procurement phase.
+                       Sum of programme budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if programmes are in an active procurement phase.
                     </div>
                 </aside>
                 <span><strong>
@@ -70,7 +70,7 @@
                 <span><strong><%= region[:projectBudgetPercentToDfidBudget] %>%</strong></span>
             </li> -->
             <li class="fact-item">
-                Active Projects
+                Active Programmes
                 <span><strong><%= region[:totalProjects] || "&nbsp;" %></strong></span>
             </li>
             <!--removed key stats from region pages -->
@@ -101,7 +101,7 @@
             <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
             <aside id="moreinfo2" class="more-info">            
                     <div class="more-info-content">
-                        The highest ranking sectors by project spend, consistent with the Development Assistance Committee's (DAC) classifications.
+                        The highest ranking sectors by Programme spend, consistent with the Development Assistance Committee's (DAC) classifications.
                     </div>
             </aside>
          </div>
@@ -114,17 +114,17 @@
     </div>
     <div class="six columns">
          <div class="country-info-container">  
-            <span class="country-info">Project budget total by year</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
+            <span class="country-info">Programme budget total by year</span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme funding" class="more-info-link-middle"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%= region[:name] %>
+                        Budgets approved at a programme level to date. This may be different from the overall operational plan budget for <%= region[:name] %>
                     </div>
             </aside>
          </div>
         <div id="budget-year-chart" style="height: 250px;" class="standard">
         </div>
-        <div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%= region[:name] %>.</div>
+        <div style="text-align: center">Budgets approved at a programme level to date. This may be different from the overall operational plan budget for <%= region[:name] %>.</div>
     </div>
 </div>
 

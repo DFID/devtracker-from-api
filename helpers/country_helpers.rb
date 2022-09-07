@@ -97,24 +97,9 @@ module CountryHelpers
       
       countriesInfo = Oj.load(File.read('data/countries.json'))
       country = countriesInfo.select {|country| country['code'] == countryCode}.first
-      
-      countryOperationalBudgetInfo = Oj.load(File.read('data/countries_operational_budgets.json'))
-      countryOperationalBudget = countryOperationalBudgetInfo.select {|result| result['code'] == countryCode}
-      
+            
       #oipa v3.1
       currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value"))
-
-      totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&format=json&fields=activity_status&page_size=250&activity_status=2"))
-      totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
-
-      if countryOperationalBudget.length > 0 then
-          operationalBudget = countryOperationalBudget[0]['operationalBudget']
-          operationalBudgetCurrency = countryOperationalBudget[0]['currency']
-      else
-          operationalBudget = 0 
-          operationalBudgetCurrency = "GBP"
-      end
 
       if currentTotalCountryBudget['count'] > 0 then
           #oipa v2.2
@@ -124,17 +109,6 @@ module CountryHelpers
       else
           countryBudget = 0
       end
-
-      #oipa v2.2
-      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
-      #oipa v3.1
-      totalDfidBudget = 0
-      currentTotalDFIDBudget['results'].each do |budget|
-        totalDfidBudget = totalDfidBudget + budget['value'].to_i
-      end
-      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
-      projectBudgetPercentToDfidBudget = ((countryBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
-
     
       returnObject = {
             :code => country['code'],
@@ -150,13 +124,8 @@ module CountryHelpers
             :fertilityRate_year => country['fertilityRate_year'],
             :gdpGrowthRate => country['gdpGrowthRate'],
             :gdpGrowthRate_year => country['gdpGrowthRate_year'],
-            :totalProjects => totalProjectsDetails['count'],
-            :totalActiveProjects => totalActiveProjects,
-            :operationalBudget => operationalBudget,
-            :operationalBudgetCurrency => operationalBudgetCurrency,
             :countryBudget => countryBudget,
             :countryBudgetCurrency => "GBP",
-            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget
             }
   end
 
@@ -481,6 +450,64 @@ module CountryHelpers
           return c3ReadyDonutData
       end
   end
+
+  def get_country_sector_graph_data_jsCompatible(countrySpecificsectorValuesJSONLink)
+    budgetArray = Array.new
+    resultCount = Oj.load(countrySpecificsectorValuesJSONLink)
+    c3ReadyDonutData = Array.new
+    if resultCount["count"] > 0
+        highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+        sectorWithTopBudgetHash = {}
+        highLevelSectorListData[:sectorsData].each do |sector|
+          sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
+          sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
+          budgetArray.push(sectorGroupPercentage)
+        end
+        budgetArray.sort!
+        #Fixing the donut data here
+        topFiveTracker = 0
+        c3ReadyDonutData[0] = []
+        otherBudgetPercentage = 0.0
+        c3ReadyDonutData[1] = []
+        while !budgetArray.empty?
+          if(topFiveTracker < 5)
+            topFiveTracker = topFiveTracker + 1
+            tempBudgetValue = budgetArray.pop
+            tempData = []
+            tempData.push(sectorWithTopBudgetHash.key(tempBudgetValue))
+            tempData.push(tempBudgetValue)
+            c3ReadyDonutData[0].push(tempData)
+            #c3ReadyDonutData[0].concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
+            c3ReadyDonutData[1].push(sectorWithTopBudgetHash.key(tempBudgetValue))
+
+            #c3ReadyDonutData[1].concat("'"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',")
+          else
+            otherBudgetPercentage = otherBudgetPercentage + budgetArray.pop
+          end
+        end
+        if(topFiveTracker == 5)
+          tempData = []
+          tempData.push('Others')
+          tempData.push(otherBudgetPercentage.round(2))
+          c3ReadyDonutData[0].push(tempData)
+          #c3ReadyDonutData[0].concat("['Others',"+ otherBudgetPercentage.round(2).to_s+"]")
+          #c3ReadyDonutData[1].concat("'Others']")
+          c3ReadyDonutData[1].push('Others')
+          return c3ReadyDonutData
+        else
+          # c3ReadyDonutData[1].concat(']')
+          return c3ReadyDonutData
+        end
+    else
+        #c3ReadyDonutData[0] = '["No data available for this view",0]'
+        tempData = []
+        tempData.push("No data available for this view")
+        tempData.push(0)
+        c3ReadyDonutData[0].push(tempData)
+        c3ReadyDonutData[1].push('No data available for this view')
+        return c3ReadyDonutData
+    end
+end
 
   def get_country_all_projects_rss(countryCode)
     rssJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,descriptions,iati_identifier&page_size=500")

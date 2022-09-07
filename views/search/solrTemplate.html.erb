@@ -50,7 +50,7 @@
                             </h1>
                         <%else%>
                             <h1>
-                                Global Projects
+                                Global Programmes
                             </h1>
                         <%end%>
                     <%end%>
@@ -66,12 +66,12 @@
                     <form id="mid-search-form" method="POST" action="/search">
 											<div class="govuk-grid-column-full">
                                 <label for="query">
-                                    <h3>Search Projects</h3>
+                                    <h3>Search Programmes</h3>
                                 </label>
                                 <a style="top: 0px; text-decoration: none" class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img class="more-info-link-middle" src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
                                 <aside id="moreinfo2" class="more-info">            
                                     <div class="more-info-content">
-                                        To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tag:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each_with_index do |(key, val), i|%><%=key%><%if solrConfig['SearchTags'].length - 1 != i%>, <%end%><%end%></strong></i>. To search for a specific project, please use quotations around the search term e.g. "GB-1-204766"
+                                        To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tag:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each_with_index do |(key, val), i|%><%=key%><%if solrConfig['SearchTags'].length - 1 != i%>, <%end%><%end%></strong></i>. To search for a specific Programme, please use quotations around the search term e.g. "GB-1-204766"
                                      </div>
                                 </aside>
 						</div>
@@ -82,7 +82,7 @@
                                 <div class="govuk-checkboxes__item">                            
                                         <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
                                         <label style="color: white" class="govuk-label govuk-checkboxes__label">
-                                            Include closed projects
+                                            Include closed Programmes
                                         </label>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                 <%end%>
                 <div class="govuk-grid-row">
 					<div class="govuk-grid-column-full">
-					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
 					</div>
 				</div>
                        <div class="govuk-grid-row">
@@ -139,7 +139,7 @@
                             </h1>
                         <%else%>
                             <h1>
-								<span>Now showing projects related to:</span>
+								<span>Now showing Programmes related to:</span>
                                 "<%= query %>"
                             </h1>
                         <%end%>
@@ -152,7 +152,7 @@
                         <div class="govuk-grid-row">
 							<div class="govuk-grid-column-full">
 								<h3>Advanced Filters</h3>
-								<p>To search for projects in a specific time period, please enter the start and end dates.</p>
+								<p>To search for Programmes in a specific time period, please enter the start and end dates.</p>
 							</div>
                             <div class="govuk-grid-column-one-half">
                                 <div class="govuk-form-group">
@@ -422,7 +422,7 @@
 											<!-- <a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary">Learn more</a> -->
 										</div>
 										<div class="govuk-grid-column-one-quarter">
-                                            <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
+                                            <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
                                             <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
                                             <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                             <h4>Total Budget:</h4>  <p><%=item['totalBudgetWithCurrency']%></p>
@@ -441,11 +441,11 @@
             <div class="row">
                 <div class="twelve columns">
                     <div class="search-result nine columns push-three">
-                        <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any projects.</p><p style="margin-top:1em">Suggestions:</p>
+                        <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any Programmes.</p><p style="margin-top:1em">Suggestions:</p>
                         <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
                             <li>Make sure all words are spelled correctly or try different keywords</li>
                         </ul>
-                        <p>Search results only show active projects. To see projects that have been completed, select the "Include Completed Projects" checkbox and click the Search button.</p>
+                        <p>Search results only show active Programmes. To see Programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
                     </div>
                     <div class="three columns pull-nine"></div>
                 </div>
@@ -457,7 +457,7 @@
                     
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full">
-                                                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+                                                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
                         </div>
                     </div>
                         <div class="govuk-grid-row">
@@ -469,7 +469,7 @@
                                 </h1>
                             <%else%>
                                 <h1>
-                                    <span>Now showing projects related to:</span>
+                                    <span>Now showing Programmes related to:</span>
                                     "<%= query %>"
                                 </h1>
                             <%end%>
@@ -482,7 +482,7 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
                                     <h3>Advanced Filters</h3>
-                                    <p>To search for projects in a specific time period, please enter the start and end dates.</p>
+                                    <p>To search for Programmes in a specific time period, please enter the start and end dates.</p>
                                 </div>
                                 <div class="govuk-grid-column-one-half">
                                     <div class="govuk-form-group">
@@ -683,7 +683,7 @@
                                                 <!-- <a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary">Learn more</a> -->
                                             </div>
                                             <div class="govuk-grid-column-one-quarter">
-                                                <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
+                                                <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
                                                 <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
                                                 <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                                 <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
@@ -900,10 +900,10 @@
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);

@@ -8,7 +8,7 @@ layout: cw_landing
 <div class="row">
     <div class="twelve columns" id="whatsnew-banner">
       <p>
-        <span>Due to the security situations in Afghanistan and Ukraine, we have temporarily removed potentially sensitive information from DevTracker to ensure the safety of partners. As projects are reviewed and republished, information will become available on DevTracker.</span>
+        <span>Due to the security situations in Afghanistan and Ukraine, we have temporarily removed potentially sensitive information from DevTracker to ensure the safety of partners. As programmes are reviewed and republished, information will become available on DevTracker.</span>
       </p>
     </div>
 </div>
@@ -16,9 +16,9 @@ layout: cw_landing
 <div class="row">
     <div class="nine columns">
         <h1>Making Development Assistance More Transparent</h1>
-        <p class="meta">The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
+        <p class="meta">The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development programmes led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
         <div class="summary">
-            <p>The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development projects led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
+            <p>The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. Our work is building a safer, healthier, more prosperous world for people in developing countries and in the UK too. This site shows in detail the international development programmes led by the Foreign, Commonwealth and Development Office (FCDO), other government departments and partners.</p>
         </div>
     </div>
     <div class="two columns" style="text-align:right; margin-top:10px;">
@@ -37,13 +37,13 @@ layout: cw_landing
                     <div class="ten columns">
                         <div class="row">
                             <div class="twelve columns">
-                                <span class="search-title">Search Projects</span>
+                                <span class="search-title">Search Programmes</span>
                                 <label class="visually-hidden" for="query">Search for  location, sector, organisation or keyword</label>
                                 <input id="query" name="query" type="text" placeholder="e.g. location, sector, organisation or keyword" value="">
                                 <input id="front-search-submit" type="submit" value="Search">
                             </div>
                             <div class="twelve columns" style="text-align: left; display: none">
-                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Projects</label>
+                                <input id="IncludeClosedProjects" style="margin-top: 10px; margin-bottom: 10px" type="checkbox"><label for="IncludeClosedProjects">Include Completed Programmes</label>
                                 <input id="includeClosed" name="includeClosed" type="hidden" value="0">
                             </div>
                         </div>
@@ -109,13 +109,13 @@ layout: cw_landing
                 <a class="more-info-link float-right move-up-4" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
                 <aside id="moreinfo2" class="more-info">            
                         <div class="more-info-content">
-                            The sectors that projects have allocated their budget to,  consistent with the Development Assistance Committee's classifications.
+                            The sectors that Programmes have allocated their budget to,  consistent with the Development Assistance Committee's classifications.
                          </div>
                 </aside>
             </div> 
             <div id="top5Sectors"></div>     
         <%end%>
-        <p>Project budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+        <p>Programme budgets for each sector [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
         <p>Source: <a style="display: inline" href="https://iatistandard.org/en/" target="_blank">IATI Data</a></p>
     </div>
     <div class="four columns" id="top-5-countries">
@@ -131,7 +131,7 @@ layout: cw_landing
         <div id="top5Countries"></div>
         <ol>
         </ol>
-        <p>Project budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
+        <p>Programme budgets for each country [<%= financial_year_formatter_from_fulldate DateTime.now %>]</p>
         <p>Source: <a style="display: inline" href="https://iatistandard.org/en/" target="_blank">IATI Data</a></p>
     </div>
     <div class="four columns" id="top-5-achiee">

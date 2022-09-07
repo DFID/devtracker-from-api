@@ -792,3 +792,25 @@ def add_exclusions_to_solr2()
   end
   query
 end
+
+def bestActivityDate(activityDates)
+  finalDates = {}
+  tempStartDate = activityDates.select {|d| d['type']['code'].to_i == 1 || d['type']['code'].to_i == 2}
+  puts(tempStartDate)
+	if tempStartDate.length > 1
+		finalDates['start_date'] = tempStartDate.select{|d| d['type']['code'].to_i == 2}[0]['iso_date']
+	elsif tempStartDate.length == 0
+		finalDates['start_date'] = 'N/A'
+	else
+		finalDates['start_date'] = tempStartDate.first['iso_date']
+	end
+	tempEndDate = activityDates.select {|d| d['type']['code'].to_i == 3 || d['type']['code'].to_i == 4}
+	if tempEndDate.length > 1
+		finalDates['end_date'] = tempEndDate.select{|d| d['type']['code'].to_i == 4}[0]['iso_date']
+	elsif tempEndDate.length == 0
+		finalDates['end_date'] = 'N/A'
+	else
+		finalDates['end_date'] = tempEndDate.first['iso_date']
+	end
+  finalDates
+end

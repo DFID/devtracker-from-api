@@ -1,4 +1,4 @@
-<%= erb :'partials/_projects-header', :locals => { :project => project, :countryOrRegion => countryOrRegion, :fundedProjectsCount => fundedProjectsCount, :fundingProjectsCount => fundingProjectsCount, :active => "summary"} %>
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "summary"} %>
 
 <div class="row">
     <div class="twelve columns summary">
@@ -35,10 +35,10 @@
     <div class="six columns">
         <div class="more-info-container">  
             <span class="more-info-title">Status - <%= activity_status(project['activity_status']['code']) %></span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about project status" class="more-info-link-middle"/></a>
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme status" class="more-info-link-middle"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
-                        The current stage of the project, consistent with the International Aid Transparency Initiative's (IATI) classifications.
+                        The current stage of the Programme, consistent with the International Aid Transparency Initiative's (IATI) classifications.
                     </div>
             </aside>
         </div> 
@@ -47,32 +47,16 @@
         <div id="time-progress" style="height: 150px;" class="progress"></div>
         
          <div class="more-info-container">  
-            <span class="more-info-title">Project Spend</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about project funding" class="more-info-link-middle"/></a>
+            <span class="more-info-title">Programme Spend</span> 
+            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about Programme funding" class="more-info-link-middle"/></a>
             <aside id="moreinfo2" class="more-info">            
                     <div class="more-info-content">
-                        Project budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
+                        Programme budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
                     </div>
             </aside>
          </div> 
 
         <div id="funding-progress" style="height: 150px;" class="progress"></div>
-
-        <!-- TODO: add back in the number_to_currency method based on the money gem -->
-        <!--[if lte IE 8]>
-           <div>
-                <p><strong>Budget spend to date:</strong> </p>
-                <p><strong>Project budget:</strong>  </p>
-           </div>
-        <![endif]-->
-
-        <!--[if lte IE 8]>
-            <div>
-                 <p><strong>Start Date:</strong> <%#= format_date(choose_better_date(project['start-actual'], project['start-planned'])) %></p>
-                 <p><strong>End Date:</strong> <%#= format_date(choose_better_date(project['end-actual'], project['end-planned'])) %> </p>
-            </div>
-        <![endif]-->
-        <%# implementingOrgs=get_implementing_orgs(project['iati_identifier'])%>
         <% if participatingOrgList == nil %>
             <% implementingOrgs=get_implementing_orgs(projectId)%>
             <% if (implementingOrgs.length>0)  %>
@@ -148,7 +132,7 @@
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
            <aside id="moreinfo1" class="more-info">            
                     <div class="more-info-content more-info-limit-size">
-                        The country/countries/regions that benefit from this project.
+                        The country/countries/regions that benefit from this Programme.
                     </div>
             </aside>
         </div>  
@@ -195,22 +179,22 @@
 
 <div class="row">
     <div class="six columns">
-        <div class="country-info-container">  
+        <div style="display: none" class="country-info-container sector_chart_container">  
             <span class="country-info">Sectors</span> 
-                <p>Sector groups as a percentage of total project budget according to the OECD Development Assistance Committee (DAC) classifications.</p>
+                <p>Sector groups as a percentage of total Programme budget according to the OECD Development Assistance Committee (DAC) classifications.</p>
         </div>
         <div class="row">
-            <div class="twelve columns">
+            <div style="display: none" class="twelve columns sector_chart_container">
                 <div id="sectorChart"></div>
             </div>
         </div>
     </div>
     <div class="six columns">
-        <div class="country-info-container">  
+        <div style="display: none" class="country-info-container budget_container">  
                 <span class="country-info">Budget</span> 
-                <p>A comparison across financial years of forecast budget and spend to date on the project.</p>
+                <p>A comparison across financial years of forecast budget and spend to date on the Programme.</p>
         </div>
-        <div id="budget-plan-spend" style="height: 300px; width: 100%;" class="row"></div>
+        <div id="budget-plan-spend" style="height: 300px; width: 100%" class="row budget_container"></div>
     </div>
     <div style="display: none" class="twelve columns">
         <%if policyMarkersCount > 0%>
@@ -246,11 +230,11 @@
             <%if project['activity_plus_child_aggregation']['activity']['budget_value'].to_i > 0 %>
                 var funding = [ {label: "", text: "", value: 0},
                                 {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0))*100 , choose_better_currency(dis_curr,exp_curr,default_curr)).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0) %>},
-                                {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0) %>}]
+                                {label: "Programme budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0) %>}]
             <%else%>
                 var funding = [ {label: "", text: "", value: 0},
                                 {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0))*100 , choose_better_currency(dis_curr,exp_curr,default_curr)).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0) %>},
-                                {label: "Project budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0) %>}]
+                                {label: "Programme budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0) %>}]
             <%end%>
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
@@ -264,9 +248,6 @@
                           text: "<%= format_date(choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date']))) %>",
                           value: <%= choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date'])) %>}];
             charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
-
-            //var budgets = 0;<%#= ([["Year" ,"Plan", "Spend"]]) + (project_budget_per_fy project['iatiId']) %>;
-            //charts.bar("#budget-plan-spend", budgets, ".2s", null, null, ["#D8DCBF", "#2B6367"]);
         })()
     </script>
     <script>
@@ -282,7 +263,6 @@
         }
         function graphCurrencyHandlerFront(string){
             if(string.search("0") != 0){
-                console.log(string.slice(0,string.search("0") - 1));
                 return string.slice(0,string.search("0"));
             }
             else{
@@ -294,13 +274,18 @@
                 return '';
             }
             else{
-                console.log(string.slice(4,string.length));
                 //return string.slice(4,string.length);
                 return string.replace(/[0.]*/,"");
             }
         }
         //Prepare color codes to be used for the bar graph
         var graphData = [<%= projectSectorGraphData[0] %>];
+        if (graphData[0][0] == 'No data available for this view'){
+            $('.sector_chart_container').hide();
+        }
+        else {
+            $('.sector_chart_container').slideDown('slow');
+        }
         var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
         var fColors = {};
         for(i = 0; i<graphData.length; i++){
@@ -348,8 +333,8 @@
             }
         });
         <% budgetYearData = project_budget_per_fy(project['iati_identifier']) %>
-
-        <% if !budgetYearData.nil? then %>
+        <% if !budgetYearData.nil? && budgetYearData[0].length>0 then %>
+            $('.budget_container').slideDown('slow');
             <% begin %>
                 <%if !project["default_currency"]["code"].nil? %>
                     var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
@@ -432,7 +417,7 @@
                 $('#budget-plan-spend').append('<span style="text-align: center; margin: 0 60px;">Please note: No Valid currency present in the above data.</span>');
             }            
             <% else %>
-
+            $('.budget_container').hide();
             $('#budget-plan-spend').html("Data not found");
 
             <% end %>
@@ -446,7 +431,51 @@
         <div class="twelve columns download-link">
             <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
             <%if !project['last_updated_datetime'].nil?%>
-                <p>Project data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
+                <p>Programme data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
             <% end %>
         </div>
     </div>
+
+
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.html5.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    //Process for generating component details
+    jq3.get('/country-or-region/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.projectType == 'country'){
+        $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
+      }
+    });
+
+    jq3.get('/get-funding-projects/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.output > 0) {
+        $('.partner-tab').show();
+      }
+      else {
+        jq3.get('/get-funded-projects/<%= project["iati_identifier"]%>')
+        .done(function(res){
+          if(res.output > 0) {
+            $('.partner-tab').show();
+          }
+        })
+      }
+    })
+
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+        if(response.output > 0) {
+            $('.transactions-tab').show();
+        }
+    })
+  })
+</script>

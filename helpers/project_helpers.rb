@@ -140,6 +140,46 @@ module ProjectHelpers
     def get_funding_project_details(projectId)
         fundingProjectsAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&page_size=1000" )
         fundingProjectsData = JSON.parse(fundingProjectsAPI)
+        fundingProjectsData = fundingProjectsData['results']
+        begin
+            fundingProjects=fundingProjectsData
+            .group_by{|b| b['provider_organisation']['provider_activity_id'].to_s.strip}
+            .map{|provider_activity_id, budgets, currency|
+                summedBudgets = budgets.reduce(0) {|memo, budget| memo.to_f + budget['value'].to_f}
+                [provider_activity_id, summedBudgets]}
+            refinedFundingProjects = []
+            fundingProjects.each do |item|
+                if is_valid_project(item[0])
+                    targetData = fundingProjectsData.select{|d| d['provider_organisation'].to_s == item[0].to_s}.first
+                    apiData = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{item[0]}/?format=json&fields=title,description,reporting_org,default_currency" )
+                    apiData = JSON.parse(apiData)
+                    begin
+                        item.push(apiData['reporting_org']['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item.push(apiData['title']['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item.push(apiData['description'][0]['narrative'][0]['text'])
+                    rescue
+                        item.push('N/A')
+                    end
+                    begin
+                        item[1] = Money.new(item[1].to_f.round(0)*100, apiData['default_currency']['code']).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    rescue
+                        item[1] = Money.new(item[1].to_f.round(0)*100, 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    end
+                    refinedFundingProjects.push(item)
+                end
+            end
+            refinedFundingProjects
+        rescue
+            []
+        end
     end
 
     def get_funded_project_details(projectId)
@@ -174,6 +214,48 @@ module ProjectHelpers
         projectsByKeys
     end
 
+    def get_funded_project_details_page(projectId, page, count)
+        response = getProjectIdentifierList(projectId)
+        projectIdentifierList = response['projectIdentifierList']
+        fundedProjects = Array.new
+        tempProjects = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{count}&fields=id,title,description,reporting_org,participating_org,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{page}")
+        tempProjects = JSON.parse(tempProjects)
+        tempProjects['results'].each do |i|
+            begin
+                if(response['projectIdentifierListArray'].include?(i['iati_identifier'].to_s))
+                else
+                    tdata = i
+                    tdata['total_project_budget'] = 0.00
+                    tdata['total_funding'] = 0.00
+                    begin       
+                        tdata['total_project_budget'] = Money.new(i['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if i['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then i['default_currency']['code'] else i['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    rescue
+                        tdata['total_project_budget'] = 0.00
+                    end
+                    begin       
+                        tdata['total_funding'] = Money.new(i['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if i['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then i['default_currency']['code'] else i['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                    rescue
+                        tdata['total_funding'] = 0.00
+                    end
+                    fundedProjects.push(i)
+                end
+            rescue
+                puts i
+            end
+        end
+        projectsByKeys = {}
+        fundedProjects.each do |p|
+            projectsByKeys[p['iati_identifier']] = {}
+            projectsByKeys[p['iati_identifier']] = p
+        end
+        puts 'funded project details grabbed'
+        projectsByKeys
+        data = {}
+        data['projectsByKeys'] = projectsByKeys
+        data['hasNext'] = tempProjects['next']
+        data
+    end
+
     def getProjectIdentifierList(projectId)
         activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=related_activity")
         activityDetails = JSON.parse(activityDetails)
@@ -201,9 +283,11 @@ module ProjectHelpers
 
     def get_transaction_details(projectId,transactionType)
         if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
         else
+            puts 'This is not a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
@@ -222,6 +306,79 @@ module ProjectHelpers
         end
         # Filter out wrong transaction types
         transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+    end
+
+    def get_transaction_count(projectId)
+        if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
+        else
+            puts 'This is not a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
+        end
+        # Get the initial transaction count based on above API call
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL)
+        initialPull['count']
+    end
+
+    def get_transaction_total(projectId,transactionType, currency)
+        if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,transaction_date,transaction_type,value,currency"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
+        else
+            puts 'This is not a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,transaction_date,transaction_type,value,currency"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
+        end
+        # Get the initial transaction count based on above API call
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL + "&page_size=20")
+        transactionsJSON = initialPull['results']
+        # Process remaining transactions if transaction count is more than 20
+        if (initialPull['count'] > 20)
+            pages = (initialPull['count'].to_f/20).ceil
+            for page in 2..pages do
+              tempData = JSON.parse(RestClient.get  oipaTransactionURL + "&page_size=20&page=#{page}")
+              tempData['results'].each do |item|
+                transactionsJSON.push(item)
+              end
+            end
+        end
+        # Filter out wrong transaction types
+        transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+        totalAmount = 0.00
+        transactions.each do |t|
+            totalAmount = totalAmount + t['value'].to_f
+        end
+        begin
+            data = Money.new(totalAmount.to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+        rescue
+            data = "£#{number}"
+        end
+        data
+    end
+
+    def get_transaction_details_page(projectId,transactionType, page, count)
+        if is_dfid_project(projectId) then
+            puts 'This is a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
+        else
+            puts 'This is not a FCDO project'
+            oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
+            #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
+        end
+        # Get the initial transaction count based on above API call
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL + "&page_size=#{count}&page=#{page}")
+        transactionsJSON = initialPull['results']
+        # Filter out wrong transaction types
+        transactions = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+        response = {}
+        response['transactions'] = transactionsJSON.select {|transaction| !transaction['transaction_type'].nil? }
+        response['hasNext'] = initialPull['next']
+        response
     end
 
     def get_project_yearwise_budget(projectId)
@@ -428,7 +585,6 @@ module ProjectHelpers
 
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
-            puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000"
             projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
         else
             projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
@@ -598,7 +754,6 @@ module ProjectHelpers
             returnGraphData[0] = tempFYear
             returnGraphData[1] = tempBudgetAmount
             returnGraphData[2] = tempSpendAmount
-
             return returnGraphData  
 
         rescue

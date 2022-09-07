@@ -1,0 +1,204 @@
+<!--
+title: Development Tracker
+ -->
+
+<%= erb :'partials/_projects-header', :locals => { :project => project, :active => "components"} %>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                       B U D G E T S   T A B L E                          %>
+<%# ------------------------------------------------------------------------ %>
+<div class="row">
+  <div id="waiting" class="twelve columns" style="display: none;"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Data.. Please wait..</strong></p></div>
+</div>
+<div id="budget_container" style="display: none" class="row">
+  <div class="twelve columns transactions">
+
+    <div class="section-group-title trans-header-container">
+      <div class="trans-header-left">
+        <span class="trans-type-title">Budget</span>
+        <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+           <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
+        </a> 
+        <aside id="moreinfo1" class="more-info">  
+              <div class="more-info-content trans-more-info-box-limiter">
+                The total amount of money available to spend.  Some budgets may not be shown if Programme are in an active procurement phase.
+              </div>
+        </aside>
+       </div>  
+       <div class="trans-header-right">
+         <div class="float-right trans-type-value"><span id="totalProjectBudget"></span><a href="/downloadCSV/<%= project['iati_identifier']%>/0" style="margin-left: 5px" class="api-link button">CSV</a></div>
+       </div>        
+    </div>
+    <table class="transactions-tablev2 display" style="width:100%; display: none">
+      <thead>
+        <tr>
+          <th>Financial Year</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%# ------------------------------------------------------------------------ %>
+<%#                   C O M P O N E N T S   T A B L E                        %>
+<%# ------------------------------------------------------------------------ %>
+<div id='component_container' style="display: none" class="row">
+  <div class="twelve columns transactions" style="margin-top: 15px">
+    <div class="section-group-title trans-header-container">
+      <div class="trans-header-left" style="padding-right: 25px;">
+        <span class="trans-type-title">Project Descriptions</span>
+        <span id="genComList" style="display: none;">(Generating projects List... Please wait...)</span><span id="genComDetails" style="display: none;">(Generating Component Details... Please wait..)</span>
+        <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
+            <img src="/images/icon-information.png" alt="More information about budget" class="more-info-link-middle"/>
+        </a> 
+        <aside id="moreinfo1" class="more-info">  
+              <div class="more-info-content trans-more-info-box-limiter">
+                Description of related projects.
+              </div>
+        </aside>
+        </div>        
+    </div>
+    <table id="transactionsv3" class="display" style="width:100%; display: none">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th>IATI Activity ID</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.html5.min.js" type="text/javascript"></script>
+<script src="/javascripts/buttons.print.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/buttons.dataTables.min.css">
+<script src="/javascripts/dinero.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var jq3 = jQuery.noConflict(true);
+  jq3(document).ready(function() {
+    $('#waiting').slideDown('slow');
+    function convertCurrency(value) {
+      var tempData = {};
+      tempData['precPoint'] = 0;
+      tempData['amount'] = value;
+      if(tempData['amount'].toString().search('.') != -1) {
+        tempData['precPoint'] = 2;
+        tempData['amount'] = parseInt(tempData['amount'].toString().replace('.', ''));
+      }
+      return tempData;
+    }
+    var projectCurrency = "<%= begin project['default_currency']['code'] rescue 'GBP' end%>" ;
+    var tab1 = jq3('#transactionsv3').DataTable({
+      "info":false,
+      "paging":false,
+      "searching":false,
+      "order":[1,"asc"]
+    });
+    var tab2 = jq3('.transactions-tablev2').DataTable({
+      retrieve: true,
+      "info": false,
+      "paging": false,
+      "searching": false,
+      dom: 'Bfrtip',
+      buttons: [
+        'csvHtml5'
+      ],
+      initComplete: function(){
+        var $buttons = jq3('.dt-buttons').hide();
+        $buttons.parent().parent().children('.downloadInCSV').click(function(){
+          $buttons.find('.button-csv').click();
+        });
+        // jq3('.downloadInCSV').click(function(){
+        //   jq3(this).parent().parent().parent().children('.dt-buttons').children('.buttons-csv').click();
+        // });
+      }
+    });
+    jq3('.transactions-tablev2').show();
+    //Process for generating component details
+    var components = [];
+    var call1 = jq3.get('/country-or-region/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.projectType == 'country'){
+        $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
+      }
+    });
+    jq3('#genComList').slideDown('slow');
+    var call2 = jq3.get('/component-list/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      jq3('#genComList').slideUp('slow');
+      jq3('#genComDetails').slideDown('slow');
+      components = response.output;
+      if (components.length > 0) {
+        jq3('#component_container').slideDown('slow');
+      }
+      jq3.each(components, function(i, data){
+        jq3.get('/project-details/'.concat(data))
+        .done(function(res){
+          tab1.row.add([res.output.title,res.output.iati_identifier,res.output.activity_dates.start_date,res.output.activity_dates.end_date]);
+          tab1.draw();
+          jq3('#genComDetails').html('(Loaded: '.concat(i+1,' out of ', components.length, ' projects data.)'))
+          if(components.length == i+1) {
+            jq3('#genComDetails').slideUp('slow');
+          }
+        })
+      });
+    });
+    jq3('#transactionsv3').show();
+    var call3 = jq3.get('/total-project-budget/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      $('#totalProjectBudget').html(response.output);
+    });
+    var call4 = jq3.get('/project-yearwise-budget/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      res = response.output;
+      if (res.length > 0) {
+        jq3('#budget_container').slideDown('slow');
+      }
+      jq3.each(res, function(i, data){
+        var amount = convertCurrency(data['value']);
+        tab2.row.add([data.fy,Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+        tab2.draw();
+      });
+    });
+
+    var call5 = jq3.get('/get-funding-projects/<%= project["iati_identifier"]%>')
+    .done(function(response){
+      if(response.output > 0) {
+        $('.partner-tab').show();
+      }
+      else {
+        jq3.get('/get-funded-projects/<%= project["iati_identifier"]%>')
+        .done(function(res){
+          if(res.output > 0) {
+            $('.partner-tab').show();
+          }
+        })
+      }
+    })
+    jq3.get('/transaction-count/<%= project["iati_identifier"]%>')
+    .done(function(response){
+        if(response.output > 0) {
+            $('.transactions-tab').show();
+        }
+    })
+    function allDone() {
+      $('#waiting').slideUp('slow');
+    }
+    function someFailed() {
+      console.log('Some failed!');
+    }
+    $.when(call1, call2, call3, call4, call5).then(allDone, someFailed);
+  })
+</script>
