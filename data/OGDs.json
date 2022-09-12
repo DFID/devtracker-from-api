@@ -14,11 +14,6 @@
 		"identifiers":"GB-GOV-7",
 		"name": "Department for Environment, Food and Rural Affairs"
 	},
-	"CSSF":
-	{
-		"identifiers":"GB-GOV-52",
-		"name": "Conflict, Stability and Security Fund"
-	},
 	"HO":
 	{
 		"identifiers":"GB-GOV-6,GB-6",
@@ -33,11 +28,6 @@
 	{
 		"identifiers":"GB-10,GB-GOV-10",
 		"name": "Department of Health and Social Care"
-	},
-	"PF":
-	{
-		"identifiers":"GB-GOV-50",
-		"name": "Prosperity Fund"
 	},
 	"DFE":
 	{
