@@ -32,17 +32,6 @@
             "note": ""
         }
     ],
-    "CSSF":
-    [
-        {
-            "name":"Conflict, Stability and Security Fund",
-            "year":"2021",
-            "value": 430,
-            "percentage": 3.7,
-            "shortName": "CSSF",
-            "note": ""
-        }
-    ],
     "DH":
     [
         {
@@ -73,17 +62,6 @@
             "value": 76,
             "percentage": 0.7,
             "shortName": "DEFRA",
-            "note": ""
-        }
-    ],
-    "PF":
-    [
-        {
-            "name":"Cross-Government Prosperity Fund",
-            "year":"2021",
-            "value": 53,
-            "percentage": 0.5,
-            "shortName": "CGPF",
             "note": ""
         }
     ],
