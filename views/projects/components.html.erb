@@ -93,8 +93,8 @@ title: Development Tracker
       var tempData = {};
       tempData['precPoint'] = 0;
       tempData['amount'] = value;
-      if(tempData['amount'].toString().search('.') != -1) {
-        tempData['precPoint'] = 2;
+      if(tempData['amount'].toString().includes('.')) {
+        tempData['precPoint'] = tempData['amount'].toString().length - (tempData['amount'].toString().indexOf('.')+1);
         tempData['amount'] = parseInt(tempData['amount'].toString().replace('.', ''));
       }
       return tempData;
