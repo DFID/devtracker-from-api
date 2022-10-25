@@ -272,7 +272,9 @@
           $('#cookieDiv').slideDown('slow');
           $('#acceptCookie').click(function(){
             Cookies.set('accept_cookie', 1, { expires: 90 });
-            $.getScript("/javascripts/analytics.js")
+            $.getScript("https://www.googletagmanager.com/gtag/js?id=G-34D74G152F");
+            $.getScript("/javascripts/analytics.js");
+            $.getScript("/javascripts/analytics_FCDO.js");
             $('#cookieDiv').slideUp();
           });
           // $('#closeCookie').click(function(){
