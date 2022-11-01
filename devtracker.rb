@@ -69,6 +69,7 @@ set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
+
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 Money.locale_backend = :i18n
@@ -1116,7 +1117,12 @@ end
 get '/cookies/?' do
   	settings.devtracker_page_title = 'Cookies Page'
 	erb :'cookies/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
-end  
+end
+
+get '/privacy-policy/?' do
+	settings.devtracker_page_title = 'Privacy Policy'
+  erb :'privacy-policy/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end
 
 get '/faq/?' do
   	settings.devtracker_page_title = 'FAQ: What does this mean?'
