@@ -60,8 +60,8 @@ include SolrHelper
 # Developer Machine: set global settings
 # set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
-set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
+set :oipa_api_url, 'https://datastore.iati.cloud/api/'
+set :oipa_api_url_solr, 'https://datastore.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
  set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
