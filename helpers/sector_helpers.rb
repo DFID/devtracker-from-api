@@ -36,7 +36,7 @@ module SectorHelpers
 	def top_5_sectors_data()
 		firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
       	lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-		apiResponse = RestClient.get api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
+		apiResponse = RestClient.get api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date:['+firstDayOfFinYear.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO '+lastDayOfFinYear.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"sector_code","limit":-1,"facet":{"value":"sum(budget_value)"}}}&rows=0')
 		parsedResponse = JSON.parse(apiResponse)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		highLevelSectorData = {}
