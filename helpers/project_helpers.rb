@@ -10,6 +10,14 @@ module ProjectHelpers
 
     def check_if_project_exists(projectId)
         begin
+            solrConfig = Oj.load(File.read('data/solr-config.json'))
+            if(solrConfig["Exclusions"]["projects"].length > 0)
+                solrConfig['Exclusions']['projects'].each_with_index do |fieldToBeChecked, index|
+                    if(projectId.to_s ==fieldToBeChecked.to_s)
+                        halt 404, "Activity not found"
+                    end
+                end
+            end
             oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=recipient_country")
             response = Oj.load(oipa)
             tempData = response['recipient_country'].select{|a| a['country']['code'].to_s == 'UA'}.length()
