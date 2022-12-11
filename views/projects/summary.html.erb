@@ -2,34 +2,16 @@
 
 <div class="row">
     <div class="twelve columns summary">
-        <%if project['description'].length == 1%>
-            <%project['description'] = JSON.parse(project['description'].first)%>
+        <%begin%>
             <b class="more-info-title">Description</b>
-            <%begin%>
-                <p class="project-description"><%= project['description']['narrative'].first['text'] %></p>
-            <%rescue%>
-                <p class="project-description">N/A</p>
+            <%project['description_narrative'].each do |desc|%>
+                <p class="project-description"><%= project['description_narrative'].first %></p>
             <%end%>
-        <%else%>
-            <%project['description'].each do |desc|%>
-                <%desc = JSON.parse(desc)%>
-            <%end%>
-            <%project['description'].sort_by{|item| item['type']['code']}.each do |description|%>
-                <%if description['type']['code'] == '1'%>
-                    <b class="more-info-title">Description</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '2'%>
-                    <b class="more-info-title">Objectives</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '3'%>
-                    <b class="more-info-title">Target Groups</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '4'%>
-                    <b class="more-info-title">Other</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%end%> 
-            <%end%>
+        <%rescue%>
+            <b class="more-info-title">Description</b>
+            <p class="project-description">N/A</p>
         <%end%>
+        
     </div>
 
 </div>

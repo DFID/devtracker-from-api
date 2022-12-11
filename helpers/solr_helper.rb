@@ -235,6 +235,7 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'O')
