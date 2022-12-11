@@ -82,6 +82,7 @@ module CountryHelpers
           if !newTop5countriesBudget.has_key?(item['recipient_country_code'].first)
             newTop5countriesBudget[item['recipient_country_code'].first] = {}
             newTop5countriesBudget[item['recipient_country_code'].first]['name'] = item['recipient_country_name'].first
+            newTop5countriesBudget[item['recipient_country_code'].first]['code'] = item['recipient_country_code'].first
             newTop5countriesBudget[item['recipient_country_code'].first]['budget'] = 0
             item['budget_value'].each_with_index do | element, index |
               if(item['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && item['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)

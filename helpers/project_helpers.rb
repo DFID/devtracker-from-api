@@ -1147,7 +1147,7 @@ module ProjectHelpers
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['facets']['items']['buckets']
         #oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2")
-        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND activity_status_code:(2) AND hierarchy:(1)&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
+        oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND activity_status_code:(2) AND hierarchy:(1)&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         projectValues = JSON.parse(oipaCountryProjectCountJSON)
         projectCountValues = projectValues['facets']['items']['buckets']
         countriesList = JSON.parse(File.read('data/countries.json'))

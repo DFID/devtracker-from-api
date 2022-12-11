@@ -82,13 +82,14 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+#set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+set :goverment_department_ids, 'GB-GOV-1,GB-1'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
 set :raise_errors, true
 set :show_exceptions, true
-set :log_api_calls, false
+set :log_api_calls, true
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -126,9 +127,12 @@ get '/countries/:country_code/?' do |n|
 	results = ''
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	#newAPI = 'https://fcdo.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND recipient_country_code:(BD)&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
+	newtempActivityCount = 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+')&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
+	#tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
+	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + newtempActivityCount))['response']['numFound']
 	if n == 'UA'
-		tempActivityCount['count'] = 0
+		tempActivityCount = 0
 	end
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
@@ -155,7 +159,7 @@ get '/countries/:country_code/?' do |n|
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
- 			activityCount: tempActivityCount['count'],
+ 			activityCount: tempActivityCount,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
  		}
