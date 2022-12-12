@@ -18,9 +18,11 @@ module ProjectHelpers
                     end
                 end
             end
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json&fields=recipient_country")
+            # https://fcdo.iati.cloud/search/activity?q=iati_identifier:GB-1-202035&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text
+            #oipa = RestClient.get  api_simple_log(settings.oipa_api_url_api + "activities/#{projectId}/?format=json&fields=recipient_country")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=iati_identifier:#{projectId}&fl=recipient_country_code")
             response = Oj.load(oipa)
-            tempData = response['recipient_country'].select{|a| a['country']['code'].to_s == 'UA'}.length()
+            tempData = response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length()
             if(tempData != 0)
                 halt 404, "Activity not found"
             end    

@@ -783,39 +783,68 @@ end
 
     #Get a list of map markers for visualisation
     def getCountryMapMarkers(countryCode)
-      rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
-      rawMapMarkers = rawMapMarkers['results']
+      # https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND recipient_country_code:BD AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code
+      #puts settings.oipa_api_url_other + 'xxxactivity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:#{countryCode} AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'
+      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
+      newRawMapMakers = newRawMapMakers['response']['docs']
+      # rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
+      # rawMapMarkers = rawMapMarkers['results']
       mapMarkers = Array.new
       ar = 0
-      rawMapMarkers.each do |data|
-        if(data['recipient_country'].count == 1)
-          data['location'].each do |location|
+      newRawMapMakers.each do |data|
+        if data.has_key?('location_point_pos')
+          data['location_point_pos'].each_with_index do | element, index |
+            tempStorage = {}
+            tempStorage["geometry"] = {}
+            tempStorage['geometry']['type'] = 'Point'
+            tempStorage['geometry']['coordinates'] = Array.new
+            tempStorage['geometry']['coordinates'].push(element.split[1].to_f)
+            tempStorage['geometry']['coordinates'].push(element.split[0].to_f)
+            tempStorage['iati_identifier'] = data['iati_identifier']
             begin
-              tempStorage = {}
-              tempStorage["geometry"] = {}
-              tempStorage['geometry']['type'] = 'Point'
-              tempStorage['geometry']['coordinates'] = Array.new
-              tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-              tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-              tempStorage['iati_identifier'] = location['iati_identifier']
-              begin
-                tempStorage['loc'] = location['name']['narrative'][0]['text']
-              rescue
-                tempStorage['loc'] = 'N/A'
-              end
-              begin
-                tempStorage['title'] = data['title']['narrative'][0]['text']
-              rescue
-                tempStorage['title'] = 'N/A'
-              end
-              mapMarkers.push(tempStorage)
-              ar = ar + 1
+              tempStorage['loc'] = data['location_name_narrative_text'][index]
             rescue
-              puts 'Data missing in API response.'
+              tempStorage['loc'] = 'N/A'
             end
+            begin
+              tempStorage['title'] = data['title_narrative_text'].first
+            rescue
+              tempStorage['title'] = 'N/A'
+            end
+            mapMarkers.push(tempStorage)
+            ar = ar + 1
           end
         end
       end
+      # rawMapMarkers.each do |data|
+      #   if(data['recipient_country'].count == 1)
+      #     data['location'].each do |location|
+      #       begin
+      #         tempStorage = {}
+      #         tempStorage["geometry"] = {}
+      #         tempStorage['geometry']['type'] = 'Point'
+      #         tempStorage['geometry']['coordinates'] = Array.new
+      #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
+      #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
+      #         tempStorage['iati_identifier'] = location['iati_identifier']
+      #         begin
+      #           tempStorage['loc'] = location['name']['narrative'][0]['text']
+      #         rescue
+      #           tempStorage['loc'] = 'N/A'
+      #         end
+      #         begin
+      #           tempStorage['title'] = data['title']['narrative'][0]['text']
+      #         rescue
+      #           tempStorage['title'] = 'N/A'
+      #         end
+      #         mapMarkers.push(tempStorage)
+      #         ar = ar + 1
+      #       rescue
+      #         puts 'Data missing in API response.'
+      #       end
+      #     end
+      #   end
+      # end
       mapMarkers
     end
 
@@ -842,44 +871,62 @@ end
     
   # Returns the country level implementing organisations
   def getCountryLevelImplOrgs(countryCode, activityCount)
-    response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20"))
-    allActivities = []
-    allActivities = response['results']
-    if (response['count'] > 20)
-      pages = (response['count'].to_f/20).ceil
-      for page in 2..pages do
-        tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
-        tempData['results'].each do |item|
-          allActivities.push(item)
-        end
-      end
-    end
+    ## New stuff
+    
+    ##
+    # response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20"))
+    # allActivities = []
+    # allActivities = response['results']
+    # if (response['count'] > 20)
+    #   pages = (response['count'].to_f/20).ceil
+    #   for page in 2..pages do
+    #     tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
+    #     tempData['results'].each do |item|
+    #       allActivities.push(item)
+    #     end
+    #   end
+    # end
     implementingOrgs = {}
-    allActivities.each do |activity|
-      if(activity['recipient_country'].count == 1)
-        if(activity['recipient_country'][0]['country']['code'].to_s == countryCode)
-          activity['participating_org'].each do |org|
-            begin
-              if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
-                if(implementingOrgs.has_key?(org['ref'].to_s))
-                  if(org['role']['code'].to_s == '4')
-                    implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
-                  end
-                else
-                  if(org['role']['code'].to_s == '4')
-                    implementingOrgs[org['ref']] = {}
-                    implementingOrgs[org['ref']]['orgName'] = org['narrative'][0]['text']
-                    implementingOrgs[org['ref']]['count'] = 1
-                  end
-                end
-              end
-            rescue
-              # Do nothing
-            end
+    newtempActivityCount = 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+countryCode+') AND activity_status_code:2 AND hierarchy:1 AND participating_org_role:4&fl=participating_org_role,participating_org_narrative,participating_org_ref&rows=10000'
+    newAPIResponse = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + newtempActivityCount))['response']['docs']
+    newAPIResponse.each do |activity|
+      activity['participating_org_role'].each_with_index do | element, index |
+        if (element.to_i == 4 && activity['participating_org_ref'][index] != '')
+          if(implementingOrgs.has_key?(activity['participating_org_ref'][index]))
+            implementingOrgs[activity['participating_org_ref'][index]]['count'] = implementingOrgs[activity['participating_org_ref'][index]]['count'] + 1
+          else
+            implementingOrgs[activity['participating_org_ref'][index]] = {}
+            implementingOrgs[activity['participating_org_ref'][index]]['orgName'] = activity['participating_org_narrative'][index]
+            implementingOrgs[activity['participating_org_ref'][index]]['count'] = 1
           end
         end
       end
     end
+    # allActivities.each do |activity|
+    #   if(activity['recipient_country'].count == 1)
+    #     if(activity['recipient_country'][0]['country']['code'].to_s == countryCode)
+    #       activity['participating_org'].each do |org|
+    #         begin
+    #           if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
+    #             if(implementingOrgs.has_key?(org['ref'].to_s))
+    #               if(org['role']['code'].to_s == '4')
+    #                 implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
+    #               end
+    #             else
+    #               if(org['role']['code'].to_s == '4')
+    #                 implementingOrgs[org['ref']] = {}
+    #                 implementingOrgs[org['ref']]['orgName'] = org['narrative'][0]['text']
+    #                 implementingOrgs[org['ref']]['count'] = 1
+    #               end
+    #             end
+    #           end
+    #         rescue
+    #           # Do nothing
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
     implementingOrgs
   end
 end

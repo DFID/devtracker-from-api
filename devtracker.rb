@@ -143,7 +143,7 @@ get '/countries/:country_code/?' do |n|
 	end
 
 	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
-	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
+	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
 
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
