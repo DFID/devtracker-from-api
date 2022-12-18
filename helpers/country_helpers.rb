@@ -69,13 +69,14 @@ module CountryHelpers
       countriesInfo = JSON.parse(File.read('data/countries.json'))
       newApiCall = 'https://fcdo-direct-indexing.iati.cloud/search/budget?q=participating_org_ref:GB-* AND reporting_org_ref:(GB-GOV-1 OR GB-1) AND budget_period_start_iso_date:[2022-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2023-03-31T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=100'
       oldCall = settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json"
-      top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
-      puts oldCall
+      #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
+      
       newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=5000"
-      puts newApiCall
+      
       #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")} AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[#{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=5000")
-      top5countries = JSON.parse(top5countriesJSON)
+      #top5countries = JSON.parse(top5countriesJSON)
       newTop5countries = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code,recipient_country_name,budget_period_start_iso_date,budget_period_end_iso_date&rows=5000")
+      puts settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code,recipient_country_name,budget_period_start_iso_date,budget_period_end_iso_date&rows=5000"
       newTop5countriesBudget = {}
       for item in newTop5countries['response']['docs']
         begin
@@ -97,23 +98,22 @@ module CountryHelpers
             end
           end
         rescue
-          puts item
-          puts '========'
+          
         end
       end
       finalResult = []
       newTop5countriesBudget.each do |key, val|
         finalResult.push(val)
       end
-      top5countriesBudget = top5countries["results"].map do |elem| 
-         {  
-            :code     => elem["recipient_country"]["code"],  
-            :name     => countriesInfo.find do |source|
-                           source["code"].to_s == elem["recipient_country"]["code"]
-                         end["name"],
-            :budget   => elem["value"].to_i                                                                                  
-         } 
-      end
+      # top5countriesBudget = top5countries["results"].map do |elem| 
+      #    {  
+      #       :code     => elem["recipient_country"]["code"],  
+      #       :name     => countriesInfo.find do |source|
+      #                      source["code"].to_s == elem["recipient_country"]["code"]
+      #                    end["name"],
+      #       :budget   => elem["value"].to_i                                                                                  
+      #    } 
+      # end
       finalResult
   end
 

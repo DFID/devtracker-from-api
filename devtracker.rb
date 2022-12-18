@@ -82,8 +82,8 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-#set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
-set :goverment_department_ids, 'GB-GOV-1,GB-1'
+set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+#set :goverment_department_ids, 'GB-GOV-1,GB-1'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -99,22 +99,92 @@ set :devtracker_page_title, ''
 get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
-  	top5countries = get_top_5_countries()
+	top5countries = ''
+	Benchmark.bm(7) do |x|
+		x.report("Loading Time: ") {
+			if (!canLoadFromCache('top5Countries'))
+				storeCacheData(get_top_5_countries(), 'top5Countries')
+				top5countries = getCacheData('top5Countries')
+			else
+				top5countries = getCacheData('top5Countries')
+			end
+		   #oipa v3.1
+		}
+   end
+  	## Store data to cache
+	# tempD = top5countries.to_json
+	# File.open("data/cache/top5Countries.json", "w") { |f| f.puts tempD }
+	## cache storing ends here
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
   	settings.devtracker_page_title = ''
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
+	what_we_do = ''
+	if (!canLoadFromCache('what_we_do'))
+		## logic
+		## get budget data, then check if they fall within date range
+		## do a summation of the budget amount within date range
+		## pick dac5 sector code and then get the underlying high level sector code
+		## if the sector is present, add the new budget info to this sector
+		## Else create a new ref to the high level sector code and add
+		## budget value starting from 0
+		## pick budget percentage for each dac5 sector code2
+		## calculate the budget amount against that perentage and add it to
+		## the high level related sector code
+		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(high_level_sector_list( RestClient.get newApiCall, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 'what_we_do')
+		#storeCacheData(high_level_sector_list( RestClient.get newApiCall, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 'what_we_do')
+		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
+		what_we_do = getCacheData('what_we_do')
+	else
+		what_we_do = getCacheData('what_we_do')
+	end
 	erb :index,
  		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			what_we_do: what_we_do,
  			what_we_achieve: top5results,
  			odas: odas,
  			oipa_api_url: settings.oipa_api_url
  		}
 end
+
+
+############## RUBY APP LEVEL CACHING OF DATA######################
+def canLoadFromCache(fileName)
+	if File.exists?('data/cache/'+fileName+'.json')
+		data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
+		updatedDate = data['updatedDate'].to_date
+		if (DateTime.now.to_date <= updatedDate)
+			puts 'date time check passed and sending true'
+			return true
+		else
+			puts 'date time check failed and sending false'
+			return false
+		end
+	else
+		puts 'file does not exist, sending false'
+		return false
+	end
+end
+
+def storeCacheData(data, fileName)
+	tempData = {}
+	tempData['updatedDate'] = DateTime.now.to_date
+	tempData['data'] = data
+	File.open('data/cache/'+fileName+'.json', "w") { |f| f.puts tempData.to_json }
+end
+
+def getCacheData(fileName)
+	data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
+	data['data']
+end
+
+####################################################################
+
 
 #####################################################################
 #  COUNTRY PAGES
@@ -558,24 +628,54 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
+	high_level_sector_list = ''
+	if (!canLoadFromCache('high_level_sector_list'))
+		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		storeCacheData(high_level_sector_listv2(pulledData, 'all_sectors'), 'high_level_sector_list')
+		high_level_sector_list = getCacheData('high_level_sector_list')
+	else
+		high_level_sector_list = getCacheData('high_level_sector_list')
+	end
   	settings.devtracker_page_title = 'Sector Page'
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list#high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
  		}		
 end
 
 # Category Page (e.g. Three Digit DAC Sector) 
 get '/sector/:high_level_sector_code/?' do
 	# Get the three digit DAC sector data from the API
-  	settings.devtracker_page_title = 'Sector '+sanitize_input(params[:high_level_sector_code],"p")+' Page'
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_'+dac2Code
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['High Level Code (L1)'].to_i == dac2Code.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+  	settings.devtracker_page_title = 'Sector '+dac2Code+' Page'
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+ 			category_list: high_level_sector_list#sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
  		}		
 end
 
@@ -584,12 +684,35 @@ end
 # Sector Page (e.g. Five Digit DAC Sector) 
 get '/sector/:high_level_sector_code/categories/:category_code/?' do
 	# Get the three digit DAC sector data from the API
-  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Page'
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	catCode = sanitize_input(params[:category_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_'+dac2Code+'_'+catCode
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['Category (L2)'].to_i == catCode.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
+		#storeCacheData(sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p")), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+  	settings.devtracker_page_title = 'Sector Category '+catCode+' Page'
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+ 			sector_list: high_level_sector_list#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
  		}		
 end
 

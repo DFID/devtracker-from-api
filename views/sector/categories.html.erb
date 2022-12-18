@@ -8,7 +8,7 @@
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
                     <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
-                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %></li> 
+                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= category_list['sectorHierarchyPath']['highLevelSectorDescription'] %></li> 
                 </ol>
             </div>
             <h1>
@@ -21,22 +21,22 @@
 
 <div class="row">
     <div class="twelve columns content">
-        <h2 class="section-group-title"><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %> Sector Breakdown</h2>
+        <h2 class="section-group-title"><%= category_list['sectorHierarchyPath']['highLevelSectorDescription'] %> Sector Breakdown</h2>
         <div class="row">
             <div class="four columns summary">
-                <p><%= category_list[:sectorHierarchyPath][:highLevelSectorDescription] %></p>               
-                 <a id='view-all-relevant-sector-projects' class="button" href="/sector/<%=category_list[:sectorHierarchyPath][:highLevelSectorCode]%>/projects" style="width:100%;">View All <%= category_list[:sectorHierarchyPath][:highLevelSectorDescription]%> Programmes</a> 
+                <p><%= category_list['sectorHierarchyPath']['highLevelSectorDescription'] %></p>               
+                 <a id='view-all-relevant-sector-projects' class="button" href="/sector/<%=category_list['sectorHierarchyPath']['highLevelSectorCode']%>/projects" style="width:100%;">View All <%= category_list['sectorHierarchyPath']['highLevelSectorDescription']%> Programmes</a> 
             </div>
             <div class="eight columns">
                <ul class="sector-list" id='aid-by-sector-list'>
-                    <% (category_list[:sectorData]).each do |category| %>
+                    <% (category_list['sectorData']).each do |category| %>
                         <li>
-                            <a href="/sector/<%=category[:parentCode]%>/categories/<%=category[:code]%>"><%=category[:name]%></a>
+                            <a href="/sector/<%=category['parentCode']%>/categories/<%=category['code']%>"><%=category['name']%></a>
                             <div class="progress">
-                                   <%budgetPercentage = 100*category[:budget].to_f/category_list[:totalBudget].to_f %>
+                                   <%budgetPercentage = 100*category['budget'].to_f/category_list['totalBudget'].to_f %>
                                    <em><%=format_percentage budgetPercentage%> </em>
                                    <span class="meter" style="width: <%=format_percentage (0.7*budgetPercentage)%>"></span>
-                                   <span>£<%=format_round_m category[:budget].to_f || 0.0 %> </span>                                
+                                   <span>£<%=format_round_m category['budget'].to_f || 0.0 %> </span>                                
                             </div> 
                         </li> 
                     <% end %>
