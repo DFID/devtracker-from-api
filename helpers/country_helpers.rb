@@ -126,6 +126,63 @@ module CountryHelpers
             }
   end
 
+
+  def get_country_detailsv2(countryCode)
+
+    firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+    
+    countriesInfo = Oj.load(File.read('data/countries.json'))
+    country = countriesInfo.select {|country| country['code'] == countryCode}.first
+    
+    ## new api call
+    newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
+		pulledData = RestClient.get newApiCall
+    pulledData  = JSON.parse(pulledData)['response']['docs']
+    countryBudget = 0
+    pulledData.each do |element|
+      if (element.has_key?('recipient_country_code'))
+        tempTotalBudget = 0
+        element['budget_period_start_iso_date'].each_with_index do |data, index|
+            if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+            end
+        end
+        countryBudget = countryBudget + tempTotalBudget
+      end
+    end
+    ##
+    #oipa v3.1
+    #currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
+
+    # if currentTotalCountryBudget['count'] > 0 then
+    #     #oipa v2.2
+    #     #countryBudget = currentTotalCountryBudget['results'][0]['budget']
+    #     #oipa v3.1
+    #     countryBudget = currentTotalCountryBudget['results'][0]['value']
+    # else
+    #     countryBudget = 0
+    # end
+  
+    returnObject = {
+          :code => country['code'],
+          :name => country['name'],
+          :description => country['description'],
+          :population => country['population'],
+          :population_year => country['population_year'],
+          :lifeExpectancy => country['lifeExpectancy'],
+          :incomeLevel => country['incomeLevel'],
+          :belowPovertyLine => country['belowPovertyLine'],
+          :belowPovertyLine_year => country['belowPovertyLine_year'],
+          :fertilityRate => country['fertilityRate'],
+          :fertilityRate_year => country['fertilityRate_year'],
+          :gdpGrowthRate => country['gdpGrowthRate'],
+          :gdpGrowthRate_year => country['gdpGrowthRate_year'],
+          :countryBudget => countryBudget,
+          :countryBudgetCurrency => "GBP",
+          }
+  end
+
   def get_country_details(countryCode)
 
       firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
@@ -543,7 +600,7 @@ module CountryHelpers
         c3ReadyDonutData[1].push('No data available for this view')
         return c3ReadyDonutData
     end
-end
+  end
 
   def get_country_all_projects_rss(countryCode)
     rssJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&related_activity_recipient_country=#{countryCode}&ordering=-last_updated_datetime&fields=last_updated_datetime,title,descriptions,iati_identifier&page_size=500")
@@ -904,21 +961,6 @@ end
     
   # Returns the country level implementing organisations
   def getCountryLevelImplOrgs(countryCode, activityCount)
-    ## New stuff
-    
-    ##
-    # response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20"))
-    # allActivities = []
-    # allActivities = response['results']
-    # if (response['count'] > 20)
-    #   pages = (response['count'].to_f/20).ceil
-    #   for page in 2..pages do
-    #     tempData = JSON.parse(RestClient.get  settings.oipa_api_url + "activities/?format=json&recipient_country=#{countryCode}&fields=participating_org,recipient_country,recipient_region&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2&page_size=20&page=#{page}")
-    #     tempData['results'].each do |item|
-    #       allActivities.push(item)
-    #     end
-    #   end
-    # end
     implementingOrgs = {}
     newtempActivityCount = 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+countryCode+') AND activity_status_code:2 AND hierarchy:1 AND participating_org_role:4&fl=participating_org_role,participating_org_narrative,participating_org_ref&rows=10000'
     newAPIResponse = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + newtempActivityCount))['response']['docs']
@@ -935,31 +977,6 @@ end
         end
       end
     end
-    # allActivities.each do |activity|
-    #   if(activity['recipient_country'].count == 1)
-    #     if(activity['recipient_country'][0]['country']['code'].to_s == countryCode)
-    #       activity['participating_org'].each do |org|
-    #         begin
-    #           if(org['ref'] != '' && org['ref'] != 'NULL' && org['ref'] != 'null')
-    #             if(implementingOrgs.has_key?(org['ref'].to_s))
-    #               if(org['role']['code'].to_s == '4')
-    #                 implementingOrgs[org['ref']]['count'] = implementingOrgs[org['ref']]['count'] + 1
-    #               end
-    #             else
-    #               if(org['role']['code'].to_s == '4')
-    #                 implementingOrgs[org['ref']] = {}
-    #                 implementingOrgs[org['ref']]['orgName'] = org['narrative'][0]['text']
-    #                 implementingOrgs[org['ref']]['count'] = 1
-    #               end
-    #             end
-    #           end
-    #         rescue
-    #           # Do nothing
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
     implementingOrgs
   end
 end

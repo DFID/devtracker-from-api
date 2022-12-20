@@ -195,6 +195,12 @@ get '/countries/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	country = ''
 	results = ''
+	if (!canLoadFromCache('country_'+n))
+		storeCacheData(get_country_details(n), 'country_'+n)
+		country = getCacheData('country_'+n)
+	else
+		country = getCacheData('country_'+n)
+	end
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
 	#newAPI = 'https://fcdo.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND recipient_country_code:(BD)&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
@@ -206,14 +212,14 @@ get '/countries/:country_code/?' do |n|
 	end
 	Benchmark.bm(7) do |x|
 	 	x.report("Loading Time: ") {
-	 		country = get_country_details(n)
+	 		#country = get_country_details(n) # convert to new
 	 		results = get_country_results(n)
 			#oipa v3.1
 	 	}
 	end
 
 	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
-	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
+	country['totalProjects'] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
 
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
@@ -221,7 +227,7 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
+  	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -243,7 +249,14 @@ end
 
 get '/country-sector-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
-	json :output => get_country_sector_graph_data_jsCompatible(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
+	country = ''
+	if (!canLoadFromCache('country_sector_graph_data_'+n))
+		storeCacheData(get_country_sector_graph_data_jsCompatible(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")), 'country_sector_graph_data_'+n)
+		country = getCacheData('country_sector_graph_data_'+n)
+	else
+		country = getCacheData('country_sector_graph_data_'+n)
+	end
+	json :output => country
 end
 
 get '/country-budget-bar-graph-data/:country_code/?' do |n|

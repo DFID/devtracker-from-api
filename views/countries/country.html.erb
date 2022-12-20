@@ -1,4 +1,4 @@
-<% if(country[:code] == 'UA') %>
+<% if(country['code'] == 'UA') %>
     <% chartDataRepOrgsSplit2 = []%>
     <% chartDataFinYearsSplit2 = []%>
     <% chartDataColumnDataSplit2 = []%>
@@ -12,45 +12,45 @@
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
                     <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
-                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country[:name] %></li>
+                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country['name'] %></li>
                 </ol>
             </div>
             <h1>
-                <%= country[:name] %>
+                <%= country['name'] %>
             </h1>
         </div>
     </div>
 </div>
-<% if(country[:code] != 'UA') %>
-    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country[:totalProjects] } %>
+<% if(country['code'] != 'UA') %>
+    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country['totalProjects'] } %>
 <%else%>
     <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => 0 } %>
 <%end%>
 </div>
 <div class="row">
-    <% if(country[:code] == 'AF') %>
+    <% if(country['code'] == 'AF') %>
         <div class="twelve columns">
             <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (Programme title, description and channel of delivery) from Devtracker. As Programmes are reviewed and republished, the Programme and financial information will become available on DevTracker.</div>
         </div>
     <%end%>
-    <% if(country[:code] == 'UA') %>
+    <% if(country['code'] == 'UA') %>
         <div class="twelve columns">
             <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
         </div>
     <%end%>
     <div class="eight columns summary">
         <h2 class="visually-hidden">Summary</h2>
-        <% if country[:description].length > 0%>
+        <% if country['description'].length > 0%>
             <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify">
-                <%= markdown_to_html(country[:description])%>
+                <%= markdown_to_html(country['description'])%>
                 <p style="font-style: italic;">Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.</p>
-                <%if country[:description].length > 500%>
+                <%if country['description'].length > 500%>
                     <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
-                        <div class="description-expander" style="text-align: center; color: #2e3191; cursor: pointer">Read more about <%= country[:name] %></div>
+                        <div class="description-expander" style="text-align: center; color: #2e3191; cursor: pointer">Read more about <%= country['name'] %></div>
                     </div>
                 <%else%>
                     <div class="description-overlay" style="display: none">
-                        <div class="description-expander">Read more about <%= country[:name] %></div>
+                        <div class="description-expander">Read more about <%= country['name'] %></div>
                     </div>
                 <%end%>
                 <div class="description-collapse" style="text-align: center; color: #2e3191; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
@@ -60,7 +60,7 @@
                 Description Not Available.
             </div>
         <%end%>
-        <% if country[:description].length > 0%>
+        <% if country['description'].length > 0%>
             <script type="text/javascript">
                 $(document).ready(function() {
                     var curHeight = $('.country-description').height();
@@ -88,7 +88,7 @@
         <%end%>
     </div>
     <div class="four columns country-flag">
-        <img alt="Country flag" src="/images/flags_l/<%= country[:code] %>.png">
+        <img alt="Country flag" src="/images/flags_l/<%= country['code'] %>.png">
     </div>
 </div>
 <div style="margin: 15px auto" class="row">
@@ -107,14 +107,14 @@
         <div id="countryMap" class="countryMap">
         </div>
 
-        <input type="hidden" id="countryName" value="<%=country[:name] %>">
-        <input type="hidden" id="countryCode" value="<%=country[:code] %>">
+        <input type="hidden" id="countryName" value="<%=country['name'] %>">
+        <input type="hidden" id="countryCode" value="<%=country['code'] %>">
        
         <div id="countryMapDisclaimer" class="disclaimer grey">
             <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
         </div>
     </div>
-    <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
+    <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country['code']%>" class="api-link button">CSV</a></span>
 </div>
 <div class="stuffs">
 <!-- Top six results -->
@@ -235,9 +235,9 @@
          <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
          <div class="row">
             <div style="text-align: center" class="six columns">
-                <% tempTotalBudget = Money.new(country[:countryBudget].to_f.round(0)*100, country[:countryBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(0)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                 <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
-                <% if(country[:code] == 'UA') %>
+                <% if(country['code'] == 'UA') %>
                     <span style="font-size: 1.5em">£0</span>
                 <%else%>
                     <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
@@ -266,12 +266,12 @@
 
 <div class="row">
     <div class="twelve columns download-link">
-        <% if(country[:code] != 'UA') %>
-            <p>Download IATI Activity Data for <%= country[:name]%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country[:name].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country[:code]%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country[:code]%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
+        <% if(country['code'] != 'UA') %>
+            <p>Download IATI Activity Data for <%= country['name']%>: <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country['name'].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country['code']%>.xml" class="api-link button" target="_blank">XML</a> <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country['code']%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="api-link button" target="_blank">JSON</a></p>
         <%end%>
     </div>
 </div>
-<%if country[:code] != 'UA'%>
+<%if country['code'] != 'UA'%>
     <div class="row">
         <div id="waiting-impl-orgs" class="twelve columns"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Implementing organisations list.. Please wait..</strong></p></div>
         <div class="twelve columns">
@@ -301,7 +301,7 @@
         var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
         //Prepare the ajax calls
         $('#waiting-impl-orgs').slideDown('slow');
-        var call1 = $.get('/country-implementing-org-list/<%= country[:code] %>/<%= activityCount%>')
+        var call1 = $.get('/country-implementing-org-list/<%= country['code'] %>/<%= activityCount%>')
         .done(function(response){
             if(Object.keys(response.output).length > 0){
                 tempString = '';
@@ -321,7 +321,7 @@
             // }
         });
 
-        var sectorGraphDataVar = $.get('/country-sector-graph-data/<%= country[:code] %>')
+        var sectorGraphDataVar = $.get('/country-sector-graph-data/<%= country['code'] %>')
         .done(function(response){
             if(response.output.length > 0){
                 var graphData = response.output[0];
@@ -373,7 +373,7 @@
             }
         });
 
-        var budgetBarGraphData = $.get('/country-budget-bar-graph-data/<%= country[:code] %>')
+        var budgetBarGraphData = $.get('/country-budget-bar-graph-data/<%= country['code'] %>')
         .done(function(response){
             if(response.output.length > 0){
                 var yTicks = [];
@@ -426,19 +426,19 @@
         //End the ajax calls
         $('#populationCount').animateNumber(
         {
-          number: <%if country[:population] != "" then%><%= (country[:population]/1000000.0).round(2)%><%else%>0<%end%>
+          number: <%if country['population'] != "" then%><%= (country['population']/1000000.0).round(2)%><%else%>0<%end%>
         },
         2000
       )
         $('#livingBelowCount').animateNumber(
         {
-          number: <%if country[:belowPovertyLine] != "" then%><%= country[:belowPovertyLine].to_f.round(2)%><%else%>0<%end%>
+          number: <%if country['belowPovertyLine'] != "" then%><%= country['belowPovertyLine'].to_f.round(2)%><%else%>0<%end%>
         },
         2000
       )
         $('#gdpGrowthRateCount').animateNumber(
         {
-          number: <%if country[:gdpGrowthRate] != "" then%><%= country[:gdpGrowthRate].to_f.round(2)%><%else%>0<%end%>
+          number: <%if country['gdpGrowthRate'] != "" then%><%= country['gdpGrowthRate'].to_f.round(2)%><%else%>0<%end%>
         },
         2000
       )
@@ -447,8 +447,8 @@
 </script>
 <script type="text/javascript">
     var mapType = "country";
-    window.countryCode = "<%= country[:code]%>";
-    window.countryName = "<%= country[:name]%>";
+    window.countryCode = "<%= country['code']%>";
+    window.countryName = "<%= country['name']%>";
     window.geometryType = "<%= countryGeoJsonData['type'] %>";
     window.coordinates = <%= countryGeoJsonData['coordinates'].to_json %>
     window.mainMarkers = <%= mapMarkers.to_json%>;
