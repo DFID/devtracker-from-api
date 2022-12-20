@@ -423,6 +423,102 @@ module ProjectHelpers
         countriesList
     end
 
+    def dfid_complete_country_list_region_wise_sortedv2
+        countryWithRegions = Oj.load(File.read('data/all-region-sorted-countries.json'))
+        countryHash = {}
+        countryWithRegions.each do |data|
+            if data['region'] != ''
+                tempString = data['alpha-2'].to_s
+                countryHash[tempString] = {}
+                countryHash[tempString]['name'] = data['name']
+                countryHash[tempString]['region'] = data['region']
+                countryHash[tempString]['activeProjects'] = 0
+            end
+        end
+        # if !countryHash.has_key?("TA")
+        #     countryHash['TA'] = {}
+        #     countryHash['TA']['name'] = "Tristan da Cunha"
+        #     countryHash['TA']['region'] = "Africa"
+        #     countryHash['TA']['activeProjects'] = 0
+        # end
+        staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
+        # current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
+        # current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
+        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,related_activity_type,related_activity_ref&rows=50000"
+        projectTracker = []
+        pulledData = RestClient.get newApiCall
+        pulledData  = JSON.parse(pulledData)['response']['docs']
+        finalData = []
+        pulledData.each do |element|
+            if (element.has_key?('recipient_country_code'))
+                tempTotalBudget = 0
+                #tempCountryDetails = staticCountriesList.select{|sct| sct['code'].to_s == element["recipient_country_code"].first.to_s}
+                element['budget_period_start_iso_date'].each_with_index do |data, index|
+                    if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+                        tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+                    end
+                end
+                # if tempCountryDetails.length>0
+                #     country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
+                # elsif country["recipient_country"]["code"].to_s == 'VG'
+                #    country["recipient_country"]["name"] =  'Virgin Islands (British)'
+                # end
+               tempCode = element['recipient_country_code'].first.to_s
+               if countryHash.has_key?(tempCode)
+                    if(element['hierarchy'] == 2)
+                        if(!element['related_activity_type'].index('1').nil?)
+                            if(!projectTracker.index(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s).nil?)
+                                countryHash[tempCode]['activeProjects'] = countryHash[tempCode]['activeProjects'] + 1
+                                countryHash[tempCode]['name'] = element["recipient_country_name"]
+                                projectTracker.push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
+                            end
+                        end
+                    end
+               end
+            end
+        end
+        sortedCountries = {}
+        countryHash.each do |country|
+            tempRegion = country[1]['region'].to_s
+            if !sortedCountries.has_key?(tempRegion)
+                sortedCountries[tempRegion] = {}
+            end
+            sortedCountries[tempRegion][country[0]] = {}
+            sortedCountries[tempRegion][country[0]]['name'] = country[1]['name']
+            sortedCountries[tempRegion][country[0]]['activeProjects'] = country[1]['activeProjects']
+        end
+        sortedCountries
+        ###############
+        #puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2"
+        # oipaCountryProjectBudgetValuesJSON = RestClient.get api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
+        # countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
+        # countriesList = countriesList['results']
+        # countriesList.each do |country|
+        #     tempCountryDetails = staticCountriesList.select{|sct| sct['code'] == country["recipient_country"]["code"]}
+        #     if tempCountryDetails.length>0
+        #          country["recipient_country"]["name"] =  tempCountryDetails[0]['name']
+        #      elsif country["recipient_country"]["code"].to_s == 'VG'
+        #         country["recipient_country"]["name"] =  'Virgin Islands (British)'
+        #     end
+        #     tempCode = country['recipient_country']['code'].to_s
+        #     if countryHash.has_key?(tempCode)
+        #         countryHash[tempCode]['activeProjects'] = country['count']
+        #         countryHash[tempCode]['name'] = country["recipient_country"]["name"]
+        #     end
+        # end
+        # sortedCountries = {}
+        # countryHash.each do |country|
+        #     tempRegion = country[1]['region'].to_s
+        #     if !sortedCountries.has_key?(tempRegion)
+        #         sortedCountries[tempRegion] = {}
+        #     end
+        #     sortedCountries[tempRegion][country[0]] = {}
+        #     sortedCountries[tempRegion][country[0]]['name'] = country[1]['name']
+        #     sortedCountries[tempRegion][country[0]]['activeProjects'] = country[1]['activeProjects']
+        # end
+        # sortedCountries
+    end
+
     def dfid_complete_country_list_region_wise_sorted
         countryWithRegions = Oj.load(File.read('data/all-region-sorted-countries.json'))
         countryHash = {}
@@ -444,7 +540,9 @@ module ProjectHelpers
         staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
+        puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2"
+        puts 'xxaxaascascasc'
+        oipaCountryProjectBudgetValuesJSON = RestClient.get api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
         countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         countriesList = countriesList['results']
         countriesList.each do |country|
@@ -1145,7 +1243,7 @@ module ProjectHelpers
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         #OIPA V3.1
         #oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country")
-        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date_f:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date_f:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
+        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + 'budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['facets']['items']['buckets']
         #oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2")

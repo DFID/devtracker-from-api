@@ -71,6 +71,84 @@ module RegionHelpers
         regionsList = JSON.parse(File.read('data/dfidRegions.json')).select{|r| r["type"]==regionType}.sort_by{ |k| k["name"]}    
     end
 
+    def dfid_regional_projects_datav2(regionType)
+      if regionType == 'all'
+        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+      else
+        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+      end
+        pulledData = RestClient.get newApiCall
+      pulledData  = JSON.parse(pulledData)['response']['docs']
+      allRegionsChartData = []
+      pulledData.each do |element|
+        if (element.has_key?('recipient_region_code'))
+          puts '==xx==xx'
+          puts element['recipient_region_code'].first.to_i
+          puts '==xx==xx'
+          tempTotalBudget = 0
+          element['budget_period_start_iso_date'].each_with_index do |data, index|
+            if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+            end
+          end
+          if !allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}.nil?
+            allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] = allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] + tempTotalBudget
+          else
+            tempRegionData = {}
+            tempRegionData['region'] = element['recipient_region_name'].first.to_s.gsub(", regional","")
+            tempRegionData['code'] = element['recipient_region_code'].first.to_i
+            tempRegionData['budget'] = tempTotalBudget
+            allRegionsChartData.push(tempRegionData)
+          end
+        end
+      end
+      ####
+      # firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+      # lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+      # if (regionType=="region")
+      #     #oipa v3.1
+      #     regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380")
+      # elsif (regionType == "regionAll")
+      #   regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=298,798,89,589,389,189,679,289,380,998")
+      # else
+      #   #oipa v3.1
+      #   regionsDataJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=count,value&recipient_region=998")
+      # end
+
+      # # aggregates budgets of the dfid regional projects that are active in the current FY
+      # allCurrentRegions = JSON.parse(regionsDataJSON)
+      # allCurrentRegions = allCurrentRegions['results']
+
+      # # Map the input data structure so that it matches the required input for the Regions map
+      # allRegionsChartData = allCurrentRegions.map do |elem|
+      # {
+      #     "region" => elem["recipient_region"]["name"].to_s.gsub(", regional",""),
+      #     "code" => elem["recipient_region"]["code"],
+      #     #oipa v2.2
+      #     ###"budget" => elem["budget"]
+      #     #oipa v3.1
+      #     "budget" => elem["value"],
+      #     "projects" => elem["count"]     
+      # }
+      # end
+             
+      # Find the total budget for all of the Regions
+      totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
+
+      # Format the Budget for use on the region chart
+      totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
+
+      # Format the output of the chart data
+      allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
+
+      returnObject = {
+          :regionsDataJSON => allRegionsChartData,
+          :regionsData => allRegionsChartDataFormatted,            
+          :totalBudget => totalBudget,  
+          :totalBudgetFormatted => totalBudgetFormatted                              
+      }
+  end
+
     def dfid_regional_projects_data(regionType)
         
         firstDayOfFinYear = first_day_of_financial_year(DateTime.now)

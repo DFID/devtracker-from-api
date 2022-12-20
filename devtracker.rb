@@ -723,18 +723,32 @@ end
 #Aid By Location Page
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
-  	map_data = dfid_country_map_data2()
-  	getMaxBudget = map_data[1].sort_by{|k,val| val['budget']}.reverse!.first
-  	getMaxBudget = getMaxBudget[1]['budget']
+	fileName = 'map_data'
+	map_data = ''
+	dfid_complete_country_list = ''
+	total_coun_bud_loc = ''
+	country_sector_data = ''
+	getMaxBudget = ''
+	if (!canLoadFromCache('country_sector_data'))
+		storeCacheData(generateCountryDatav2(), 'country_sector_data')
+		getMainData = getCacheData('country_sector_data')
+		map_data = getMainData['map_data']
+		storeCacheData(map_data[1].sort_by{|k,val| val['budget']}.reverse!.first[1]['budget'], 'getMaxBudgetCountryLocation')
+		country_sector_data = getMainData['countryHash']
+		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
+	else
+		getMainData = getCacheData('country_sector_data')
+		map_data = getMainData['map_data']
+		country_sector_data = getMainData['countryHash']
+		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
+	end
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	map_data[0],
 			:dfid_country_stats_data => map_data[1],
-			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
-			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData(),
+			:sectorData => country_sector_data,
 			:countryMapData => getCountryBoundsForLocation(map_data[1]),
 			:maxBudget => getMaxBudget
 		}
@@ -743,23 +757,38 @@ end
 # Aid by Region Page
 get '/location/regional/?' do 
   	settings.devtracker_page_title = 'Aid by Region Page'
+	  dfid_regional_projects_data = ''
+	  generateRegionData = ''
+	if (!canLoadFromCache('dfid_regional_projects_data_regions'))
+		storeCacheData(dfid_regional_projects_datav2("all"), 'dfid_regional_projects_data_regions')
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
+	else
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
+	end
 	erb :'location/regional/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
-			:generateRegionData => generateRegionData()	
+			:dfid_regional_projects_data => dfid_regional_projects_data,
+			#:generateRegionData => generateRegionData	
 		}
 end
 
 # Aid by Global Page
 get '/location/global/?' do
+	dfid_regional_projects_data = ''
+	if (!canLoadFromCache('dfid_regional_projects_data_global'))
+		storeCacheData(dfid_regional_projects_datav2("global"), 'dfid_regional_projects_data_global')
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
+	else
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
+	end
   	settings.devtracker_page_title = 'Aid by Global Page'
 	erb :'location/global/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_global_projects_data => dfid_regional_projects_data("global")
+			:dfid_global_projects_data => dfid_regional_projects_data
 		}
 end
 

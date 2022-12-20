@@ -551,6 +551,39 @@ end
     rssResults = rssData['results']
   end
   
+  def total_country_budget_locationv2
+    newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
+    pulledData = RestClient.get newApiCall
+    pulledData  = JSON.parse(pulledData)['response']['docs']
+    totalBudget = 0
+    pulledData.each do |element|
+      if (element.has_key?('recipient_country_code'))
+        tempTotalBudget = 0
+        element['budget_period_start_iso_date'].each_with_index do |data, index|
+            if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+            end
+        end
+        totalBudget = totalBudget + tempTotalBudget
+      end
+    end
+    totalAmount = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
+    totalAmount
+    ########
+    #oipa 3.1
+    # totalCountryBudgetLocation = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value")
+    # totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
+    # totalAmount = 0.0
+    # totalCountryBudgetLocation['results'].each do |countryBudgets|
+    #   #oipa 2.2
+    #   #totalAmount = totalAmount + countryBudgets['budget'].to_f
+    #   #oipa 3.1
+    #   totalAmount = totalAmount + countryBudgets['value'].to_f
+    # end
+    # totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
+    # totalAmount
+  end
+
   def total_country_budget_location
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
