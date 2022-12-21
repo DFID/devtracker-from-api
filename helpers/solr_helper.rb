@@ -3,7 +3,7 @@ module SolrHelper
     ## Filter handling driver goes below ##
     def filterDriver(filter, apiUrl, mappingFileUrl)
         finalData = []
-        apiUrl = apiUrl + 'fl=iati_identifier&rows=1'
+        apiUrl = apiUrl + '&fl=iati_identifier&rows=1'
         case filter
         ## ADDING A NEW FILTER ##
         # Main logic is to prepare an array of key/val pairs which will work as the DevTracker left hand side filter checkbox titles and values.
