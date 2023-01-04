@@ -40,6 +40,12 @@ module ProjectHelpers
         puts 'project details grabbed.'
         project
     end
+
+    def get_h1_project_documents(projectId)
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}&fl=reporting_org_narrative,document_link_title_narrative_lang,document_link_url,document_link_title_narrative,document-link.category-codes-combined,iati_identifier,document_link_language_code,contact_info*,title_narrative_text,last_updated_datetime_f")
+        project = JSON.parse(oipa)['response']['docs'].first
+        project
+    end
     
     def get_funded_by_organisations(project)
         #if(is_dfid_project(project['id']))
@@ -331,6 +337,21 @@ module ProjectHelpers
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         initialPull['count']
+    end
+
+    def get_transaction_countv2(projectId)
+        oipaTransactionURL = settings.oipa_api_url_other + "/transaction/?q=iati_identifier:#{projectId}*&fl=transaction_ref"
+        tCount = 0
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL)['response']['docs']
+        initialPull.each do |item|
+            if(item.has_key?('transaction_ref'))
+                if (item['transaction_ref'].count > 0)
+                    tCount = 1
+                    break
+                end
+            end
+        end
+        tCount
     end
 
     def get_transaction_total(projectId,transactionType, currency)
@@ -635,6 +656,14 @@ module ProjectHelpers
             organisation = project['reporting_org']['narrative'][0]['text']
         rescue
             organisation = project['reporting_org']['type']['name']
+        end
+    end
+
+    def reporting_organisationv2(project)
+        begin
+            organisation = project['reporting_org_narrative'].first
+        rescue
+            organisation = 'N/A'
         end
     end
 

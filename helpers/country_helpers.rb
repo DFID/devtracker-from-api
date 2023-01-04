@@ -320,8 +320,167 @@ module CountryHelpers
             :breadcrumbUrl => breadcrumbUrl,
             :countriesCount => numberOfCountries,
             :regionsCount => numberOfRegions
-            } 
+            }
+  end
 
+  def get_country_or_regionv2(projectId)
+    # countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name")
+    # #countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_country,recipient_region&format=json&page_size=500")
+    # countryOrRegionData = JSON.parse(countryOrRegionAPI)['response']['docs'].first
+    # data = countryOrRegionData
+    # data.each do |d|
+    #   begin
+    #     d['recipient_country'][0].delete('id')
+    #     #This is a special check in place because the API is returning a different name
+    #     if(d['recipient_country'][0]['country']['code'].to_s == 'PS')
+    #       d['recipient_country'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
+    #     end
+    #   rescue
+    #   end
+    #   begin
+    #     d['recipient_region'][0].delete('id')
+    #   rescue
+    #   end
+    # end
+    # #iterate through the array
+    # countries = data[0]['recipient_country']
+    # regions = data[0]['recipient_region']
+    # #project type logic
+    # if(!countries.empty?) then 
+    #   numberOfCountries = countries.count
+    # else 
+    #   numberOfCountries = 0
+    # end
+
+    # if(!regions.empty?) then 
+    #   numberOfRegions = regions.count
+    # else numberOfRegions = 0
+    # end
+
+    # #single country case
+    # if(numberOfCountries == 1 && numberOfRegions == 0) then 
+    #   projectType = "country"
+    #   name = countries[0]['country']['name']
+    #   code = countries[0]['country']['code']
+    #   breadcrumbLabel = name
+    #   breadcrumbUrl = "/countries/" + code
+    # #single region case
+    # elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
+    #   projectType = "region"
+    #   name = regions[0]['region']['name']
+    #   code = regions[0]['region']['code']
+    #   breadcrumbLabel = name
+    #   breadcrumbUrl = "/regions/" + code
+    # #other cases - multiple countries/regions
+    # #  projectType = "region"
+    # else 
+    #   projectType = "global"
+    #   breadcrumbLabel = "Global"
+    #   breadcrumbUrl = "/location/global"
+    # end
+
+    # #generate the text label for the country or region
+    # globalLabel = []
+    # countries.map do |c|
+    #   country = get_country_code_name(c['country']['code'])
+    #   globalLabel << country[:name]
+    # end
+    # regions.map do |r|
+    #   globalLabel << r['region']['name']
+    # end
+    # label = globalLabel.sort.join(", ")
+
+    # if (label.length == 0 && projectType == "global") then 
+    #   label = "Global project" 
+    # end
+    # puts 'country or region details sgrabbed'
+    #############################################
+    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name,recipient_country_percentage,recipient_region_percentage")
+    countryOrRegionData = JSON.parse(countryOrRegionAPI)['response']['docs'].first
+    countries = []
+    regions = []
+    numberOfCountries = 0
+    numberOfRegions = 0
+    if(countryOrRegionData.has_key?('recipient_country_code'))
+      if(countryOrRegionData['recipient_country_code'].count > 0)
+        numberOfCountries = countryOrRegionData['recipient_country_code'].count
+        countryOrRegionData['recipient_country_code'].each_with_index do |item, index|
+          tempData = {}
+          tempData['country'] = {}
+          tempData['country']['code'] = item
+          tempData['country']['name'] = countryOrRegionData['recipient_country_name'][index]
+          tempData['percentage'] = countryOrRegionData.has_key?('recipient_country_percentage') ? countryOrRegionData['recipient_country_percentage'][index] : 0
+          countries.push(tempData)
+        end
+      else
+        numberOfCountries = 0
+      end
+    else
+      numberOfCountries = 0
+    end
+    if(countryOrRegionData.has_key?('recipient_region_code'))
+      if(countryOrRegionData['recipient_region_code'].count > 0)
+        numberOfRegions = countryOrRegionData['recipient_region_code'].count
+        countryOrRegionData['recipient_region_code'].each_with_index do |item, index|
+          tempData = {}
+          tempData['region'] = {}
+          tempData['region']['code'] = item
+          tempData['region']['name'] = countryOrRegionData['recipient_region_name'][index]
+          tempData['percentage'] = countryOrRegionData.has_key?('recipient_region_percentage') ? countryOrRegionData['recipient_region_percentage'][index] : 0
+          countries.push(tempData)
+        end
+      else
+        numberOfRegions = 0
+      end
+    else
+      numberOfRegions = 0
+    end
+    if(numberOfCountries == 1 && numberOfRegions == 0) then 
+      projectType = "country"
+      name = countries.first['country']['name']
+      code = countries.first['country']['code']
+      breadcrumbLabel = name
+      breadcrumbUrl = "/countries/" + code
+    #single region case
+    elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
+      projectType = "region"
+      name = regions.first['region']['name']
+      code = regions.first['region']['code']
+      breadcrumbLabel = name
+      breadcrumbUrl = "/regions/" + code
+    #other cases - multiple countries/regions
+    #  projectType = "region"
+    else 
+      projectType = "global"
+      breadcrumbLabel = "Global"
+      breadcrumbUrl = "/location/global"
+    end
+    #generate the text label for the country or region
+    globalLabel = []
+    countries.map do |c|
+      country = get_country_code_name(c['country']['code'])
+      globalLabel << country[:name]
+    end
+    regions.map do |r|
+      globalLabel << r['region']['name']
+    end
+    label = globalLabel.sort.join(", ")
+
+    if (label.length == 0 && projectType == "global") then 
+      label = "Global project" 
+    end
+    returnObject = {
+          :recipient_countries  => countries,
+          :recipient_regions => regions,
+          :name => name,
+          :code => code,
+          :projectType => projectType,
+          :label => label,
+          :breadcrumbLabel => breadcrumbLabel,
+          :breadcrumbUrl => breadcrumbUrl,
+          :countriesCount => numberOfCountries,
+          :regionsCount => numberOfRegions
+          }
   end
 
   def budgetBarGraphData(apiLink)

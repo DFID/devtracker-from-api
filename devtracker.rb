@@ -441,14 +441,15 @@ get '/projects/*/documents/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
-  	
+	project = get_h1_project_documents(n)
+	doc_categories = Oj.load(File.read('data/doc_category_list.json'))
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			project: project,
+			cateogies: doc_categories,
  		}
 end
 
@@ -501,7 +502,7 @@ end
 
 get '/transaction-count/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output => get_transaction_count(n)
+	json :output => get_transaction_countv2(n)
 end
 
 post '/transaction-details-page' do
@@ -580,7 +581,7 @@ end
 
 get '/country-or-region/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_country_or_region(n)
+	json :output=> get_country_or_regionv2(n)
 end
 
 # Get the funding projects Count from the API
