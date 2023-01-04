@@ -132,6 +132,24 @@ module ProjectHelpers
         end
     end
 
+    def get_funding_project_countv2(projectId)
+        begin
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=iati_identifier:#{projectId}* AND transaction_type:1&fl=iati_identifier")
+            project = JSON.parse(oipa)['response']['numFound']
+        rescue
+            project = 0
+        end
+    end
+
+    def get_funded_project_countv2(projectId)
+        begin
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}*&fl=iati_identifier&rows=1")
+            project = JSON.parse(oipa)['response']['numFound']
+        rescue
+            project = 0
+        end
+    end
+
     def get_funded_project_count(projectId)
         activityDetails = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/?format=json")
         activityDetails = JSON.parse(activityDetails)

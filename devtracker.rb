@@ -587,29 +587,33 @@ end
 # Get the funding projects Count from the API
 get '/get-funding-projects/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_funding_project_count(n)
+	json :output=> get_funding_project_countv2(n)
 end
 
 # Get funded project counts
 get '/get-funded-projects/*?' do
+	# n = ERB::Util.url_encode (params['splat'][0]).to_s
+	# fundedProjectsCount = 0
+	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
+	# 	begin
+	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
+	# 	rescue
+	# 		puts id
+	# 	end
+	# end
+	# json :output=> fundedProjectsCount
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	fundedProjectsCount = 0
-	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-		begin
-			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-		rescue
-			puts id
-		end
-	end
-	json :output=> fundedProjectsCount
+	json :output=> get_funded_project_countv2(n)
 end
 
+# projects that are funded by this target project
 get '/get-funded-projects-page/:page/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	page = ERB::Util.url_encode params[:page].to_s
 	json :output=> get_funded_project_details_page(n, page, 20)
 end
 
+# projects that are funding this target project
 get '/get-funding-projects-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	json :output=> get_funding_project_details(n)
