@@ -474,7 +474,7 @@ get '/projects/*/components/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/components', 
@@ -522,21 +522,22 @@ end
 
 get '/component-list/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
-    project = JSON.parse(oipa)
-	tempData = []
-	project['related_activity'].each do |item|
-		if(item['type']['code'].to_i == 2)
-			tempData.push(item['ref'])
-		end
-	end
-	json :output => tempData
+	#oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
+	oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}&fl=related_activity_ref&rows=1")
+    project = JSON.parse(oipa)['response']['docs'].first
+	#tempData = []
+	# project['related_activity_ref'].each do |item|
+	# 	if(item['type']['code'].to_i == 2)
+	# 		tempData.push(item['ref'])
+	# 	end
+	# end
+	json :output => project['related_activity_ref']
 end
 
 # Get yearly budget for H1 Activity from the API
 get '/project-yearwise-budget/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	projectYearWiseBudgets= get_project_yearwise_budgetv2(n)
 	json :output=> projectYearWiseBudgets
 end
 
@@ -555,7 +556,7 @@ end
 # Get total project budget
 get '/total-project-budget/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 	totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f
 	begin
@@ -566,16 +567,37 @@ get '/total-project-budget/*?' do
 	json :output=> data
 end
 
+get '/total-project-budgetv2/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency")
+	programmeBudgets = JSON.parse(programmeBudgets)['response']['docs']
+	totalBudget = 0
+	programmeBudgets.each do |project|
+		if project.has_key?('budget_value')
+			project['budget_value'].each do |budget|
+				totalBudget = totalBudget + budget
+			end
+		end
+	end
+	begin
+		data = Money.new(totalBudget.round(0)*100, if programmeBudgets.first.has_key?('default-currency') then programmeBudgets.first['default-currency'] else 'GBP' end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	rescue
+		data = "£#{totalBudget}"
+	end
+	json :output=> data
+end
+
 get '/project-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
-	oipa = JSON.parse(oipa)
+	#oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
+	oipa = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}&fl=iati_identifier,title_narrative,description_narrative,activity_date_type,activity_date_iso_date&rows=1")
+	oipa = JSON.parse(oipa)['response']['docs'].first
 	tempData = {}
 	tempData['iati_identifier'] = oipa['iati_identifier']
-	tempData['title'] = begin oipa['title']['narrative'][0]['text'] rescue 'N/A' end
-	tempData['description'] = begin oipa['description'][0]['narrative'][0]['text'] rescue 'N/A' end
+	tempData['title'] = oipa['title_narrative'].first
+	tempData['description'] = oipa['description_narrative'].first
 	tempData['activity_date'] = {}
-	tempData['activity_dates'] = bestActivityDate(oipa['activity_date'])
+	tempData['activity_dates'] = bestActivityDatev2(oipa)
 	json :output=> tempData
 end
 

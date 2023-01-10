@@ -41,6 +41,12 @@ module ProjectHelpers
         project
     end
 
+    def get_h1_project_detailsv2(projectId)
+        oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}&fl=*")
+        project = JSON.parse(oipa)['response']['docs'].first
+        project
+    end
+
     def get_h1_project_documents(projectId)
         oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}&fl=reporting_org_narrative,document_link_title_narrative_lang,document_link_url,document_link_title_narrative,document-link.category-codes-combined,iati_identifier,document_link_language_code,contact_info*,title_narrative_text,last_updated_datetime_f")
         project = JSON.parse(oipa)['response']['docs'].first
@@ -443,6 +449,14 @@ module ProjectHelpers
         yearWiseBudgets=JSON.parse(oipaYearWiseBudgets)
         #oipa3.1
         projectBudgets=financial_year_wise_budgets(yearWiseBudgets['results'].select {|project| !project['value'].nil? },"P")
+    end
+
+    def get_project_yearwise_budgetv2(projectId)
+        programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}*&fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter")
+
+        yearWiseBudgets=JSON.parse(programmeBudgets)['response']['docs']
+        #oipa3.1
+        projectBudgets=financial_year_wise_budgetsv2(yearWiseBudgets,"P")
     end
 
     def dfid_complete_country_list

@@ -33,6 +33,7 @@ module CommonHelpers
   def financial_year_wise_budgets(yearWiseBudgets,type)
 
       finYearWiseBudgets = get_actual_budget_per_fy(yearWiseBudgets)
+      puts finYearWiseBudgets
       # determine what range to show
       #current_financial_year = first_day_of_financial_year(DateTime.now)
       currentFinancialYear = financial_year
@@ -101,6 +102,105 @@ module CommonHelpers
       end
   end
 
+  def financial_year_wise_budgetsv2(yearWiseBudgets,type)
+
+    finYearWiseBudgets = get_actual_budget_per_fyv2(yearWiseBudgets)
+    puts finYearWiseBudgets
+    # determine what range to show
+    #current_financial_year = first_day_of_financial_year(DateTime.now)
+    currentFinancialYear = financial_year
+
+    # if range is 6 or less just show it
+    if (type=="C") then
+      range = if finYearWiseBudgets.size < 7 then
+               finYearWiseBudgets
+              # if the last item in the list is less than or equal to 
+              # the current financial year get the last 6
+              elsif finYearWiseBudgets.last['fy'] <= currentFinancialYear
+                finYearWiseBudgets.last(6)
+              # other wise show current FY - 3 years and cuurent FY + 3 years
+              else
+                index_of_now = finYearWiseBudgets.index { |i| i['fy'] == currentFinancialYear }
+
+                if index_of_now.nil? then
+                  finYearWiseBudgets.last(6)
+                else
+                  finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
+                end
+              end
+              tempFYear = ""
+              tempFYAmount = ""
+              finalData = []
+              # finally convert the range into a label format
+              range.each { |item| 
+                item['fy'] = financial_year_formatter(item['fy'])
+                tempFYear  = tempFYear + "'" + item['fy'] + "'" + ","
+                tempFYAmount = tempFYAmount + "'" + item['value'].to_s + "'" + ","
+              }
+              finalData[0] = tempFYear
+              finalData[1] = tempFYAmount
+              return finalData
+    elsif (type=='C2') then
+      range = if finYearWiseBudgets.size < 7 then
+               finYearWiseBudgets
+              # if the last item in the list is less than or equal to 
+              # the current financial year get the last 6
+              elsif finYearWiseBudgets.last['fy'] <= currentFinancialYear
+                finYearWiseBudgets.last(6)
+              # other wise show current FY - 3 years and cuurent FY + 3 years
+              else
+                index_of_now = finYearWiseBudgets.index { |i| i['fy'] == currentFinancialYear }
+
+                if index_of_now.nil? then
+                  finYearWiseBudgets.last(6)
+                else
+                  finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
+                end
+              end
+              tempFYear = ""
+              tempFYAmount = ""
+              finalData = {}
+              # finally convert the range into a label format
+              range.each { |item| 
+                item['fy'] = financial_year_formatter(item['fy'])
+                finalData[item['fy']] = item['value']
+              }
+              return finalData
+    elsif (type=="P") then
+      finYearWiseBudgets.each { |item| 
+        item['fy'] = financial_year_formatterv2(item['fy']) 
+      }
+                            
+    end
+end
+
+def get_actual_budget_per_fyv2(yearWiseBudgets)
+  hash = {}
+  yearWiseBudgets.each do |project|
+    if project.has_key?('budget_period_start_iso_date')
+      project['budget_period_start_iso_date'].each_with_index do |data, index|
+        t = Time.parse(data)
+        fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+        #quarter = if project['budget.period-start.quarter'][index].to_i == 1 then 4 else project['budget.period-start.quarter'][index].to_i - 1 end
+        if hash.has_key?(fy)
+          hash[fy] = hash[fy] + project['budget_value'][index]
+        else
+          hash[fy] = project['budget_value'][index]
+        end
+      end
+    end
+  end
+  finalData = []
+  hash.each do |key, val|
+    tempData = {}
+    tempData['fy'] = key
+    tempData['type'] = 'budget'
+    tempData['value'] = val
+    finalData.push(tempData)
+  end
+  finalData
+end
+
   #oipa v2.2
   # def get_actual_budget_per_fy(yearWiseBudgets)      
   #     yearWiseBudgets.to_a.group_by { |b| 
@@ -123,6 +223,7 @@ module CommonHelpers
   # end
 
   #oipa v3.1
+
   def get_actual_budget_per_fy(yearWiseBudgets)      
       yearWiseBudgets.to_a.group_by { |b| 
           # we want to group them by the first day of 
@@ -896,5 +997,49 @@ def bestActivityDate(activityDates)
 	else
 		finalDates['end_date'] = tempEndDate.first['iso_date']
 	end
+  finalDates
+end
+
+def bestActivityDatev2(activityDates)
+  finalDates = {}
+  if activityDates.has_key?('activity_date_type')
+    # take best start date
+    if(!activityDates['activity_date_type'].index('2').nil?)
+      finalDates['start_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('2')]
+    elsif (!activityDates['activity_date_type'].index('1').nil?)
+      finalDates['start_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('1')]
+    else
+      finalDates['start_date'] = 'N/A'
+    end
+    if(!activityDates['activity_date_type'].index('4').nil?)
+      finalDates['end_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('4')]
+    elsif (!activityDates['activity_date_type'].index('3').nil?)
+      finalDates['end_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('3')]
+    else
+      finalDates['end_date'] = 'N/A'
+    end
+  else
+    finalDates['start_date'] = 'N/A'
+    finalDates['end_date'] = 'N/A'
+  end
+  #finalDates
+  ########################
+  # tempStartDate = activityDates.select {|d| d['type']['code'].to_i == 1 || d['type']['code'].to_i == 2}
+  # puts(tempStartDate)
+	# if tempStartDate.length > 1
+	# 	finalDates['start_date'] = tempStartDate.select{|d| d['type']['code'].to_i == 2}[0]['iso_date']
+	# elsif tempStartDate.length == 0
+	# 	finalDates['start_date'] = 'N/A'
+	# else
+	# 	finalDates['start_date'] = tempStartDate.first['iso_date']
+	# end
+	# tempEndDate = activityDates.select {|d| d['type']['code'].to_i == 3 || d['type']['code'].to_i == 4}
+	# if tempEndDate.length > 1
+	# 	finalDates['end_date'] = tempEndDate.select{|d| d['type']['code'].to_i == 4}[0]['iso_date']
+	# elsif tempEndDate.length == 0
+	# 	finalDates['end_date'] = 'N/A'
+	# else
+	# 	finalDates['end_date'] = tempEndDate.first['iso_date']
+	# end
   finalDates
 end
