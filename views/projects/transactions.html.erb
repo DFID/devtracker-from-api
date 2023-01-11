@@ -451,8 +451,11 @@ title: Development Tracker
       }
     });
     let dollarUSLocale = Intl.NumberFormat('en-US');
-    var projectInfo = <%= project['participating_org'].to_json %>;
-    var projectCurrency = "<%= begin project['default_currency']['code'] rescue 'GBP' end%>" ;
+    var projectInfo = <%= project['participating_org_ref'].to_json %>;
+    var parti_roles = <%= project['participating_org_role'].to_json %>;
+    var orgTypes = <%= File.read('data/custom-codes/OrganisationType.json') %>;
+    //console.log(orgTypes.data.find(element => element.code == 10).name)
+    var projectCurrency = "<%= begin project['default-currency'] rescue 'GBP' end%>" ;
     function convertCurrency(value) {
       var tempData = {};
       tempData['precPoint'] = 0;
@@ -523,7 +526,7 @@ title: Development Tracker
             var receiver_org_type = '';
             try {
               jq3.each(projectInfo, function(i, d){
-                if(d.ref == data.receiver_organisation.ref){
+                if(d == data.receiver_organisation.ref){
                   receiver_org_type = d.type.name;
                 }
               });

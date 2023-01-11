@@ -458,7 +458,7 @@ get '/projects/*/transactions/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 		
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
@@ -510,7 +510,16 @@ post '/transaction-details-page' do
 	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
 	resultCount = 20
 	nextPage = sanitize_input(params['data']['nextPage'].to_s, "a")
+	get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
 	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
+end
+
+post '/transaction-details-pagev2' do
+	project = sanitize_input(params['projectID'].to_s,"newId")
+	transactionType = sanitize_input(params['transactionType'].to_s, "a")
+	resultCount = 20
+	nextPage = sanitize_input(params['nextPage'].to_s, "a")
+	json :output => get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
 end
 
 post '/transaction-total' do
@@ -648,10 +657,10 @@ get '/projects/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Partners'
-	erb :'projects/partners', 
+	erb :'projects/partners',
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
