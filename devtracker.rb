@@ -402,7 +402,7 @@ get '/projects/*/summary' do
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
-  	project = get_h1_project_details(n)
+  	project = get_h1_project_detailsv2(n)
   	participatingOrgList = get_participating_organisations(project)
   	#get the country/region data from the API
   	countryOrRegion = get_country_or_region(n)
@@ -506,10 +506,10 @@ get '/transaction-count/*?' do
 end
 
 post '/transaction-details-page' do
-	project = sanitize_input(params['data']['projectID'].to_s,"newId")
-	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
+	project = sanitize_input(params['projectID'].to_s,"newId")
+	transactionType = sanitize_input(params['transactionType'].to_s, "a")
 	resultCount = 20
-	nextPage = sanitize_input(params['data']['nextPage'].to_s, "a")
+	nextPage = sanitize_input(params['nextPage'].to_s, "a")
 	get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
 	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
 end
@@ -641,13 +641,13 @@ end
 get '/get-funded-projects-page/:page/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	page = ERB::Util.url_encode params[:page].to_s
-	json :output=> get_funded_project_details_page(n, page, 20)
+	json :output=> get_funded_project_details_pagev2(n, page, 20)
 end
 
 # projects that are funding this target project
 get '/get-funding-projects-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_funding_project_details(n)
+	json :output=> get_funding_project_detailsv2(n)
 end
 
 ######################################################################

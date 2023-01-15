@@ -22,7 +22,7 @@ module ProjectHelpers
             #oipa = RestClient.get  api_simple_log(settings.oipa_api_url_api + "activities/#{projectId}/?format=json&fields=recipient_country")
             oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=iati_identifier:#{projectId}&fl=recipient_country_code")
             response = Oj.load(oipa)
-            tempData = response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length()
+            tempData = response['response']['docs'].first.has_key?('recipient_country_code') ? response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length() : 0
             if(tempData != 0)
                 halt 404, "Activity not found"
             end    
@@ -222,6 +222,35 @@ module ProjectHelpers
         end
     end
 
+    def get_funding_project_detailsv2(projectId)
+        print(settings.oipa_api_url_other + "transaction/?q=transaction_receiver_org_receiver_activity_id:#{projectId}*&fl=activity_aggregation_disbursement_value_gbp,reporting_org_narrative,activity_aggregation_incoming_funds_value,activity_aggregation_budget_value,default_currency,iati_identifier,title_narrative,description_narrative,participating_org_ref,participating_org_role&start=#{0}&rows=200")
+        newApiCall = RestClient.get settings.oipa_api_url_other + "transaction/?q=transaction_receiver_org_receiver_activity_id:#{projectId}*&fl=activity_aggregation_disbursement_value_gbp,reporting_org_narrative,activity_aggregation_incoming_funds_value,activity_aggregation_budget_value,default_currency,iati_identifier,title_narrative,description_narrative,&start=#{0}&rows=200"
+		newApiCall = JSON.parse(newApiCall)
+        pulledData = newApiCall['response']['docs']
+        fundedProjects = Array.new
+        pulledData.each do |data|
+            if(data['iati_identifier'].to_s != projectId.to_s)
+                tempData = {}
+                tempData['iati_identifier'] = data['iati_identifier']
+                tempData['reporting_org_title'] = data['reporting_org_narrative'].first
+                tempData['title'] = data.has_key?('title_narrative') ? data['title_narrative'].first : 'N/A'
+                tempData['description'] = data.has_key?('description_narrative') ? data['description_narrative'].first : 'N/A'
+                # tempData['total_project_budget'] = data.has_key?('activity_aggregation_budget_value') ? Money.new(data['activity_aggregation_budget_value'].to_f.round(0)*100,data['default_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) : '£0'
+                tempData['total_funding'] = data.has_key?('activity_aggregation_budget_value') ? Money.new(data['activity_aggregation_budget_value'].to_f.round(0)*100,data['default_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) : '£0'
+                fundedProjects.push(tempData)
+            end
+        end
+        projectsByKeys = {}
+        fundedProjects.each do |p|
+            projectsByKeys[p['iati_identifier']] = {}
+            projectsByKeys[p['iati_identifier']] = p
+        end
+        projectsByKeys
+        data = {}
+        data['projectsByKeys'] = projectsByKeys
+        data
+    end
+
     def get_funded_project_details(projectId)
         response = getProjectIdentifierList(projectId)
         projectIdentifierList = response['projectIdentifierList']
@@ -297,34 +326,22 @@ module ProjectHelpers
     end
 
     def get_funded_project_details_pagev2(projectId, page, count)
-        # sample: https://fcdo-direct-indexing.iati.cloud/search/transaction/?q=participating_org_ref:GB-1-202035*%20AND%20hierarchy:1&fl=*&start=0&rows=1
-        newApiCall = RestClient.get settings.oipa_api_url_other + "transaction/?q=participating_org_ref:#{projectId}* AND hierarchy:1&fl=iati_identifier,title_narrative,description_narrative,&start=#{page}&rows=#{count}"
-		pulledData = newApiCall['response']['docs']
-        projectIdentifierList = response['projectIdentifierList']
+        page = page.to_i - 1
+        finalPage = page * count
+        newApiCall = RestClient.get settings.oipa_api_url_other + "transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}*&fl=reporting_org_narrative,activity_aggregation_incoming_funds_value,activity_aggregation_budget_value,default_currency,iati_identifier,title_narrative,description_narrative,participating_org_ref,participating_org_role&start=#{finalPage}&rows=#{count}"
+		newApiCall = JSON.parse(newApiCall)
+        pulledData = newApiCall['response']['docs']
         fundedProjects = Array.new
-        tempProjects = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{projectIdentifierList}&page_size=#{count}&fields=id,title,description,reporting_org,participating_org,activity_plus_child_aggregation,default_currency,aggregations,iati_identifier&ordering=title&page=#{page}")
-        tempProjects = JSON.parse(tempProjects)
-        tempProjects['results'].each do |i|
-            begin
-                if(response['projectIdentifierListArray'].include?(i['iati_identifier'].to_s))
-                else
-                    tdata = i
-                    tdata['total_project_budget'] = 0.00
-                    tdata['total_funding'] = 0.00
-                    begin       
-                        tdata['total_project_budget'] = Money.new(i['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100,if i['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then i['default_currency']['code'] else i['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
-                    rescue
-                        tdata['total_project_budget'] = 0.00
-                    end
-                    begin       
-                        tdata['total_funding'] = Money.new(i['activity_plus_child_aggregation']['activity_children']['incoming_funds_value'].to_f.round(0)*100,if i['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'].nil? then i['default_currency']['code'] else i['activity_plus_child_aggregation']['activity_children']['incoming_funds_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
-                    rescue
-                        tdata['total_funding'] = 0.00
-                    end
-                    fundedProjects.push(i)
-                end
-            rescue
-                puts i
+        pulledData.each do |data|
+            if(data['iati_identifier'].to_s != projectId.to_s)
+                tempData = {}
+                tempData['iati_identifier'] = data['iati_identifier']
+                tempData['reporting_org_title'] = data['reporting_org_narrative'].first
+                tempData['title'] = data.has_key?('title_narrative') ? data['title_narrative'].first : 'N/A'
+                tempData['description'] = data.has_key?('description_narrative') ? data['description_narrative'].first : 'N/A'
+                tempData['total_project_budget'] = data.has_key?('activity_aggregation_budget_value') ? Money.new(data['activity_aggregation_budget_value'].to_f.round(0)*100,data['default_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) : '£0'
+                tempData['total_funding'] = data.has_key?('activity_aggregation_incoming_funds_value') ? Money.new(data['activity_aggregation_incoming_funds_value'].to_f.round(0)*100,data['default_currency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) : '£0'
+                fundedProjects.push(tempData)
             end
         end
         projectsByKeys = {}
@@ -332,11 +349,9 @@ module ProjectHelpers
             projectsByKeys[p['iati_identifier']] = {}
             projectsByKeys[p['iati_identifier']] = p
         end
-        puts 'funded project details grabbed'
         projectsByKeys
         data = {}
         data['projectsByKeys'] = projectsByKeys
-        data['hasNext'] = tempProjects['next']
         data
     end
 
@@ -481,10 +496,9 @@ module ProjectHelpers
         response
     end
 
-    def get_transaction_details_pagev2(projectId,transactionType, page, count)auninda
+    def get_transaction_details_pagev2(projectId,transactionType, page, count)
         p = page.to_i - 1
         oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}*&fl=*&start=#{p}&rows=#{count}"
-        puts oipaTransactionURL
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         transactionsJSON = initialPull['response']['docs']
