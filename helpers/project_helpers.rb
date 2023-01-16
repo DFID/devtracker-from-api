@@ -496,14 +496,81 @@ module ProjectHelpers
         response
     end
 
-    def get_transaction_details_pagev2(projectId,transactionType, page, count)
-        p = page.to_i - 1
-        oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}*&fl=*&start=#{p}&rows=#{count}"
+    def get_transaction_details_pagev2(projectId, transactionType, page, count)
+        page = page.to_i - 1
+        finalPage = page * count
+        oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
+        orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         transactionsJSON = initialPull['response']['docs']
+        finalTransactions = []
+        transactionsJSON.each do |activity|
+            # activity['transaction_type'].each_with_index do |transaction, index|
+            #     if transaction.to_i == transactionType.to_i
+            #         tempTransaction = {}
+            #         receiverOrgType = ''
+            #         currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
+            #         receiverOrgRef = activity['transaction_receiver_org_ref'][index]
+            #         if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
+            #             print(activity['participating_org_ref'].find_index(receiverOrgRef.to_s))
+            #             x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
+            #             begin
+            #                 receiverOrgType = x['name']
+            #             rescue
+            #                 receiverOrgType = 'N/A'
+            #             end    
+            #         else
+            #             receiverOrgType = 'N/A'
+            #         end
+            #         tempTransaction['receiver_org_type'] = receiverOrgType
+            #         tempTransaction['value'] = Money.new(activity['transaction_value'][index].to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+            #         tempTransaction['valueNoCurrency'] = activity['transaction_value'][index].to_f
+            #         tempTransaction['receiver_org_title'] = activity['transaction_receiver_org_narrative'][index]
+            #         tempTransaction['transaction_date'] = activity['transaction_date_iso_date'][index]
+            #         tempTransaction['description'] = activity['transaction_description_narrative'][index]
+            #         tempTransaction['iati_identifier'] = activity['iati-identifier']
+            #         tempTransaction['provider_org'] = activity.has_key?('transaction_provider_org_narrative') ? activity['transaction_provider_org_narrative'][index] : 'N/A'
+            #         tempTransaction['provider_activity_id'] = activity.has_key?('transaction_provider_org_narrative')
+            #         finalTransactions.push(tempTransaction)
+            #     end
+            # end
+            if activity.has_key?('json.transaction')
+                activity['json.transaction'].each do |t|
+                    t = JSON.parse(t)
+                    if t['transaction-type']['code'].to_i == transactionType.to_i
+                        tempTransaction = {}
+                        receiverOrgType = ''
+                        currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
+                        receiverOrgRef = t['receiver-org']['ref']
+                        if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
+                            begin
+                                x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
+                                receiverOrgType = x['name']
+                            rescue
+                                receiverOrgType = 'N/A'
+                            end    
+                        else
+                            receiverOrgType = 'N/A'
+                        end
+                        tempTransaction['receiver_org_type'] = receiverOrgType
+                        tempTransaction['value'] = Money.new(t['value'].to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                        tempTransaction['valueNoCurrency'] = t['value'].to_f
+                        tempTransaction['receiver_org_title'] = t.has_key?('receiver-org') ? t['receiver-org']['narrative'] : 'N/A'
+                        tempTransaction['transaction_date'] = t.has_key?('transaction-date') ? t['transaction-date']['iso-date'] : Time.now.iso8601
+                        tempTransaction['description'] = t.has_key?('description') ? t['description']['narrative'] : 'N/A'
+                        tempTransaction['iati_identifier'] = activity['iati-identifier']
+                        tempTransaction['provider_org'] = t.has_key?('provider-org') ? t['provider-org']['ref'] : 'N/A'
+                        tempTransaction['provider_activity_id'] = t.has_key?('provider-org') ? t['provider-org']['provider-activity-id'] : 'N/A'
+                        tempTransaction['receiver_activity_id'] = begin t['receiver-org'].has_key?('receiver-activity-id') ? t['receiver-org']['receiver-activity-id'] : 'N/A' rescue 'N/A' end
+                        finalTransactions.push(tempTransaction)
+                    end
+                end
+            end
+        end
         # Filter out wrong transaction types
         response = {}
+        response['transactions'] = finalTransactions
         response['hasNext'] = if initialPull['response']['numFound'].to_i < (page.to_i*count.to_i) then nil else page end
         response
     end

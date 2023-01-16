@@ -451,9 +451,6 @@ title: Development Tracker
       }
     });
     let dollarUSLocale = Intl.NumberFormat('en-US');
-    var projectInfo = <%= project['participating_org_ref'].to_json %>;
-    var parti_roles = <%= project['participating_org_role'].to_json %>;
-    var orgTypes = <%= File.read('data/custom-codes/OrganisationType.json') %>;
     //console.log(orgTypes.data.find(element => element.code == 10).name)
     var projectCurrency = "<%= begin project['default-currency'] rescue 'GBP' end%>" ;
     function convertCurrency(value) {
@@ -482,7 +479,7 @@ title: Development Tracker
     ];
     // The following is for commitments
     function a7(nextPage){
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 2,
@@ -515,29 +512,19 @@ title: Development Tracker
           jq3('#commitments_container').slideDown();
           jq3('#commitments').show();
           jq3.each(res, function(i, data){
-            total_commitments = total_commitments + parseFloat(data.value);
+            total_commitments = total_commitments + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
             }
             catch {
               receiver_org = 'N/A';
             }
-            var receiver_org_type = '';
-            try {
-              jq3.each(projectInfo, function(i, d){
-                if(d == data.receiver_organisation.ref){
-                  receiver_org_type = d.type.name;
-                }
-              });
-            }
-            catch {
-              receiver_org_type = 'N/A';
-            }
+            var receiver_org_type = data.receiver_org_type;
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabCommitments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabCommitments.row.add([receiver_org, receiver_org_type, data.iati_identifier, final_date, amount]);
             tabCommitments.draw();
           });
         }
@@ -546,7 +533,7 @@ title: Development Tracker
     // Incoming Funds logic starts here
     
     function a6(nextPage) {
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 1,
@@ -579,32 +566,32 @@ title: Development Tracker
           jq3('#incoming_funds_container').slideDown();
           jq3('#incomingFunds').show();
           jq3.each(res, function(i, data){
-            total_incoming_funds = total_incoming_funds + parseFloat(data.value);
+            total_incoming_funds = total_incoming_funds + parseFloat(data.valueNoCurrency);
             var activity_description = '';
             var provider_org = '';
             var provider_activity_id = '';
             try {
-              provider_activity_id = ' (' + data.provider_organisation.provider_activity_id + ')';
+              provider_activity_id = ' (' + data.provider_activity_id + ')';
             }
             catch {
               provider_activity_id = 'N/A';
             }
             try {
-              activity_description = data.description.narrative[0].text;
+              activity_description = data.description;
             }
             catch {
               activity_description = '';
             }
             try {
-              provider_org = data.provider_organisation.narrative[0].text + provider_activity_id;
+              provider_org = data.provider_org + provider_activity_id;
             }
             catch {
               provider_org = 'N/A';
             }
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabincomingFunds.row.add([activity_description, provider_org, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabincomingFunds.row.add([activity_description, provider_org, final_date, amount]);
             tabincomingFunds.draw();
           });
         }
@@ -614,7 +601,7 @@ title: Development Tracker
     
     // Disbursment logic starts here
     function a5(nextPage){
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 3,
@@ -647,29 +634,19 @@ title: Development Tracker
           jq3('#disbursements_container').slideDown();
           jq3('#disbursements').show();
           jq3.each(res, function(i, data){
-            total_disbursments = total_disbursments + parseFloat(data.value);
+            total_disbursments = total_disbursments + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
             }
             catch {
               receiver_org = 'N/A';
             }
-            var receiver_org_type = '';
-            try {
-              jq3.each(projectInfo, function(i, d){
-                if(d.ref == data.receiver_organisation.ref){
-                  receiver_org_type = d.type.name;
-                }
-              });
-            }
-            catch {
-              receiver_org_type = 'N/A';
-            }
+            var receiver_org_type = data.receiver_org_type;
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabDisbursments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabDisbursments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, amount]);
             tabDisbursments.draw();
           });
         }
@@ -680,7 +657,7 @@ title: Development Tracker
     // Expenditure logic starts here
     
     function a4(nextPage) {
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 4,
@@ -714,25 +691,25 @@ title: Development Tracker
           jq3('#expenditures_container').slideDown();
           jq3('#expenditures').show();
           jq3.each(res, function(i, data){
-            total_expenditures = total_expenditures + parseFloat(data.value);
+            total_expenditures = total_expenditures + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             var activity_description = '';
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
             }
             catch {
               receiver_org = 'N/A';
             }
             try {
-              activity_description = data.description.narrative[0].text;
+              activity_description = data.description;
             }
             catch {
               activity_description = 'N/A';
             }
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabExpenditures.row.add([activity_description, receiver_org, data.activity.iati_identifier, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabExpenditures.row.add([activity_description, receiver_org, data.activity.iati_identifier, final_date, amount]);
             tabExpenditures.draw();
           });
         }
@@ -775,32 +752,32 @@ title: Development Tracker
           jq3('#interestRepayments_container').slideDown();
           jq3('#interestRepayments').show();
           jq3.each(res, function(i, data){
-            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            total_interestRepayments = total_interestRepayments + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             var activity_description = '';
             var receiver_activity_id = '';
             try {
-              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
+              receiver_activity_id = data.receiver_activity_id;
             }
             catch {
               receiver_activity_id = 'N/A';
             }
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
             }
             catch {
               receiver_org = 'N/A';
             }
             try {
-              activity_description = data.description.narrative[0].text;
+              activity_description = data.description;
             }
             catch {
               activity_description = 'N/A';
             }
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, amount]);
             tabInterestRepayments.draw();
           });
         }
@@ -811,7 +788,7 @@ title: Development Tracker
     //Loan Repayment logic starts here
     
     function a2(nextPage) {
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 6,
@@ -844,18 +821,18 @@ title: Development Tracker
           jq3('#loanRepayments_container').slideDown();
           jq3('#loanRepayments').show();
           jq3.each(res, function(i, data){
-            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            total_interestRepayments = total_interestRepayments + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             var activity_description = '';
             var receiver_activity_id = '';
             try {
-              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
+              receiver_activity_id = data.receiver_activity_id;
             }
             catch {
               receiver_activity_id = 'N/A';
             }
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
               if (receiver_org == 'Journal Transaction') {
                 receiver_activity_id = data.iati_identifier;
               }
@@ -864,15 +841,15 @@ title: Development Tracker
               receiver_org = 'N/A';
             }
             try {
-              activity_description = data.description.narrative[0].text;
+              activity_description = data.description;
             }
             catch {
               activity_description = 'N/A';
             }
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, amount]);
             tabInterestRepayments.draw();
           });
         }
@@ -882,7 +859,7 @@ title: Development Tracker
 
     // Purchase of equities
     function a1(nextPage) {
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 8,
@@ -915,18 +892,18 @@ title: Development Tracker
           jq3('#purchaseEquities_container').slideDown();
           jq3('#purchaseEquities').show();
           jq3.each(res, function(i, data){
-            total_interestRepayments = total_interestRepayments + parseFloat(data.value);
+            total_interestRepayments = total_interestRepayments + parseFloat(data.valueNoCurrency);
             var receiver_org = '';
             var activity_description = '';
             var receiver_activity_id = '';
             try {
-              receiver_activity_id = data.receiver_organisation.receiver_activity_id;
+              receiver_activity_id = data.receiver_activity_id;
             }
             catch {
               receiver_activity_id = 'N/A';
             }
             try {
-              receiver_org = data.receiver_organisation.narrative[0].text;
+              receiver_org = data.receiver_org_title;
               if (receiver_org == 'Journal Transaction') {
                 receiver_activity_id = data.iati_identifier;
               }
@@ -935,15 +912,15 @@ title: Development Tracker
               receiver_org = 'N/A';
             }
             try {
-              activity_description = data.description.narrative[0].text;
+              activity_description = data.description;
             }
             catch {
               activity_description = 'N/A';
             }
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
-            var amount = convertCurrency(data.value);
-            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, Dinero({amount: amount['amount'], currency: projectCurrency, precision: amount['precPoint']}).toFormat()]);
+            var amount = data.value;
+            tabInterestRepayments.row.add([activity_description, receiver_org, receiver_activity_id, final_date, amount]);
             tabInterestRepayments.draw();
           });
         }

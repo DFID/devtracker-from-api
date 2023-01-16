@@ -63,10 +63,10 @@ include SolrHelper
 set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
- set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/api/'
 
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
@@ -89,7 +89,7 @@ set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
 set :raise_errors, true
 set :show_exceptions, true
-set :log_api_calls, true
+set :log_api_calls, false
 
 set :devtracker_page_title, ''
 #####################################################################
@@ -510,8 +510,9 @@ post '/transaction-details-page' do
 	transactionType = sanitize_input(params['transactionType'].to_s, "a")
 	resultCount = 20
 	nextPage = sanitize_input(params['nextPage'].to_s, "a")
-	get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
+	data = get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
 	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
+	#json :output => data
 end
 
 post '/transaction-details-pagev2' do
