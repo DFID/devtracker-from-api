@@ -297,44 +297,85 @@ end
       end
   end
 
+  def get_financial_year(d) 
+    d = Time.parse(d)
+    if(d.month < 4)
+      d.year-1
+    else
+      d.year
+    end
+  end
+
+  def format_datev2(d)
+    begin
+      d = Time.parse(d)
+      str = d.year.to_s + '-' + d.month.to_s + '-' + d.day.to_s
+      str
+    rescue
+      print(d)
+    end
+  end
+
   def plannedStartDate(dates)
-      begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "1"
-        end["iso_date"]
-      rescue
-        nil
+    finalData = nil
+    begin
+      dates['activity_date_type'].each_with_index do |d, index|
+        if(d.to_s == '1')
+          finalData = dates['activity_date_iso_date'][index]
+        end
       end
+      # dates['activity_date_type'].find do |s|
+      #   s.to_s == "1"
+      # end["iso_date"]
+    rescue
+      finalData = nil
+    end
+    finalData
   end
 
   def actualStartDate(dates)
-      begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "2"
-        end["iso_date"]
-      rescue
-        nil
+    finalData = nil
+    begin
+      dates['activity_date_type'].each_with_index do |d, index|
+        if(d.to_s == '2')
+          finalData = dates['activity_date_iso_date'][index]
+        end
       end
+      # dates.find do |s|
+      #   s["type"]["code"].to_s == "2"
+      # end["iso_date"]
+    rescue
+      finalData = nil
     end
+    finalData
+  end
 
-    def plannedEndDate(dates)
-      begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "3"
-        end["iso_date"]
+  def plannedEndDate(dates)
+    finalData = nil
+    begin
+      dates['activity_date_type'].each_with_index do |d, index|
+        if(d.to_s == '3')
+          finalData = dates['activity_date_iso_date'][index]
+        end
+      end
       rescue
-        nil
-    end   
+        finalData = nil
+    end
+    finalData 
   end
 
   def actualEndDate(dates)
-      begin
-        dates.find do |s|
-          s["type"]["code"].to_s == "4"
-        end["iso_date"]
-      rescue
-        nil
+    finalData = nil
+    begin
+      dates['activity_date_type'].each_with_index do |d, index|
+        if(d.to_s == '4')
+          finalData = dates['activity_date_iso_date'][index]
+        end
       end
+    rescue
+      finalData = nil
+    end
+    finalData
   end
 
   def first_day_of_financial_year(date_value)

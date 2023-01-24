@@ -119,12 +119,12 @@ module CountryHelpers
   end
 
   def get_country_code_name(countryCode)
-      countriesInfo = Oj.load(File.read('data/countries.json'))
-      country = countriesInfo.select {|country| country['code'] == countryCode}.first
-      returnObject = {
-            :code => country['code'],
-            :name => country['name']
-            }
+    countriesInfo = Oj.load(File.read('data/countries.json'))
+    country = countriesInfo.select {|country| country['code'] == countryCode}.first
+    returnObject = {
+          'code' => country['code'],
+          'name' => country['name']
+        }
   end
 
 
@@ -428,7 +428,7 @@ module CountryHelpers
           tempData['region']['code'] = item
           tempData['region']['name'] = countryOrRegionData['recipient_region_name'][index]
           tempData['percentage'] = countryOrRegionData.has_key?('recipient_region_percentage') ? countryOrRegionData['recipient_region_percentage'][index] : 0
-          countries.push(tempData)
+          regions.push(tempData)
         end
       else
         numberOfRegions = 0
@@ -584,6 +584,63 @@ module CountryHelpers
     data.push(finYearList)
     data.push(finalData)
     data
+  end
+
+  def budgetBarGraphDataDv2(countryCode)
+    #Process budgets
+    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-*&fl=reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
+    apiData = JSON.parse(apiData)['response']['docs']
+    fyTracker = []
+    repOrgs = {}
+    apiData.each do |activity|
+      if activity.has_key?('budget_period_start_iso_date')
+          activity['budget_period_start_iso_date'].each_with_index do |item, index|
+            if !repOrgs.has_key?(activity['reporting_org_ref'])
+              repOrgs[activity['reporting_org_ref']] = {}
+              repOrgs[activity['reporting_org_ref']]['orgName'] = activity['reporting_org_narrative'].first
+              repOrgs[activity['reporting_org_ref']]['orgFinYears'] = {}
+            end
+            t = Time.parse(item)
+            fy = if activity['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+            if repOrgs[activity['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+              repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] + activity['budget_value'][index]
+            else
+              repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = activity['budget_value'][index]
+              if !fyTracker.include?(fy)
+                fyTracker.push(fy)
+              end
+            end
+          end
+      end
+    end
+    repOrgs
+    fyTracker.sort!
+    titleArray = []
+    fyArray = []
+    dataArray = []
+    repOrgs.each do |key, val|
+      titleArray.push(val['orgName'])
+      tempDataArray = []
+      tempDataArray.push(val['orgName'])
+      fyTracker.each do |fy|
+        if val['orgFinYears'].has_key?(fy)
+          tempDataArray.push(val['orgFinYears'][fy].round(2))
+        else
+          tempDataArray.push(0)
+        end
+      end
+      dataArray.push(tempDataArray)
+    end
+    fyTracker.each do |item|
+      e = item+1
+      f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
+      fyArray.push(f)
+    end
+    finalData = []
+    finalData.push(titleArray)
+    finalData.push(fyArray)
+    finalData.push(dataArray)
+    finalData
   end
 
 
@@ -760,6 +817,58 @@ module CountryHelpers
         c3ReadyDonutData[1].push('No data available for this view')
         return c3ReadyDonutData
     end
+  end
+
+  def get_country_sector_graph_data_jsCompatibleV2(countryCode)
+    secHi = JSON.parse(File.read('data/sectorHierarchies.json'))
+    api = RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
+    pulledData = JSON.parse(api)['response']['docs']
+    sectorBudgets = {}
+    totalBudget = 0
+    pulledData.each do |activity|
+      if activity.has_key?('sector_code') && activity.has_key?('child_aggregation_budget_value_gbp') && activity.has_key?('sector_percentage') 
+        activity['sector_code'].each_with_index do |s, i|
+          if !secHi.find_index{|k,_| k['Code (L3)'].to_i == s.to_i}.nil?
+            selectedHiLvlSectorData = secHi.find{|k,_| k['Code (L3)'].to_i == s.to_i}
+            if !sectorBudgets.has_key?(selectedHiLvlSectorData['High Level Sector Description'])
+              sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] = ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+              totalBudget = totalBudget + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+            else
+              sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] = sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+              totalBudget = totalBudget + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+            end
+          end
+        end
+      end
+    end
+    c3ReadyDonutData = []
+    c3ReadyDonutData[0] = []
+    c3ReadyDonutData[1] = []
+    otherBudget = 0
+    fBud = 0
+    sectorBudgets.sort_by {|_key, value| -value}
+    sectorBudgets.update(sectorBudgets) {|key, val| val/totalBudget*100}
+    counter = 0
+    sectorBudgets.each do |key, val|
+      if (counter < 5)
+        tempData = []
+        tempData.push(key)
+        tempData.push(val.round(2))
+        c3ReadyDonutData[0].push(tempData)
+        c3ReadyDonutData[1].push(key)
+        counter = counter + 1
+      else
+        otherBudget = otherBudget + val
+      end
+    end
+    if counter == 5
+      tempData = []
+      tempData.push('Others')
+      tempData.push(otherBudget.round(2))
+      c3ReadyDonutData[0].push(tempData)
+      c3ReadyDonutData[1].push('Others')
+    end
+    c3ReadyDonutData
   end
 
   def get_country_all_projects_rss(countryCode)

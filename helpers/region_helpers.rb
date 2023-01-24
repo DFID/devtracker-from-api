@@ -67,6 +67,54 @@ module RegionHelpers
             }
   end
 
+  def get_region_detailsv2(regionCode)
+    regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
+    region = regionInfo.select {|region| region['code'] == regionCode}.first
+    totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND hierarchy:2&fl=budget.period-end.quarter,budget.period-start.quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=1000")['response']['docs']
+    totalRegionBudget = 0
+    currentFinYear = financial_year
+    allRelatedctivities.each do |activity|
+      activityBudget = 0
+      if activity.has_key?('budget_value')
+        activity['budget_value'].each_with_index do |data, index|
+          tStart = Time.parse(activity['budget_period_start_iso_date'][index])
+          fyStart = if activity['budget.period-start.quarter'][index].to_i == 1 then tStart.year - 1 else tStart.year end
+          tEnd = Time.parse(activity['budget_period_end_iso_date'][index])
+          fyEnd = if activity['budget.period-end.quarter'][index].to_i == 1 then tEnd.year - 1 else tEnd.year end
+          if fyStart <= currentFinYear || fyEnd >= currentFinYear
+            activityBudget = activityBudget + data.to_f
+          end
+        end
+      end
+      if activity.has_key?('recipient_region_code')
+        activity['recipient_region_code'].each_with_index do |data, index|
+          if data.to_i == regionCode.to_i
+            if !activity.has_key?('recipient_region_percentage')
+              percentage = 100
+            else
+              percentage = activity['recipient_region_percentage'][index].to_f
+            end
+            totalRegionBudget = totalRegionBudget + activityBudget * (percentage/100)
+          end
+        end
+      end
+    end
+    returnObject = {
+      :code => region['code'],
+      :name => region['name'],
+      :description => region['descriptions'],
+      :type => region['type'],
+      :url => region['url'],
+      :totalProjects => totalProjectCount,
+      :totalActiveProjects => totalActiveProjects,
+      :regionBudget => totalRegionBudget.round(2),
+      :regionBudgetCurrency => "GBP",
+      :projectBudgetPercentToDfidBudget => 0
+    }
+  end
+
   def dfid_complete_region_list(regionType)        
         regionsList = JSON.parse(File.read('data/dfidRegions.json')).select{|r| r["type"]==regionType}.sort_by{ |k| k["name"]}    
     end

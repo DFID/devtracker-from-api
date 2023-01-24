@@ -646,7 +646,7 @@ title: Development Tracker
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
             var amount = data.value;
-            tabDisbursments.row.add([receiver_org, receiver_org_type, data.activity.iati_identifier, final_date, amount]);
+            tabDisbursments.row.add([receiver_org, receiver_org_type, data.iati_identifier, final_date, amount]);
             tabDisbursments.draw();
           });
         }
@@ -709,7 +709,7 @@ title: Development Tracker
             var transaction_date = new Date(data.transaction_date);
             var final_date = ('0' + transaction_date.getDate()).slice(-2).toString() + ' ' + months[transaction_date.getMonth()] + ' ' + transaction_date.getFullYear().toString();
             var amount = data.value;
-            tabExpenditures.row.add([activity_description, receiver_org, data.activity.iati_identifier, final_date, amount]);
+            tabExpenditures.row.add([activity_description, receiver_org, data.iati_identifier, final_date, amount]);
             tabExpenditures.draw();
           });
         }
@@ -719,7 +719,7 @@ title: Development Tracker
 
     //Interest Repayment logic starts here
     function a3(nextPage) {
-      return jq3.post('/transaction-details-page', {
+      return jq3.post('/transaction-details-pagev2', {
         data: {
           'projectID': "<%= project['iati_identifier'] %>",
           'transactionType': 5,

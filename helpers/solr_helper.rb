@@ -350,20 +350,7 @@ module SolrHelper
 
     def addTotalBudgetWithCurrency(response)
         response['docs'].each do |r|
-            r['totalBudgetWithCurrency'] = Money.new(r['activity_plus_child_aggregation_budget_value'].to_f*100, 
-                                        if r['activity_plus_child_aggregation_budget_currency'].to_s == 'None'  
-                                            if r['activity_plus_child_aggregation_incoming_funds_currency'].to_s == 'None'
-                                                if r['activity_plus_child_aggregation_expenditure_currency'].to_s == 'None'
-                                                    r['default_currency']
-                                                else
-                                                    r['activity_plus_child_aggregation_expenditure_currency']
-                                                end
-                                            else
-                                                r['activity_plus_child_aggregation_incoming_funds_currency']
-                                            end
-                                        else r['activity_plus_child_aggregation_budget_currency'] 
-                                        end
-                                            ).round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
+            r['totalBudgetWithCurrency'] = Money.new(r['activity_plus_child_aggregation_budget_value_gbp'].to_f*100,'GBP').round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
         end
         response
     end

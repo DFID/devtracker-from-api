@@ -20,10 +20,10 @@
                                 <%end%>
                             <%elsif searchType == 'S'%>
                                 <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
-                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
+                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/"><%=sector_list['sectorHierarchyPath']['highLevelSectorDescription']%></a></li>
                                 <%#if !(defined?(sectorData['categoryCode'])).nil? %>
                                 <%if sectorData['categoryCode'].length > 0 %>
-                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
+                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list['sectorHierarchyPath']['categoryDescription']%></a></li>
                                 <%end%>
                                 <%if !(defined?(sectorData['sectorName'])).nil?%>
                                     <% if sectorData['sectorName'] != ''%>
@@ -108,7 +108,7 @@
 				<%if searchType == 'F'%>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full">
-                            <% if !fcdoCountryBudgets.empty? %>
+                            <% if !fcdoCountryBudgets.nil? %>
                                 <% fcdoCountryBudgets.each do |results| %>
                                     <%if results[0] != 'UA'%>
                                         <div class="govuk-inset-text" style="font-size: 14px;">
@@ -423,7 +423,7 @@
 										</div>
 										<div class="govuk-grid-column-one-quarter">
                                             <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
+                                            <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common_f'])%></p>
                                             <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                             <h4>Total Budget:</h4>  <p><%=item['totalBudgetWithCurrency']%></p>
 										</div>
