@@ -19,6 +19,7 @@
                 </tr>
             </thead>
             <tbody>
+              <%if project.has_key?('document_link_title_narrative') %>
                 <% project['document_link_title_narrative'].each_with_index do |document, index| %>
                   <%begin%>
                     <%
@@ -34,11 +35,11 @@
                     <tr class="result-list-row">
                         <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
                         <% if t_code != "en" then%>
-                           <td scope="col">
+                          <td scope="col">
                               <span class="language">
                                 <%= t_title %>
                               </span>
-                           </td>
+                          </td>
                         <% end %>
                         <td scope="col">
                           <% categoryCodes.each do |category| %>
@@ -55,6 +56,7 @@
                     <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk">site admins</a> know of this.</p>
                   <%end%>
                 <% end %>
+              <% end %>
             </tbody>
         </table>
     </div>

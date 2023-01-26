@@ -72,22 +72,24 @@ module RegionHelpers
     region = regionInfo.select {|region| region['code'] == regionCode}.first
     totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
     totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND hierarchy:2&fl=budget.period-end.quarter,budget.period-start.quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=1000")['response']['docs']
+    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
+    print(settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")
     totalRegionBudget = 0
     currentFinYear = financial_year
     allRelatedctivities.each do |activity|
       activityBudget = 0
-      if activity.has_key?('budget_value')
-        activity['budget_value'].each_with_index do |data, index|
-          tStart = Time.parse(activity['budget_period_start_iso_date'][index])
-          fyStart = if activity['budget.period-start.quarter'][index].to_i == 1 then tStart.year - 1 else tStart.year end
-          tEnd = Time.parse(activity['budget_period_end_iso_date'][index])
-          fyEnd = if activity['budget.period-end.quarter'][index].to_i == 1 then tEnd.year - 1 else tEnd.year end
+      if activity.has_key?('related_budget_value')
+        activity['related_budget_value'].each_with_index do |data, index|
+          tStart = Time.parse(activity['related_budget_period_start_iso_date'][index])
+          fyStart = if activity['related_budget_period_start_quarter'][index].to_i == 1 then tStart.year - 1 else tStart.year end
+          tEnd = Time.parse(activity['related_budget_period_end_iso_date'][index])
+          fyEnd = if activity['related_budget_period_end_quarter'][index].to_i == 1 then tEnd.year - 1 else tEnd.year end
           if fyStart <= currentFinYear || fyEnd >= currentFinYear
             activityBudget = activityBudget + data.to_f
           end
         end
       end
+      print(activityBudget)
       if activity.has_key?('recipient_region_code')
         activity['recipient_region_code'].each_with_index do |data, index|
           if data.to_i == regionCode.to_i

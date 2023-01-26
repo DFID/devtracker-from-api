@@ -45,8 +45,6 @@
           res = response.output['projectsByKeys'];
           var htmlString = '';
           if (Object.keys(res).length > 0) {
-            console.log(res);
-            console.log('xxx');
             if (isFCDOProj(projectID)){
               htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Partner Programmes</h3>';
             }

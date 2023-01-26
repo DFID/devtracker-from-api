@@ -37,7 +37,6 @@ module ProjectHelpers
         project = JSON.parse(oipa)
         project['document_links'] = get_h1_project_document_details(projectId,project)
         #project['local_document_links'] = get_document_links_local(projectId)
-        puts 'project details grabbed.'
         project
     end
 
@@ -84,7 +83,6 @@ module ProjectHelpers
             participatingOrgs['Accountable'] = project['participating_org'].select{|org| org['role']['code'] == '2'}
             participatingOrgs['Extending'] = project['participating_org'].select{|org| org['role']['code'] == '3'}
             participatingOrgs['Implementing'] = project['participating_org'].select{|org| org['role']['code'] == '4'}
-            puts 'org list grabbed'
             participatingOrgs
         else
             nil
@@ -156,10 +154,8 @@ module ProjectHelpers
         begin
             oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{projectId}/transactions/?format=json&transaction_type=1&fields=url")
             project = JSON.parse(oipa)
-            puts 'funding project count grabbed'
             project = project['count']
         rescue
-            puts 'API error for get_funding_project_count method'
             project = 0
         end
     end
@@ -175,7 +171,7 @@ module ProjectHelpers
 
     def get_funded_project_countv2(projectId)
         begin
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}*&fl=iati_identifier&rows=1")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}* AND !iati_identifier:(#{projectId}*)&fl=iati_identifier&rows=1")
             project = JSON.parse(oipa)['response']['numFound']
         rescue
             project = 0
@@ -305,7 +301,6 @@ module ProjectHelpers
             projectsByKeys[p['iati_identifier']] = {}
             projectsByKeys[p['iati_identifier']] = p
         end
-        puts 'funded project details grabbed'
         projectsByKeys
     end
 
@@ -343,7 +338,6 @@ module ProjectHelpers
             projectsByKeys[p['iati_identifier']] = {}
             projectsByKeys[p['iati_identifier']] = p
         end
-        puts 'funded project details grabbed'
         projectsByKeys
         data = {}
         data['projectsByKeys'] = projectsByKeys
@@ -354,7 +348,7 @@ module ProjectHelpers
     def get_funded_project_details_pagev2(projectId, page, count)
         page = page.to_i - 1
         finalPage = page * count
-        newApiCall = RestClient.get settings.oipa_api_url_other + "transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}*&fl=reporting_org_narrative,activity_aggregation_incoming_funds_value,activity_aggregation_budget_value,default_currency,iati_identifier,title_narrative,description_narrative,participating_org_ref,participating_org_role&start=#{finalPage}&rows=#{count}"
+        newApiCall = RestClient.get settings.oipa_api_url_other + "transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}* AND !iati_identifier:(#{projectId}*)&fl=reporting_org_narrative,activity_aggregation_incoming_funds_value,activity_aggregation_budget_value,default_currency,iati_identifier,title_narrative,description_narrative,participating_org_ref,participating_org_role&start=#{finalPage}&rows=#{count}"
 		newApiCall = JSON.parse(newApiCall)
         pulledData = newApiCall['response']['docs']
         fundedProjects = Array.new
@@ -408,11 +402,9 @@ module ProjectHelpers
 
     def get_transaction_details(projectId,transactionType)
         if is_dfid_project(projectId) then
-            puts 'This is a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
         else
-            puts 'This is not a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
@@ -435,11 +427,9 @@ module ProjectHelpers
 
     def get_transaction_count(projectId)
         if is_dfid_project(projectId) then
-            puts 'This is a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
         else
-            puts 'This is not a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=1,2,3,4,5,6,8&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency&page_size=1"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
@@ -504,10 +494,8 @@ module ProjectHelpers
         if is_dfid_project(projectId) then
             puts 'This is a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency"
-            puts settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currencyxx"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&related_activity_id=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,provider_activity,receiver_organisation,transaction_date,transaction_type,value,currency")
         else
-            puts 'This is not a FCDO project'
             oipaTransactionURL = settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency"
             #oipaTransactionsJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "transactions/?format=json&iati_identifier=#{projectId}&transaction_type=#{transactionType}&page_size=1&fields=aggregations,activity,description,provider_organisation,receiver_organisation,transaction_date,transaction_type,value,currency")
         end
@@ -873,8 +861,6 @@ module ProjectHelpers
         staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        puts settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2"
-        puts 'xxaxaascascasc'
         oipaCountryProjectBudgetValuesJSON = RestClient.get api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country&activity_status=1,2")
         countriesList = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         countriesList = countriesList['results']
@@ -1019,7 +1005,6 @@ module ProjectHelpers
                 project['policy_marker_narrative'].each_with_index do |item, index|
                     if project['policy_marker_significance'][index].to_i != 0
                         sig = significances.select{|status| status['code'].to_i == project['policy_marker_significance'][index].to_i}.first
-                        puts(sig)
                         marker = {}
                         marker['significance'] = sig['name']
                         marker['title'] = item
@@ -1028,7 +1013,7 @@ module ProjectHelpers
                 end
             end
         rescue
-            puts('resciedsssssssss')
+            puts('error')
         end
         policyMarkers
     end
@@ -1114,8 +1099,15 @@ module ProjectHelpers
                     c3ReadyStackBarData[1] = '['
                     projectSectorGraph['sector_code'].each_with_index do |data, index|
                         if counter <=10
-                            c3ReadyStackBarData[0].concat('["'+projectSectorGraph['sector_narrative'][index]+'",'+projectSectorGraph['sector_percentage'][index].to_s+"],")
-                            c3ReadyStackBarData[1].concat('"'+projectSectorGraph['sector_narrative'][index]+'",')
+                            begin
+                                narrative = projectSectorGraph['sector_narrative'][index]
+                                percentage = projectSectorGraph['sector_percentage'][index]
+                            rescue
+                                narrative = 'N/A'
+                                percentage = 0
+                            end
+                            c3ReadyStackBarData[0].concat('["'+narrative+'",'+percentage.to_s+"],")
+                            c3ReadyStackBarData[1].concat('"'+narrative+'",')
                             counter = counter + 1
                         else
                             otherPercentage = otherPercentage + projectSectorGraph['sector_percentage'][index].to_f
@@ -1129,8 +1121,15 @@ module ProjectHelpers
                     c3ReadyStackBarData[0] = ''
                     c3ReadyStackBarData[1] = '['
                     projectSectorGraph['sector_code'].each_with_index do |data, index|
-                        c3ReadyStackBarData[0].concat('["'+projectSectorGraph['sector_narrative'][index]+'",'+projectSectorGraph['sector_percentage'][index].to_s+"],")
-                        c3ReadyStackBarData[1].concat('"'+projectSectorGraph['sector_narrative'][index]+'",')
+                        begin
+                            narrative = projectSectorGraph['sector_narrative'][index]
+                            percentage = projectSectorGraph['sector_percentage'][index]
+                        rescue
+                            narrative = 'N/A'
+                            percentage = 0
+                        end
+                        c3ReadyStackBarData[0].concat('["'+narrative+'",'+percentage.to_s+"],")
+                        c3ReadyStackBarData[1].concat('"'+narrative+'",')
                     end
                     c3ReadyStackBarData[1].concat(']')
                     c3ReadyStackBarData

@@ -120,7 +120,7 @@ module CountryHelpers
 
   def get_country_code_name(countryCode)
     countriesInfo = Oj.load(File.read('data/countries.json'))
-    country = countriesInfo.select {|country| country['code'] == countryCode}.first
+    country = countriesInfo.select {|country| country['code'].to_s == countryCode.to_s}.first
     returnObject = {
           'code' => country['code'],
           'name' => country['name']
@@ -460,11 +460,12 @@ module CountryHelpers
     globalLabel = []
     countries.map do |c|
       country = get_country_code_name(c['country']['code'])
-      globalLabel << country[:name]
+      globalLabel << country['name']
     end
     regions.map do |r|
       globalLabel << r['region']['name']
     end
+    print(globalLabel)
     label = globalLabel.sort.join(", ")
 
     if (label.length == 0 && projectType == "global") then 

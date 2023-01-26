@@ -12,16 +12,16 @@
                 <%end%>
             <%else%>
                 <%project['description_narrative'].each_with_index do |description, index|%>
-                    <%if project['description_type'].to_i == 1%>
+                    <%if project['description_type'][index].to_i == 1%>
                         <b class="more-info-title">Description</b>
                         <p class="project-description"><%= description %></p>
-                    <%elsif project['description_type'].to_i == 2%>
+                    <%elsif project['description_type'][index].to_i == 2%>
                         <b class="more-info-title">Objectives</b>
                         <p class="project-description"><%= description %></p>
-                    <%elsif project['description_type'].to_i == 3%>
+                    <%elsif project['description_type'][index].to_i == 3%>
                         <b class="more-info-title">Target Groups</b>
                         <p class="project-description"><%= description %></p>
-                    <%elsif project['description_type'].to_i == 4%>
+                    <%elsif project['description_type'][index].to_i == 4%>
                         <b class="more-info-title">Other</b>
                         <p class="project-description"><%= description %></p>
                     <%end%> 

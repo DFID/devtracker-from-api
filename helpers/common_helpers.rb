@@ -1046,16 +1046,16 @@ def bestActivityDatev2(activityDates)
   if activityDates.has_key?('activity_date_type')
     # take best start date
     if(!activityDates['activity_date_type'].index('2').nil?)
-      finalDates['start_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('2')]
+      finalDates['start_date'] = format_datev2(activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('2')])
     elsif (!activityDates['activity_date_type'].index('1').nil?)
-      finalDates['start_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('1')]
+      finalDates['start_date'] = format_datev2(activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('1')])
     else
       finalDates['start_date'] = 'N/A'
     end
     if(!activityDates['activity_date_type'].index('4').nil?)
-      finalDates['end_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('4')]
+      finalDates['end_date'] = format_datev2(activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('4')])
     elsif (!activityDates['activity_date_type'].index('3').nil?)
-      finalDates['end_date'] = activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('3')]
+      finalDates['end_date'] = format_datev2(activityDates['activity_date_iso_date'][activityDates['activity_date_type'].index('3')])
     else
       finalDates['end_date'] = 'N/A'
     end
