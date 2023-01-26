@@ -1113,7 +1113,7 @@ module ProjectHelpers
                             otherPercentage = otherPercentage + projectSectorGraph['sector_percentage'][index].to_f
                         end
                     end
-                    c3ReadyStackBarData[0].concat('["Other Sectors",'+sectorGroupPercentage.to_s+"],")
+                    c3ReadyStackBarData[0].concat('["Other Sectors",'+otherPercentage.to_s+"],")
                     c3ReadyStackBarData[1].concat('"Other Sectors",')
                     c3ReadyStackBarData[1].concat(']')
                     c3ReadyStackBarData
