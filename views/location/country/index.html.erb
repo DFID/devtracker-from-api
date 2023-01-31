@@ -80,7 +80,11 @@
                 <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
                 <td>
                 <% if sectorData.key?(key) %>
-                  <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)
+                  <%begin%>
+                    <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)
+                  <%rescue%>
+                    No sector data available
+                  <%end%>
                 <%end%>
               </td>
               </tr>

@@ -1,46 +1,212 @@
 [
   {
     "code": "A01",
-    "text": "Pre- and post-project impact appraisal"
+    "category": "A",
+    "text": "Pre- and post-project impact appraisal",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A02",
-    "text": "Objectives / Purpose of activity"
+    "category": "A",
+    "text": "Objectives / Purpose of activity",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A03",
-    "text": "Intended ultimate beneficiaries"
+    "category": "A",
+    "text": "Intended ultimate beneficiaries",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A04",
-    "text": "Conditions"
+    "category": "A",
+    "text": "Conditions",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A05",
-    "text": "Budget"
+    "category": "A",
+    "text": "Budget",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "A06",
+    "category": "A",
+    "text": "Summary information about contract",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A07",
-    "text": "Review of project performance and evaluation"
+    "category": "A",
+    "text": "Review of project performance and evaluation",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A08",
-    "text": "Results, outcomes and outputs"
+    "category": "A",
+    "text": "Results, outcomes and outputs",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A09",
-    "text": "Memorandum of understanding (If agreed by all parties)"
+    "category": "A",
+    "text": "Memorandum of understanding (If agreed by all parties)",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A10",
-    "text": "Tender"
+    "category": "A",
+    "text": "Tender",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A11",
-    "text": "Contract"
+    "category": "A",
+    "text": "Contract",
+    "description": null,
+    "status": "active"
   },
   {
     "code": "A12",
-    "text": "Activity website"
+    "category": "A",
+    "text": "Activity web page",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B01",
+    "category": "B",
+    "text": "Annual report",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B02",
+    "category": "B",
+    "text": "Institutional Strategy paper",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B03",
+    "category": "B",
+    "text": "Country strategy paper",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B04",
+    "category": "B",
+    "text": "Aid Allocation Policy",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B05",
+    "category": "B",
+    "text": "Procurement Policy and Procedure",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B06",
+    "category": "B",
+    "text": "Institutional Audit Report",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B07",
+    "category": "B",
+    "text": "Country Audit Report",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B08",
+    "category": "B",
+    "text": "Exclusions Policy",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B09",
+    "category": "B",
+    "text": "Institutional Evaluation Report",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B10",
+    "category": "B",
+    "text": "Country Evaluation Report",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B11",
+    "category": "B",
+    "text": "Sector strategy",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B12",
+    "category": "B",
+    "text": "Thematic strategy",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B13",
+    "category": "B",
+    "text": "Country-level Memorandum of Understanding",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B14",
+    "category": "B",
+    "text": "Evaluations policy",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B15",
+    "category": "B",
+    "text": "General Terms and Conditions",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B16",
+    "category": "B",
+    "text": "Organisation web page",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B17",
+    "category": "B",
+    "text": "Country/Region web page",
+    "description": null,
+    "status": "active"
+  },
+  {
+    "code": "B18",
+    "category": "B",
+    "text": "Sector web page",
+    "description": null,
+    "status": "active"
   }
 ]

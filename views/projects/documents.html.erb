@@ -28,7 +28,7 @@
                       t_url = t_url.sub! 'http:', 'https:'
                     end
                     t_url_txt = document.gsub(/\.[^.]*$/, '')
-                    t_code = project['document_link_language_code'][index]
+                    t_code = project.has_key?('document_link_language_code') ? project['document_link_language_code'][index] : 'en'
                     t_title = project['document_link_title_narrative_lang'][index]
                     categoryCodes = project['document-link.category-codes-combined'][index].split(',')
                     %>
@@ -44,7 +44,11 @@
                         <td scope="col">
                           <% categoryCodes.each do |category| %>
                             <%
-                              cat = cateogies.select{|s| s['code'].to_s == category.to_s}.first
+                              begin
+                                cat = cateogies.select{|s| s['code'].to_s == category.to_s}.first
+                              rescue
+                                print(category)
+                              end
                             %>
                             <span class="category">
                               <%= cat['text']%>

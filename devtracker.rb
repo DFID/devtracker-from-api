@@ -82,8 +82,8 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
-#set :goverment_department_ids, 'GB-GOV-1,GB-1'
+#set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+set :goverment_department_ids, 'GB-GOV-1,GB-1,GB-GOV-3'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -1288,7 +1288,7 @@ end
 get '/downloadCSV/:proj_id/:transaction_type?' do
 	projID = sanitize_input(params[:proj_id],"newId")
 	transactionType = sanitize_input(params[:transaction_type],"p")
-	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
+	#transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
 	#tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
 	if transactionType.to_i == 0
 		data = get_project_yearwise_budgetv2(projID)
@@ -1296,10 +1296,12 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 		data = get_transactionsv2(projID,transactionType)
 	end
 	tempTransactions = transaction_data_hash_table_for_csvv2(data,transactionType,projID)
-	tempTitle = transactionsForCSV.first
+	#tempTitle = transactionsForCSV.first
+	transactionTypes = Oj.load(File.read('data/custom-codes/TransactionType.json'))['data']
+	t = transactionTypes.select{|s| s['code'].to_i == transactionType.to_i}.first
 	content_type 'text/csv'
 	if transactionType != '0'
-		attachment "Export-" +tempTitle['transaction_type']['name']+ "s.csv"
+		attachment "Export-" +t['name']+ "s.csv"
 	else
 		attachment "Export-Budgets.csv"
 	end

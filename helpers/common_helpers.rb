@@ -739,75 +739,208 @@ end
 
   #Serve the aid by location country page table data
   def generateCountryDatav2()
-    newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
-    pulledData = RestClient.get newApiCall
-    pulledData  = JSON.parse(pulledData)['response']['docs']
+    #newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+    count = 20
+    #newApiCall = settings.oipa_api_url_other + "budget?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    ##pagination stuff
+    puts newApiCall
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    puts ('Number of activities: ' + numOActivities.to_s)
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            if item.has_key?('activity_status_code')
+              if item['activity_status_code'].to_i == 2
+                pulledData.push(item)
+              end
+            end
+          end
+      end
+    end
+    puts ('Activity count: ' + pulledData.count.to_s)
     sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
     countryHash = {}
     projectDataHash = {}
     projectTracker = []
     countryProjecttracker = {}
+    currentFinYear = financial_year
+    firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
     pulledData.each do |element|
-      if (element.has_key?('recipient_country_code'))
-        tempTotalBudget = 0
-        element['budget_period_start_iso_date'].each_with_index do |data, index|
-            if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
-                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
-            end
-        end
-        ## Prepare projects hash
-        if(element['hierarchy'] == 2)
-          if(!element['related_activity_type'].index('1').nil?)
-            if(countryProjecttracker.has_key?(element["recipient_country_code"].first))
-              if(countryProjecttracker[element["recipient_country_code"].first].index(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s).nil?)
-                countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
-                projectDataHash[element["recipient_country_code"].first]["projects"] = projectDataHash[element["recipient_country_code"].first]["projects"] + 1
-                projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
-              else
-                projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
+      if element.has_key?('activity_status_code')
+        if element['activity_status_code'].to_i == 2
+          tempTotalBudget = 0
+          if element.has_key?('budget_value')
+            element['budget_value_gbp'].each_with_index do |data, index|
+              if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+                tempTotalBudget = tempTotalBudget + data.to_f
               end
-            else
-              countryProjecttracker[element["recipient_country_code"].first] = []
-              countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
-              projectDataHash[element["recipient_country_code"].first] = {}
-              projectDataHash[element["recipient_country_code"].first]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"].first : 'N/A'
-              projectDataHash[element["recipient_country_code"].first]["id"] = element["recipient_country_code"].first
-              projectDataHash[element["recipient_country_code"].first]["projects"] = 1
-              projectDataHash[element["recipient_country_code"].first]["budget"] = tempTotalBudget
-              projectDataHash[element["recipient_country_code"].first]["flag"] = '/images/flags/' + element["recipient_country_code"].first.downcase + '.png'
             end
-            ###new logic
           end
-        end
-        ##
-        if(!countryHash.has_key?(element['recipient_country_code'].first))
-          countryHash[element['recipient_country_code'].first] = {}
-        end
-        #highLvlSectorData = sectorHierarchy.select{|s| s['Code (L3)'].to_i == catCode.to_i}
-        if element.has_key?('sector_code')
-          element['sector_code'].each_with_index do |data, index|
-            if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
-              selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
-              if(countryHash[element['recipient_country_code'].first].has_key?(selectedHiLvlSectorData['High Level Sector Description']))
-                if(element.has_key?('sector_percentage'))
-                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+          # begin
+          #   if element.has_key?('budget_value')
+          #     element['budget_value'].each_with_index do |data, index|
+          #       tStart = Time.parse(element['budget_period_start_iso_date'][index])
+          #       fyStart = if element['budget.period-start.quarter'][index].to_i == 1 then tStart.year - 1 else tStart.year end
+          #       tEnd = Time.parse(element['budget_period_end_iso_date'][index])
+          #       fyEnd = if element['budget.period-end.quarter'][index].to_i == 1 then tEnd.year - 1 else tEnd.year end
+          #       if fyStart <= currentFinYear && fyEnd >= currentFinYear
+          #         tempTotalBudget = tempTotalBudget + data.to_f
+          #       else
+          #         puts element['budget_period_start_iso_date'][index]
+          #         #puts ('start year: ' + fyStart.to_s + ' and end year: ' + fyEnd.to_s + ' and current system fin year: ' + currentFinYear.to_s)
+          #       end
+          #     end
+          #   end
+          # rescue
+          #   puts 'Issue found: '
+          #   puts element
+          # end
+          # if element.has_key?('related_budget_value')
+          #   element['related_budget_value'].each_with_index do |data, index|
+          #     tStart = Time.parse(element['related_budget_period_start_iso_date'][index])
+          #     fyStart = if element['related_budget_period_start_quarter'][index].to_i == 1 then tStart.year - 1 else tStart.year end
+          #     tEnd = Time.parse(element['related_budget_period_end_iso_date'][index])
+          #     fyEnd = if element['related_budget_period_end_quarter'][index].to_i == 1 then tEnd.year - 1 else tEnd.year end
+          #     if fyStart <= currentFinYear || fyEnd >= currentFinYear
+          #       tempTotalBudget = tempTotalBudget + data.to_f
+          #     end
+          #   end
+          # end
+          #######################################
+          if(element['hierarchy'] == 2)
+            if element.has_key?('related_activity_type')
+              if(!element['related_activity_type'].index('1').nil?)
+                if(countryProjecttracker.has_key?(element["recipient_country_code"].first))
+                  if(countryProjecttracker[element["recipient_country_code"].first].index(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s).nil?)
+                    countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
+                    projectDataHash[element["recipient_country_code"].first]["projects"] = projectDataHash[element["recipient_country_code"].first]["projects"] + 1
+                    projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
+                  else
+                    projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
+                  end
                 else
-                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + tempTotalBudget
+                  countryProjecttracker[element["recipient_country_code"].first] = []
+                  countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
+                  projectDataHash[element["recipient_country_code"].first] = {}
+                  projectDataHash[element["recipient_country_code"].first]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"].first : 'N/A'
+                  projectDataHash[element["recipient_country_code"].first]["id"] = element["recipient_country_code"].first
+                  projectDataHash[element["recipient_country_code"].first]["projects"] = 1
+                  projectDataHash[element["recipient_country_code"].first]["budget"] = tempTotalBudget
+                  projectDataHash[element["recipient_country_code"].first]["flag"] = '/images/flags/' + element["recipient_country_code"].first.downcase + '.png'
                 end
               else
-                countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']] = {}
-                countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['code'] = selectedHiLvlSectorData['High Level Code (L1)'].to_i
-                countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['name'] = selectedHiLvlSectorData['High Level Sector Description']
-                if(element.has_key?('sector_percentage'))
-                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+                puts ('faileddddd')
+                ###new logic
+              end
+            end
+          end
+          ######################################
+          if(!countryHash.has_key?(element['recipient_country_code'].first))
+            countryHash[element['recipient_country_code'].first] = {}
+          end
+          #highLvlSectorData = sectorHierarchy.select{|s| s['Code (L3)'].to_i == catCode.to_i}
+          if element.has_key?('sector_code')
+            element['sector_code'].each_with_index do |data, index|
+              if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
+                selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
+                if(countryHash[element['recipient_country_code'].first].has_key?(selectedHiLvlSectorData['High Level Sector Description']))
+                  if(element.has_key?('sector_percentage'))
+                    countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+                  else
+                    countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + tempTotalBudget
+                  end
                 else
-                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = tempTotalBudget
+                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']] = {}
+                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['code'] = selectedHiLvlSectorData['High Level Code (L1)'].to_i
+                  countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['name'] = selectedHiLvlSectorData['High Level Sector Description']
+                  if(element.has_key?('sector_percentage'))
+                    countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+                  else
+                    countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = tempTotalBudget
+                  end
                 end
               end
             end
           end
         end
       end
+      #######################
+      # if (element.has_key?('recipient_country_code'))
+      #   tempTotalBudget = 0
+      #   element['budget_period_start_iso_date'].each_with_index do |data, index|
+      #       if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+      #           tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+      #       end
+      #   end
+      #   ## Prepare projects hash
+      #   if(element['hierarchy'] == 2)
+      #     if(!element['related_activity_type'].index('1').nil?)
+      #       if(countryProjecttracker.has_key?(element["recipient_country_code"].first))
+      #         if(countryProjecttracker[element["recipient_country_code"].first].index(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s).nil?)
+      #           countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
+      #           projectDataHash[element["recipient_country_code"].first]["projects"] = projectDataHash[element["recipient_country_code"].first]["projects"] + 1
+      #           projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
+      #         else
+      #           projectDataHash[element["recipient_country_code"].first]["budget"] = projectDataHash[element["recipient_country_code"].first]["budget"] + tempTotalBudget
+      #         end
+      #       else
+      #         countryProjecttracker[element["recipient_country_code"].first] = []
+      #         countryProjecttracker[element["recipient_country_code"].first].push(element['related_activity_ref'][element['related_activity_type'].index('1')].to_s)
+      #         projectDataHash[element["recipient_country_code"].first] = {}
+      #         projectDataHash[element["recipient_country_code"].first]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"].first : 'N/A'
+      #         projectDataHash[element["recipient_country_code"].first]["id"] = element["recipient_country_code"].first
+      #         projectDataHash[element["recipient_country_code"].first]["projects"] = 1
+      #         projectDataHash[element["recipient_country_code"].first]["budget"] = tempTotalBudget
+      #         projectDataHash[element["recipient_country_code"].first]["flag"] = '/images/flags/' + element["recipient_country_code"].first.downcase + '.png'
+      #       end
+      #     else
+      #       puts ('faileddddd')
+      #       ###new logic
+      #     end
+      #   end
+      #   ##
+      #   if(!countryHash.has_key?(element['recipient_country_code'].first))
+      #     countryHash[element['recipient_country_code'].first] = {}
+      #   end
+      #   #highLvlSectorData = sectorHierarchy.select{|s| s['Code (L3)'].to_i == catCode.to_i}
+      #   if element.has_key?('sector_code')
+      #     element['sector_code'].each_with_index do |data, index|
+      #       if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
+      #         selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
+      #         if(countryHash[element['recipient_country_code'].first].has_key?(selectedHiLvlSectorData['High Level Sector Description']))
+      #           if(element.has_key?('sector_percentage'))
+      #             countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+      #           else
+      #             countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + tempTotalBudget
+      #           end
+      #         else
+      #           countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']] = {}
+      #           countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['code'] = selectedHiLvlSectorData['High Level Code (L1)'].to_i
+      #           countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['name'] = selectedHiLvlSectorData['High Level Sector Description']
+      #           if(element.has_key?('sector_percentage'))
+      #             countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+      #           else
+      #             countryHash[element['recipient_country_code'].first][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = tempTotalBudget
+      #           end
+      #         end
+      #       end
+      #     end
+      #   end
+      # end
     end
     finalOutput = Array.new
     finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
@@ -819,6 +952,7 @@ end
     output = {}
     output['map_data'] = finalOutput
     output['countryHash'] = countryHash
+    output['xx'] = countryProjecttracker
     output
   end
 

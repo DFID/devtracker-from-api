@@ -441,14 +441,17 @@ module ProjectHelpers
     def get_transaction_countv2(projectId)
         oipaTransactionURL = settings.oipa_api_url_other + "/transaction/?q=iati_identifier:#{projectId}*&fl=transaction_ref"
         tCount = 0
-        initialPull = JSON.parse(RestClient.get oipaTransactionURL)['response']['docs']
-        initialPull.each do |item|
-            if(item.has_key?('transaction_ref'))
-                if (item['transaction_ref'].count > 0)
-                    tCount = 1
-                    break
-                end
-            end
+        initialPull = JSON.parse(RestClient.get oipaTransactionURL)['response']['numFound']
+        # initialPull.each do |item|
+        #     if(item.has_key?('transaction_ref'))
+        #         if (item['transaction_ref'].count > 0)
+        #             tCount = 1
+        #             break
+        #         end
+        #     end
+        # end
+        if initialPull.to_i > 0
+            tCount = 1
         end
         tCount
     end
@@ -516,41 +519,49 @@ module ProjectHelpers
         oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
         # Get the initial transaction count based on above API call
-        print(oipaTransactionURL)
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         transactionsJSON = initialPull['response']['docs']
         finalTransactions = []
         transactionsJSON.each do |activity|
             if activity.has_key?('json.transaction')
-                activity['json.transaction'].each do |t|
-                    t = JSON.parse(t)
-                    if t['transaction-type']['code'].to_i == transactionType.to_i
-                        tempTransaction = {}
-                        receiverOrgType = ''
-                        currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
-                        receiverOrgRef = t['receiver-org']['ref']
-                        if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
-                            begin
-                                x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
-                                receiverOrgType = x['name']
-                            rescue
+                begin
+                    activity['json.transaction'].each do |t|
+                        t = JSON.parse(t)
+                        if t['transaction-type']['code'].to_i == transactionType.to_i
+                            tempTransaction = {}
+                            receiverOrgType = ''
+                            currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
+                            if t.has_key?('receiver-org')
+                                receiverOrgRef = t['receiver-org']['ref']
+                                if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
+                                    begin
+                                        x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
+                                        receiverOrgType = x['name']
+                                    rescue
+                                        receiverOrgType = 'N/A'
+                                    end    
+                                else
+                                    receiverOrgType = 'N/A'
+                                end
+                            else
                                 receiverOrgType = 'N/A'
-                            end    
-                        else
-                            receiverOrgType = 'N/A'
+                            end
+                            tempTransaction['receiver_org_type'] = receiverOrgType
+                            tempTransaction['value'] = Money.new(t['value'].to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+                            tempTransaction['valueNoCurrency'] = t['value'].to_f
+                            tempTransaction['receiver_org_title'] = t.has_key?('receiver-org') ? t['receiver-org']['narrative'] : 'N/A'
+                            tempTransaction['transaction_date'] = t.has_key?('transaction-date') ? t['transaction-date']['iso-date'] : Time.now.iso8601
+                            tempTransaction['description'] = t.has_key?('description') ? t['description']['narrative'] : 'N/A'
+                            tempTransaction['iati_identifier'] = activity['iati-identifier']
+                            tempTransaction['provider_org'] = t.has_key?('provider-org') ? t['provider-org']['ref'] : 'N/A'
+                            tempTransaction['provider_activity_id'] = t.has_key?('provider-org') ? t['provider-org']['provider-activity-id'] : 'N/A'
+                            tempTransaction['receiver_activity_id'] = begin t['receiver-org'].has_key?('receiver-activity-id') ? t['receiver-org']['receiver-activity-id'] : 'N/A' rescue 'N/A' end
+                            finalTransactions.push(tempTransaction)
                         end
-                        tempTransaction['receiver_org_type'] = receiverOrgType
-                        tempTransaction['value'] = Money.new(t['value'].to_f.round(0)*100, currency).format(:no_cents_if_whole => true,:sign_before_symbol => false)
-                        tempTransaction['valueNoCurrency'] = t['value'].to_f
-                        tempTransaction['receiver_org_title'] = t.has_key?('receiver-org') ? t['receiver-org']['narrative'] : 'N/A'
-                        tempTransaction['transaction_date'] = t.has_key?('transaction-date') ? t['transaction-date']['iso-date'] : Time.now.iso8601
-                        tempTransaction['description'] = t.has_key?('description') ? t['description']['narrative'] : 'N/A'
-                        tempTransaction['iati_identifier'] = activity['iati-identifier']
-                        tempTransaction['provider_org'] = t.has_key?('provider-org') ? t['provider-org']['ref'] : 'N/A'
-                        tempTransaction['provider_activity_id'] = t.has_key?('provider-org') ? t['provider-org']['provider-activity-id'] : 'N/A'
-                        tempTransaction['receiver_activity_id'] = begin t['receiver-org'].has_key?('receiver-activity-id') ? t['receiver-org']['receiver-activity-id'] : 'N/A' rescue 'N/A' end
-                        finalTransactions.push(tempTransaction)
                     end
+                rescue
+                    puts activity['iati-identifier']
+                    puts(oipaTransactionURL)
                 end
             end
         end
@@ -583,7 +594,9 @@ module ProjectHelpers
                 finalPage = p * count
                 tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
-                transactionsJSON.push(tempData)
+                tempData.each do |item|
+                    transactionsJSON.push(item)
+                end
             end
         end
         transactionsJSON.each do |activity|
