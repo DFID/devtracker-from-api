@@ -268,7 +268,7 @@ module SectorHelpers
 	end
 
 	def map_sector_data()
-		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
+		sectorValuesJSON = RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
 		sectorValues  = JSON.parse(sectorValuesJSON)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		sectorValues['results'].each do |elem|

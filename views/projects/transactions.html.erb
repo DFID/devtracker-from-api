@@ -487,9 +487,10 @@ title: Development Tracker
         }
       })
       .done(function(response){
+        console.log(response)
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#commitments_more').hide();
           }
           var total_commitments = 0.00;
@@ -543,7 +544,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if(res.length > 0){
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#incomingFunds_more').hide();
           }
           var total_incoming_funds = 0.00;
@@ -611,7 +612,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#disbursements_more').hide();
           }
           var total_disbursments = 0.00;
@@ -667,7 +668,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#expenditures_more').hide();
           }
           var total_expenditures = 0.00;
@@ -729,7 +730,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#interestRepayments_more').hide();
           }
           var total_interestRepayments = 0.00;
@@ -798,7 +799,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#loanRepayments_more').hide();
           }
           var total_interestRepayments = 0.00;
@@ -869,7 +870,7 @@ title: Development Tracker
       .done(function(response){
         res = response.output['transactions'];
         if (res.length > 0) {
-          if(response.output['hasNext'] == null){
+          if(!response.output['hasNext']){
             $('#purchaseEquities_more').hide();
           }
           var total_interestRepayments = 0.00;

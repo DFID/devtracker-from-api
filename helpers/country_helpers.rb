@@ -656,6 +656,16 @@ module CountryHelpers
 
   end
 
+  def get_country_region_yearwise_budget_graph_datav2(apiLink)
+
+    yearWiseBudgets = Oj.load(apiLink)['response']['docs']
+    #oipa v2.2
+    #yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
+    #oipa v3.1
+    budgetYearData = financial_year_wise_budgetsv2(yearWiseBudgets,"C")
+
+end
+
   def get_reporting_orgWise_yearly_country_budgets(apiLink)
     allBudgets = Oj.load(apiLink)
     reportingOrgWiseData = {}

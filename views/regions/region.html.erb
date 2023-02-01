@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <%= erb :'partials/_regions-tabs', :locals => { :active => "summary", :region => region, :project_count => region[:totalProjects] } %>
+    <%= erb :'partials/_regions-tabs', :locals => { :active => "summary", :region => region, :project_count => region[:totalActiveProjects] } %>
 </div>
 <div class="row">
     <div class="twelve columns summary">
@@ -71,7 +71,7 @@
             </li> -->
             <li class="fact-item">
                 Active Programmes
-                <span><strong><%= region[:totalProjects] || "&nbsp;" %></strong></span>
+                <span><strong><%= region[:totalActiveProjects] || "&nbsp;" %></strong></span>
             </li>
             <!--removed key stats from region pages -->
         </ul>
@@ -140,56 +140,109 @@
  <script src="/javascripts/bar.js"></script> -->
  <script>
     $(document).ready(function() {
-        var graphData = [<%= regionSectorGraphData[0] %>];
         var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
-        var fColors = {};
-        for(i = 0; i<graphData.length; i++){
-            fColors[graphData[i][0]] = colors[i];
-        };
-        var stacked = c3.generate({
-            bindto: '#sectorChart',
-            data: {
-                columns: [
-                    <%= regionSectorGraphData[0] %>
-                ],
-                type: 'bar',
-                labels: false,
-                colors: fColors,
-                groups: [
-                    <%= regionSectorGraphData[1] %>
-                ],
-                order: 'asc'
-            },
-            tooltop: {
-                grouped: false
-            },
-            axis: {
-                rotated: true,
-                x: {
-                    show: true
-                },
-                y: {
-                    label: '%'
-                }
-            },
-            bar: {
-                width: {
-                    ratio: .5
-                }
-            },
-            grid: {
-                y: {
-                    lines: [{
-                        value: 0
-                    }]
-                }
-            },
-            tooltip: {
-                format: {
-                    title: function (x) { return '%' }
-                }
+        var sectorGraphDataVar = $.get('/region-sector-graph-data/<%= region[:code] %>')
+        .done(function(response){
+            if(response.output.length > 0){
+                var graphData = response.output[0];
+                var groups = [response.output[1]];
+                var fColors = {};
+                for(i = 0; i<graphData.length; i++){
+                    fColors[graphData[i][0]] = colors[i];
+                };
+
+                var stacked = c3.generate({
+                    bindto: '#sectorChart',
+                    data: {
+                        columns: graphData,
+                        type: 'bar',
+                        labels: false,
+                        colors: fColors,
+                        groups: groups,
+                        order: 'asc'
+                    },
+                    tooltop: {
+                        grouped: false
+                    },
+                    padding: {left: 10, right: 10},
+                    axis: {
+                        rotated: true,
+                        x: {
+                            show: false
+                        },
+                        y: {
+                            label: '%',
+                            min: 0,
+                            max: 100,
+                            padding: {top: 0, bottom: 0}
+                        }
+                    },
+                    bar: {
+                        width: {
+                            ratio: .6
+                        }
+                    },
+                    
+                    tooltip: {
+                        format: {
+                            title: function (x) { return 'Sector %' }
+                        }
+                    }
+                });
+                $('#sect-container').slideDown('slow');
             }
         });
+        ////
+        // var graphData = [<%#= regionSectorGraphData[0] %>];
+        // var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+        // var fColors = {};
+        // for(i = 0; i<graphData.length; i++){
+        //     fColors[graphData[i][0]] = colors[i];
+        // };
+        // var stacked = c3.generate({
+        //     bindto: '#sectorChart',
+        //     data: {
+        //         columns: [
+        //             <%#= regionSectorGraphData[0] %>
+        //         ],
+        //         type: 'bar',
+        //         labels: false,
+        //         colors: fColors,
+        //         groups: [
+        //             <%#= regionSectorGraphData[1] %>
+        //         ],
+        //         order: 'asc'
+        //     },
+        //     tooltop: {
+        //         grouped: false
+        //     },
+        //     axis: {
+        //         rotated: true,
+        //         x: {
+        //             show: true
+        //         },
+        //         y: {
+        //             label: '%'
+        //         }
+        //     },
+        //     bar: {
+        //         width: {
+        //             ratio: .5
+        //         }
+        //     },
+        //     grid: {
+        //         y: {
+        //             lines: [{
+        //                 value: 0
+        //             }]
+        //         }
+        //     },
+        //     tooltip: {
+        //         format: {
+        //             title: function (x) { return '%' }
+        //         }
+        //     }
+        // });
     <%# if(year_wise_budgets) then budgetYearData = financial_year_wise_budgets(year_wise_budgets,"C") %>
         var yTicks = [];
         var chart = c3.generate({           

@@ -384,4 +384,91 @@ module RegionHelpers
       end
       mapMarkers
     end
+
+    def get_region_sector_graph_data_jsCompatibleV2(regionCode)
+      secHi = JSON.parse(File.read('data/sectorHierarchies.json'))
+      api = RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
+      pulledData = JSON.parse(api)['response']['docs']
+      sectorBudgets = {}
+      totalBudget = 0
+      pulledData.each do |activity|
+        if activity.has_key?('sector_code') && activity.has_key?('child_aggregation_budget_value_gbp') && activity.has_key?('sector_percentage') 
+          activity['sector_code'].each_with_index do |s, i|
+            if !secHi.find_index{|k,_| k['Code (L3)'].to_i == s.to_i}.nil?
+              selectedHiLvlSectorData = secHi.find{|k,_| k['Code (L3)'].to_i == s.to_i}
+              if !sectorBudgets.has_key?(selectedHiLvlSectorData['High Level Sector Description'])
+                sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] = ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+                totalBudget = totalBudget + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+              else
+                sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] = sectorBudgets[selectedHiLvlSectorData['High Level Sector Description']] + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+                totalBudget = totalBudget + ((activity['child_aggregation_budget_value_gbp'].to_f/100)*activity['sector_percentage'][i].to_f)
+              end
+            end
+          end
+        end
+      end
+      c3ReadyDonutData = []
+      c3ReadyDonutData[0] = []
+      c3ReadyDonutData[1] = []
+      otherBudget = 0
+      fBud = 0
+      sectorBudgets.sort_by {|_key, value| -value}
+      sectorBudgets.update(sectorBudgets) {|key, val| val/totalBudget*100}
+      counter = 0
+      sectorBudgets.each do |key, val|
+        if (counter < 5)
+          tempData = []
+          tempData.push(key)
+          tempData.push(val.round(2))
+          c3ReadyDonutData[0].push(tempData)
+          c3ReadyDonutData[1].push(key)
+          counter = counter + 1
+        else
+          otherBudget = otherBudget + val
+        end
+      end
+      if counter == 5
+        tempData = []
+        tempData.push('Others')
+        tempData.push(otherBudget.round(2))
+        c3ReadyDonutData[0].push(tempData)
+        c3ReadyDonutData[1].push('Others')
+      end
+      c3ReadyDonutData
+    end
+
+    def getRegionMapMarkersv2(regionCode)
+      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_region_code:'+regionCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
+      newRawMapMakers = newRawMapMakers['response']['docs']
+      # rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
+      # rawMapMarkers = rawMapMarkers['results']
+      mapMarkers = Array.new
+      ar = 0
+      newRawMapMakers.each do |data|
+        if data.has_key?('location_point_pos')
+          data['location_point_pos'].each_with_index do | element, index |
+            tempStorage = {}
+            tempStorage["geometry"] = {}
+            tempStorage['geometry']['type'] = 'Point'
+            tempStorage['geometry']['coordinates'] = Array.new
+            tempStorage['geometry']['coordinates'].push(element.split[1].to_f)
+            tempStorage['geometry']['coordinates'].push(element.split[0].to_f)
+            tempStorage['iati_identifier'] = data['iati_identifier']
+            begin
+              tempStorage['loc'] = data['location_name_narrative_text'][index]
+            rescue
+              tempStorage['loc'] = 'N/A'
+            end
+            begin
+              tempStorage['title'] = data['title_narrative_text'].first
+            rescue
+              tempStorage['title'] = 'N/A'
+            end
+            mapMarkers.push(tempStorage)
+            ar = ar + 1
+          end
+        end
+      end
+      mapMarkers
+    end
 end

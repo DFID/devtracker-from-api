@@ -105,7 +105,6 @@ module CommonHelpers
   def financial_year_wise_budgetsv2(yearWiseBudgets,type)
 
     finYearWiseBudgets = get_actual_budget_per_fyv2(yearWiseBudgets)
-    puts finYearWiseBudgets
     # determine what range to show
     #current_financial_year = first_day_of_financial_year(DateTime.now)
     currentFinancialYear = financial_year
@@ -169,8 +168,7 @@ module CommonHelpers
     elsif (type=="P") then
       finYearWiseBudgets.each { |item| 
         item['fy'] = financial_year_formatterv2(item['fy']) 
-      }
-                            
+      }  
     end
 end
 
@@ -191,7 +189,8 @@ def get_actual_budget_per_fyv2(yearWiseBudgets)
     end
   end
   finalData = []
-  hash.each do |key, val|
+  #hash.each do |key, val|
+  hash.sort.map do |key, val|
     tempData = {}
     tempData['fy'] = key
     tempData['type'] = 'budget'

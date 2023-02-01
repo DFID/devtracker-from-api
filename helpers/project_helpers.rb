@@ -568,7 +568,7 @@ module ProjectHelpers
         # Filter out wrong transaction types
         response = {}
         response['transactions'] = finalTransactions
-        response['hasNext'] = if initialPull['response']['numFound'].to_i < (page.to_i*count.to_i) then nil else page end
+        response['hasNext'] = if initialPull['response']['numFound'].to_i < (page.to_i*count.to_i) then false else true end
         response
     end
 

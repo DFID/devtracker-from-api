@@ -260,6 +260,12 @@ get '/country-sector-graph-data/:country_code/?' do |n|
 	json :output => get_country_sector_graph_data_jsCompatibleV2(n)
 end
 
+get '/region-sector-graph-data/:country_code/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	country = ''
+	json :output => get_region_sector_graph_data_jsCompatibleV2(n)
+end
+
 get '/country-budget-bar-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	#json :output => budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
@@ -346,24 +352,29 @@ get '/regions/:region_code/?' do |n|
     region = get_region_detailsv2(n)
 	#oipa v3.1
 	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
+	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
+	#regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
- 			regionYearWiseBudgets: regionYearWiseBudgets,
- 			regionSectorGraphData: regionSectorGraphData,
- 			mapMarkers: getRegionMapMarkers(region[:code]),
+ 			#regionYearWiseBudgets: regionYearWiseBudgets,
+			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url_other + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter')),
+ 			# regionSectorGraphData: regionSectorGraphData,
+ 			mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
 
 get '/ta/:region_code/?' do |n|
-	json :output => get_region_detailsv2(n)
+	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
+	json :output => regionSectorGraphData
 end
 
+get '/ta-solr/:region_code/?' do |n|
+	json :output => get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url_other + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter'))
+end
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
@@ -417,6 +428,10 @@ get '/projects/*/summary' do
 	programmeBudget = 0
 	if(project.has_key?('activity_plus_child_aggregation_budget_value_gbp'))
 		programmeBudget = programmeBudget + project['activity_plus_child_aggregation_budget_value_gbp'].to_f
+	elsif(project.has_key?('related_budget_value'))
+		project['related_budget_value'].each do |b|
+			programmeBudget = programmeBudget + b.to_f
+		end
 	end
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_datav2(n)
