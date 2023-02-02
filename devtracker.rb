@@ -607,7 +607,7 @@ end
 
 get '/total-project-budgetv2/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency")
+	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency&rows=200")
 	programmeBudgets = JSON.parse(programmeBudgets)['response']['docs']
 	totalBudget = 0
 	programmeBudgets.each do |project|
@@ -1093,6 +1093,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData['sectorName'] = ""
 	#Segment
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'S', 0, '', '')
 	if(response['numFound'].to_i > 0)

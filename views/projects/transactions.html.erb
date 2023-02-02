@@ -542,6 +542,8 @@ title: Development Tracker
         }
       })
       .done(function(response){
+        console.log('incoming funds');
+        console.log(response);
         res = response.output['transactions'];
         if(res.length > 0){
           if(!response.output['hasNext']){

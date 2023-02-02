@@ -517,6 +517,9 @@ module ProjectHelpers
         page = page.to_i - 1
         finalPage = page * count
         oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
+        if transactionType.to_i == 1
+            puts oipaTransactionURL
+        end
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
@@ -697,7 +700,7 @@ module ProjectHelpers
                         tempTransaction = {}
                         receiverOrgType = ''
                         currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
-                        receiverOrgRef = t['receiver-org']['ref']
+                        receiverOrgRef = t.has_key?('receiver-org') ? t['receiver-org']['ref'] : 'N/A'
                         if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
                             begin
                                 x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
