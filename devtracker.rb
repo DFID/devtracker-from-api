@@ -63,7 +63,7 @@ include SolrHelper
 set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -141,14 +141,22 @@ get '/' do  #homepage
 	else
 		what_we_do = getCacheData('what_we_do')
 	end
-	erb :index,
- 		:layout => :'layouts/landing', 
+	whatWeDoTotal = what_we_do.first['budget']
+	top5countries = top5countries.select{|i| i.has_key?('budget')}
+	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
+	#top5countries = top5countries.first(10)
+	top5CountryTotal = top5countries.first['budget']
+	puts top5countries
+	erb :'new_layout/index',
+ 		:layout => :'new_layout/layouts/landing', 
  		:locals => {
- 			top_5_countries: top5countries, 
+ 			top_5_countries: top5countries.first(10), 
  			what_we_do: what_we_do,
  			what_we_achieve: top5results,
  			odas: odas,
- 			oipa_api_url: settings.oipa_api_url
+ 			oipa_api_url: settings.oipa_api_url,
+			whatWeDoTotal: whatWeDoTotal,
+			top5CountryTotal: top5CountryTotal
  		}
 end
 
