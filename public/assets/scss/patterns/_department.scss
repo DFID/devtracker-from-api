@@ -1,0 +1,108 @@
+﻿.app-logos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    &:first-of-type {
+        margin-top: 50px;
+    }
+}
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-height: 100px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 30px;
+
+    @include govuk-media-query($from: tablet) {
+        width: 50%;
+    }
+
+    @include govuk-media-query($from: desktop) {
+        width: 33.33%;
+    }
+    /*background-color: govuk-colour("light-grey");*/
+
+    &__department {
+        display: flex;
+        flex-direction: column;
+        border-left: 4px solid;
+        padding-left: 10px;
+        height: 100%;
+
+        &.fcdo, &.dbeis {
+            border-left-color: #003e74;
+        }
+
+        .defra {
+            border-left-color: #00a33b;
+        }
+
+        &.dit {
+            border-left-color: #CF102D;
+        }
+
+        &.ho {
+            border-left-color: #9325b2;
+        }
+
+        &.hmt {
+            border-left-color: #af292e;
+        }
+
+        &.dfe {
+            border-left-color: #003a69;
+        }
+
+        &.mod {
+            border-left-color: #4d2942;
+        }
+
+        &.dwp {
+            border-left-color: #00beb7;
+        }
+
+        &.dcms {
+            border-left-color: #d40072;
+        }
+
+        &.dhsc {
+            border-left-color: #00ad93;
+        }
+
+        &.bii, &.ons {
+            border-left-color: transparent;
+            height: auto;
+            padding-left: 0;
+            border: 0;
+        }
+
+        &--logo {
+            width: 40px;
+            margin-bottom: 20px;
+
+            &.mod, &.ho {
+                width: 56px;
+            }
+
+            &.bii, &.ons {
+                width: 150px;
+                margin: 0;
+            }
+        }
+
+        &--name {
+            margin-bottom: 5px;
+            max-width: 195px;
+            width: 195px;
+            margin-top: auto;
+        }
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

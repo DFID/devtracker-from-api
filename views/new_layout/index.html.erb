@@ -3,7 +3,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <div class="app-card app-card-search app-card-search-no-margin">
-                    <img src="/new_layout_assets/assets/images/homepage-search.svg" class="app-card-search__image" alt="Search programmes">
+                    <img src="/assets/images/homepage-search.svg" class="app-card-search__image" alt="Search programmes">
                     <div class="govuk-form-group app-card-search__input">
                         <h1 class="govuk-label-wrapper">
                             <label class="govuk-label govuk-label--m" for="search">
@@ -15,13 +15,13 @@
                         </div>
                         <form action="/search" class="app-search-form" method="post" enctype="multipart/form-data">
                             <div class="app-search-form__textbox">
-                                <input class="govuk-input" id="search" name="search" type="text">
+                                <input class="govuk-input" id="query" name="query" type="text">
                                 <button class="app-search-form__button" data-module="govuk-button"></button>
                             </div>
                             <div class="app-search-form__checkbox">
                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="organisation" name="organisation" type="checkbox" value="hmrc">
+                                        <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
                                         <label class="govuk-label govuk-checkboxes__label" for="organisation">
                                             Include closed programmes
                                         </label>
@@ -38,20 +38,20 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-third">
                     <div class="app-headline-stats__data">
-                        <span class="govuk-caption-m">Top location - Afghanistan</span>
-                        <h1 class="govuk-heading-xl app-headline-stats__data--value">£1,084m</h1>
+                        <span class="govuk-caption-m">Top location - <%= top_5_countries.first['name']%></span>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value">£<%= format_round_m(top_5_countries.first['budget'])%></h1>
                     </div>
                 </div>
                 <div class="govuk-grid-column-one-third">
                     <div class="app-headline-stats__data">
                         <span class="govuk-caption-m">Current global spend</span>
-                        <h1 class="govuk-heading-xl app-headline-stats__data--value">£1.4bn</h1>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value" id="total-global-spend">~</h1>
                     </div>
                 </div>
                 <div class="govuk-grid-column-one-third">
                     <div class="app-headline-stats__data">
                         <span class="govuk-caption-m">Active projects</span>
-                        <h1 class="govuk-heading-xl app-headline-stats__data--value">10,394</h1>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value"><%= activiteProjectCount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse%></h1>
                     </div>
                 </div>
             </div>

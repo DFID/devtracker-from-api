@@ -1,0 +1,43 @@
+﻿@import "../govuk/all";
+
+html {
+    background: govuk-colour("light-grey");
+}
+
+body {
+    margin:0;
+    position:relative;
+    background: #fff;
+}
+
+$govuk-global-styles: true;
+$govuk-new-link-styles: true;
+
+$app-fcdo-blue: #012169;
+$app-light-grey: #f8f8f8;
+$app-code-color: #d13118;
+$govuk-link-visited-colour: $govuk-link-colour;
+
+@import "patterns/contents-list";
+@import "patterns/pagination";
+@import "patterns/related-items";
+@import "patterns/layout";
+@import "patterns/menu";
+@import "patterns/header";
+@import "patterns/homepage";
+@import "patterns/banner";
+@import "patterns/card";
+@import "patterns/progress-bar";
+@import "patterns/side-navigation";
+@import "patterns/collapsible";
+@import "patterns/typography";
+@import "patterns/buttons";
+@import "patterns/modal";
+@import "patterns/charts";
+@import "patterns/service-status";
+
+@import "patterns/search";
+@import "patterns/department";
+@import "patterns/project";
+@import "patterns/components";
+@import "patterns/document";

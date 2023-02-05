@@ -18,6 +18,41 @@ module CommonHelpers
     return apiLink
   end
 
+  def get_total_spend()
+    count = 20
+    apiCall = settings.oipa_api_url_other +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
+    apiCall = JSON.parse(RestClient.get apiCall)
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    numOActivities = apiCall['response']['numFound'].to_i
+    pulledData = apiCall['response']['docs']
+    if numOActivities > count
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+        p = p - 1
+        finalPage = p * count
+        tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=#{finalPage}&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code")
+        tempData = tempData['response']['docs']
+        tempData.each do |item|
+          pulledData.push(item)
+        end
+      end
+    end
+    totalSpend = 0
+    pulledData.each do |item|
+      if item.has_key?('transaction_type')
+        item['transaction_type'].each_with_index do |i, index|
+          if i.to_i == 3 || i.to_i == 4 || i.to_i == 8
+            totalSpend = totalSpend + item['transaction_value'][index].to_f
+          end
+        end
+      end
+    end
+    #Money.new(totalSpend.to_f.round(0)*100, 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false)
+    totalSpend
+  end
+
   def get_current_total_budget(apiLink)
       currentTotalBudget= JSON.parse(apiLink)
   end

@@ -1,0 +1,36 @@
+﻿.app-collapsible {
+    border-bottom: 1px solid $govuk-border-colour;
+
+    &-title {
+        display: flex;
+        align-items: center;
+
+        &__link {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            &:focus {
+                text-decoration: none;
+            }
+        }
+
+        &__icon {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        &--active {
+            .app-collapsible-title__icon {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &__content {
+        display: none;
+        margin: 5px 5px 20px 5px;
+    }
+}

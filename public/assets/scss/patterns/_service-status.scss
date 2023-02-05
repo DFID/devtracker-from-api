@@ -1,0 +1,23 @@
+﻿.app-service-status {
+    background-color: govuk-colour("yellow");
+    padding: 10px 0;
+
+    &__tag {
+        margin-right: 10px;
+        background-color: govuk-colour("black");
+        color: #fff;
+    }
+
+    &__text {
+        color: govuk-colour("black");
+        font-weight: 700;
+    }
+}
+
+.app-service-status-bar {
+    width: 100%;
+    height: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: govuk-colour("blue");
+}

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex">
     <title>Home page - Development Tracker</title>
-    <link rel="stylesheet" href="/new_layout_assets/assets/scss/moj-frontend.min.css" />
-    <link rel="stylesheet" href="/new_layout_assets/assets/scss/application.min.css" />
+    <link rel="stylesheet" href="/assets/scss/moj-frontend.min.css" />
+    <link rel="stylesheet" href="/assets/scss/application.min.css" />
 </head>
 <body>
     <header class="govuk-header app-header " role="banner" data-module="govuk-header">
@@ -16,7 +16,7 @@
                 <div class="app-header__content--logo">
                     <a href="/" class="govuk-header__link govuk-header__link--homepage app-header__link">
                         <span class="govuk-header__logotype">
-                            <img src="/new_layout_assets/assets/images/govuk-crown.svg" class="govuk-header__logotype-crown" alt="GovUK" />
+                            <img src="/assets/images/govuk-crown.svg" class="govuk-header__logotype-crown" alt="GovUK" />
                             <span class="govuk-header__logotype-text">
                                 GOV.UK
                             </span>
@@ -50,14 +50,13 @@
                         Enter location, sector, organisation or keyword
                     </div>
                     <div class="app-header__search-input">
-                        <input class="govuk-input" id="event-name" name="event-name" type="text" aria-describedby="event-name-hint">
+                        <input class="govuk-input" id="query" name="query" type="text">
                         <button data-module="govuk-button"></button>
-                        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8AyKK_x9RQ1EhOi-5ICxTzOxIfKabRMlDqbgrIr1yAGhYwznAUUZK09tgiO792wRx9zeKS-F2ABDxaHOAWDhUw_NxNdAX6JotdXw-smcPD3LJfrMFVohHQEswsEUJYLv0MjeBCShxSjcUZSGXI4OpwQ" />
                     </div>
                     <div class="app-search-form__checkbox">
                         <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="includeClosed" name="includeClosed" type="checkbox" value="hmrc">
+                                <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
                                 <label class="govuk-label govuk-checkboxes__label" for="includeClosed">
                                     Include closed programmes
                                 </label>
@@ -65,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="govuk-heading-m">Popular searches</h2>
+                <%# <h2 class="govuk-heading-m">Popular searches</h2>
                 <ul class="govuk-list">
                     <li>
                         <a class="govuk-link" href="#">Ukraine costs</a>
@@ -76,7 +75,7 @@
                     <li>
                         <a class="govuk-link" href="#">Oversea costs</a>
                     </li>
-                </ul>
+                </ul> %>
             </div>
         </div>
     </form>
@@ -84,18 +83,18 @@
     <nav aria-label="Menu" class="govuk-width-container app-width-container">
         <div class="app-header__navigation-content">
             <ul id="navigation" class="govuk-header__navigation-list">
-                <li class="govuk-header__navigation-item app-header__navigation-item">
+                <li class="govuk-header__navigation-item app-header__navigation-item app-header__navigation-item--active">
                     <a class="govuk-header__link app-header__link" href="/">
                         Home
                     </a>
                 </li>
                 <li class="govuk-header__navigation-item app-header__navigation-item ">
-                    <a class="govuk-header__link app-header__link" href="/sectors">
+                    <a class="govuk-header__link app-header__link" href="/sector">
                         Aid by Sector
                     </a>
                 </li>
                 <li class="govuk-header__navigation-item app-header__navigation-item ">
-                    <a class="govuk-header__link app-header__link" href="/location/countries">
+                    <a class="govuk-header__link app-header__link" href="/location/country">
                         Aid by Location
                     </a>
                 </li>
@@ -161,7 +160,7 @@
                     </p>
                 </div>
                 <div>
-                    <img src="/new_layout_assets/assets/images/uk-aid_logo-w.png" alt="UK aid from the British people"
+                    <img src="/assets/images/uk-aid_logo-w.png" alt="UK aid from the British people"
                          class="app-banner__image">
                 </div>
             </div>
@@ -181,44 +180,44 @@
             <ul class="govuk-footer__inline-list">
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="https://govuk-prototype-kit.herokuapp.com/">
+                    <a class="govuk-footer__link" href="/about">
                         About
                     </a>
                 </li>
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="/prototype-admin/clear-data">
+                    <a class="govuk-footer__link" href="/accessibility-statement">
                         Accessibility Statement
                     </a>
                 </li>
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="/prototype-admin/clear-data">
+                    <a class="govuk-footer__link" href="/custom-codes">
                         Custom Codes
                     </a>
                 </li>
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="/prototype-admin/clear-data">
+                    <a class="govuk-footer__link" href="/faq">
                         Glossary
                     </a>
                 </li>
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="/prototype-admin/clear-data">
-                        Report Concerns
+                    <a class="govuk-footer__link" href="/privacy-policy">
+                        Privacy Policy
                     </a>
                 </li>
 
                 <li class="govuk-footer__inline-list-item">
-                    <a class="govuk-footer__link" href="/prototype-admin/clear-data">
+                    <a target="_BLANK" class="govuk-footer__link" href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office?_ga=2.164820735.1535445563.1675569120-188307593.1659519762">
                         Contact Us
                     </a>
                 </li>
 
             </ul>
             <div class="govuk-footer__meta-custom">
-                This site uses <a href="#" class="govuk-footer__link">cookies</a>
+                This site uses <a href="/cookies" class="govuk-footer__link">cookies</a>
             </div>
 
 
@@ -242,10 +241,20 @@
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/moj-frontend.min.js"></script>
     <script src="/assets/govuk/all.js"></script>
-    <script src="/assets/js/dev-tracker.js"></script>
+    <%# <script src="/assets/js/dev-tracker.js"></script> %>
     <script>
         window.GOVUKFrontend.initAll();
         window.MOJFrontend.initAll();
+        $(document).ready(function() {
+            $.ajax({
+                    method: "GET",
+                    async: false,
+                    url: "/total_spend",
+                }).done(function(msg){
+                    temp_response = msg.output;
+                });
+            $('#total-global-spend').html(temp_response);
+        });
     </script>
     
 </body>

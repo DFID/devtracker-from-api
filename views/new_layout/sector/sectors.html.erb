@@ -1,0 +1,53 @@
+<div class="govuk-width-container app-width-container">  
+    <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/">Home</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/sector">Aid by sector</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">
+                <a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/"><%=sector_list['sectorHierarchyPath']['highLevelSectorDescription']%></a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">
+                <%=sector_list['sectorHierarchyPath']['categoryDescription']%>
+            </li>
+        </ol>
+    </div>
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Sector breakdown</span>
+                <h1 class="govuk-heading-l"><%= sector_list['sectorHierarchyPath']['categoryDescription']%></h1>
+                <table class="govuk-table" data-module="moj-sortable-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button" data-index="0">Sector</button></th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="descending"><button type="button" data-index="1">Budget</button></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <% (sector_list['sectorData']).each do |sector| %>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" data-sort-value="<%=sector['name']%>">
+                                    <a href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sector_list['sectorHierarchyPath']['categoryCode']%>/projects/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a>
+                                    <%budgetPercentage = 100*sector['budget'].to_f/sector_list['totalBudget'].to_f %>
+                                    <div class="app-progress-bar">
+                                        <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%=format_percentage budgetPercentage %></span>
+                                        <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage budgetPercentage %> + 25px);"></div>
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=sector['budget'].to_f %>">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <p class="govuk-body">
+                    <a href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sector_list['sectorHierarchyPath']['categoryCode']%>/projects" class="govuk-link">View all <%= sector_list['sectorHierarchyPath']['categoryDescription']%> programmes</a>
+                </p>
+                <div aria-live="polite" role="status" aria-atomic="true" class="govuk-visually-hidden">Sort by Budget (descending)</div>
+            </div>
+        </div>
+    </main>
+</div>

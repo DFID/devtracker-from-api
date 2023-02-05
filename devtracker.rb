@@ -63,7 +63,7 @@ include SolrHelper
 set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -146,7 +146,7 @@ get '/' do  #homepage
 	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
 	#top5countries = top5countries.first(10)
 	top5CountryTotal = top5countries.first['budget']
-	puts top5countries
+	activiteProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:1 AND activity_status_code:2&rows=1&fl=iati_identifier")['response']['numFound'].to_i
 	erb :'new_layout/index',
  		:layout => :'new_layout/layouts/landing', 
  		:locals => {
@@ -156,10 +156,21 @@ get '/' do  #homepage
  			odas: odas,
  			oipa_api_url: settings.oipa_api_url,
 			whatWeDoTotal: whatWeDoTotal,
-			top5CountryTotal: top5CountryTotal
+			top5CountryTotal: top5CountryTotal,
+			activiteProjectCount: activiteProjectCount,
  		}
 end
 
+get '/total_spend/?' do
+	if (!canLoadFromCache('totalGlobalSpend'))
+		storeCacheData(get_total_spend(), 'totalGlobalSpend')
+		totalSpend = getCacheData('totalGlobalSpend')
+	else
+		totalSpend = getCacheData('totalGlobalSpend')
+	end
+	totalSpend = format_billion_stg(totalSpend.to_f)
+	json :output => totalSpend
+end
 
 ############## RUBY APP LEVEL CACHING OF DATA######################
 def canLoadFromCache(fileName)
@@ -724,11 +735,12 @@ get '/sector/?' do
 		high_level_sector_list = getCacheData('high_level_sector_list')
 	end
   	settings.devtracker_page_title = 'Sector Page'
-  	erb :'sector/index', 
-		:layout => :'layouts/layout',
+  	erb :'new_layout/sector/index', 
+		:layout => :'new_layout/layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			high_level_sector_list: high_level_sector_list#high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list,#high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+			active_link: 'sector'
  		}		
 end
 
@@ -757,12 +769,13 @@ get '/sector/:high_level_sector_code/?' do
 		high_level_sector_list = getCacheData(fileName)
 	end
   	settings.devtracker_page_title = 'Sector '+dac2Code+' Page'
-  	erb :'sector/categories', 
-		:layout => :'layouts/layout',
+  	erb :'new_layout/sector/categories', 
+		:layout => :'new_layout/layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			category_list: high_level_sector_list#sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
- 		}		
+ 			category_list: high_level_sector_list,#sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+			active_link: 'sector'
+		}		
 end
 
 # List of all the High level sector projects (e.g. Three Digit DAC Sector) 
@@ -794,12 +807,13 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 		high_level_sector_list = getCacheData(fileName)
 	end
   	settings.devtracker_page_title = 'Sector Category '+catCode+' Page'
-  	erb :'sector/sectors', 
-		:layout => :'layouts/layout',
+  	erb :'new_layout/sector/sectors', 
+		:layout => :'new_layout/layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: high_level_sector_list#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
- 		}		
+ 			sector_list: high_level_sector_list,#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+			active_link: 'sector'
+		}
 end
 
 #####################################################################
@@ -828,15 +842,17 @@ get '/location/country/?' do
 		country_sector_data = getMainData['countryHash']
 		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
 	end
-	erb :'location/country/index', 
-		:layout => :'layouts/layout',
+	erb :'new_layout/location/country/index', 
+		:layout => :'new_layout/layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	map_data[0],
 			:dfid_country_stats_data => map_data[1],
 			:sectorData => country_sector_data,
 			:countryMapData => getCountryBoundsForLocation(map_data[1]),
-			:maxBudget => getMaxBudget
+			:maxBudget => getMaxBudget,
+			active_link: 'aidByLoc',
+			active_sub_link: 'country',
 		}
 end
 

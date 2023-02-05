@@ -1,0 +1,65 @@
+﻿.app-chart-container {
+    padding: 15px;
+    background-color: #f8f8f8;
+
+    &__chart {
+        padding: 5px;
+        background-color: #fff;
+
+
+    }
+}
+
+.app-chart-row {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 25px;
+
+    @include govuk-media-query($from: 768px) {
+        flex-direction: row;
+    }
+
+    &__chart {
+        padding: 20px;
+        border: 1px solid $govuk-border-colour;
+        flex: 1 1 0px;
+
+        &--heading {
+            display: flex;
+
+            &-tag {
+                margin-left: auto;
+            }
+        }
+
+        &--intro {
+            margin-bottom: 5px;
+            color: #636a6d;
+
+            span {
+                font-weight: 700;
+            }
+        }
+
+        &--data {
+            margin-top: 30px;
+        }
+
+        &--details {
+            font-size: 15px
+        }
+
+        &--ul {
+            margin-top: 30px;
+
+            li {
+                display: flex;
+            }
+
+            span {
+                min-width: 125px;
+            }
+        }
+    }
+}

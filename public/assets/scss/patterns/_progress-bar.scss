@@ -1,0 +1,42 @@
+.app-progress-bar {
+    width: 100%;
+
+    &__title {
+        margin-bottom: 5px;
+    }
+
+    &__meter {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 20px;
+        background-color: lighten($govuk-link-colour, 20%);
+        cursor: pointer;
+
+        &--tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            position: absolute;
+            right: 10px;
+            bottom: -10px;
+            z-index: 1;
+        }
+
+        &:hover {
+            background-color: $govuk-link-colour;
+
+            .app-progress-bar__meter--tooltip {
+                visibility: visible;
+            }
+        }
+    }
+
+    &__label {
+        color: $govuk-secondary-text-colour;
+        margin-bottom: 0;
+    }
+}
