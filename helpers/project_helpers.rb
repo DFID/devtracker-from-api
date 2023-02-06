@@ -624,9 +624,9 @@ module ProjectHelpers
         page = page.to_i - 1
         finalPage = page * count
         #initialPull = oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
-        oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:2&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
-        looper = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:2&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        looper = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         numOTransactions = initialPull['response']['numFound'].to_i
@@ -637,7 +637,7 @@ module ProjectHelpers
             for p in 2..pages do
                 p = p - 1
                 finalPage = p * count
-                tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:2&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
+                tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
                 transactionsJSON.push(tempData)
             end
@@ -747,7 +747,7 @@ module ProjectHelpers
     end
 
     def get_project_yearwise_budgetv2(projectId)
-        programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}*&fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter")
+        programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}*&fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=100")
 
         yearWiseBudgets=JSON.parse(programmeBudgets)['response']['docs']
         #oipa3.1
@@ -1066,6 +1066,21 @@ module ProjectHelpers
         implementingOrgsList = implementingOrgsList.uniq.sort
     end
 
+    def get_implementing_orgsv2(projectId)
+        implementingOrgsDetailsJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati-identifier:#{projectId}&rows=1&fl=participating_org_role,participating_org_narrative")
+        implementingOrgsDetails = JSON.parse(implementingOrgsDetailsJSON)['response']['docs'].first
+
+        implementingOrgsList = []
+        if implementingOrgsDetails.has_key?('participating_org_narrative')
+            implementingOrgsDetails['participating_org_role'].each_with_index do |item, index|
+                if item.to_i == 4
+                    implementingOrgsList << implementingOrgsDetails['participating_org_narrative'][index]
+                end
+            end
+        end
+        implementingOrgsList = implementingOrgsList.uniq.sort
+    end
+
     def get_project_sector_graph_data(projectId)
         if is_dfid_project(projectId) then
             projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&hierarchy=2&related_activity_id=#{projectId}&group_by=sector&aggregations=value&order_by=-value&page_count=1000")
@@ -1149,8 +1164,8 @@ module ProjectHelpers
                     c3ReadyStackBarData[1] = '['
                     projectSectorGraph['sector_code'].each_with_index do |data, index|
                         begin
-                            narrative = projectSectorGraph['sector_narrative'][index]
-                            percentage = projectSectorGraph['sector_percentage'][index]
+                            narrative = begin projectSectorGraph['sector_narrative'][index] rescue data end
+                            percentage = begin projectSectorGraph['sector_percentage'][index] rescue 100 end
                         rescue
                             narrative = 'N/A'
                             percentage = 0

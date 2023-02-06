@@ -145,6 +145,7 @@ module RegionHelpers
             tempRegionData['region'] = element['recipient_region_name'].first.to_s.gsub(", regional","")
             tempRegionData['code'] = element['recipient_region_code'].first.to_i
             tempRegionData['budget'] = tempTotalBudget
+            tempRegionData['projects'] = 1
             allRegionsChartData.push(tempRegionData)
           end
         end

@@ -8,6 +8,7 @@
     <title>Home page - Development Tracker</title>
     <link rel="stylesheet" href="/assets/scss/moj-frontend.min.css" />
     <link rel="stylesheet" href="/assets/scss/application.min.css" />
+    <link rel="stylesheet" href="/assets/scss/extend.css"/>
 </head>
 <body>
     <header class="govuk-header app-header " role="banner" data-module="govuk-header">
@@ -215,10 +216,228 @@
         window.GOVUKFrontend.initAll();
         window.MOJFrontend.initAll();
     </script>
+    <!-- -->
+    
+    <!-- -->
     <%if active_link=='aidByLoc'%>
+        <script src="/javascripts/d3.v3.js" type="text/javascript"></script>
+        <script src="/javascripts/c3.min-12912fb6.js" type="text/javascript"></script>
+        <link href="/stylesheets/c3-b03125fa.css" rel="stylesheet" type="text/css">
         <%if active_sub_link=='country'%>
-            <script src="/javascripts/d3.v3.js" type="text/javascript"></script>
-            <script src="/javascripts/c3.min-12912fb6.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
+            <script src="/javascripts/leaflet/leaflet_new.js"></script>
+            <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
+            <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
+            <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
+        <%end%>
+        <%if active_sub_link=='region'%>
+            <script src="/javascripts/circlegraph.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var regionsData = {
+                    totalSpend : <%= dfid_regional_projects_data ['totalBudget'] %>,
+                    regionalProjects : <%= dfid_regional_projects_data ['regionsData'] %>	    		
+                    }
+                    var labels = {
+                        header : 'Total regional budget ' + '<%= current_financial_year %> ',
+                        amount : '\u00A3' + '<%= dfid_regional_projects_data ['totalBudgetFormatted']%>' 
+                    }
+                    var container = $('#map');
+                    var graph = new CircleGraph(container);
+                    graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                    $(window).resize(function() {
+                        if (container.width != graph.width) {
+                            graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                        }	        	
+                    });
+                });
+            </script>
+        <%end%>
+        <%if active_sub_link=='region'%>
+            <script src="/javascripts/circlegraph.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var regionsData = {
+                    totalSpend : <%= dfid_regional_projects_data ['totalBudget'] %>,
+                    regionalProjects : <%= dfid_regional_projects_data ['regionsData'] %>	    		
+                    }
+                    var labels = {
+                        header : 'Total regional budget ' + '<%= current_financial_year %> ',
+                        amount : '\u00A3' + '<%= dfid_regional_projects_data ['totalBudgetFormatted']%>' 
+                    }
+                    var container = $('#map');
+                    var graph = new CircleGraph(container);
+                    graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                    $(window).resize(function() {
+                        if (container.width != graph.width) {
+                            graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                        }	        	
+                    });
+                });
+            </script>
+        <%end%>
+        <%if active_sub_link=='countrySummary'%>
+            <script src="/javascripts/jquery.color.min.js"></script>
+            <script src="/javascripts/jquery.animateNumber.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+                    //Prepare the ajax calls
+                    $('#waiting-impl-orgs').slideDown('slow');
+                    var call1 = $.get('/country-implementing-org-list/<%= country['code'] %>/<%= activityCount%>')
+                    .done(function(response){
+                        if(Object.keys(response.output).length > 0){
+                            tempString = '';
+                            $.each(response.output, function(i, data){
+                                tempString = tempString + '<tr class="govuk-table__row"><th scope="row" class="govuk-table__header">' 
+                                + data.orgName 
+                                + '</th><td class="govuk-table__cell">' + data.count + '</td></tr>';
+                            });
+                            $('#implementing_org_table_body').html(tempString);
+                            $('#implementing_org_container').slideDown('slow');
+                            $('#waiting-impl-orgs').slideUp('slow');
+                        }
+                        //console.log(response.output.length);
+                        // if(response)
+                        // if(response.projectType == 'country'){
+                        //     $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
+                        // }
+                    });
+
+                    var sectorGraphDataVar = $.get('/country-sector-graph-data/<%= country['code'] %>')
+                    .done(function(response){
+                        if(response.output.length > 0){
+                            var graphData = response.output[0];
+                            var groups = [response.output[1]];
+                            var fColors = {};
+                            for(i = 0; i<graphData.length; i++){
+                                fColors[graphData[i][0]] = colors[i];
+                            };
+
+                            var stacked = c3.generate({
+                                bindto: '#sectorChart',
+                                data: {
+                                    columns: graphData,
+                                    type: 'bar',
+                                    labels: false,
+                                    colors: fColors,
+                                    groups: groups,
+                                    order: 'asc'
+                                },
+                                tooltop: {
+                                    grouped: false
+                                },
+                                padding: {left: 10, right: 10},
+                                axis: {
+                                    rotated: true,
+                                    x: {
+                                        show: false
+                                    },
+                                    y: {
+                                        label: '%',
+                                        min: 0,
+                                        max: 100,
+                                        padding: {top: 0, bottom: 0}
+                                    }
+                                },
+                                bar: {
+                                    width: {
+                                        ratio: .6
+                                    }
+                                },
+                                
+                                tooltip: {
+                                    format: {
+                                        title: function (x) { return 'Sector %' }
+                                    }
+                                }
+                            });
+                            $('#sect-container').slideDown('slow');
+                        }
+                    });
+
+                    var budgetBarGraphData = $.get('/country-budget-bar-graph-data/<%= country['code'] %>')
+                    .done(function(response){
+                        if(response.output.length > 0){
+                            var yTicks = [];
+                            var chartv5 = c3.generate({
+                                bindto: '#budget-year-chart5',
+                            data: {
+                                columns: response.output[2],
+                                type: 'bar',
+                                groups: [response.output[0]],
+                            },
+                            color: {
+                                pattern: colors
+                            },
+                            tooltip: {
+                                    format: {
+                                        value: function(value){
+                                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                        }
+                                    }
+                                },
+                            axis: { 
+                                x: {
+                                type: 'category',
+                                categories: response.output[1],
+                            },
+                            y: {
+                                        tick: {
+                                            format: function(d){ 
+                                                yTicks.push(d3.format(".2s")(d)); 
+                                                return "£" + d3.format(".2s")(d);
+                                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                                        },
+                                    }
+                                },
+                            });
+                            /*This code is for generating the grid line values for the bar chart*/
+                            var tempString = [];
+                            yTicks.pop();
+                            for(i = 0; i < 5; i++) {
+                                tempString[i] = yTicks.pop().replace("M","") + '000000';
+                            }
+                            /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
+                            yTicks = [];
+                            /* Generating the grid lines */
+                            for(i=0;i<tempString.length;i++){
+                                yTicks = [];
+                            }
+                        }
+                    });
+                    //End the ajax calls
+                    $('#populationCount').animateNumber(
+                    {
+                    number: <%if country['population'] != "" then%><%= (country['population']/1000000.0).round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                    $('#livingBelowCount').animateNumber(
+                    {
+                    number: <%if country['belowPovertyLine'] != "" then%><%= country['belowPovertyLine'].to_f.round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                    $('#gdpGrowthRateCount').animateNumber(
+                    {
+                    number: <%if country['gdpGrowthRate'] != "" then%><%= country['gdpGrowthRate'].to_f.round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                });
+                
+            </script>
+            <script type="text/javascript">
+                var mapType = "country";
+                window.countryCode = "<%= country['code']%>";
+                window.countryName = "<%= country['name']%>";
+                window.geometryType = "<%= countryGeoJsonData['type'] %>";
+                window.coordinates = <%= countryGeoJsonData['coordinates'].to_json %>
+                window.mainMarkers = <%= mapMarkers.to_json%>;
+            </script>
             <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
             <script src="/javascripts/leaflet/leaflet_new.js"></script>
             <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>

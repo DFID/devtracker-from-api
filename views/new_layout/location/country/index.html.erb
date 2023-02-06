@@ -5,7 +5,7 @@
                 <a class="govuk-breadcrumbs__link" href="/">Home</a>
             </li>
             <li class="govuk-breadcrumbs__list-item">
-                <a class="govuk-breadcrumbs__link" href="/location/countries">Aid by Location</a>
+                <a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a>
             </li>
             <li class="govuk-breadcrumbs__list-item" aria-current="page">
                 Current Programmes
@@ -18,7 +18,7 @@
                 <nav class="moj-sub-navigation" aria-label="Sub navigation">
                     <ul class="moj-sub-navigation__list">
                         <li class="moj-sub-navigation__item">
-                            <a href="/location/countries" class="moj-sub-navigation__link" <%if active_sub_link=='country'%> aria-current="page" <%end%>>Current programmes</a>
+                            <a href="/location/country" class="moj-sub-navigation__link" <%if active_sub_link=='country'%> aria-current="page" <%end%>>Current programmes</a>
                         </li>
                         <li class="moj-sub-navigation__item">
                             <a href="/location/regional" class="moj-sub-navigation__link" <%if active_sub_link=='region'%> aria-current="page" <%end%>>Regional programmes</a>
@@ -37,7 +37,7 @@
                     var finYear = '<%=current_financial_year%>';
                     var maxBudget = <%= maxBudget%>
                 </script>
-                <div id="countryMap" role="presentation">
+                <div style="height: 450px" id="countryMap" role="presentation">
                   <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
                     <img alt="Map legend" src="/images/country-map-legend.png" style="Map Legend"/>
                     <!-- <h3>Current Projects: Total Project Budget for <%#=current_financial_year%></h3> -->
@@ -63,11 +63,21 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-sort-value="Afghanistan"><a href="/location/countries/country?country-name=Afghanistan" class="govuk-link">Afghanistan</a></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="£286,350,331">£286,350,331</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="Disaster relief (80.0%)">Disaster relief (80.0%)</td>
-                        </tr>
+                        <%dfid_country_stats_data.each do |key,val|%>
+                            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA'%>
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell" data-sort-value="<%= val['country']%>"><a href="/countries/<%= val['id']%>" class="govuk-link"><%= val['country']%></a></td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="<%=val['budget']%>"><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
+                                    <% if sectorData.key?(key) %>
+                                        <%begin%>
+                                            <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="<%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)"><%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)</td>
+                                        <%rescue%>
+                                            <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="No sector data available">No sector data available</td>
+                                        <%end%>
+                                    <%end%>
+                                </tr>
+                            <%end%>
+                        <%end%>
                     </tbody>
                 </table>
                 <div aria-live="polite" role="status" aria-atomic="true" class="govuk-visually-hidden">

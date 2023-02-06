@@ -82,8 +82,8 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-#set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
-set :goverment_department_ids, 'GB-GOV-1,GB-1,GB-GOV-3'
+set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+#set :goverment_department_ids, 'GB-GOV-1,GB-1,GB-GOV-3'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -177,6 +177,7 @@ def canLoadFromCache(fileName)
 	if File.exists?('data/cache/'+fileName+'.json')
 		data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
 		updatedDate = data['updatedDate'].to_date
+		updatedDate = updatedDate.next_day(10)
 		if (DateTime.now.to_date <= updatedDate)
 			puts 'date time check passed and sending true'
 			return true
@@ -247,8 +248,8 @@ get '/countries/:country_code/?' do |n|
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
-	erb :'countries/country', 
-		:layout => :'layouts/layout',
+	erb :'new_layout/countries/country', 
+		:layout => :'new_layout/layouts/layout',
 		:locals => {
  			country: country,
  			results: results,
@@ -257,6 +258,8 @@ get '/countries/:country_code/?' do |n|
  			activityCount: tempActivityCount,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
+			active_link: 'aidByLoc',
+			active_sub_link: 'countrySummary'
  		}
 end
 ## country summary page related api calls
@@ -451,6 +454,8 @@ get '/projects/*/summary' do
 		project['related_budget_value'].each do |b|
 			programmeBudget = programmeBudget + b.to_f
 		end
+	elsif(project.has_key?('activity_aggregation_budget_value_gbp'))
+		programmeBudget = programmeBudget + project['activity_aggregation_budget_value_gbp'].to_f
 	end
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_datav2(n)
@@ -867,12 +872,14 @@ get '/location/regional/?' do
 	else
 		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
 	end
-	erb :'location/regional/index', 
-		:layout => :'layouts/layout',
+	erb :'new_layout/location/regional/index', 
+		:layout => :'new_layout/layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
 			:dfid_regional_projects_data => dfid_regional_projects_data,
-			#:generateRegionData => generateRegionData	
+			#:generateRegionData => generateRegionData
+			active_link: 'aidByLoc',
+			active_sub_link: 'region',
 		}
 end
 
@@ -886,11 +893,13 @@ get '/location/global/?' do
 		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
 	end
   	settings.devtracker_page_title = 'Aid by Global Page'
-	erb :'location/global/index', 
-		:layout => :'layouts/layout',
+	erb :'new_layout/location/global/index', 
+		:layout => :'new_layout/layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_global_projects_data => dfid_regional_projects_data
+			:dfid_global_projects_data => dfid_regional_projects_data,
+			active_link: 'aidByLoc',
+			active_sub_link: 'global',
 		}
 end
 

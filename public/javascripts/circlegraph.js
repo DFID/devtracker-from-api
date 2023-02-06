@@ -3,11 +3,10 @@ CircleGraph = function (container) {
 
   this.drawRegionalProjectsGraph = function(labels, regionsData, type) {
     this.clearContainer();
-
     // calculate central circle's dimensions
     var innerCircleRadius = 0.13 * this.width;
     var outerCircleRadius = 0.22 * this.width;
-
+    console.log(innerCircleRadius)
     this.drawCentralCircle(innerCircleRadius, 0.2*innerCircleRadius, labels, "/" + type);
 
     var maxBudget = d3.max(regionsData.regionalProjects.map(function(project) { return project.budget; }));
@@ -73,7 +72,8 @@ CircleGraph = function (container) {
   
 
   this.drawCentralCircle = function(r, shiftY, labels, location) {
-
+    console.log('drawing central circle')
+    console.log(this.height)
     var circleShiftX = this.width / 2 - r;
     var circleShiftY = this.height / 2 - r - shiftY; // shiftY - additional shift, when circle is not centered on Y axis
 
