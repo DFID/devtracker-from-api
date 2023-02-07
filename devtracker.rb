@@ -147,8 +147,9 @@ get '/' do  #homepage
 	#top5countries = top5countries.first(10)
 	top5CountryTotal = top5countries.first['budget']
 	activiteProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:1 AND activity_status_code:2&rows=1&fl=iati_identifier")['response']['numFound'].to_i
-	erb :'new_layout/index',
- 		:layout => :'new_layout/layouts/landing', 
+	#erb :'new_layout/index',
+	erb :'index',
+ 		:layout => :'layouts/landing', 
  		:locals => {
  			top_5_countries: top5countries.first(10), 
  			what_we_do: what_we_do,
@@ -177,7 +178,7 @@ def canLoadFromCache(fileName)
 	if File.exists?('data/cache/'+fileName+'.json')
 		data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
 		updatedDate = data['updatedDate'].to_date
-		updatedDate = updatedDate.next_day(10)
+		#updatedDate = updatedDate.next_day(10)
 		if (DateTime.now.to_date <= updatedDate)
 			puts 'date time check passed and sending true'
 			return true
@@ -248,8 +249,8 @@ get '/countries/:country_code/?' do |n|
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
-	erb :'new_layout/countries/country', 
-		:layout => :'new_layout/layouts/layout',
+	erb :'countries/country', 
+		:layout => :'layouts/layout',
 		:locals => {
  			country: country,
  			results: results,
@@ -740,8 +741,8 @@ get '/sector/?' do
 		high_level_sector_list = getCacheData('high_level_sector_list')
 	end
   	settings.devtracker_page_title = 'Sector Page'
-  	erb :'new_layout/sector/index', 
-		:layout => :'new_layout/layouts/layout',
+  	erb :'sector/index', 
+		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			high_level_sector_list: high_level_sector_list,#high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
@@ -774,8 +775,8 @@ get '/sector/:high_level_sector_code/?' do
 		high_level_sector_list = getCacheData(fileName)
 	end
   	settings.devtracker_page_title = 'Sector '+dac2Code+' Page'
-  	erb :'new_layout/sector/categories', 
-		:layout => :'new_layout/layouts/layout',
+  	erb :'sector/categories', 
+		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			category_list: high_level_sector_list,#sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
@@ -812,8 +813,8 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 		high_level_sector_list = getCacheData(fileName)
 	end
   	settings.devtracker_page_title = 'Sector Category '+catCode+' Page'
-  	erb :'new_layout/sector/sectors', 
-		:layout => :'new_layout/layouts/layout',
+  	erb :'sector/sectors', 
+		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
  			sector_list: high_level_sector_list,#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
@@ -835,7 +836,7 @@ get '/location/country/?' do
 	country_sector_data = ''
 	getMaxBudget = ''
 	if (!canLoadFromCache('country_sector_data'))
-		storeCacheData(generateCountryDatav2(), 'country_sector_data')
+		storeCacheData(generateCountryDatav3(), 'country_sector_data')
 		getMainData = getCacheData('country_sector_data')
 		map_data = getMainData['map_data']
 		storeCacheData(map_data[1].sort_by{|k,val| val['budget']}.reverse!.first[1]['budget'], 'getMaxBudgetCountryLocation')
@@ -847,8 +848,8 @@ get '/location/country/?' do
 		country_sector_data = getMainData['countryHash']
 		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
 	end
-	erb :'new_layout/location/country/index', 
-		:layout => :'new_layout/layouts/layout',
+	erb :'location/country/index', 
+		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	map_data[0],
@@ -872,8 +873,8 @@ get '/location/regional/?' do
 	else
 		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
 	end
-	erb :'new_layout/location/regional/index', 
-		:layout => :'new_layout/layouts/layout',
+	erb :'location/regional/index', 
+		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
 			:dfid_regional_projects_data => dfid_regional_projects_data,
@@ -893,8 +894,8 @@ get '/location/global/?' do
 		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
 	end
   	settings.devtracker_page_title = 'Aid by Global Page'
-	erb :'new_layout/location/global/index', 
-		:layout => :'new_layout/layouts/layout',
+	erb :'location/global/index', 
+		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
 			:dfid_global_projects_data => dfid_regional_projects_data,
