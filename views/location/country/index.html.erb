@@ -69,7 +69,6 @@
             <tr>
                 <th>Country</th>
                 <th>Programme Budget</th>
-                <th>Top Sector</th>
             </tr>
         </thead>
         <tbody>
@@ -78,15 +77,7 @@
               <tr>
                 <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
                 <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-                <td>
-                <% if sectorData.key?(key) %>
-                  <%begin%>
-                    <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)
-                  <%rescue%>
-                    No sector data available
-                  <%end%>
-                <%end%>
-              </td>
+                
               </tr>
             <%end%>
           <%end%>

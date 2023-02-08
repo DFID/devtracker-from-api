@@ -1031,13 +1031,13 @@ end
     output['xx'] = countryProjecttracker
     output
   end
-
+  ###############################
   #Serve the aid by location country page table data
   def generateCountryDatav3()
     #newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
     count = 20
     #newApiCall = settings.oipa_api_url_other + "budget?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
-    newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     puts newApiCall
     page = 1
@@ -1054,7 +1054,7 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             if item.has_key?('activity_status_code')
@@ -1113,56 +1113,55 @@ end
               end
             end
           elsif(element['reporting_org_ref'].to_s != 'GB-GOV-1')
-            if element.has_key?('recipient_country_code')
-              element['recipient_country_code'].each_with_index do |c, index|
+            if element.has_key?('recipient_country_code') and tempTotalBudget > 0
+              if element['recipient_country_code'].length() > 1
+                element['recipient_country_code'].each_with_index do |c, index|
+                  if(countryProjecttracker.has_key?(c))
+                    if(countryProjecttracker[c].index(element['iati_identifier'].to_s).nil?)
+                      countryProjecttracker[c].push(element['iati_identifier'].to_s)
+                      projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+                      begin
+                        projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + ((tempTotalBudget * element['recipient_country_percentage'][index].to_f) / 100)
+                      rescue
+                        puts 'staged----'
+                        puts 'temp total budget:' + tempTotalBudget.to_s
+                        puts projectDataHash[c]["budget"]
+                        puts element['iati_identifier']
+                        projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + 0
+                      end
+                    else
+                      projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + ((tempTotalBudget * element['recipient_country_percentage'][index].to_f) / 100)
+                    end
+                  else
+                    countryProjecttracker[c] = []
+                    countryProjecttracker[c].push(element['iati_identifier'].to_s)
+                    projectDataHash[c] = {}
+                    projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][index] : 'N/A'
+                    projectDataHash[c]["id"] = begin element["recipient_country_code"][index] rescue '' end
+                    projectDataHash[c]["projects"] = 1
+                    projectDataHash[c]["budget"] = tempTotalBudget
+                    projectDataHash[c]["flag"] = '/images/flags/' + element["recipient_country_code"].first.downcase + '.png'
+                  end
+                end
+              else
+                c = element['recipient_country_code'].first
                 if(countryProjecttracker.has_key?(c))
                   if(countryProjecttracker[c].index(element['iati_identifier'].to_s).nil?)
                     countryProjecttracker[c].push(element['iati_identifier'].to_s)
                     projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
-                    projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + ((tempTotalBudget * element['recipient_country_percentage'][index].to_f) / 100)
+                    projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + tempTotalBudget 
                   else
-                    projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + ((tempTotalBudget * element['recipient_country_percentage'][index].to_f) / 100)
+                    projectDataHash[c]["budget"] = projectDataHash[c]["budget"] + tempTotalBudget
                   end
                 else
                   countryProjecttracker[c] = []
                   countryProjecttracker[c].push(element['iati_identifier'].to_s)
                   projectDataHash[c] = {}
-                  projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][index] : 'N/A'
-                  projectDataHash[c]["id"] = begin element["recipient_country_code"][index] rescue '' end
+                  projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"].first : 'N/A'
+                  projectDataHash[c]["id"] = begin element["recipient_country_code"].first rescue '' end
                   projectDataHash[c]["projects"] = 1
                   projectDataHash[c]["budget"] = tempTotalBudget
                   projectDataHash[c]["flag"] = '/images/flags/' + element["recipient_country_code"].first.downcase + '.png'
-                end
-              end
-            end
-          end
-          ######################################
-          if element.has_key?('recipient_country_code')
-            element['recipient_country_code'].each_with_index do |c, index2|
-              if(!countryHash.has_key?(c))
-                countryHash[c] = {}
-              end
-              if element.has_key?('sector_code')
-                element['sector_code'].each_with_index do |data, index|
-                  if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
-                    selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
-                    if(countryHash[c].has_key?(selectedHiLvlSectorData['High Level Sector Description']))
-                      if(element.has_key?('sector_percentage'))
-                        countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + (((tempTotalBudget * element['recipient_country_percentage'][index2].to_f) / 100) * (element['sector_percentage'][index].to_f/100))
-                      else
-                        countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] + ((tempTotalBudget * element['recipient_country_percentage'][index2].to_f) / 100)
-                      end
-                    else
-                      countryHash[c][selectedHiLvlSectorData['High Level Sector Description']] = {}
-                      countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['code'] = selectedHiLvlSectorData['High Level Code (L1)'].to_i
-                      countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['name'] = selectedHiLvlSectorData['High Level Sector Description']
-                      if(element.has_key?('sector_percentage'))
-                        countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = (((tempTotalBudget * element['recipient_country_percentage'][index2].to_f) / 100) * (element['sector_percentage'][index].to_f/100))
-                      else
-                        countryHash[c][selectedHiLvlSectorData['High Level Sector Description']]['budget'] = ((tempTotalBudget * element['recipient_country_percentage'][index2].to_f) / 100)
-                      end
-                    end
-                  end
                 end
               end
             end
@@ -1173,16 +1172,13 @@ end
     finalOutput = Array.new
     finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
     finalOutput.push(projectDataHash)
-    countryHash.each do |key|
-      countryHash[key[0]] = key[1].sort_by{ |x, y| -y["budget"] }
-    end
-    countryHash
     output = {}
     output['map_data'] = finalOutput
-    output['countryHash'] = countryHash
     output
   end
-
+  ###############################
+  ###############################
+  ###############################
   def generateCountryData()
     current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
     current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
