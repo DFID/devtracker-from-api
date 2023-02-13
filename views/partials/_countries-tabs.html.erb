@@ -16,7 +16,7 @@
                         <ul class="tab-bar">
                             <li <%= active=="summary" ? "class='active'" : ""%>><a id='Summary' href="/countries/<%= country['code'] %>">Summary</a></li>
                             <%if project_count !=0 %>
-                                <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/countries/<%= country['code'] %>/projects">Active Projects (<%=project_count%>)</a></li>
+                                <li <%= active=="projects" ? "class='active'" : ""%>><a id='Active-Projects' href="/countries/<%= country['code'] %>/projects">Active Programmes (<%=project_count%>)</a></li>
                             <%end%>
                         </ul>
                     </nav>

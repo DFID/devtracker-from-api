@@ -71,6 +71,7 @@ set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 #set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
 
+
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 Money.locale_backend = :i18n
@@ -95,6 +96,37 @@ set :devtracker_page_title, ''
 #####################################################################
 #  HOME PAGE
 #####################################################################
+
+# get '/t' do
+# 	# newApiCall = RestClient.get 'https://iatiregistry.org/api/action/package_search?fq=owner_org:4da32e41-a060-4d75-86c1-4b627eb22647&fl=id,title&rows=152'
+# 	# newApiCall = Oj.load(newApiCall)
+# 	# newApiCall['result']['results'].each do |item|
+# 	# 	File.open('data/cache/xx.txt', "a") { |f| f.puts item['id'] + ',' + item['title'] }	
+# 	# end
+# 	newCall = 'https://iatiregistry.org/api/action/package_patch'
+# 	idList = ['5f032773-c34f-455a-a5d1-e058abb2ffc2','66937630-9bf6-4ba4-bff7-c130e8388040','9d2fc7d4-609e-47ab-a730-5923c40f54d9','c3d66b4f-282c-433d-a778-1e18d421f658','ce952124-07a8-4fd3-9f28-019d1e9d936f','b8c47aab-ed58-45cc-97e6-19eabc4235e5','d8cd2257-9bc1-48b4-a640-5a1f0f7f3ea3','3b89122d-b181-4f58-8e4a-79b4ef2c8944','1efb3ceb-c47c-45e9-b3c5-a1204edb9554','a43c4cc0-fdeb-47c5-9f5d-786187cf1775','e48a1d80-71e4-4116-9579-8be334404696','2372aee3-e381-4e25-af89-ebea54bbd73d','18020215-8c0a-452e-b7a8-5eb0397a2bab','e003e413-ad10-4868-a302-7760b860aa2c','80225517-8ab9-4725-b03d-1a20a42f7810','761df7a6-ccfb-49fb-b733-3aba5005273b','de0dda4f-25a8-4a19-a0e5-46d16d81ab78','d824ceb9-3cb8-4e78-9a7e-9bd3b1150344','95b567f6-14e3-417e-aca8-a134736ff1d3','3b07a1ad-58e1-4ed9-99aa-5c49419ea713','f547e351-1641-4d1d-a2f0-b42e9e665411','d00182cf-93d7-4c9f-ba3f-92ea5e78d00f','96ffa0a6-b594-45f9-9e93-504bbf0ab32f','b7b6e638-2c30-4ad8-8c1d-66e78511f950','76b0a252-0f30-45f3-9772-eac382e71226','14448285-4daf-4b87-bda6-3f30d0c88b14','3def86a5-efac-4090-8a1e-0786690b9b94','ceaef5b2-82fd-48d9-893e-835fc8fb67cb','e32ea519-bf94-4097-a1c8-9dae5eebb4d0','38bc0674-f52b-4f55-af51-26249d30cafc','11391b60-0a93-4545-91a1-d1b96ab2fe95','6e5d049b-baac-49e4-b055-2ba1b397e624','1d97646d-d277-413d-8e0f-c38b85c6569f','04ede33d-d0b4-4a03-b398-be9172d3ee3d','8fc7f199-aa88-4cae-8625-6162a9595f9b','518c3f60-3b45-4d37-b6bb-edba01fb886a','74d44f95-2e5c-46a6-a813-c5b8ca329e28','d7add8a8-02c8-4b7b-804a-4b578ca5d7e2','33bd85de-c790-42ec-9dca-a65dcf2ae3a7','1a141837-55cc-4c64-bf98-1ccf46824596','bb918cd0-bcaf-4886-82a5-fa07a1808e0f','daa5d4f0-4172-4f5f-a3b2-eb07784357f3','01a63be2-1e4a-42e6-b799-2ccd1fb3e1e2','c2fb7fae-f910-44fc-a33f-77b22ffc69c5','93470069-e1f3-44f8-8427-9581f09eaa9b','e33e4957-abcb-4f53-950d-0fe6c00de311','cd8e418d-b33d-4abf-bfce-3711f387570b','a2febb1c-a62c-4ab6-a88e-449a75c72b63','5f297576-b3fa-4394-a074-6dd4a45c1826','af5f0f63-9bef-496e-9497-814c547ddb54','5ec5a601-fd82-46b7-8906-3e80faaf1fce','faa67a5b-f2fd-4f6d-b493-1251e2f766cc','b5a16b08-223e-4dfe-abb1-ee57ce8bc22c','8df07f6e-d8d9-4c42-b9f8-f778cce62863','894b77b5-8646-4721-a5ed-62ec556c6297','91e32587-41f4-4dee-878d-2d8fb82bffc1','83a25dd2-0e6b-438d-8db1-be8a48322cf8','0e34fca5-32a2-4c3b-a549-5e594d8f3334','6bdf109e-f228-4c0c-a169-4b3a4a5b52ed','13c32228-5393-4b3e-a2e5-aa2897828589','0047702b-bee8-450d-88e3-6bcbb31155a4','c120d7e8-b1a6-4b8a-8b98-624990dee6f6','820a3041-90b5-416c-9443-3464289cfb9f','ed0a72a8-a39f-43e7-bb0c-20c54bd90ce9','110a4e3d-f829-4d70-a034-99b30ed4295f','a0fec848-4e64-4b1e-ad6f-fd2f7bf186df','880e8d94-476d-47bd-b093-1ffdc7c0c255','c9040061-20ad-47e1-8055-ca071ad109f1','08b493e8-36f1-4171-a7e2-6c1cd5b0e373','a96784a0-8143-4aeb-81c1-e81d4ae2c42f','a126e5d6-0599-4ea9-8d6d-9a0c277027fb','81fc7ae2-f6a7-4b6e-9333-e55821499079','3ba17b16-f8f2-4730-821b-3decefa25880','285742d6-3056-4c1d-89ca-caba2d7b82e6','3238b94c-1f13-4241-8050-a1f81f8c7bcd','da8dcc6d-18e8-4d3f-b310-f028c82db6d9','a827b93e-fe8d-498c-9aeb-e9335fc84f18','44b94c15-edc8-44d2-b265-639b1743e59d','5e93a123-1069-4048-83b4-3004557b6115','001799c7-fb9d-4da9-affc-76bcb257f80e','40b3b508-0d59-4492-bc21-dfd2dd40e7e7','1d4b06cc-b388-47dd-bcaf-79b4848aaaec','27becf88-17a1-4d86-b137-d9bfe6e6743f','a0f5f6a3-cad5-4571-8d55-6b1e455eb48d','341b1737-6e71-4496-925e-c90487e479e4','5cfe2ab5-81e9-440a-9c81-974fa4344be0','f946f140-d5f6-4056-b01c-a74dce56acd0','c9c42f13-ee21-4512-86cf-63268dcd5093','34620c65-92d1-446a-a4e8-ffb5b6a6ff00','781ffbcb-2602-458a-8c0b-5759a2fe3352','cd77c431-bccf-40b4-b26a-f5df7dda9973','3c9ccc88-8cf5-4d05-bc3b-9dfb02483080','7d1a71ab-1dc6-49ba-a009-fd053a704018','360a251c-2254-4241-bd74-2557cf4cb695','bd5af84a-82fd-4473-977d-a32bb9419fcb','13ed0d76-aa47-4365-a278-a25f45ef4b73','d7668829-735b-4011-969a-ce08ea1aaac3','ae675a07-6e83-482f-9733-c9c7c36c472f','d98d8ade-4866-4e5f-a4a0-1f5b3d0a5ae0','6aad4919-bdb7-463b-a1cf-e33299cfc741','26f42404-2942-4308-b428-094e6f072d84','9a94f0a6-4dfa-47ed-bf24-f9393d7effd6','a1420dad-cc1a-4bc6-915c-12a37c00d20e','ab3c3fb4-d62a-4bdd-8f93-6c6daf828eab','bdaa5684-cf5f-4270-a604-8226e198a3cc','61a630c7-b8fd-482a-918d-5a98152cc5d0','cab6f836-e9c2-48cd-ba19-a6455f649315','f82e01b7-f5fe-40e7-8c76-5c254be69ae2','14feea62-a800-4b80-91b8-08ab992fba7c','b2f5536b-4804-4d44-bd05-f208b2cc5136','f4ef61cd-0cd7-473e-9f9f-e5f2897daaf4','5f11e862-1d43-4d28-84d2-8463cb655d0f','a0e84997-7c5f-4751-8ced-159b5c25a774','03d3aa97-8669-49c1-9253-50aaf777e4e3','fc94e904-9740-4a7d-b267-10de07bef614','989cbe83-cf5f-4690-92a9-e98548931fd1','e19290a6-e9e1-43be-9444-4988152c1a49','707bcf39-4b24-40cf-9cd9-f75decc07980','3730798e-50c0-4df3-8403-b651199d0532','8f1ccd6a-3599-477a-9c37-673fea908601','880e564a-fb35-4d89-8603-804ff9cacc1b','cbb10d2f-e6df-42b6-926b-a367906b10d4','650ce389-5fcd-4f51-aa02-1e5b421ae731','90f80118-1a12-4b60-8831-8ee083c26678','39ad31b8-7eb8-447f-aeb9-382e536fde72','08430b9f-f5fd-4e91-b4b5-dab511a0e44b','fea013a7-5b23-49dd-9dbe-3eab7fdf54b5','6df6a91b-27f5-4ad1-8f5d-f1bb93dc6442','4ebd3827-b1bc-45ad-adf6-c904e42a29aa']
+# 	# idList.each do |i|
+# 	# 	call = RestClient.post(
+# 	# 		newCall,
+# 	# 		{
+# 	# 			id: i.to_s,
+# 	# 			private: true
+# 	# 		}, 
+# 	# 		{
+# 	# 			content_type: 'application/json',
+# 	# 			Authorization: 'auth_key_here'
+# 	# 		}
+# 	# 	)
+# 	# 	if (call['success'])
+# 	# 		puts 'successfully updated for - ' + i.to_s
+# 	# 	else
+# 	# 		puts 'Failed to update for - ' + i.to_s
+# 	# 	end
+# 	# end
+	
+# 	# File.open('data/cache/xx.txt', "w") { |f| f.puts newApiCall }
+# 	json :output => 'all ok'
+# end
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
@@ -457,6 +489,12 @@ get '/projects/*/summary' do
 		end
 	elsif(project.has_key?('activity_aggregation_budget_value_gbp'))
 		programmeBudget = programmeBudget + project['activity_aggregation_budget_value_gbp'].to_f
+	else
+		if project.has_key?('budget_value')
+			project['budget_value'].each do |budget|
+				programmeBudget = programmeBudget + budget
+			end
+		end
 	end
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_datav2(n)
@@ -836,7 +874,7 @@ get '/location/country/?' do
 	country_sector_data = ''
 	getMaxBudget = ''
 	if (!canLoadFromCache('country_sector_data'))
-		storeCacheData(generateCountryDatav3(), 'country_sector_data')
+		storeCacheData(generateCountryDatav4(), 'country_sector_data')
 		getMainData = getCacheData('country_sector_data')
 		map_data = getMainData['map_data']
 		storeCacheData(map_data[1].sort_by{|k,val| val['budget']}.reverse!.first[1]['budget'], 'getMaxBudgetCountryLocation')

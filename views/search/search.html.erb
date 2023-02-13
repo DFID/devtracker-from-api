@@ -89,9 +89,9 @@
                     <%end%>
                 </div>
                 <div id="showResults">
-                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active programmes. To see programmes at other stages, use the status filters.</div>
                 <div>
-                    Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
+                    Now showing programmes <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
                     <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
@@ -225,7 +225,7 @@
                     <div class="three columns">
                             <div class="bottom-table row">
                                 <div class="tweleve columns">
-                                    <span>Project Identifier:</span>
+                                    <span>Programme Identifier:</span>
                                 </div>
                             </div>
                             <div class="bottom-table row">
@@ -539,11 +539,11 @@
         <div class="row">
             <div class="twelve columns">
                 <div class="search-result nine columns push-three">
-                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any projects.</p><p style="margin-top:1em">Suggestions:</p>
+                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any programmes.</p><p style="margin-top:1em">Suggestions:</p>
                     <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
                         <li>Make sure all words are spelled correctly or try different keywords</li>
                     </ul>
-                    <p>Search results only show active projects. To see projects that have been completed, select the "Include Completed Projects" checkbox and click the Search button.</p>
+                    <p>Search results only show active programmes. To see programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
                 </div>
                 <div class="three columns pull-nine"></div>
             </div>

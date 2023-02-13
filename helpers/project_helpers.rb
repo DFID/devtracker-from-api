@@ -517,8 +517,9 @@ module ProjectHelpers
         page = page.to_i - 1
         finalPage = page * count
         oipaTransactionURL = settings.oipa_api_url_other + "transaction/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
-        if transactionType.to_i == 1
+        if transactionType.to_i == 2
             puts oipaTransactionURL
+            puts (page.to_i*count.to_i)
         end
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
         # Get the initial transaction count based on above API call
@@ -571,7 +572,7 @@ module ProjectHelpers
         # Filter out wrong transaction types
         response = {}
         response['transactions'] = finalTransactions
-        response['hasNext'] = if initialPull['response']['numFound'].to_i < (page.to_i*count.to_i) then false else true end
+        response['hasNext'] = if initialPull['response']['numFound'].to_i < ((page.to_i+1)*count.to_i) then false else true end
         response
     end
 
