@@ -63,7 +63,7 @@ include SolrHelper
 set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
 set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -127,11 +127,6 @@ set :devtracker_page_title, ''
 # 	# File.open('data/cache/xx.txt', "w") { |f| f.puts newApiCall }
 # 	json :output => 'all ok'
 # end
-
-get '/t2' do
-	FileUtils.rm_rf(Dir['data/cache/*'])
-	json :output => 'cache cleared'
-end
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
@@ -1415,6 +1410,11 @@ get '/downloadLocationDataCountriesCSV/:countryCode?' do
 	content_type 'text/csv'
 	attachment "Export-locations-"+countryCode+".csv"
 	locationData
+end
+
+get '/clear-cache' do
+	FileUtils.rm_rf(Dir['data/cache/*'])
+	json :output => 'cache cleared'
 end
 
 #####################################################################
