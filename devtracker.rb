@@ -135,7 +135,7 @@ get '/' do  #homepage
 	Benchmark.bm(7) do |x|
 		x.report("Loading Time: ") {
 			if (!canLoadFromCache('top5Countries'))
-				storeCacheData(get_top_5_countries(), 'top5Countries')
+				storeCacheData(get_top_5_countriesv2(), 'top5Countries')
 				top5countries = getCacheData('top5Countries')
 			else
 				top5countries = getCacheData('top5Countries')

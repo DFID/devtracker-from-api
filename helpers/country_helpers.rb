@@ -119,6 +119,78 @@ module CountryHelpers
       finalResult
   end
 
+  def get_top_5_countriesv2()
+    firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+    countriesInfo = JSON.parse(File.read('data/countries.json'))
+    count = 20
+    newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    ##pagination stuff
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    #puts ('Number of activities: ' + numOActivities.to_s)
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            pulledData.push(item)
+          end
+      end
+    end
+    newTop5countriesBudget = {}
+    pulledData.each do |element|
+      tempTotalBudget = 0
+      ## Process total budget value first
+      if(element['reporting_org_ref'].to_s == 'GB-GOV-1')
+        if element.has_key?('related_budget_value')
+          element['related_budget_value'].each_with_index do |data, index|
+            if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+              tempTotalBudget = tempTotalBudget + data.to_f
+            end
+          end
+        end
+      else
+        if element.has_key?('budget_value')
+          element['budget_value'].each_with_index do |data, index|
+            if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+              tempTotalBudget = tempTotalBudget + data.to_f
+            end
+          end
+        end
+      end
+      if element.has_key?('recipient_country_code')
+        element['recipient_country_code'].each_with_index do |cd, i|
+          countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+          countryBudget = tempTotalBudget*countryPercentage/100
+          if newTop5countriesBudget.has_key?(cd)
+            newTop5countriesBudget[cd]['budget'] = (newTop5countriesBudget[cd]['budget'] + countryBudget).round(2)
+          else
+            newTop5countriesBudget[cd] = {}
+            newTop5countriesBudget[cd]['name'] = begin element['recipient_country_name'][i] rescue 'N/A' end
+            newTop5countriesBudget[cd]['code'] = cd
+            newTop5countriesBudget[cd]['budget'] = countryBudget.round(2)
+          end
+        end
+      end
+    end
+    #######################
+    finalResult = []
+    newTop5countriesBudget.each do |key, val|
+      finalResult.push(val)
+    end
+    finalResult
+  end
+
   def get_country_code_name(countryCode)
     countriesInfo = Oj.load(File.read('data/countries.json'))
     country = countriesInfo.select {|country| country['code'].to_s == countryCode.to_s}.first
@@ -130,42 +202,50 @@ module CountryHelpers
 
 
   def get_country_detailsv2(countryCode)
-
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-    
     countriesInfo = Oj.load(File.read('data/countries.json'))
     country = countriesInfo.select {|country| country['code'] == countryCode}.first
-    
     ## new api call
-    newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
-		pulledData = RestClient.get newApiCall
+    #newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
+    puts newApiCall
+    pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
-    countryBudget = 0
+    puts pulledData.count
+    countryTotalBudget = 0
     pulledData.each do |element|
-      if (element.has_key?('recipient_country_code'))
+      if element['hierarchy'].to_i == 1
         tempTotalBudget = 0
-        element['budget_period_start_iso_date'].each_with_index do |data, index|
-            if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
-                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+        if(element['reporting_org_ref'].to_s == 'GB-GOV-1')
+          if element.has_key?('related_budget_value')
+            element['related_budget_value'].each_with_index do |data, index|
+              if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+                tempTotalBudget = tempTotalBudget + data.to_f
+              end
             end
+          end
+        else
+          if element.has_key?('budget_value')
+            element['budget_value'].each_with_index do |data, index|
+              if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+                tempTotalBudget = tempTotalBudget + data.to_f
+              end
+            end
+          end
         end
-        countryBudget = countryBudget + tempTotalBudget
+        if element.has_key?('recipient_country_code')
+          element['recipient_country_code'].each_with_index do |c, i|
+            if c.to_s == countryCode
+              countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+              countryBudget = tempTotalBudget*countryPercentage/100
+              countryTotalBudget = countryTotalBudget + countryBudget
+              break
+            end
+          end
+        end
       end
     end
-    ##
-    #oipa v3.1
-    #currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
-
-    # if currentTotalCountryBudget['count'] > 0 then
-    #     #oipa v2.2
-    #     #countryBudget = currentTotalCountryBudget['results'][0]['budget']
-    #     #oipa v3.1
-    #     countryBudget = currentTotalCountryBudget['results'][0]['value']
-    # else
-    #     countryBudget = 0
-    # end
-  
     returnObject = {
           :code => country['code'],
           :name => country['name'],
@@ -180,9 +260,9 @@ module CountryHelpers
           :fertilityRate_year => country['fertilityRate_year'],
           :gdpGrowthRate => country['gdpGrowthRate'],
           :gdpGrowthRate_year => country['gdpGrowthRate_year'],
-          :countryBudget => countryBudget,
+          :countryBudget => countryTotalBudget,
           :countryBudgetCurrency => "GBP",
-          }
+        }
   end
 
   def get_country_details(countryCode)
