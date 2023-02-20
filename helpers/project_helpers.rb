@@ -20,12 +20,23 @@ module ProjectHelpers
             end
             # https://fcdo.iati.cloud/search/activity?q=iati_identifier:GB-1-202035&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text
             #oipa = RestClient.get  api_simple_log(settings.oipa_api_url_api + "activities/#{projectId}/?format=json&fields=recipient_country")
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=iati_identifier:#{projectId}&fl=recipient_country_code")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=iati_identifier:#{projectId}&fl=recipient_country_code,participating_org_ref")
             response = Oj.load(oipa)
             tempData = response['response']['docs'].first.has_key?('recipient_country_code') ? response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length() : 0
             if(tempData != 0)
                 halt 404, "Activity not found"
-            end    
+            end
+            isGovOrgPresent = false
+            orgData = response['response']['docs'].first['participating_org_ref']
+            orgData.each do |item|
+                if item[0, 6] == "GB-GOV"
+                    isGovOrgPresent = true
+                    break
+                end
+            end
+            if !isGovOrgPresent
+                halt 404, "Activity not found"
+            end
         rescue => e
             halt 404, "Activity not found"
         end
@@ -793,7 +804,7 @@ module ProjectHelpers
         staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         # current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         # current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,related_activity_type,related_activity_ref&rows=50000"
         projectTracker = []
         pulledData = RestClient.get newApiCall
         pulledData  = JSON.parse(pulledData)['response']['docs']
