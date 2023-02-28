@@ -1397,7 +1397,7 @@ end
   ###############################
   def generateCountryDatav5()
     count = 20
-    newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     page = 1
     page = page.to_i - 1
@@ -1413,7 +1413,7 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             pulledData.push(item)
@@ -1457,13 +1457,19 @@ end
           countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
           countryBudget = tempTotalBudget*countryPercentage/100
           if(projectDataHash.has_key?(c))
-            projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+            if(element['activity_status_code'].to_i == 2)
+              projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+            end
             projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
           else
             projectDataHash[c] = {}
             projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
             projectDataHash[c]["id"] = c
-            projectDataHash[c]["projects"] = 1
+            if(element['activity_status_code'].to_i == 2)
+              projectDataHash[c]["projects"] = 1
+            else
+              projectDataHash[c]["projects"] = 0
+            end
             projectDataHash[c]["budget"] = countryBudget.round(2)
             projectDataHash[c]["flag"] = '/images/flags/' + c.downcase + '.png'
           end

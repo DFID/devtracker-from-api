@@ -208,7 +208,7 @@ module CountryHelpers
     country = countriesInfo.select {|country| country['code'] == countryCode}.first
     ## new api call
     #newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
-		newApiCall = settings.oipa_api_url_other + "budget?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
     puts newApiCall
     pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
@@ -217,7 +217,7 @@ module CountryHelpers
     pulledData.each do |element|
       if element['hierarchy'].to_i == 1
         tempTotalBudget = 0
-        if(element['reporting_org_ref'].to_s == 'GB-GOV-1')
+        if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
           if element.has_key?('related_budget_value')
             element['related_budget_value'].each_with_index do |data, index|
               if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
@@ -670,7 +670,7 @@ module CountryHelpers
 
   def budgetBarGraphDataDv2(countryCode)
     #Process budgets
-    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-*&fl=reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
+    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
     apiData = JSON.parse(apiData)['response']['docs']
     fyTracker = []
     repOrgs = {}

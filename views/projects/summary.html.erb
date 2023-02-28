@@ -11,18 +11,36 @@
                     <p class="project-description">N/A</p>
                 <%end%>
             <%else%>
+                <%
+                jDesc = 0
+                jObj = 0
+                jTar = 0
+                jOth = 0 
+                %>
                 <%project['description_narrative'].each_with_index do |description, index|%>
                     <%if project['description_type'][index].to_i == 1%>
-                        <b class="more-info-title">Description</b>
+                        <%if jDesc == 0%>
+                            <b class="more-info-title">Description</b>
+                            <%jDesc = 1%>
+                        <%end%>
                         <p class="project-description"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 2%>
-                        <b class="more-info-title">Objectives</b>
+                        <%if jObj == 0%>
+                            <b class="more-info-title">Objectives</b>
+                            <%jObj = 1%>
+                        <%end%>
                         <p class="project-description"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 3%>
-                        <b class="more-info-title">Target Groups</b>
+                        <%if jTar == 0%>
+                            <b class="more-info-title">Target Groups</b>
+                            <%jTar = 1%>
+                        <%end%>
                         <p class="project-description"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 4%>
-                        <b class="more-info-title">Other</b>
+                        <%if jOth == 0%>
+                            <b class="more-info-title">Other</b>
+                            <%jOth = 1%>
+                        <%end%>
                         <p class="project-description"><%= description %></p>
                     <%end%> 
                 <%end%>
