@@ -22,14 +22,14 @@ module ProjectHelpers
             #oipa = RestClient.get  api_simple_log(settings.oipa_api_url_api + "activities/#{projectId}/?format=json&fields=recipient_country")
             oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=iati_identifier:#{projectId}&fl=recipient_country_code,participating_org_ref")
             response = Oj.load(oipa)
-            tempData = response['response']['docs'].first.has_key?('recipient_country_code') ? response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length() : 0
-            if(tempData != 0)
-                halt 404, "Activity not found"
-            end
+            # tempData = response['response']['docs'].first.has_key?('recipient_country_code') ? response['response']['docs'].first['recipient_country_code'].select{|a| a.to_s == 'UA'}.length() : 0
+            # if(tempData != 0)
+            #     halt 404, "Activity not found"
+            # end
             isGovOrgPresent = false
             orgData = response['response']['docs'].first['participating_org_ref']
             orgData.each do |item|
-                if item[0, 6] == "GB-GOV"
+                if item[0, 6] == "GB-GOV" || item[0, 4] == "GB-1"
                     isGovOrgPresent = true
                     break
                 end
@@ -54,6 +54,7 @@ module ProjectHelpers
     def get_h1_project_detailsv2(projectId)
         oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{projectId}&fl=*")
         project = JSON.parse(oipa)['response']['docs'].first
+        puts(project['reporting_org_narrative'])
         project
     end
 
@@ -1141,7 +1142,7 @@ module ProjectHelpers
     end
 
     def get_project_sector_graph_datav2(projectId)
-        projectSectorGraphJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati-identifier:#{projectId}&fl=sector_code,sector_percentage,sector_narrative,activity_plus_child_aggregation_budget_value_gbp&rows=1")
+        projectSectorGraphJSON = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati-identifier:#{projectId}&fl=sector_code,sector_percentage,sector_narrative,activity_plus_child_aggregation_budget_value_gbp&rows=1")
         projectSectorGraph = JSON.parse(projectSectorGraphJSON)['response']['docs'].first
         c3ReadyStackBarData = Array.new
         if projectSectorGraph.has_key?('sector_code')
