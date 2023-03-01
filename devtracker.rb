@@ -324,7 +324,7 @@ end
 get '/country-budget-bar-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	#json :output => budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
-	json :output => budgetBarGraphDataDv2(n)
+	json :output => budgetBarGraphDataDv3(n)
 end 
 ##
 # solr route
@@ -1395,6 +1395,302 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	end
 	tempTransactions
 end
+
+# get '/generatecsv?' do
+# 	response = g3('AF')
+# 	##
+# 	response.each do |item|
+# 		File.open('data/cache/export-country-budgets-bar.txt', "a") { |f| f.puts item['rep-org'] + ',' + item['startDate'].to_s + ',' + item['endDate'].to_s + ',' + item['countryPercentage'].to_s + ',' + item['cBudget'].to_s }	
+# 	end
+# 	##
+# 	json :output => 'CSV Generated'
+# end
+
+# def g2(countryCode)
+#     #Process budgets
+#     apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
+#     apiData = JSON.parse(apiData)['response']['docs']
+#     fyTracker = []
+#     repOrgs = {}
+# 	tracker = []
+#     apiData.each do |element|
+# 		if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
+# 			if element.has_key?('related_budget_value')
+# 			  element['related_budget_value'].each_with_index do |data, index|
+# 				# if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+# 				#   tempTotalBudget = tempTotalBudget + data.to_f
+# 				#   tempT = {}
+# 				#   tempT['activityID'] = element['iati_identifier']
+# 				#   tempT['start_iso_date'] = element['related_budget_period_start_iso_date'][index]
+# 				#   tempT['end_iso_date'] = element['related_budget_period_end_iso_date'][index]
+# 				#   tempT['budget'] = data.to_f
+# 				#   tracker.append(tempT)
+# 				# end
+# 				##
+# 				if !repOrgs.has_key?(element['reporting_org_ref'])
+# 					repOrgs[element['reporting_org_ref']] = {}
+# 					repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
+# 					repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
+# 					end
+# 					t = Time.parse(item)
+# 					fy = if element['related_budget_period_start_quarter'][index].to_i == 1 then t.year - 1 else t.year end
+# 					if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+# 					repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + element['related_budget_value'][index]
+# 					else
+# 					repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = element['related_budget_value'][index]
+# 					if !fyTracker.include?(fy)
+# 						fyTracker.push(fy)
+# 					end
+# 				end
+# 			  end
+# 			end
+# 		else
+# 			if element.has_key?('budget_value')
+# 			  element['budget_value'].each_with_index do |data, index|
+# 				if activity.has_key?('budget_period_start_iso_date')
+# 					activity['budget_period_start_iso_date'].each_with_index do |item, index|
+# 					  if !repOrgs.has_key?(activity['reporting_org_ref'])
+# 						repOrgs[activity['reporting_org_ref']] = {}
+# 						repOrgs[activity['reporting_org_ref']]['orgName'] = activity['reporting_org_narrative'].first
+# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'] = {}
+# 					  end
+# 					  t = Time.parse(item)
+# 					  fy = if activity['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+# 					  if repOrgs[activity['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] + activity['budget_value'][index]
+# 					  else
+# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = activity['budget_value'][index]
+# 						if !fyTracker.include?(fy)
+# 						  fyTracker.push(fy)
+# 						end
+# 					  end
+# 					end
+# 				end
+# 			  end
+# 			end
+# 		end
+# 		##
+#     end
+#     repOrgs
+#     fyTracker.sort!
+#     titleArray = []
+#     fyArray = []
+#     dataArray = []
+#     repOrgs.each do |key, val|
+#       titleArray.push(val['orgName'])
+#       tempDataArray = []
+#       tempDataArray.push(val['orgName'])
+#       fyTracker.each do |fy|
+#         if val['orgFinYears'].has_key?(fy)
+#           tempDataArray.push(val['orgFinYears'][fy].round(2))
+#         else
+#           tempDataArray.push(0)
+#         end
+#       end
+#       dataArray.push(tempDataArray)
+#     end
+#     fyTracker.each do |item|
+#       e = item+1
+#       f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
+#       fyArray.push(f)
+#     end
+#     finalData = []
+#     finalData.push(titleArray)
+#     finalData.push(fyArray)
+#     finalData.push(dataArray)
+#     finalData
+#   end
+
+#   def g3(countryCode)
+#     #Process budgets
+#     apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
+#     apiData = JSON.parse(apiData)['response']['docs']
+#     fyTracker = []
+#     repOrgs = {}
+# 	  tracker = []
+#     apiData.each do |element|
+#       ## Process country Code percentage
+#       countryPercentage = 0
+#       if element.has_key?('recipient_country_code')
+#         element['recipient_country_code'].each_with_index do |c, i|
+#           if c.to_s == countryCode
+#             countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+#             break
+#           end
+#         end
+#       end
+#       ##
+#       if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
+#         if element.has_key?('related_budget_value')
+#           element['related_budget_value'].each_with_index do |data, index|
+#             if !repOrgs.has_key?(element['reporting_org_ref'])
+#               repOrgs[element['reporting_org_ref']] = {}
+#               repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
+#               repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
+#               end
+#               t = Time.parse(element['related_budget_period_start_iso_date'][index])
+#               fy = if element['related_budget_period_start_quarter'][index].to_i == 1 then t.year - 1 else t.year end
+#               if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+#                 repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + (data.to_f*countryPercentage/100)
+#               else
+#                 repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
+#               if !fyTracker.include?(fy)
+#                 fyTracker.push(fy)
+#               end
+#               tempT = {}
+#               tempT['rep-org'] = element['reporting_org_ref']
+#               tempT['startDate'] = element['related_budget_period_start_iso_date'][index]
+#               tempT['endDate'] = element['related_budget_period_end_iso_date'][index]
+#               tempT['countryPercentage'] = countryPercentage
+#               tempT['cBudget'] = data.to_f*countryPercentage/100
+#               tracker.append(tempT)
+#             end
+#           end
+#         end
+#       else
+#         if element.has_key?('budget_value')
+#           element['budget_value'].each_with_index do |data, index|
+#             if !repOrgs.has_key?(element['reporting_org_ref'])
+#               repOrgs[element['reporting_org_ref']] = {}
+#               repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
+#               repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
+#               end
+#               t = Time.parse(element['budget_period_start_iso_date'][index])
+#               fy = if element['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+#               if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+#               repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + data.to_f*countryPercentage/100
+#               else
+#               repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
+#               if !fyTracker.include?(fy)
+#                 fyTracker.push(fy)
+#               end
+#               tempT = {}
+#               tempT['rep-org'] = element['reporting_org_ref']
+#               tempT['startDate'] = element['budget_period_start_iso_date'][index]
+#               tempT['endDate'] = element['budget_period_end_iso_date'][index]
+#               tempT['countryPercentage'] = countryPercentage
+#               tempT['cBudget'] = data.to_f*countryPercentage/100
+#               tracker.append(tempT)
+#             end
+#           end
+#         end
+#       end
+# 		##
+#     end
+#     repOrgs
+#     fyTracker.sort!
+#     titleArray = []
+#     fyArray = []
+#     dataArray = []
+#     repOrgs.each do |key, val|
+#       titleArray.push(val['orgName'])
+#       tempDataArray = []
+#       tempDataArray.push(val['orgName'])
+#       fyTracker.each do |fy|
+#         if val['orgFinYears'].has_key?(fy)
+#           tempDataArray.push(val['orgFinYears'][fy].round(2))
+#         else
+#           tempDataArray.push(0)
+#         end
+#       end
+#       dataArray.push(tempDataArray)
+#     end
+#     fyTracker.each do |item|
+#       e = item+1
+#       f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
+#       fyArray.push(f)
+#     end
+#     finalData = []
+#     finalData.push(titleArray)
+#     finalData.push(fyArray)
+#     finalData.push(dataArray)
+#     tracker
+#   end
+
+# def g1(countryCode)
+#     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+#     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+#     countriesInfo = Oj.load(File.read('data/countries.json'))
+#     country = countriesInfo.select {|country| country['code'] == countryCode}.first
+#     ## new api call
+#     #newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
+# 		newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
+#     puts newApiCall
+#     pulledData = RestClient.get newApiCall
+#     pulledData  = JSON.parse(pulledData)['response']['docs']
+#     puts pulledData.count
+#     countryTotalBudget = 0
+# 	tracker = []
+# 	tracker2 = []
+#     pulledData.each do |element|
+#       if element['hierarchy'].to_i == 1
+#         tempTotalBudget = 0
+#         if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
+#           if element.has_key?('related_budget_value')
+#             element['related_budget_value'].each_with_index do |data, index|
+#               if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+#                 tempTotalBudget = tempTotalBudget + data.to_f
+# 				tempT = {}
+# 				tempT['activityID'] = element['iati_identifier']
+# 				tempT['start_iso_date'] = element['related_budget_period_start_iso_date'][index]
+# 				tempT['end_iso_date'] = element['related_budget_period_end_iso_date'][index]
+# 				tempT['budget'] = data.to_f
+# 				tracker.append(tempT)
+#               end
+#             end
+#           end
+#         else
+#           if element.has_key?('budget_value')
+#             element['budget_value'].each_with_index do |data, index|
+#               if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+#                 tempTotalBudget = tempTotalBudget + data.to_f
+# 				tempT = {}
+# 				tempT['activityID'] = element['iati_identifier']
+# 				tempT['start_iso_date'] = element['budget_period_start_iso_date'][index]
+# 				tempT['end_iso_date'] = element['budget_period_end_iso_date'][index]
+# 				tempT['budget'] = data.to_f
+# 				tracker.append(tempT)
+#               end
+#             end
+#           end
+#         end
+#         if element.has_key?('recipient_country_code')
+#           element['recipient_country_code'].each_with_index do |c, i|
+#             if c.to_s == countryCode
+#             	countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+#             	countryBudget = tempTotalBudget*countryPercentage/100
+#               	countryTotalBudget = countryTotalBudget + countryBudget
+# 			  	tempT = {}
+# 			  	tempT['activityID'] = element['iati_identifier']
+# 				tempT['countryBudgetPercentage'] = countryPercentage
+# 				tempT['countryBudget'] = countryBudget
+# 				tempT['TotalActivityBudget'] = tempTotalBudget
+# 				tracker2.append(tempT)
+#               break
+#             end
+#           end
+#         end
+#       end
+#     end
+#     # returnObject = {
+#     #       :code => country['code'],
+#     #       :name => country['name'],
+#     #       :description => country['description'],
+#     #       :population => country['population'],
+#     #       :population_year => country['population_year'],
+#     #       :lifeExpectancy => country['lifeExpectancy'],
+#     #       :incomeLevel => country['incomeLevel'],
+#     #       :belowPovertyLine => country['belowPovertyLine'],
+#     #       :belowPovertyLine_year => country['belowPovertyLine_year'],
+#     #       :fertilityRate => country['fertilityRate'],
+#     #       :fertilityRate_year => country['fertilityRate_year'],
+#     #       :gdpGrowthRate => country['gdpGrowthRate'],
+#     #       :gdpGrowthRate_year => country['gdpGrowthRate_year'],
+#     #       :countryBudget => countryTotalBudget,
+#     #       :countryBudgetCurrency => "GBP",
+#     #     }
+# 	tracker2
+#   end
 
 get '/downloadLocationDataCSV/:proj_id?' do
 	projID = sanitize_input(params[:proj_id],"newId")

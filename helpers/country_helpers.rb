@@ -725,6 +725,116 @@ module CountryHelpers
     finalData
   end
 
+  def budgetBarGraphDataDv3(countryCode)
+    #Process budgets
+    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "budget/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
+    #apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "budget/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-13&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
+    apiData = JSON.parse(apiData)['response']['docs']
+    fyTracker = []
+    repOrgs = {}
+	  tracker = []
+    counter  = 0
+    apiData.each do |element|
+      ## Process country Code percentage
+      countryPercentage = 0
+      if element.has_key?('recipient_country_code')
+        element['recipient_country_code'].each_with_index do |c, i|
+          if c.to_s == countryCode
+            countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+            puts(counter)
+            counter = counter+1
+            break
+          end
+        end
+      end
+      ##
+      if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
+        if element.has_key?('related_budget_value')
+          element['related_budget_value'].each_with_index do |data, index|
+            if !repOrgs.has_key?(element['reporting_org_ref'])
+              repOrgs[element['reporting_org_ref']] = {}
+              repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
+              repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
+              end
+              t = Time.parse(element['related_budget_period_start_iso_date'][index])
+              fy = if element['related_budget_period_start_quarter'][index].to_i == 1 then t.year - 1 else t.year end
+              if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+                repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + (data.to_f*countryPercentage/100)
+              else
+                repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
+              if !fyTracker.include?(fy)
+                fyTracker.push(fy)
+              end
+              tempT = {}
+              tempT['rep-org'] = element['reporting_org_ref']
+              tempT['startDate'] = element['related_budget_period_start_iso_date'][index]
+              tempT['endDate'] = element['related_budget_period_end_iso_date'][index]
+              tempT['countryPercentage'] = countryPercentage
+              tempT['cBudget'] = data.to_f*countryPercentage/100
+              tracker.append(tempT)
+            end
+          end
+        end
+      else
+        if element.has_key?('budget_value')
+          element['budget_value'].each_with_index do |data, index|
+            if !repOrgs.has_key?(element['reporting_org_ref'])
+              repOrgs[element['reporting_org_ref']] = {}
+              repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
+              repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
+            end
+            t = Time.parse(element['budget_period_start_iso_date'][index])
+            fy = if element['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+            if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
+              repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + data.to_f*countryPercentage/100
+            else
+              repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
+              if !fyTracker.include?(fy)
+                fyTracker.push(fy)
+              end
+            end
+            tempT = {}
+              tempT['rep-org'] = element['reporting_org_ref']
+              tempT['startDate'] = element['budget_period_start_iso_date'][index]
+              tempT['endDate'] = element['budget_period_end_iso_date'][index]
+              tempT['countryPercentage'] = countryPercentage
+              tempT['cBudget'] = data.to_f*countryPercentage/100
+              tracker.append(tempT)
+          end
+        end
+      end
+		##
+    end
+    repOrgs
+    fyTracker.sort!
+    titleArray = []
+    fyArray = []
+    dataArray = []
+    repOrgs.each do |key, val|
+      titleArray.push(val['orgName'])
+      tempDataArray = []
+      tempDataArray.push(val['orgName'])
+      fyTracker.each do |fy|
+        if val['orgFinYears'].has_key?(fy)
+          tempDataArray.push(val['orgFinYears'][fy].round(2))
+        else
+          tempDataArray.push(0)
+        end
+      end
+      dataArray.push(tempDataArray)
+    end
+    fyTracker.each do |item|
+      e = item+1
+      f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
+      fyArray.push(f)
+    end
+    finalData = []
+    finalData.push(titleArray)
+    finalData.push(fyArray)
+    finalData.push(dataArray)
+    finalData
+  end
+
 
   def get_country_region_yearwise_budget_graph_data(apiLink)
 
