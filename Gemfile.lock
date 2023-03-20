@@ -67,7 +67,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
-    minitest (5.17.0)
+    minitest (5.18.0)
     money (6.16.0)
       i18n (>= 0.6.4, <= 2)
     multi_json (1.15.0)
@@ -90,7 +90,7 @@ GEM
       mail (>= 2.0)
     public_suffix (5.0.1)
     racc (1.6.1)
-    rack (2.2.6.2)
+    rack (2.2.6.4)
     rack-protection (3.0.5)
       rack
     rack-test (2.0.2)
