@@ -126,7 +126,7 @@ get '/countries/:country_code/?' do |n|
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
 	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
-	if n == 'UA'
+	if n == 'UA22'
 		tempActivityCount['count'] = 0
 	end
 	Benchmark.bm(7) do |x|
