@@ -356,7 +356,7 @@ module CommonHelpers
     oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[0])
     allProjectsData['projects']= JSON.parse(oipa_project_list)
 
-    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA'}.length() == 0}
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA22'}.length() == 0}
     allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
 
     sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[1])
@@ -372,7 +372,7 @@ module CommonHelpers
       oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[6])
       allProjectsData['projects']= JSON.parse(oipa_project_list)
 
-      allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA'}.length() == 0}
+      allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA22'}.length() == 0}
       allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
     end
     begin
@@ -491,7 +491,7 @@ module CommonHelpers
     oipa_project_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiLink)
     allProjectsData['projects']= JSON.parse(oipa_project_list)
 
-    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA'}.length() == 0}
+    allProjectsData['projects']['results'] = allProjectsData['projects']['results'].select{|a| a['recipient_countries'].select{|b| b['country']['code'].to_s == 'UA22'}.length() == 0}
     allProjectsData['projects']['count'] = allProjectsData['projects']['results'].length()
 
     allProjectsData['project_budget_higher_bound'] = 0
