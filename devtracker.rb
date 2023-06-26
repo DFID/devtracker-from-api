@@ -61,7 +61,7 @@ include SolrHelper
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
 set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
-set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
+set :oipa_api_url_solr, 'https://fcdo-direct-indexing.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
@@ -260,7 +260,7 @@ get '/countries/:country_code/?' do |n|
 	newtempActivityCount = 'activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+')&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
 	#tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
 	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + newtempActivityCount))['response']['numFound']
-	if n == 'UA'
+	if n == 'UA2'
 		tempActivityCount = 0
 	end
 	Benchmark.bm(7) do |x|
