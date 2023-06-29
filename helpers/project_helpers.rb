@@ -944,7 +944,7 @@ module ProjectHelpers
         
         projectDataHash = {}
         projectCountValues.each do |project|
-            if project["recipient_country"]["code"].to_s != 'UA'
+            if project["recipient_country"]["code"].to_s != 'UA2'
                 tempBudget = projectBudgetValues.find do |projectBudget|
                     projectBudget["recipient_country"]["code"].to_s == project["recipient_country"]["code"]
                 end
@@ -1958,7 +1958,7 @@ module ProjectHelpers
         
         projectDataHash = {}
         projectCountValues.each do |project|
-            if project["val"].to_s != 'UA'
+            if project["val"].to_s != 'UA2'
                 tempBudget = projectBudgetValues.find do |projectBudget|
                     projectBudget["val"].to_s == project["val"]
                 end

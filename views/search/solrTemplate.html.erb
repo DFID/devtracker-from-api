@@ -110,7 +110,7 @@
                         <div class="govuk-grid-column-full">
                             <% if !fcdoCountryBudgets.nil? %>
                                 <% fcdoCountryBudgets.each do |results| %>
-                                    <%if results[0] != 'UA'%>
+                                    <%if results[0] != 'UA2'%>
                                         <div class="govuk-inset-text" style="font-size: 14px;">
                                         <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
                                             <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>

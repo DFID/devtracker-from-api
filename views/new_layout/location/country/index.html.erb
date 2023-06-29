@@ -64,7 +64,7 @@
                     </thead>
                     <tbody class="govuk-table__body">
                         <%dfid_country_stats_data.each do |key,val|%>
-                            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA'%>
+                            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA2'%>
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell" data-sort-value="<%= val['country']%>"><a href="/countries/<%= val['id']%>" class="govuk-link"><%= val['country']%></a></td>
                                     <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="<%=val['budget']%>"><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
