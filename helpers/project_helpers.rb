@@ -1183,8 +1183,16 @@ module ProjectHelpers
                             narrative = 'N/A'
                             percentage = 0
                         end
-                        c3ReadyStackBarData[0].concat('["'+narrative+'",'+percentage.to_s+"],")
-                        c3ReadyStackBarData[1].concat('"'+narrative+'",')
+                        if percentage.nil? || narrative.nil?
+                            c3ReadyStackBarData[0].concat('["N/A",0],')
+                        else
+                            c3ReadyStackBarData[0].concat('["'+narrative+'",'+percentage.to_s+"],")
+                        end
+                        if narrative.nil?
+                            c3ReadyStackBarData[1].concat('"N/A",')
+                        else
+                            c3ReadyStackBarData[1].concat('"'+narrative+'",')
+                        end
                     end
                     c3ReadyStackBarData[1].concat(']')
                     c3ReadyStackBarData
