@@ -32,8 +32,8 @@
 
 #whatsnew-banner {
   background-color:#FFFFFF;position:relative;z-index:0;
-  border-bottom: 1px solid #a1acb2;
-  padding: 10px 0 8px 15px;
+  /* border-bottom: 1px solid #a1acb2; */
+  padding: 0px 0 8px 15px;
   /*margin:0 15px;*/
 }
 #whatsnew-banner p {
