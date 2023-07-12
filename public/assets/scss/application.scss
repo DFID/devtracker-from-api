@@ -5,8 +5,8 @@ html {
 }
 
 body {
-    margin:0;
-    position:relative;
+    margin: 0;
+    position: relative;
     background: #fff;
 }
 
@@ -35,9 +35,9 @@ $govuk-link-visited-colour: $govuk-link-colour;
 @import "patterns/modal";
 @import "patterns/charts";
 @import "patterns/service-status";
-
 @import "patterns/search";
 @import "patterns/department";
 @import "patterns/project";
 @import "patterns/components";
 @import "patterns/document";
+@import "patterns/gds-overrides";

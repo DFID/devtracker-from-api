@@ -26,7 +26,7 @@
     <![endif]-->
      <!--[if gte IE 9]><!--><link href="/stylesheets/fonts.css" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
    
-   <script src="/javascripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
    <script src="/javascripts/js.cookie.min.js" type="text/javascript"></script>
     <!--[if lt IE 9]>
       <script src="/javascripts/ie-compat.js?1435740689" type="text/javascript"></script>
@@ -36,12 +36,10 @@
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <link href="/stylesheets/foundation.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="/stylesheets/aip-styles.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="/stylesheets/graph-styles.css" media="screen" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="/stylesheets/gds.css">
-<link href="/stylesheets/main.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="/stylesheets/new_layout.css" media="screen" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/assets/scss/moj-frontend.min.css" />
+    <link rel="stylesheet" href="/assets/scss/application.min.css" />
+
+
 <link type="image/x-icon" href="https://assets.digital.cabinet-office.gov.uk/static/favicon-8d811b8c3badbc0b0e2f6e25d3660a96cc0cca7993e6f32e98785f205fc40907.ico" rel="shortcut icon" />
    <!--  <script>  
         jQuery(function(){
@@ -117,43 +115,199 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/ios/apple-touch-icon-180x180.png" />
   </head>
   <body>
-    <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-    <a href="#content" class="visually-hidden">Go to main content</a>
-    <header role="banner" id="global-header">
-      <div class="row">
-        <div class="twelve columns">
-          <h2>
-          <span class="govuk-header__logotype" style="color: white">
-            <!--[if gt IE 8]><!-->
-            <svg aria-hidden="true" class="govuk-header__logotype-crown gem-c-layout-super-navigation-header__logotype-crown" focusable="false" height="30" viewBox="0 0 132 97" width="36" xmlns="http://www.w3.org/2000/svg">
-              <path d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z" fill="currentColor" fill-rule="evenodd">
-              </path>
-            </svg>
-            <span class="govuk-header__logotype-text">
-              <a href="/" title="Go to the homepage">Development Tracker</a>
-            </span>
-          </span>
-          <form style="display: none" id="search" class="site-search" action="/search" method="POST" role="search">
-           <label for="site-search-text" class="visually-hidden">Search</label>
-           <input type="search" name="query" id="site-search-text" title="Search" placeholder="Search Programmes"><input class="button" type="submit" value="Search">
-           <input name="includeClosed" type="hidden" value="0">
-         </form>
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+
+<div class="govuk-cookie-banner"  id="cookieDiv" data-nosnippet role="region" aria-label="Cookies on [name of service]">
+  <div id="cookieContent" class="govuk-cookie-banner__message govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on DevTracker</h2>
+        <div class="govuk-cookie-banner__content">
+          <p class="govuk-body">We use some essential cookies to make this service work.</p>
+          <p class="govuk-body">We'd also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
         </div>
       </div>
+    </div>
+    <div class="govuk-button-group">
+      <button id="acceptCookie"class="govuk-button">
+        Accept analytics cookies
+      </button>
+      <button id="rejectCookie" value="reject" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+        Reject analytics cookies
+      </button>
+      <a class="govuk-link" href="#">View cookies</a>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-cookie-banner" aria-label="Cookies on Accepted" id="cookieAccepted">
+<div class="govuk-cookie-banner__message govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-cookie-banner__content">
+            <p class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-button-group">
+        <a href="#" role="button" draggable="false" class="govuk-button close-cookies" data-module="govuk-button">
+          Hide cookie message
+        </a>
+      </div>
+</div>
+</div>
+
+<div class="govuk-cookie-banner" aria-label="Cookies on Rejected" id="cookieRejected">
+ <div class="govuk-cookie-banner__message govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-cookie-banner__content">
+            <p class="govuk-body">You've rejected additional cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-button-group">
+        <a href="#" role="button" draggable="false" class="govuk-button close-cookies" data-module="govuk-button">
+          Hide cookie message
+        </a>
+      </div>
+    </div>
+</div>
+    <a href="#" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <header class="govuk-header app-header " role="banner" data-module="govuk-header">
+        <div class="app-header__container">
+            <div class="app-width-container app-header__content">
+                <div class="app-header__content--logo">
+                    <a href="/" class="govuk-header__link govuk-header__link--homepage app-header__link">
+                        <span class="govuk-header__logotype">
+                            <img src="/assets/images/govuk-crown.svg" class="govuk-header__logotype-crown" alt="GovUK" />
+                            <span class="govuk-header__logotype-text">
+                                GOV.UK
+                            </span>
+                        </span>
+                    </a>
+                    <a href="/" class="app-header__link">
+                        <span class="govuk-header__product-name app-header__product-name">
+                            Development Tracker
+                        </span>
+                    </a>
+                </div>
+                <div class="app-header__content--controls">
+                    <button class="app-header__menu-button" data-module="govuk-button" id="toggleGlobalMenu" onclick="toggleGlobalMenu()">Menu</button>
+                    <button class="app-header__search-button" data-module="govuk-button" id="toggleGlobalSearch" onclick="toggleGlobalSearch()"></button>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div id="content" class="page-wrapper">   
-      <div class="row">
-        <div class="twelve columns" id="whatsnew-banner">
+    <form action="/search" method="post" id="mid-search-form">
+      <div id="globalSearch" class="app-header__search app-element-hidden">
+          <div class="govuk-width-container">
+              <div class="govuk-form-group">
+                  <h1 class="govuk-label-wrapper">
+                      <label class="govuk-label govuk-label--m" for="event-name">
+                          Search Programmes
+                      </label>
+                  </h1>
+                  <div id="event-name-hint" class="govuk-hint">
+                      Enter location, sector, organisation or keyword
+                  </div>
+                  <div class="app-header__search-input">
+                      <input class="govuk-input" id="query" name="query" type="text" aria-describedby="event-name-hint">
+                      <button data-module="govuk-button" id="front-search-submit"></button>
+                  </div>
+                  <div class="app-search-form__checkbox">
+                      <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                          <div class="govuk-checkboxes__item">
+                              <input class="govuk-checkboxes__input" id="includeClosed" name="includeClosed" type="checkbox" value="hmrc">
+                              <label class="govuk-label govuk-checkboxes__label" for="includeClosed">
+                                  Include closed programmes
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <h2 class="govuk-heading-m">Popular searches</h2>
+              <ul class="govuk-list">
+                  <li>
+                      <a class="govuk-link" href="#">Ukraine costs</a>
+                  </li>
+                  <li>
+                      <a class="govuk-link" href="#">Iraq aid</a>
+                  </li>
+                  <li>
+                      <a class="govuk-link" href="#">Oversea costs</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+    </form>
+
+    <div class="app-header__navigation" id="globalMenu">
+      <nav aria-label="Menu" class="govuk-width-container app-width-container">
+          <div class="app-header__navigation-content">
+              <ul id="navigation" class="govuk-header__navigation-list">
+                  <li class="govuk-header__navigation-item app-header__navigation-item">
+                      <a class="govuk-header__link app-header__link" href="/">
+                          Home
+                      </a>
+                  </li>
+                  <li class="govuk-header__navigation-item app-header__navigation-item">
+                      <a class="govuk-header__link app-header__link" href="/sector">
+                          Aid by Sector
+                      </a>
+                  </li>
+                  <li class="govuk-header__navigation-item app-header__navigation-item">
+                      <a class="govuk-header__link app-header__link" href="/location/country">
+                          Aid by Location
+                      </a>
+                  </li>
+                  <li class="govuk-header__navigation-item app-header__navigation-item">
+                      <a class="govuk-header__link app-header__link" href="/department">
+                          Aid by Department
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+    </div>
+
+       <div class="app-banner app-banner-homepage govuk-!-width-full">
+        <div class="govuk-width-container">
+            <div class="app-banner__content">
+                <div>
+                    <h1 class="govuk-heading-l app-banner__title">Making development assistance more transparent</h1>
+                    <p class="govuk-body-m app-banner__text">
+                        <!-- The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. -->
+                        Our work is building a safer, healthier, more prosperous world for people in developing countries and in the
+                        UK too. This site shows in detail the international development programmes led by the Foreign, Commonwealth
+                        and Development Office (FCDO), other government departments and partners.
+                    </p>
+                </div>
+                <div>
+                    <img src="/assets/images/uk-aid_logo-w.png" alt="UK aid from the British people"
+                         class="app-banner__image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-width-container app-width-container">
+        <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper" id="content">
+        <div id="whatsnew-banner">
           <p>
             <span></span>
           </p>
-        </div>
       </div>
       <%= yield %>
-      <div class="modal_free_text_search">
+      <!--<div class="modal_free_text_search">
                     <div><div>Searching...<br /><br /><br /><br /></div></div>
-                </div>
+                </div>-->
+                </main>
     </div><!-- end page-wrapper -->  
 
     <footer class="govuk-footer" role="contentinfo">
@@ -210,21 +364,25 @@
         </div>
       </div>
     </footer>
-    <div id="cookieDiv">
-      <!-- <button style="display: flex; position: absolute; top: 16px; right: 16px " id="closeCookie">Close</button> -->
-      <div id="cookieContent">
-        <h1>This site uses cookies</h1>
-        <div>
-          We use Google Analytics to measure how you use the website so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about how you got to the site, the internal pages you visit, how long you spend on each page and what you click on while you're visiting the site. <a href="/cookies">Read more</a>
-        </div>
-        <hr />
-        <button id="acceptCookie">Accept</button>
-        <button id="rejectCookie">Reject</button>
-      </div>
-    </div>
-    <%if request.cookies['accept_cookie'].nil? %>
+
+  
+    <!-- <%=DateTime.now%> -->
+
+
+    <script src="/assets/js/moj-frontend.min.js"></script>
+    <script src="/assets/govuk/all.js"></script>
+    <script src="/assets/js/dev-tracker.js"></script>
+    <script>
+      window.GOVUKFrontend.initAll();
+      window.MOJFrontend.initAll();
+    </script>
+
+      <%if request.cookies['accept_cookie'].nil? %>
       <script>
         $(document).ready(function() {
+          alert();
+          $('#cookieAccepted').hide();
+          $('#cookieRejected').hide();
           function clearCookies(){
             var cookies = document.cookie.split("; ");
             for (var c = 0; c < cookies.length; c++) {
@@ -241,28 +399,31 @@
                 }
             }
           };
-          $('#cookieDiv').slideDown('slow');
+          $('#cookieDiv').show();
           $('#acceptCookie').click(function(){
             Cookies.set('accept_cookie', 1, { expires: 90 });
             $.getScript("https://www.googletagmanager.com/gtag/js?id=G-34D74G152F");
             $.getScript("/javascripts/analytics.js");
             $.getScript("/javascripts/analytics_FCDO.js");
-            $('#cookieDiv').slideUp();
+            $('#cookieDiv').hide();
+            $('#cookieAccepted').show();
           });
-          // $('#closeCookie').click(function(){
-          //   $('#cookieDiv').slideUp();
-          // });
+          $('.close-cookies').click(function(){
+            $('#cookieAccepted').hide();
+            $('#cookieRejected').hide();
+          });
           $('#rejectCookie').click(function(){
             clearCookies();
             Cookies.set('accept_cookie', 0, { expires: 90 });
-            $('#cookieDiv').slideUp();
+            $('#cookieDiv').hide();
+            $('#cookieRejected').show();
           });
         });
       </script>
     <%elsif request.cookies['accept_cookie'] == '1'%>
+    TEST
       <%= erb :'partials/_analytics'%> 
     <%end%>
-    <!-- <%=DateTime.now%> -->
   </body>
 </html>
 
