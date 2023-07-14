@@ -4,57 +4,97 @@
 .app-pagination {
   display: block;
   margin: govuk-spacing(8) 0;
-}
 
-.app-pagination__list {
-  margin: 0;
-  padding: 0;
-}
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 
-.app-pagination__item {
-  @include govuk-font($size: 19);
-  list-style: none;
+    li {
+      list-style: none;
+      min-width: 25px;
 
-  &:first-child {
-    margin-bottom: govuk-spacing(4);
+      &.active {
+        padding: 5px 0 5px 5px;
+        font-weight: 600;
+
+        .current {
+          padding: 5px;
+        }
+      }
+
+      .ellipse {
+        font-weight: 600;
+      }
+    }
   }
-}
 
-.app-pagination__link {
-  display: block;
-  text-decoration: none;
-  padding-bottom: govuk-spacing(4);
-
-  &:hover,
-  &:active,
-  &:visited {
+  a {
+    display: inline-block;
+    text-align: center;
+    @include govuk-font($size: 19);
     color: $govuk-link-colour;
+    text-decoration: none;
+    min-width: 25px;
+    padding: 5px;
+
+    &:hover,
+    &:active,
+    &:visited {
+      color: $govuk-link-colour;
+      background-color: none;
+    }
+
+    &:focus {
+      @include govuk-focused-text;
+
+      .app-pagination__link-title {
+        border-top-color: transparent;
+      }
+
+      .app-pagination__link-icon {
+        fill: $govuk-text-colour;
+      }
+    }
   }
 
-  &:hover,
-  &:active {
-    background-color: govuk-colour("light-grey", $legacy: "grey-4");
+  .prev {
+    position: relative;
 
-    // Add govuk-link hover decoration to title if no label present
-    .app-pagination__link-text--decorated {
-      @include govuk-link-decoration;
-    }
-
-    .app-pagination__link-label,
-    .app-pagination__link-text--decorated {
-      @include govuk-link-hover-decoration;
+    &::before {
+      border-width: 3px 0 0 3px;
+      margin-right: 5px;
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      border-style: solid;
+      color: #0b0c0c;
+      background: rgba(0, 0, 0, 0);
+      -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      content: "";
     }
   }
 
-  &:focus {
-    @include govuk-focused-text;
+  .next {
+    position: relative;
 
-    .app-pagination__link-title {
-      border-top-color: transparent;
-    }
-
-    .app-pagination__link-icon {
-      fill: $govuk-text-colour;
+    &::after {
+      border-width: 0 3px 3px 0;
+      margin-left: 5px;
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      border-style: solid;
+      color: #0b0c0c;
+      background: rgba(0, 0, 0, 0);
+      -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      content: "";
     }
   }
 }

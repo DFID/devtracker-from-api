@@ -1,373 +1,152 @@
 <!DOCTYPE html>
-
-<!--[if lt IE 7]>      <html class="ie6"> <![endif]-->
-<!--[if IE 7]>         <html class="ie7"> <![endif]-->
-<!--[if IE 8]>         <html class="ie8"> <![endif]-->
-<!--[if gt IE 8]><!--> 
-<html lang="en">         <!--<![endif]-->
+  <!--[if lt IE 7]><html class="ie6"> <![endif]-->
+  <!--[if IE 7]><html class="ie7"> <![endif]-->
+  <!--[if IE 8]><html class="ie8"> <![endif]-->
+  <!--[if gt IE 8]><!--> 
+    <html lang="en">
+  <!--<![endif]-->
 
   <head>
     <meta charset="utf-8">
     <meta name="description" content="The Development Tracker uses open data on international development published in the International Aid Transparency Initiative (IATI) open data standard by the UK Government and partners to show where the UK is investing in developing countries." />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Development Tracker</title>
 
-  
     <!--[if IE 8]>
-    <script type="text/javascript">
-      (function(){if(window.opera){return;}
-      setTimeout(function(){var a=document,g,b={families:(g=
-      ["nta"]),urls:["/stylesheets/fonts-ie8.css]},
-      c="javascripts/webfont-debug.js,d="script",
-      e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
-      ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h--;a.documentElement
-      .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
-      })()
-    </script>
+      <script type="text/javascript">
+        (function(){if(window.opera){return;}
+        setTimeout(function(){var a=document,g,b={families:(g=
+        ["nta"]),urls:["/stylesheets/fonts-ie8.css]},
+        c="javascripts/webfont-debug.js,d="script",
+        e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
+        ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h--;a.documentElement
+        .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
+        })()
+      </script>
     <![endif]-->
-     <!--[if gte IE 9]><!--><link href="/stylesheets/fonts.css" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    
+    <!--[if gte IE 9]><!--><link href="/stylesheets/fonts.css" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
    
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
-   <script src="/javascripts/js.cookie.min.js" type="text/javascript"></script>
+    <script src="/javascripts/js.cookie.min.js" type="text/javascript"></script>
+   
     <!--[if lt IE 9]>
       <script src="/javascripts/ie-compat.js?1435740689" type="text/javascript"></script>
     <![endif]-->
+   
     <script src="/javascripts/d3.js" type="text/javascript"></script>
     <script src="/javascripts/design-custom.js" type="text/javascript"></script>
-
-    <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <link rel="stylesheet" href="/assets/scss/moj-frontend.min.css" />
     <link rel="stylesheet" href="/assets/scss/application.min.css" />
 
+    <script> 
+      $(document).ready(function() {
+        /*Cookie usage reference*/
+        // console.log(Cookies.get('my_cookie'));
+        // console.log(Cookies.set('my_cookie', 'test'));
+        // console.log(Cookies.get('my_cookie'));
+        $('#IncludeClosedProjects').change(function(){
+            if(this.checked){
+              $('#includeClosed').val('1');
+            }
+            else{
+              $('#includeClosed').val('0'); 
+            }
+          });
+          $(".more-info-link").click(function(e){
+              e.stopPropagation();
+              $(this).parent().children('aside').toggle();
+              //$("#moreinfo"+$(this).attr('target')).toggle();
+            });
+          
+          $(".more-info").on('click', function(e){
+              e.stopPropagation();
+            });
 
-<link type="image/x-icon" href="https://assets.digital.cabinet-office.gov.uk/static/favicon-8d811b8c3badbc0b0e2f6e25d3660a96cc0cca7993e6f32e98785f205fc40907.ico" rel="shortcut icon" />
-   <!--  <script>  
-        jQuery(function(){
-          jQuery('.more-info-link').click( function(){
-              jQuery('#moreinfo'+$(this).attr('target')).toggle();
-           }); 
-         });  
-    </script> -->
-   <script> 
-    $(document).ready(function() {
-      /*Cookie usage reference*/
-      // console.log(Cookies.get('my_cookie'));
-      // console.log(Cookies.set('my_cookie', 'test'));
-      // console.log(Cookies.get('my_cookie'));
-      $('#IncludeClosedProjects').change(function(){
-          if(this.checked){
-            $('#includeClosed').val('1');
-          }
-          else{
-            $('#includeClosed').val('0'); 
-          }
+          $(document).on('click', function(e){
+              $(".more-info").hide(); 
+            });
+            $('#search').submit(function(){
+              $('.modal_free_text_search').show();
+              setTimeout(patience,10000);
+              setTimeout(patience_second_level,20000);
+            });
+            var patience = function(){
+              $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait<br /><br /><br /><br /><br /></div>');
+            };
+            var patience_second_level = function(){
+              $('.modal_free_text_search div').html('<div>The search is taking longer than expected.<br> Would you like to <span><a href="#" class="cancel_form_submission">cancel</a></span> the search or wait?<br/><br/><br/><br/><br/><br/><br/></div>');
+            };
+            $('.modal_free_text_search').click(function(){
+              window.stop();
+              $(this).hide();
+              $('.modal_free_text_search div').html('<div>Searching...<br /><br /><br /><br /></div>');
+            });
         });
-         $(".more-info-link").click(function(e){
-            e.stopPropagation();
-            $(this).parent().children('aside').toggle();
-            //$("#moreinfo"+$(this).attr('target')).toggle();
-           });
-         
-         $(".more-info").on('click', function(e){
-            e.stopPropagation();
-          });
+      </script>
 
-         $(document).on('click', function(e){
-            $(".more-info").hide(); 
-          });
-          $('#search').submit(function(){
-            $('.modal_free_text_search').show();
-            setTimeout(patience,10000);
-            setTimeout(patience_second_level,20000);
-          });
-          var patience = function(){
-            $('.modal_free_text_search div').html('<div>Still Searching... <br /> Please Wait<br /><br /><br /><br /><br /></div>');
-          };
-          var patience_second_level = function(){
-            $('.modal_free_text_search div').html('<div>The search is taking longer than expected.<br> Would you like to <span><a href="#" class="cancel_form_submission">cancel</a></span> the search or wait?<br/><br/><br/><br/><br/><br/><br/></div>');
-          };
-          $('.modal_free_text_search').click(function(){
-            window.stop();
-            $(this).hide();
-            $('.modal_free_text_search div').html('<div>Searching...<br /><br /><br /><br /></div>');
-          });
-      });
-  </script>
-  <!-- Hotjar Tracking Code for my site -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:3148260,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
-  <link rel="apple-touch-icon" href="/images/ios/apple-touch-icon.png" />
-  <link rel="apple-touch-icon" sizes="57x57" href="/images/ios/apple-touch-icon-57x57.png" />
-  <link rel="apple-touch-icon" sizes="72x72" href="/images/ios/apple-touch-icon-72x72.png" />
-  <link rel="apple-touch-icon" sizes="76x76" href="/images/ios/apple-touch-icon-76x76.png" />
-  <link rel="apple-touch-icon" sizes="114x114" href="/images/ios/apple-touch-icon-114x114.png" />
-  <link rel="apple-touch-icon" sizes="120x120" href="/images/ios/apple-touch-icon-120x120.png" />
-  <link rel="apple-touch-icon" sizes="144x144" href="/images/ios/apple-touch-icon-144x144.png" />
-  <link rel="apple-touch-icon" sizes="152x152" href="/images/ios/apple-touch-icon-152x152.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/ios/apple-touch-icon-180x180.png" />
+      <!-- hotjar tracking code for devtracker -->
+      <script>
+          (function(h,o,t,j,a,r){
+              h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+              h._hjSettings={hjid:3148260,hjsv:6};
+              a=o.getElementsByTagName('head')[0];
+              r=o.createElement('script');r.async=1;
+              r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+              a.appendChild(r);
+          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+      </script>
+
+      <link rel="apple-touch-icon" href="/images/ios/apple-touch-icon.png" />
+      <link rel="apple-touch-icon" sizes="57x57" href="/images/ios/apple-touch-icon-57x57.png" />
+      <link rel="apple-touch-icon" sizes="72x72" href="/images/ios/apple-touch-icon-72x72.png" />
+      <link rel="apple-touch-icon" sizes="76x76" href="/images/ios/apple-touch-icon-76x76.png" />
+      <link rel="apple-touch-icon" sizes="114x114" href="/images/ios/apple-touch-icon-114x114.png" />
+      <link rel="apple-touch-icon" sizes="120x120" href="/images/ios/apple-touch-icon-120x120.png" />
+      <link rel="apple-touch-icon" sizes="144x144" href="/images/ios/apple-touch-icon-144x144.png" />
+      <link rel="apple-touch-icon" sizes="152x152" href="/images/ios/apple-touch-icon-152x152.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/images/ios/apple-touch-icon-180x180.png" />
   </head>
+  
   <body>
-    <script>
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
+    <%= erb :'partials/_cookies'%>  
 
-<div class="govuk-cookie-banner"  id="cookieDiv" data-nosnippet role="region" aria-label="Cookies on [name of service]">
-  <div id="cookieContent" class="govuk-cookie-banner__message govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on DevTracker</h2>
-        <div class="govuk-cookie-banner__content">
-          <p class="govuk-body">We use some essential cookies to make this service work.</p>
-          <p class="govuk-body">We'd also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
-        </div>
-      </div>
-    </div>
-    <div class="govuk-button-group">
-      <button id="acceptCookie"class="govuk-button">
-        Accept analytics cookies
-      </button>
-      <button id="rejectCookie" value="reject" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
-        Reject analytics cookies
-      </button>
-      <a class="govuk-link" href="#">View cookies</a>
-    </div>
-  </div>
-</div>
+    <%= erb :'partials/_header'%>  
 
-<div class="govuk-cookie-banner" aria-label="Cookies on Accepted" id="cookieAccepted">
-<div class="govuk-cookie-banner__message govuk-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <div class="govuk-cookie-banner__content">
-            <p class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
-          </div>
-        </div>
-      </div>
-      <div class="govuk-button-group">
-        <a href="#" role="button" draggable="false" class="govuk-button close-cookies" data-module="govuk-button">
-          Hide cookie message
-        </a>
-      </div>
-</div>
-</div>
-
-<div class="govuk-cookie-banner" aria-label="Cookies on Rejected" id="cookieRejected">
- <div class="govuk-cookie-banner__message govuk-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <div class="govuk-cookie-banner__content">
-            <p class="govuk-body">You've rejected additional cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
-          </div>
-        </div>
-      </div>
-      <div class="govuk-button-group">
-        <a href="#" role="button" draggable="false" class="govuk-button close-cookies" data-module="govuk-button">
-          Hide cookie message
-        </a>
-      </div>
-    </div>
-</div>
-    <a href="#" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
-
-    <header class="govuk-header app-header " role="banner" data-module="govuk-header">
-        <div class="app-header__container">
-            <div class="app-width-container app-header__content">
-                <div class="app-header__content--logo">
-                    <a href="/" class="govuk-header__link govuk-header__link--homepage app-header__link">
-                        <span class="govuk-header__logotype">
-                            <img src="/assets/images/govuk-crown.svg" class="govuk-header__logotype-crown" alt="GovUK" />
-                            <span class="govuk-header__logotype-text">
-                                GOV.UK
-                            </span>
-                        </span>
-                    </a>
-                    <a href="/" class="app-header__link">
-                        <span class="govuk-header__product-name app-header__product-name">
-                            Development Tracker
-                        </span>
-                    </a>
-                </div>
-                <div class="app-header__content--controls">
-                    <button class="app-header__menu-button" data-module="govuk-button" id="toggleGlobalMenu" onclick="toggleGlobalMenu()">Menu</button>
-                    <button class="app-header__search-button" data-module="govuk-button" id="toggleGlobalSearch" onclick="toggleGlobalSearch()"></button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <form action="/search" method="post" id="mid-search-form">
-      <div id="globalSearch" class="app-header__search app-element-hidden">
-          <div class="govuk-width-container">
-              <div class="govuk-form-group">
-                  <h1 class="govuk-label-wrapper">
-                      <label class="govuk-label govuk-label--m" for="event-name">
-                          Search Programmes
-                      </label>
-                  </h1>
-                  <div id="event-name-hint" class="govuk-hint">
-                      Enter location, sector, organisation or keyword
-                  </div>
-                  <div class="app-header__search-input">
-                      <input class="govuk-input" id="query" name="query" type="text" aria-describedby="event-name-hint">
-                      <button data-module="govuk-button" id="front-search-submit"></button>
-                  </div>
-                  <div class="app-search-form__checkbox">
-                      <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                          <div class="govuk-checkboxes__item">
-                              <input class="govuk-checkboxes__input" id="includeClosed" name="includeClosed" type="checkbox" value="hmrc">
-                              <label class="govuk-label govuk-checkboxes__label" for="includeClosed">
-                                  Include closed programmes
-                              </label>
-                          </div>
-                      </div>
-                  </div>
+    <div class="app-banner app-banner-homepage govuk-!-width-full">
+      <div class="govuk-width-container">
+          <div class="app-banner__content">
+              <div>
+                  <h1 class="govuk-heading-l app-banner__title">Making development assistance more transparent</h1>
+                  <p class="govuk-body-m app-banner__text">
+                      <!-- The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. -->
+                      Our work is building a safer, healthier, more prosperous world for people in developing countries and in the
+                      UK too. This site shows in detail the international development programmes led by the Foreign, Commonwealth
+                      and Development Office (FCDO), other government departments and partners.
+                  </p>
               </div>
-              <h2 class="govuk-heading-m">Popular searches</h2>
-              <ul class="govuk-list">
-                  <li>
-                      <a class="govuk-link" href="#">Ukraine costs</a>
-                  </li>
-                  <li>
-                      <a class="govuk-link" href="#">Iraq aid</a>
-                  </li>
-                  <li>
-                      <a class="govuk-link" href="#">Oversea costs</a>
-                  </li>
-              </ul>
+              <div>
+                  <img src="/assets/images/uk-aid_logo-w.png" alt="UK aid from the British people"
+                        class="app-banner__image">
+              </div>
           </div>
       </div>
-    </form>
-
-    <div class="app-header__navigation" id="globalMenu">
-      <nav aria-label="Menu" class="govuk-width-container app-width-container">
-          <div class="app-header__navigation-content">
-              <ul id="navigation" class="govuk-header__navigation-list">
-                  <li class="govuk-header__navigation-item app-header__navigation-item">
-                      <a class="govuk-header__link app-header__link" href="/">
-                          Home
-                      </a>
-                  </li>
-                  <li class="govuk-header__navigation-item app-header__navigation-item">
-                      <a class="govuk-header__link app-header__link" href="/sector">
-                          Aid by Sector
-                      </a>
-                  </li>
-                  <li class="govuk-header__navigation-item app-header__navigation-item">
-                      <a class="govuk-header__link app-header__link" href="/location/country">
-                          Aid by Location
-                      </a>
-                  </li>
-                  <li class="govuk-header__navigation-item app-header__navigation-item">
-                      <a class="govuk-header__link app-header__link" href="/department">
-                          Aid by Department
-                      </a>
-                  </li>
-              </ul>
-          </div>
-      </nav>
-    </div>
-
-       <div class="app-banner app-banner-homepage govuk-!-width-full">
-        <div class="govuk-width-container">
-            <div class="app-banner__content">
-                <div>
-                    <h1 class="govuk-heading-l app-banner__title">Making development assistance more transparent</h1>
-                    <p class="govuk-body-m app-banner__text">
-                        <!-- The UK Government is tackling major global challenges including poverty and disease, mass migration, insecurity and conflict, working to end extreme poverty. -->
-                        Our work is building a safer, healthier, more prosperous world for people in developing countries and in the
-                        UK too. This site shows in detail the international development programmes led by the Foreign, Commonwealth
-                        and Development Office (FCDO), other government departments and partners.
-                    </p>
-                </div>
-                <div>
-                    <img src="/assets/images/uk-aid_logo-w.png" alt="UK aid from the British people"
-                         class="app-banner__image">
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="govuk-width-container app-width-container">
-        <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper" id="content">
-        <div id="whatsnew-banner">
-          <p>
-            <span></span>
-          </p>
-      </div>
-      <%= yield %>
-      <!--<div class="modal_free_text_search">
-                    <div><div>Searching...<br /><br /><br /><br /></div></div>
-                </div>-->
-                </main>
-    </div><!-- end page-wrapper -->  
-
-    <footer class="govuk-footer" role="contentinfo">
-      <div class="govuk-width-container ">
-        <div class="govuk-footer__meta">
-          <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-            <h2 class="govuk-visually-hidden">Support links</h2>
-            <ul class="govuk-footer__inline-list">
-              <li class="govuk-footer__inline-list-item">
-                <a class="govuk-footer__link" href="/about">
-                  About
-                </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <a class="govuk-footer__link" href="/accessibility-statement">
-                  Accessibility Statement
-                </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <a class="govuk-footer__link" href="/custom-codes">
-                  Custom Codes
-                </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <a class="govuk-footer__link" href="/faq">
-                  Glossary
-                </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <a target="_BLANK" class="govuk-footer__link" href="/privacy-policy">
-                  Privacy Policy
-                </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <a target="_BLANK" class="govuk-footer__link" href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office">
-                  Contact Us
-                </a>
-              </li>
-            </ul>
-            <div class="govuk-footer__meta-custom">
-              The website uses <a target="_BLANK" class="govuk-footer__link" href="/cookies">Cookies</a>. Data on this website is available for reuse under the <a class="govuk-footer__link" href="http://www.nationalarchives.gov.uk/doc/open-government-licence/" rel="license">Open Government Licence</a>
-            </div>
-            <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
-              <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
-            </svg>
-            <span class="govuk-footer__licence-description">
-              All content is available under the
-              <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
-            </span>
+        <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper govuk-!-padding-top-6" id="content">
+          <div id="whatsnew-banner">
+            <p><span></span></p>
           </div>
-          <div class="govuk-footer__meta-item">
-            <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
-          </div>
-        </div>
-      </div>
-    </footer>
 
-  
-    <!-- <%=DateTime.now%> -->
-
+          <%= yield %>
+      </main>
+    </div>
+    
+    <%= erb :'partials/_footer'%> 
 
     <script src="/assets/js/moj-frontend.min.js"></script>
     <script src="/assets/govuk/all.js"></script>
@@ -377,10 +156,9 @@
       window.MOJFrontend.initAll();
     </script>
 
-      <%if request.cookies['accept_cookie'].nil? %>
+    <%if request.cookies['accept_cookie'].nil? %>
       <script>
         $(document).ready(function() {
-          alert();
           $('#cookieAccepted').hide();
           $('#cookieRejected').hide();
           function clearCookies(){
@@ -421,7 +199,6 @@
         });
       </script>
     <%elsif request.cookies['accept_cookie'] == '1'%>
-    TEST
       <%= erb :'partials/_analytics'%> 
     <%end%>
   </body>

@@ -5,3 +5,34 @@
 .app-display-none {
     display: none;
 }
+
+.rm-link {
+    font-family: "GDS Transport", arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: underline;
+    color: $govuk-link-colour;
+    display: inline-block;
+    margin-bottom: 20px;
+
+    &:focus {
+        color: #0b0c0c;
+        background-color: #ffdd00;
+        box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+        text-decoration: none;
+    }
+
+    &:link,
+    &:visited {
+        color: $govuk-link-colour;
+    }
+
+    &:hover {
+        color: #003078;
+    }
+
+    &:active,
+    &:focus {
+        color: #0b0c0c;
+    }
+}

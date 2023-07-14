@@ -1,58 +1,80 @@
-#countryMap img, object, embed { max-width: none; }
-#map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
-#countryMap {
-    height : 450px;
+#countryMap img,
+object,
+embed {
+  max-width: none;
 }
+
+#map.static-background svg {
+  height: 100%;
+  width: 100%;
+  margin-top: 5px;
+}
+
+#countryMap {
+  height: 450px;
+}
+
 #map {
-    width: 100%; 
-    height: 545px;
-    margin-top: 15px;
+  width: 100%;
+  height: 545px;
+  margin-top: 15px;
 }
 
 .static-background {
-    background-image: url(/images/map_transparent.gif);
-    background-repeat: no-repeat;
-    background-size: contain;
+  background-image: url(/images/map_transparent.gif);
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .truncate {
-    width: 200px;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  width: 200px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #feedback-banner {
-  background-color:#ADD8E6;position:relative;z-index:0;
+  background-color: #ADD8E6;
+  position: relative;
+  z-index: 0;
   border: 1px solid #a1acb2;
-  width:100%;
-  padding-top:20px;
+  width: 100%;
+  padding-top: 20px;
 }
 
 #whatsnew-banner {
-  background-color:#FFFFFF;position:relative;z-index:0;
+  background-color: #FFFFFF;
+  position: relative;
+  z-index: 0;
   /* border-bottom: 1px solid #a1acb2; */
   padding: 0px 0 8px 15px;
   /*margin:0 15px;*/
 }
+
 #whatsnew-banner p {
-  margin-bottom:0;
+  margin-bottom: 0;
 }
 
 .countryMap {
-    height : 380px;
+  height: 380px;
 }
 
-.negative { }
+.negative {}
 
-.leaflet-popup-tip-container { display: none; }
+.leaflet-popup-tip-container {
+  display: none;
+}
 
-div.progress { border: none;}
+div.progress {
+  border: none;
+}
 
-.transactions-table th { font-weight: bold!important; }
+.transactions-table th {
+  font-weight: bold !important;
+}
 
-span.category { 
+span.category {
   border-radius: 3px;
   display: inline-block;
   padding: 4px 6px;
@@ -64,10 +86,10 @@ span.category {
   background-color: #3A7398;
 }
 
-span.language { 
+span.language {
   -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   display: inline-block;
   padding: 2px 4px;
   font-size: 11.844px;
@@ -82,27 +104,28 @@ span.language {
 }
 
 .leaflet-div-icon {
-    border: none!important;
+  border: none !important;
 }
 
-.transactions-table td{
+.transactions-table td {
   white-space: normal;
 }
 
 .marker.cluster {
-    background-image: url(/images/mapmarker_s.png);
-    font-family:"Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    height: 30px;
-    width: 15px;
-    border:none;
-    text-align:center;
-    font-size:0.6em;
-    line-height: 1.8em;
-    font-weight: bold;
-    color: #fff;
+  background-image: url(/images/mapmarker_s.png);
+  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  height: 30px;
+  width: 15px;
+  border: none;
+  text-align: center;
+  font-size: 0.6em;
+  line-height: 1.8em;
+  font-weight: bold;
+  color: #fff;
 }
 
-.country-link, .region-link {
+.country-link,
+.region-link {
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -115,24 +138,25 @@ span.language {
 }
 
 .cookies ul {
-  margin-left:30px;
+  margin-left: 30px;
 }
 
-.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
   /*color: transparent!important;*/
 }
 
 .leaflet-popup-content-wrapper {
-  padding-right: 0px!important;
+  padding-right: 0px !important;
 }
 
 .location-popup {
   min-width: 200px;
-  width:100%;
+  width: 100%;
 }
 
-#countryMap .leaflet-popup-content{
-  width: 450px!important;
+#countryMap .leaflet-popup-content {
+  width: 450px !important;
 }
 
 .location-popup .location-label {
@@ -140,63 +164,64 @@ span.language {
 }
 
 .location-popup .row {
-  margin-bottom:5px;
+  margin-bottom: 5px;
 }
 
 .location-popup.large {
   max-height: 350px;
-  overflow-y:scroll;  
+  overflow-y: scroll;
 }
 
 #disclaimer {
-  margin-bottom:15px;
+  margin-bottom: 15px;
 }
 
 
-#implementing-organisations ul
-{
-    list-style-type:none;
-    padding:0px;
-    margin:0px;}
+#implementing-organisations ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
 
-.ie7 #map_container{
-    display: none;
+.ie7 #map_container {
+  display: none;
 }
 
 .download-link {
-    padding-top:40px;
-    width:100%;
-    float:right;
-    text-align:right;
+  padding-top: 40px;
+  width: 100%;
+  float: right;
+  text-align: right;
 }
 
 .sort-proj-sectors {
-    text-align: center;
-    margin: auto 0px;
-    width:25px;
-    height:25px;
-    border:none;
-    vertical-align: baseline;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    cursor:pointer;
+  text-align: center;
+  margin: auto 0px;
+  width: 25px;
+  height: 25px;
+  border: none;
+  vertical-align: baseline;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  cursor: pointer;
 }
 
 .proj-filter-exp-collapse-text {
   cursor: pointer;
 }
-.proj-filter-exp-collapse-sign{
-    width:22px;
-    height:22px;
-    text-align: left;
-    vertical-align:top;
-    font-size:1.5em;
-    margin: -4px 2px 2px 2px;
-    border: none;
-    float:right;
-    cursor:pointer;
-    color: #f4f4f4;
+
+.proj-filter-exp-collapse-sign {
+  width: 22px;
+  height: 22px;
+  text-align: left;
+  vertical-align: top;
+  font-size: 1.5em;
+  margin: -4px 2px 2px 2px;
+  border: none;
+  float: right;
+  cursor: pointer;
+  color: #f4f4f4;
 }
 
 .proj-filter-exp-collapse-sign-down {
@@ -207,66 +232,68 @@ span.language {
   background-image: url(/images/up-arrow.png);
 }
 
-a.documentTitleLink{
+a.documentTitleLink {
   font-size: 1.5em;
 }
 
-ul.legend-list, ul.legend-list li{
-  border:none;
+ul.legend-list,
+ul.legend-list li {
+  border: none;
 }
 
-ul.legend-list li div span{
-  font-size:small;
-  font-weight:bold; 
-  position:relative;
+ul.legend-list li div span {
+  font-size: small;
+  font-weight: bold;
+  position: relative;
 }
 
-.documentContainer{
+.documentContainer {
   margin-top: 20px;
 }
 
-.moreDocsLink{
-  font-weight:bold; 
-  margin-left:1.5em;
+.moreDocsLink {
+  font-weight: bold;
+  margin-left: 1.5em;
 }
 
 .button-row {
-    padding-right: 40px;
+  padding-right: 40px;
 }
 
 .button-row span {
-  margin:0.5em 0em;
+  margin: 0.5em 0em;
   float: right;
 }
 
 .button.inform {
-  background-color:#ffffff;
-  color:#000;
+  background-color: #ffffff;
+  color: #000;
   font-weight: bold;
 }
+
 .button.inform:hover {
-  background-color:#ffffff;
-  color:#000;
+  background-color: #ffffff;
+  color: #000;
 }
 
 .envelope {
-  display:inline;
-  font-size:bigger;
+  display: inline;
+  font-size: bigger;
 }
 
 /* CSS to control the information boxes */
 
-.more-info  {
-  display: none; 
+.more-info {
+  display: none;
 }
 
 .more-info-content {
   background: #f8f8f8;
- /*  top: 1em; */
-  position: absolute; 
+  /*  top: 1em; */
+  position: absolute;
   margin: 8px 15px 0 0;
-  padding: 0.6em; 
- /* right: 0; */
+  padding: 0.6em;
+  /* right: 0; */
   width: 80%;
   z-index: 101;
   list-style: none;
@@ -274,56 +301,55 @@ ul.legend-list li div span{
   border: 3px solid #097f96;
   box-sizing: border-box;
   zoom: 1;
- /* font-size: 160%; */
+  /* font-size: 160%; */
   line-height: 1.5;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   font-family: "nta", Arial, sans-serif;
 }
 
-.more-info-container{
-  margin: 15px 0px 15px 0px; 
+.more-info-container {
+  margin: 15px 0px 15px 0px;
 }
 
-.more-info-title
-{
+.more-info-title {
   /*font-size: 27px;*/
   font-size: 1.25em;
-  font-weight: bold;  
+  font-weight: bold;
 }
 
-.more-info-link{
-  cursor:pointer;
+.more-info-link {
+  cursor: pointer;
 }
 
-.move-up-4{
-  margin-top:-4px;
+.move-up-4 {
+  margin-top: -4px;
 }
 
-.move-down-4{
+.move-down-4 {
   margin-top: 4px;
 }
 
-.more-info-link-spacer{
+.more-info-link-spacer {
   margin-left: 10px;
 }
 
-.float-right{
-  float:right;   
+.float-right {
+  float: right;
 }
 
-.float-left{
-  float:left;   
+.float-left {
+  float: left;
 }
 
 /*More Information CSS for landing page*/
 
-.top-five-header{
-    margin-bottom: 14px;
-    width:100%;    
+.top-five-header {
+  margin-bottom: 14px;
+  width: 100%;
 }
 
-.top-five-title{
+.top-five-title {
   font-size: 23px;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: bold;
@@ -337,25 +363,25 @@ ul.legend-list li div span{
 
 /*More Information CSS for Project Page*/
 
-.project-country-title{
+.project-country-title {
   /*float:left;*/
   font-size: 1.25em;
   margin-bottom: 20px;
 }
 
-.move-message-box{
-  margin-top:-35px;
-  margin-right:90px;
+.move-message-box {
+  margin-top: -35px;
+  margin-right: 90px;
 }
 
-.more-info-limit-size{
+.more-info-limit-size {
   width: 320px;
   margin-right: 689px;
 }
 
 /*More Information CSS for Country Page*/
 
-.country-info{
+.country-info {
   font-size: 27px;
   font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: 700;
@@ -368,27 +394,27 @@ ul.legend-list li div span{
 
 /*More Information CSS for Transactions Page*/
 
-.trans-header-container{
-  float:left;
-  width:100%;
-  margin-bottom:14px;
+.trans-header-container {
+  float: left;
+  width: 100%;
+  margin-bottom: 14px;
 }
 
-.trans-header-left{
-  float:left; 
-  width:70%;
-  margin-bottom:5px;
+.trans-header-left {
+  float: left;
+  width: 70%;
+  margin-bottom: 5px;
 }
 
-.trans-header-right{
-  float:left; 
-  width:30%;
-  margin-bottom:5px;
+.trans-header-right {
+  float: left;
+  width: 30%;
+  margin-bottom: 5px;
 }
 
-.trans-type-title{
+.trans-type-title {
   font-size: 27px;
-  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   color: rgb(34, 34, 34);
@@ -398,9 +424,9 @@ ul.legend-list li div span{
   margin-top: 14px;
 }
 
-.trans-type-value{
+.trans-type-value {
   font-size: 27px;
-  font-family: "NTA","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  font-family: "NTA", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   color: rgb(34, 34, 34);
@@ -410,7 +436,7 @@ ul.legend-list li div span{
 }
 
 
-.trans-more-info-box-limiter{
+.trans-more-info-box-limiter {
   width: 320px;
   margin-right: 689px;
   margin-top: 5px;
@@ -418,15 +444,15 @@ ul.legend-list li div span{
 
 /*CSS for departments page*/
 
-.overview-text{
+.overview-text {
   margin-top: 45px;
   margin-bottom: 30px;
 }
 
 /*This is a small hack to avoid the background text
 that is shown on the zoom in / zoom out buttons generated by the leaflet*/
-.leaflet-control-zoom a{
-/*  color: transparent !important;*/
+.leaflet-control-zoom a {
+  /*  color: transparent !important;*/
 }
 
 .c3-grid-lines {
@@ -438,12 +464,12 @@ that is shown on the zoom in / zoom out buttons generated by the leaflet*/
   height: 0px;
 }
 
-g.c3-axis-y > g:last-child {
-  transform: translate(0,4);
+g.c3-axis-y>g:last-child {
+  transform: translate(0, 4);
 }
 
 
-.c3-axis-y .tick:last-of-type{
+.c3-axis-y .tick:last-of-type {
   opacity: 0 !important;
 }
 
@@ -453,26 +479,26 @@ g.c3-axis-y > g:last-child {
 
 
 .modal {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 );
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, .8);
 }
 
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
 #showResults .loading {
-    overflow: hidden;   
+  overflow: hidden;
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
 #showResults .loading .modal {
-    display: block;
+  display: block;
 }
 
 .modal div {
@@ -488,17 +514,17 @@ g.c3-axis-y > g:last-child {
 }
 
 #scrollUp {
-    padding: 15px 14px 10px;
-    background: #f2f2f2;
-    bottom: 0;
-    right: 37px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    font-weight: bold;
-    border-left: 1px solid #CBCBCB;
-    border-top: 1px solid #CBCBCB;
-    border-right: 1px solid #CBCBCB;
-    text-decoration: none;
+  padding: 15px 14px 10px;
+  background: #f2f2f2;
+  bottom: 0;
+  right: 37px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-weight: bold;
+  border-left: 1px solid #CBCBCB;
+  border-top: 1px solid #CBCBCB;
+  border-right: 1px solid #CBCBCB;
+  text-decoration: none;
 }
 
 #sectorChart {
@@ -540,14 +566,14 @@ g.c3-axis-y > g:last-child {
 
 
 .modal_free_text_search {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 );
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, .8);
 }
 
 .modal_free_text_search div {
@@ -569,44 +595,45 @@ g.c3-axis-y > g:last-child {
 }
 
 .projects-nav nav ul {
-    overflow: hidden;
-/*    margin: 0;*/
-    padding: 0;
+  overflow: hidden;
+  /*    margin: 0;*/
+  padding: 0;
 }
 
 .projects-nav nav ul li {
-    list-style: none;
-    float: left;
-    text-align: center;
-/*    border-left: 1px solid #fff;
+  list-style: none;
+  float: left;
+  text-align: center;
+  /*    border-left: 1px solid #fff;
     border-right: 1px solid #ccc;*/
-    /*width: 16.6667%;*/ /* fallback for non-calc() browsers */
-    /*width: calc(100% / 4);*/
-    box-sizing: border-box;
-    width: auto;
+  /*width: 16.6667%;*/
+  /* fallback for non-calc() browsers */
+  /*width: calc(100% / 4);*/
+  box-sizing: border-box;
+  width: auto;
 }
 
 .projects-nav nav ul li:first-child {
-    /*border-left: none;*/
+  /*border-left: none;*/
 }
 
 .projects-nav nav ul li a {
-    display: block;
-    text-decoration: none;
-    /*color: #616161;*/
-    /*padding: 10px 0; */
-    font-size: 1em;
+  display: block;
+  text-decoration: none;
+  /*color: #616161;*/
+  /*padding: 10px 0; */
+  font-size: 1em;
 }
 
 .modal_map_markers {
-    /*display:    none;*/
-    position:   relative;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     auto;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 );
+  /*display:    none;*/
+  position: relative;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: auto;
+  width: 100%;
+  background: rgba(255, 255, 255, .8);
 }
 
 .modal_map_markers div {
@@ -620,23 +647,23 @@ g.c3-axis-y > g:last-child {
   width: auto;
 }
 
-.modal_free_text_search div div{
-  background: none repeat scroll 0% 0% transparent; 
-  width: auto; 
-  height: auto; 
+.modal_free_text_search div div {
+  background: none repeat scroll 0% 0% transparent;
+  width: auto;
+  height: auto;
   padding-top: 33px;
 }
 
-.modal div div{
-  background: none repeat scroll 0% 0% transparent; 
-  width: 300px; 
-  height: auto; 
+.modal div div {
+  background: none repeat scroll 0% 0% transparent;
+  width: 300px;
+  height: auto;
   padding-top: 33px;
 }
 
 .mContent {
-  /*display: none;*/ 
-  margin-bottom: 15px; 
+  /*display: none;*/
+  margin-bottom: 15px;
   /*overflow-x: hidden; 
   overflow-y: scroll; 
   min-height: 10px;
@@ -657,49 +684,53 @@ g.c3-axis-y > g:last-child {
   margin-top: 1px;
 }
 
- .filter-header {
+.filter-header {
   margin-bottom: 10px;
- }
+}
 
- .info {
-    background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    font: 14px/16px Arial,Helvetica,sans-serif;
-    padding: 6px 8px;
+.info {
+  background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  padding: 6px 8px;
 }
 
 .info h6 {
-    color: #777;
-    margin: 0 0 5px;
+  color: #777;
+  margin: 0 0 5px;
 }
 
- .tpcbcv {
+.tpcbcv {
   display: none;
- }
+}
 
- #ui-datepicker-div {
+#ui-datepicker-div {
   z-index: 2 !important;
- }
+}
 
 .meta {
-  display:none;
+  display: none;
 }
 
 .dc-chart g.row text {
   fill: black !important;
 }
 
-#top5Countries.dc-chart .axis { display: none; }
+#top5Countries.dc-chart .axis {
+  display: none;
+}
 
-#top5Sectors.dc-chart .axis { display: none; }
+#top5Sectors.dc-chart .axis {
+  display: none;
+}
 
 #top-5-sectors.columns {
   border-right: none;
 }
 
 #top-5-countries.columns {
-  border-left:1px solid #dee0e2;
+  border-left: 1px solid #dee0e2;
 }
 
 #top5Countries svg text {
@@ -707,7 +738,7 @@ g.c3-axis-y > g:last-child {
 }
 
 #top5Countries svg g:first-child {
-  transform: translate(0px,0px);
+  transform: translate(0px, 0px);
 }
 
 #top5Sectors svg text {
@@ -715,14 +746,16 @@ g.c3-axis-y > g:last-child {
 }
 
 #top5Sectors svg g:first-child {
-  transform: translate(0px,0px);
+  transform: translate(0px, 0px);
 }
 
 .link-wrapper {
   width: 8em;
-  /*margin-top: -2.8em;*/ /*This is causing Aid by containers to overlap on one another in the front page. Hence commented the line out.*/
+  /*margin-top: -2.8em;*/
+  /*This is causing Aid by containers to overlap on one another in the front page. Hence commented the line out.*/
 }
-#topSixResults .columns:nth-child(4){
+
+#topSixResults .columns:nth-child(4) {
   clear: left;
 }
 
@@ -772,7 +805,7 @@ g.c3-axis-y > g:last-child {
 }
 
 .logo {
-  background-color:  rgba(192, 192, 192, 0.26);
+  background-color: rgba(192, 192, 192, 0.26);
   padding: 25px;
 }
 
@@ -782,7 +815,7 @@ g.c3-axis-y > g:last-child {
   border-left: 3px solid #003e74;
 }
 
-.fcdo-title{
+.fcdo-title {
   margin-top: 11px !important;
 }
 
@@ -795,31 +828,31 @@ g.c3-axis-y > g:last-child {
 }
 
 .hmt h1 {
- border-left: 3px solid #af292e; 
+  border-left: 3px solid #af292e;
 }
 
 .dhsc h1 {
- border-left: 3px solid #00ad93; 
+  border-left: 3px solid #00ad93;
 }
 
 .de h1 {
- border-left: 3px solid #003a69; 
+  border-left: 3px solid #003a69;
 }
 
 .dfwp h1 {
- border-left: 3px solid #00beb7; 
+  border-left: 3px solid #00beb7;
 }
 
 .hmrc h1 {
- border-left: 3px solid #009390;
+  border-left: 3px solid #009390;
 }
 
 .mod h1 {
- border-left: 3px solid #4d2942;
+  border-left: 3px solid #4d2942;
 }
 
 .ef h1 {
- border-left: 3px solid #CF102D;
+  border-left: 3px solid #CF102D;
 }
 
 .ddcm h1 {
@@ -904,11 +937,11 @@ g.c3-axis-y > g:last-child {
 }
 
 .oda-table td:last-child {
-  text-align: center; 
+  text-align: center;
 }
 
 .oda-table td:first-child {
-  text-align: left; 
+  text-align: left;
 }
 
 .ogdDepartment {
@@ -916,26 +949,27 @@ g.c3-axis-y > g:last-child {
   font-size: 1.5em;
 }
 
-#funding-organisations ul li{
+#funding-organisations ul li {
   list-style: none;
 }
 
 .more-info-container table {
-border: none;
-width: 100%;
+  border: none;
+  width: 100%;
 }
+
 .more-info-container table thead {
-background: none;
+  background: none;
 }
 
 .more-info-container table thead tr th {
-font-size: 1.9em;
-padding: 30px 0 20px 0;
-border-top: 1px solid #ddd;
+  font-size: 1.9em;
+  padding: 30px 0 20px 0;
+  border-top: 1px solid #ddd;
 }
 
 .more-info-container table tbody tr td {
-padding: 9px 0px;
+  padding: 9px 0px;
 }
 
 .dataTables_length select {
@@ -959,9 +993,7 @@ padding: 9px 0px;
   cursor: pointer;
 }
 
-.dt-buttons {
-
-}
+.dt-buttons {}
 
 .bottom-table,
 .bottom-table em {
@@ -1005,7 +1037,7 @@ padding: 9px 0px;
   border: none;
   padding: 0 !important;
   margin: 0 !important;
-  display: contents; 
+  display: contents;
 }
 
 .no-style legend {
@@ -1013,11 +1045,11 @@ padding: 9px 0px;
 }
 
 .search-title {
-  line-height:0.6em; 
-  font-size: 1.5em; 
-  float: left; 
-  font-weight: bold; 
-  margin-top: 14px; 
+  line-height: 0.6em;
+  font-size: 1.5em;
+  float: left;
+  font-weight: bold;
+  margin-top: 14px;
   margin-bottom: 14px;
 }
 
@@ -1035,21 +1067,21 @@ padding: 9px 0px;
 
 #cookieDiv {
   position: fixed;
-    z-index: 100;
-    -webkit-box-shadow: 0 -5px 10px 2px rgba(172,171,171,.3);
-    box-shadow: 0 -5px 10px 2px rgba(172,171,171,.3);
-    text-align: left;
-    padding: 16px!important;
-    width: 480px;
-    right: 16px;
-    left: auto;
-    bottom: 16px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    background: white;
-    color: black;
-    display: none;
-    font-size: 1.1em;
+  z-index: 100;
+  -webkit-box-shadow: 0 -5px 10px 2px rgba(172, 171, 171, .3);
+  box-shadow: 0 -5px 10px 2px rgba(172, 171, 171, .3);
+  text-align: left;
+  padding: 16px !important;
+  width: 480px;
+  right: 16px;
+  left: auto;
+  bottom: 16px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background: white;
+  color: black;
+  display: none;
+  font-size: 1.1em;
 }
 
 #cookieDiv h1 {
@@ -1064,7 +1096,7 @@ padding: 9px 0px;
 #acceptCookie {
   border: 2px solid;
   border-radius: 4px;
-  padding: 8px 16px!important;
+  padding: 8px 16px !important;
   font-size: 1em;
   margin: 4px 8px 4px 0;
   font-weight: 400;
@@ -1080,7 +1112,7 @@ padding: 9px 0px;
 #rejectCookie {
   border: 2px solid;
   border-radius: 4px;
-  padding: 8px 16px!important;
+  padding: 8px 16px !important;
   font-size: 1em;
   margin: 4px 8px 4px 0;
   font-weight: 400;
@@ -1095,11 +1127,11 @@ padding: 9px 0px;
 #cookieContent {
   font-size: 1.1em;
   line-height: 1.5em;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-@media screen and (max-width: 600px){
-  #cookieDiv{
+@media screen and (max-width: 600px) {
+  #cookieDiv {
     width: 95%;
   }
 }
@@ -1109,14 +1141,14 @@ padding: 9px 0px;
   margin-top: 0px;
 }
 
-.govuk-breadcrumbs__list-item:before {
+/* .govuk-breadcrumbs__list-item:before {
   border-color: white;
 }
 
 .govuk-breadcrumbs,
 .govuk-breadcrumbs__link:link, .govuk-breadcrumbs__link:visited, .govuk-breadcrumbs__link:hover, .govuk-breadcrumbs__link:active, .govuk-breadcrumbs__link:focus {
   color: white;
-}
+} */
 
 table.govuk-table thead {
   background: white;
@@ -1125,6 +1157,7 @@ table.govuk-table thead {
 table.govuk-table {
   border: none;
 }
+
 /*Tooltips*/
 .tooltip {
   position: relative;
@@ -1162,6 +1195,6 @@ table.govuk-table {
   visibility: visible;
 }
 
-.input--error{
+.input--error {
   border: 2px solid #d4351c !important;
 }
