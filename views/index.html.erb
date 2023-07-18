@@ -47,9 +47,12 @@ layout: cw_landing
                 <div id="event-name-hint" class="govuk-hint">
                     Enter location, sector, organisation or keyword
                 </div>
-                <form id="mid-search-form" action="/search" class="app-search-form" method="POST">
-                    <div class="app-search-form__textbox">
-                        <input class="govuk-input" id="query" name="query" type="text">
+                <form id="searchForm" action="/search" class="app-search-form" method="POST"  onsubmit="return validateSearch()">
+                    <p id="searchQueryError" class="govuk-error-message app-display-none">
+                        <span class="govuk-visually-hidden">Error:</span> Please enter a search query
+                    </p>
+                    <div class="app-search-form__textbox" id="searchQueryInput">
+                        <input class="govuk-input query-input" id="query" name="query" type="text">
                         <button class="app-search-form__button" id="front-search-submit"
                             data-module="govuk-button"></button>
                     </div>
@@ -183,4 +186,16 @@ layout: cw_landing
             window.top5Countries = <%=top_5_countries.to_json %>;
         window.top5Sectors = <%=what_we_do.to_json %>;
     });    
+</script>
+
+<script>
+    function validateSearch() {
+        let searchQuery = document.forms["searchForm"]["query"].value;
+        let searchErrorMessage = document.getElementById("searchQueryError");
+        if (searchQuery == "") {
+            searchErrorMessage.style.display = "block";
+            document.forms["searchForm"]["query"].className = "govuk-input govuk-input--error";
+            return false;
+        }
+    }
 </script>

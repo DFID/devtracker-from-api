@@ -24,10 +24,10 @@
         </div>
     </div>
 </header>
-<form action="/search" method="post" id="mid-search-form">
+<form action="/search" method="post" id="headerSearchForm" onsubmit="return validateHeaderSearch()">
     <div id="globalSearch" class="app-header__search app-element-hidden">
         <div class="govuk-width-container">
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" id="headerSearchFormGroup">
                 <h1 class="govuk-label-wrapper">
                     <label class="govuk-label govuk-label--m" for="event-name">
                         Search Programmes
@@ -36,6 +36,9 @@
                 <div id="event-name-hint" class="govuk-hint">
                     Enter location, sector, organisation or keyword
                 </div>
+                <p id="headerSearchErrorMessage" class="govuk-error-message app-display-none">
+                    <span class="govuk-visually-hidden">Error:</span> Please enter a search query
+                 </p>
                 <div class="app-header__search-input">
                     <input class="govuk-input" id="query" name="query" type="text" aria-describedby="event-name-hint">
                     <button data-module="govuk-button" id="front-search-submit"></button>
@@ -94,3 +97,18 @@
         </div>
     </nav>
 </div>
+
+<script>
+    function validateHeaderSearch() {
+        let headerSearchQuery = document.forms["headerSearchForm"]["query"].value;
+        let headerSearchFormGroup = document.getElementById("headerSearchFormGroup"); 
+        let headerSearchInput = document.getElementById("query");
+        let headerSearchErrorMessage = document.getElementById("headerSearchErrorMessage");
+        if (headerSearchQuery == "") {
+            headerSearchErrorMessage.style.display = "block";
+            headerSearchFormGroup.className = "govuk-form-group govuk-form-group--error";
+            headerSearchInput.className = "govuk-input govuk-input--error";
+            return false;
+        }
+    }
+</script>

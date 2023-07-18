@@ -56,10 +56,13 @@
     <div class="govuk-grid-column-full">
         <%if searchType == 'F'%>
             <div class="app-card govuk-!-margin-top-5 govuk-!-margin-bottom-2">
-                <form action="/search" class="app-search-form govuk-!-margin-top-1" method="post" enctype="multipart/form-data">
+                <form id="searchForm" action="/search" class="app-search-form govuk-!-margin-top-1" method="post" onsubmit="return validateSearch()">
                     <div id="event-name-hint" class="govuk-hint">
                         Enter location, sector, organisation or keyword
                     </div>
+                    <p id="searchQueryError" class="govuk-error-message app-display-none">
+                        <span class="govuk-visually-hidden">Error:</span> Please enter a search query
+                    </p>                    
                     <div class="app-search-form__textbox">
                         <input class="govuk-input" value="<%= query %>" id="query" name="query" type="text">
                         <button class="app-search-form__button" data-module="govuk-button"></button>
@@ -75,6 +78,17 @@
                         </div>
                     </div>
                 </form>
+                <script>
+                    function validateSearch() {
+                        let searchQuery = document.forms["searchForm"]["query"].value;
+                        let searchErrorMessage = document.getElementById("searchQueryError");
+                        if (searchQuery == "") {
+                            searchErrorMessage.style.display = "block";
+                            document.forms["searchForm"]["query"].className = "govuk-input govuk-input--error";
+                            return false;
+                        }   
+                    }
+                </script>
             </div>
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
