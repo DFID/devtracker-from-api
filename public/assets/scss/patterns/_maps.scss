@@ -1,0 +1,42 @@
+.map {
+    margin: 0 0 5px 0;
+
+    .info {
+        background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;
+        border-radius: 0;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        padding: 6px;
+    }
+
+}
+
+#countryMap img,
+object,
+embed {
+    max-width: none;
+}
+
+#map.static-background svg {
+    height: 100%;
+    width: 100%;
+    margin-top: 5px;
+}
+
+#countryMap {
+    height: 450px;
+}
+
+#map {
+    width: 100%;
+    height: 545px;
+}
+
+.static-background {
+    margin: 0 0 5px 0;
+    position: relative;
+    background-image: url(/images/map_transparent.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 1px solid $govuk-border-colour;
+}

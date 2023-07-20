@@ -10,11 +10,6 @@
 -----------------------------------------------*/
 /*  
 -----------------------------------------------*/
-/* @media screen {
-  body {
-    background: #dee0e2;
-  }
-} */
 .clr-fix:before,
 .clr-fix:after {
   content: " ";
@@ -31,18 +26,15 @@
     outline: 3px solid #FFBF47;
     color: #000 !important;
   }
-
   input:focus,
   textarea:focus,
   select:focus {
     outline: 3px solid #ffbf47;
   }
-
   #nav-entry p a:hover {
     text-decoration: none;
   }
 }
-
 /* Main header/masthead styles 
 -----------------------------------------------*/
 #global-header {
@@ -116,7 +108,7 @@
   margin-top: 0;
 }
 
-#page-title img+div {
+#page-title img + div {
   padding-right: 90px;
 }
 
@@ -166,7 +158,6 @@
 }
 
 @media screen and (max-width: 667px) {
-
   /* hide the search at the top till we sort it out */
   #global-header #search,
   .map,
@@ -174,52 +165,40 @@
   #countryMapDisclaimer {
     display: none;
   }
-
   .tab-bar li a {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
     white-space: nowrap;
   }
-
   a.api-link {
     display: none;
   }
-
   .tab-bar-container .button-row span {
     width: 100%;
     padding-right: 65px;
   }
-
   .tab-bar-container .button-row span .button.serious {
     width: 100%;
   }
-
   #search-bar label h3 {
     display: block !important;
     margin: 0 0 10px;
   }
 }
-
 @media screen and (max-width: 600px) {
   #search-bar input.button {
     display: block;
     width: 100%;
   }
-
   #search-bar #query {
     display: block !important;
     width: 100%;
     margin-bottom: 10px;
   }
 }
-
 #search-bar form {
   margin: 0;
-}
-
-.map {
-  margin-top: -20px;
 }
 
 /* content grouping styles
@@ -312,7 +291,7 @@ Sector breakdown
   float: left;
 }
 
-.sector-list div.progress .meter+span {
+.sector-list div.progress .meter + span {
   float: right;
   display: inline-block;
   padding-top: 2px;
@@ -376,43 +355,35 @@ Sector breakdown
     width: 49% !important;
     float: left !important;
   }
-
-  #nav-entry .col+.col {
+  #nav-entry .col + .col {
     float: right !important;
   }
 }
-
 @media screen and (max-width: 600px) {
   #nav-entry .col {
     width: 100% !important;
   }
-
   .image-wrapper img {
     display: none;
   }
-
   .link-wrapper {
     margin: 0;
     width: 100%;
     background: none;
   }
-
   #nav-entry p {
     margin: 0;
   }
-
   #nav-entry .col a {
     display: block;
     padding-bottom: 10px;
     border-bottom: 1px solid #dee0e2;
     background: url(../images/nav-next-arrow.png) no-repeat 100% 50%;
   }
-
   #nav-entry .col a:hover {
     text-decoration: underline;
   }
 }
-
 /* tab bar nav styles
 -----------------------------------------------*/
 .projects-nav {
@@ -472,7 +443,6 @@ Sector breakdown
     padding: 0 15px;
     display: block;
   }
-
   .projects-nav p {
     display: block;
     text-align: center;
@@ -480,24 +450,20 @@ Sector breakdown
     margin: 10px 0;
     color: #fff;
   }
-
   .tab-bar li {
     color: #FFF;
     float: left;
     width: 34%;
     text-align: center;
   }
-
   .tab-bar li:first-child,
   .tab-bar li:last-child {
     width: 33%;
   }
-
   .tab-bar li a span {
     display: none;
   }
 }
-
 .budget-total {
   float: right;
   min-height: 1px;
@@ -526,16 +492,13 @@ Sector breakdown
     position: relative;
     display: block;
   }
-
   .budget-total p {
     text-align: center;
   }
-
   .budget-total p span {
     display: inline;
   }
 }
-
 /* Top 5 lists
 -----------------------------------------------*/
 @media screen and (min-width: 767px) {
@@ -545,7 +508,6 @@ Sector breakdown
     border-right: 1px solid #dee0e2;
   }
 }
-
 .top-5s {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -621,7 +583,7 @@ Sector breakdown
   font-size: 1.2em;
 }
 
-#filter h3+ul {
+#filter h3 + ul {
   margin-bottom: 20px;
 }
 
@@ -728,12 +690,10 @@ a.button {
     position: relative;
     display: block;
   }
-
   .button-row span {
     text-align: center;
   }
 }
-
 /* Content Styles 
 -----------------------------------------------*/
 .row-summary {
@@ -860,21 +820,18 @@ a.button {
 }
 
 @media screen and (max-width: 700px) {
-
   .transactions-table th,
   .transactions-table td {
     float: left;
     margin-right: 20px;
     width: auto !important;
   }
-
   .transactions-table tbody th {
     width: 100% !important;
     display: block;
     padding-right: 0;
   }
 }
-
 /* -----------------------------------------
    info list Styles 
 -----------------------------------------------*/
