@@ -1463,7 +1463,11 @@ end
             projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
           else
             projectDataHash[c] = {}
-            projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+            if c =='FK'
+              projectDataHash[c]["country"] = 'Falkland Islands'
+            else
+              projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+            end
             projectDataHash[c]["id"] = c
             if(element['activity_status_code'].to_i == 2)
               projectDataHash[c]["projects"] = 1
