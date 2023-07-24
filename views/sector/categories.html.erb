@@ -22,7 +22,7 @@
                    <% (category_list['sectorData']).each do |category| %>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" data-sort-value="<%=category['name']%>">
-                                                  <a href="/sector/<%=category['parentCode']%>/categories/<%=category['code']%>" class="govuk-link"><%=category['name']%></a>
+                            <a href="/sector/<%=category['parentCode']%>/categories/<%=category['code']%>" class="govuk-link"><%=category['name']%></a>
                             <div class="app-progress-bar">
                                 <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*category['budget'].to_f/category_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>
                                 <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
@@ -33,9 +33,7 @@
                 <% end %>
             </tbody>
         </table>
-
-        <p class="govuk-body"> <a id='view-all-relevant-sector-projects' class="govuk-link" href="/sector/<%=category_list['sectorHierarchyPath']['highLevelSectorCode']%>/projects">View All <%= category_list['sectorHierarchyPath']['highLevelSectorDescription']%> Programmes</a>
-    </p>
+        <p class="govuk-body"> <a id='view-all-relevant-sector-projects' class="govuk-link" href="/sector/<%=category_list['sectorHierarchyPath']['highLevelSectorCode']%>/projects">View All <%= category_list['sectorHierarchyPath']['highLevelSectorDescription']%> Programmes</a></p>
 
         </div>
 </div>
