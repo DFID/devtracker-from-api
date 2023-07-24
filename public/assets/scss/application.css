@@ -7391,7 +7391,7 @@ body {
   }
 }
 .app-has-side-bar__left {
-  min-width: 225px;
+  width: 240px;
 }
 .app-has-side-bar__right {
   padding-left: 0;
@@ -8034,14 +8034,15 @@ body {
 .app-collapsible-title {
   display: flex;
   align-items: center;
+  font-size: 17px;
 }
-.app-collapsible-title__link {
+l .app-collapsible-title__link {
   text-decoration: none;
 }
-.app-collapsible-title__link:hover {
+l .app-collapsible-title__link:hover {
   text-decoration: underline;
 }
-.app-collapsible-title__link:focus {
+l .app-collapsible-title__link:focus {
   text-decoration: none;
 }
 .app-collapsible-title__icon {
