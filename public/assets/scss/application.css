@@ -8565,6 +8565,12 @@ l .app-collapsible-title__link:focus {
   color: #0b0c0c;
 }
 
+@media (min-width: 40.0625em) {
+  .app-summary-list__key {
+    width: 60%;
+  }
+}
+
 .map {
   margin: 0 0 5px 0;
 }
