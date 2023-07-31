@@ -4796,8 +4796,6 @@
   .js-enabled .govuk-tabs__tab:hover {
     color: rgba(11, 12, 12, 0.99);
   }
-}
-@media (min-width: 40.0625em) {
   .js-enabled .govuk-tabs__tab:active, .js-enabled .govuk-tabs__tab:focus {
     color: #0b0c0c;
   }
@@ -4816,8 +4814,6 @@
     bottom: 0;
     left: 0;
   }
-}
-@media (min-width: 40.0625em) {
   .js-enabled .govuk-tabs__panel {
     margin-bottom: 0;
     padding: 30px 20px;
@@ -4827,8 +4823,6 @@
   .js-enabled .govuk-tabs__panel > :last-child {
     margin-bottom: 0;
   }
-}
-@media (min-width: 40.0625em) {
   .js-enabled .govuk-tabs__panel--hidden {
     display: none;
   }
@@ -8596,6 +8590,8 @@ embed {
 
 #countryMap {
   height: 450px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
 }
 
 #map {
@@ -8610,4 +8606,57 @@ embed {
   background-repeat: no-repeat;
   background-size: contain;
   border: 1px solid #b1b4b6;
+}
+
+.leaflet-touch .leaflet-bar a:first-child {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.leaflet-touch .leaflet-bar a:last-child {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+  border: 1px solid #ccc !important;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background-color: #fff !important;
+  border-bottom: 1px solid #ccc !important;
+  width: 26px !important;
+  height: 26px !important;
+  line-height: 26px !important;
+  display: block;
+  text-align: center !important;
+  text-decoration: none !important;
+  color: black !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  font: bold 18px "Lucida Console", Monaco, monospace !important;
+  text-indent: 1px !important;
+  border-radius: 0 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 10px 25px 10px 20px !important;
+}
+
+.leaflet-container .leaflet-popup-content a {
+  display: inline-block !important;
+  color: #1d70b8 !important;
+  margin-bottom: 5px !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: #0b0c0c !important;
 }

@@ -31,86 +31,67 @@
                     else{
                         tempEmail = tempEmail + EmailArray[1] + '.' + EmailArray[2];
                     }
-                    $('#showEmail').html('<a href="mailto:'+tempEmail+'">'+tempEmail+'</a>');
+                    $('#showEmail').html('<a href="mailto:'+tempEmail+'" class="govuk-link">'+tempEmail+'</a>');
                 });
             <%end%>
         <%end%>
     });
 </script>
-<div class="hero">
-    <div id="page-title" class="row">
-        <div class="twelve columns">
-            <div class="nine columns">
-                <div class="govuk-breadcrumbs">
-                    <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                        <li id="countryOrRegion" style="display: none" class="govuk-breadcrumbs__list-item"></li>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title_narrative_text'].first %>"><%= project['title_narrative_text'].first %></li>
-                    </ol>
-                </div>
-                <h2 style="color: rgba(255,255,255,0.5);font-size: 1em;clear: left;margin: 0px 0px -10px 0px;padding-top: 20px;font-weight: normal">
-                    <%= reporting_organisationv2(project) %>
-                </h2>
-                <h1 style="font-size:1.5em">
-                    <%= project['title_narrative_text'].first %>
-                </h1>
-            </div>
-            <div class="two columns">
-                <% if(is_dfid_project(project['iati_identifier'])) %>
-                    <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-                <%end%>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="twelve columns">
-            <div class="tab-bar-container">
-                <div class="row">
-                    <div class="projects-nav seven columns">
-                        <nav>
-                            <ul class="tab-bar">
-                                <li <%= active=="summary" ? "class='active'" : ""%>><a id='summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
-                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project.has_key?('document_link_url') ? project['document_link_url'].count : 0 %>)</a></li>
-                                <li <%= active=="components" ? "class='active'" : ""%>><a id='components' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components">Projects</a></li>
-                                <li <%= active=="transactions" ? "class='active transactions-tab'" : "class='transactions-tab'"%> style="display: none"><a id='transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
-                                <li <%= active=="partners" ? "class='active partner-tab'" : "class='partner-tab'"%> style="display: none"><a id='partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
-                                <!-- TODO: bring back in r4dDocs element -->
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="button-row five columns">
-                        <span>
-                            
-                        </span>
-                    </div>    
-                </div>
-            </div>
-        </div>
-    </div>
+
+<div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <li id="countryOrRegion" style="display: none" class="govuk-breadcrumbs__list-item"></li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title_narrative_text'].first %>"><%= project['title_narrative_text'].first %></li>
+    </ol>
 </div>
-<div class="row">
-    <div class="twelve columns">
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <span class="govuk-caption-l"><%= reporting_organisationv2(project) %></span>
+        <h1 class="govuk-heading-l"><%= project['title_narrative_text'].first %></h1>
+
+        <div class="app-project-data">
+            <%if !project['last_updated_datetime_f'].nil?%>
+                <div class="govuk-body-s app-project-data__item">
+                    <span>Last updated:</span> <%= Date.parse(project['last_updated_datetime_f']).strftime("%d/%m/%Y")%>
+                </div>
+            <%end%>
+                <%if !project['iati_identifier'].nil?%>
+                <div class="govuk-body-s app-project-data__item">
+                    <span>IATI Identifier:</span>  <%= project['iati_identifier'] %>
+                </div>
+            <%end%>
+        </div>
+
+        <nav class="moj-sub-navigation" aria-label="Sub navigation">
+            <ul class="moj-sub-navigation__list">
+                <li class="moj-sub-navigation__item"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary" id='summary' class="moj-sub-navigation__link" <%= active=="summary" ? "aria-current='page'" : ""%>>Summary</a></li>
+                <li class="moj-sub-navigation__item"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents" id='documents' class="moj-sub-navigation__link" <%= active=="documents" ? "aria-current='page'" : ""%>>Documents (<%= project.has_key?('document_link_url') ? project['document_link_url'].count : 0 %>)</a></li>
+                <li class="moj-sub-navigation__item"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components" id="components" class="moj-sub-navigation__link" <%= active=="components" ? "aria-current='page'" : ""%>>Projects</a></li>
+                <li style="display: none" class="moj-sub-navigation__item transactions-tab"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions" id="transactions" class="moj-sub-navigation__link" <%= active=="transaction" ? "aria-current='page'" : ""%>>Transactions</a></li>
+                <li style="display: none" class="moj-sub-navigation__item partner-tab"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners" id="partners" class="moj-sub-navigation__link" <%= active=="partners" ? "aria-current='page'" : ""%>>Partners</a></li>
+            </ul>
+        </nav>
+
         <% if(!is_dfid_project(project['iati_identifier'])) %>
-        <div class="govuk-inset-text" style="font-size: 14px;">
-          <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
-            <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
-                <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
-                    Please contact them (<span id='showEmail' style='color: blue; cursor: pointer'>Show Email Address</span>) if you have any questions about their data.
-                <% else %>
-                    Please contact them if you have any questions about their data.
-                <% end %>
-            <% end %>
-        </div>
-        <% end %>
-    </div>
-</div>
-<div class="row">
-    <div class="twelve columns">
-        <%if !project['last_updated_datetime_f'].nil?%>
-        <p class="last-updated"><strong>Programme Data Last Updated: <%= Date.parse(project['last_updated_datetime_f']).strftime("%d/%m/%Y")%></strong></p>
-        <% end %>
-        <%if !project['iati_identifier'].nil?%>
-            <p class="iati-id"><strong>IATI Identifier: <%= project['iati_identifier'] %></strong></p>
-        <% end %>    
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Project disclaimer
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
+                    <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
+                        <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
+                            Please contact them (<a href="#" id='showEmail' class="govuk-link">Show Email Address</a>) if you have any questions about their data.
+                        <% else %>
+                            Please contact them if you have any questions about their data.
+                        <% end %>
+                    <% end %>
+                </div>
+            </details>
+        <%end%>
     </div>
 </div>
