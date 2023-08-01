@@ -6,7 +6,7 @@
 <% if response['numFound'] > 0 %>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <div class="govuk-inset-text">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
+            <div class="govuk-inset-text govuk-!-margin-top-0 govuk-!-margin-bottom-8">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
         </div>
     </div>
     <div class="app-has-side-bar">
@@ -71,7 +71,6 @@
               </div>
         </div>
         <div class="app-has-side-bar__right <%= 'govuk-!-padding-left-0' if response['numFound'] == 0 && searchType == 'F' %>">
-            <%=searchType%>
             <div class="govuk-body app-search-count">
                 <div class="app-search-count--text">
                     Results<span name="afterFilteringAmount" style="display:inline;"></span>
@@ -131,140 +130,15 @@
         </div>
     </div>
 
-        <div class="govuk-width-container">
-            <main class="govuk-main-wrapper search-results-page">
-                      
-                       <div class="govuk-grid-row divider">
-						   
-                            <div class="govuk-grid-column-one-third results-number">
-                                <strong>Results:</strong> <span name="afterFilteringAmount" style="display:inline;"></span>
-                                <div id="resultCountHolder">
-                                    <% if (response['numFound'] > solrConfig['PageSize']) %>
-                                        <span id="numberofResults" style="display:inline;">1 - <%= solrConfig['PageSize']%></span> of <%= response['numFound']%>
-                                    <% else %>
-                                        <span id="numberofResults" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
-                                    <%end%>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-column-two-thirds">
-                                <div class="light-pagination"></div>
-                            </div>
-                            <!-- <div class="govuk-grid-column-one-half">
-                                
-                                <div class="govuk-form-group">
-                                  <select class="govuk-select" id="sort" name="sort">
-                                    <option value="20">20</option>
-                                    <option value="50" selected>50</option>
-                                    <option value="80">80</option>
-                                    <option value="100">100</option>
-                                  </select>
-                                </div>
-                            </div> -->
-                        </div>	
-					
-					
-					
-					
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-quarter filters-column">
-						<div>
-                        <h2 class="govuk-heading-m">
-                            <span>Filters</span>
-                            <span id="clearAll" style="float: right; font-size: 0.9em; font-weight: 100; cursor: pointer;color: #2e3191">Clear all</span>
-                        </h2>
-                        <div class="govuk-body">
-                            <div class="govuk-form-group">
-                                <%filters.each do |key, val|%>
-                                    <%if (val.length > 0)%>
-                                            <fieldset class="govuk-fieldset">
-                                                <legend style="width: 100%" class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                    <h3 style="float: left" class="govuk-fieldset__heading proj-filter-exp-collapse-text">
-                                                        <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                    </h3>
-                                                    <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
-                                                </legend>
-                                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
-                                                    <%val.each do |item|%>
-                                                        <div class="govuk-checkboxes__item">
-                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
-                                                                <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                <label class="govuk-label govuk-checkboxes__label">
-                                                                    <%= item['key']%>
-                                                                </label>
-                                                            <%else%>
-                                                                <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
-                                                                <label class="govuk-label govuk-checkboxes__label">
-                                                                    <%= item['key']%>
-                                                                </label>
-                                                            <%end%>
-                                                        </div>
-                                                    <%end%>
-                                                    <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
-                                                        <input class="selectedFilters" type="hidden">
-                                                    <%else%>
-                                                        <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
-                                                    <%end%>
-                                                </div>
-                                            </fieldset>
-                                    <%end%>
-                                <%end%>
-                            </div>
-                        </div>
-                    </div> 
-				</div>
-                    <div id="response-container" class="govuk-grid-column-three-quarters">
-
-                        <!-- <h2 class="govuk-heading-l">Results</h2> -->
-                        <!-- <div class="light-pagination"></div> -->
-                            <%response['docs'].each do |item|%>
-                                    <div class="govuk-grid-row divider">
-										<div class="govuk-grid-column-three-quarters">
-                                        <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative_first']%></a></h3>
-                                        <p>
-                                            <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
-                                                UK - Foreign, Commonwealth and Development Office
-                                            <%else%>
-                                                <%=item['reporting_org_narrative'].first%>
-                                            <%end%>
-                                        </p>
-                                        <p class="govuk-body description">
-                                            <%begin%>
-                                                <%=item['description_narrative'].first%>
-                                            <%rescue%>
-                                                No Description Available
-                                            <%end%>
-                                        </p>
-										</div>
-										<div class="govuk-grid-column-one-quarter">
-                                            <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common'])%></p>
-                                            <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
-                                            <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
-										</div>
-                                    </div>
-                                <br />
-                            <%end%>
-                    </div>
-                </div>
-            </main>
-            </div>
-        <%#=filters%>
-        <br/>
-        <br />
-        <%#=response%>
-
-
     <%elsif response['numFound'] == 0%>
-        <div class="row">
-            <div class="twelve columns">
-                <div class="search-result nine columns push-three">
-                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any programmes.</p><p style="margin-top:1em">Suggestions:</p>
-                    <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
-                        <li>Make sure all words are spelled correctly or try different keywords</li>
-                    </ul>
-                    <p>Search results only show active programmes. To see programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
-                </div>
-                <div class="three columns pull-nine"></div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h4 class="govuk-heading-m">No programmes found</h4>
+                <p class="govuk-body">Suggestions:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>Make sure all words are spelled correctly or try different keywords</li>
+                    <li>Search results only show active Programmes. </li>
+                </ul>
             </div>
         </div>
     <%end%>
@@ -533,7 +407,8 @@
             $('.light-pagination').pagination({
                 items: projectCount,
                 itemsOnPage: pageSize,
-                cssStyle: 'compact-theme',
+                prevText: "Previous",
+                cssStyle: 'app-pagination govuk-body',
                 onPageClick: function(pageNumber, event){
                     getFilteredResponse((pageNumber-1)*pageSize, false, pageNumber)
                 }

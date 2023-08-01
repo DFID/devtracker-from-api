@@ -1,0 +1,48 @@
+.app-top6-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: govuk-spacing(5) 0 govuk-spacing(5) 0;
+
+    @include govuk-media-query($from: tablet) {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+}
+
+.app-top6-stat {
+    @include govuk-media-query($from: tablet) {
+        flex: 1 1 calc(50% - 40px);
+    }
+
+    &__data {
+        display: flex;
+        flex-direction: column;
+        min-height: 140px;
+        padding: govuk-spacing(4);
+        background-color: govuk-colour("light-grey");
+
+        @include govuk-media-query($from: tablet) {
+            margin-top: 0;
+        }
+
+        &--caption {
+            min-height: 55px;
+            font-size: 17px;
+        }
+
+        &--value {
+            margin-top: auto;
+            margin-bottom: 0;
+        }
+    }
+
+    &__source {
+        display: flex;
+        gap: 10px;
+        padding: govuk-spacing(2) govuk-spacing(1);
+        background-color: #fff;
+        border-bottom: 1px solid $govuk-border-colour;
+    }
+}

@@ -57,7 +57,7 @@
                         <input type="hidden" id="countryCode" value="<%=country['code'] %>">
                     </div>
                 </div>
-                <span class="govuk-caption-m govuk-!-font-size-14 govuk-!-margin-bottom-5">Disclaimer: Country borders do not necessarily reflect the UK Government's official position.</span>
+                <%= erb :'partials/_map_disclaimer'%> 
             </div>
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             <div class="app-chart-row">
