@@ -73,25 +73,5 @@
                 <li style="display: none" class="moj-sub-navigation__item partner-tab"><a href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners" id="partners" class="moj-sub-navigation__link" <%= active=="partners" ? "aria-current='page'" : ""%>>Partners</a></li>
             </ul>
         </nav>
-
-        <% if(!is_dfid_project(project['iati_identifier'])) %>
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        Project disclaimer
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
-                    <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
-                        <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
-                            Please contact them (<a href="#" id='showEmail' class="govuk-link">Show Email Address</a>) if you have any questions about their data.
-                        <% else %>
-                            Please contact them if you have any questions about their data.
-                        <% end %>
-                    <% end %>
-                </div>
-            </details>
-        <%end%>
     </div>
 </div>

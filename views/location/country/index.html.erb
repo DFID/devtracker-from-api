@@ -52,7 +52,7 @@
         </div>
     </details>
     
-    <table class="govuk-table" data-module="moj-sortable-table">
+    <table class="govuk-table datatable">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header" aria-sort="ascending">Country</th>
@@ -79,12 +79,11 @@
 <script type="text/javascript">
   var jq3 = jQuery.noConflict(true);
   jq3(document).ready(function() {
-    jq3('#dataTable').DataTable({
+    jq3('.datatable').DataTable({
       "info": false,
       "paging": false,
       "searching": false
     });
-    jq3('#dataTable').show();
     jq3('.repOrgTable').DataTable({
       "info":     false,
       "paging": false,

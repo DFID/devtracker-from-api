@@ -2,6 +2,27 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+
+        <% if(!is_dfid_project(project['iati_identifier'])) %>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Project disclaimer
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
+                    <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
+                        <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
+                            Please contact them (<a href="#" id='showEmail' class="govuk-link">Show Email Address</a>) if you have any questions about their data.
+                        <% else %>
+                            Please contact them if you have any questions about their data.
+                        <% end %>
+                    <% end %>
+                </div>
+            </details>
+        <%end%>
+
         <%if project.has_key?('description_narrative')%>
             <%if project['description_narrative'].length == 1%>
             <h2 class="govuk-heading-m">Description</h2>
@@ -53,8 +74,17 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
-            <h3 class="govuk-heading-s">Location <%= countryOrRegion[:label] %></h3>
-            <p class="govuk-body">The country, countries or regions that benefit from this Programme.</p>
+            <h3 class="govuk-heading-s">Location</h3>
+            <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    The country, countries or regions that benefit from this Programme.
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <%= countryOrRegion[:label] %>
+            </div>
+        </details>
         <%#end%>            
         <%if project.has_key?('location')%>
             <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link govuk-link">CSV</a>
@@ -91,12 +121,11 @@
             var regionCount = <%= countryOrRegion[:regionsCount]%>;
         </script>
         <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
-
         <%= erb :'partials/_map_disclaimer'%> 
     </div>
 </div>
 
-<div class="app-chart-row">
+<div class="app-chart-row govuk-!-margin-top-6">
     <div class="app-chart-row__chart">
         <h3 class="govuk-heading-s app-chart-row__chart--heading">Status <strong class="govuk-tag govuk-tag--green app-chart-row__chart--heading-tag"><%= activity_status(project['activity_status_code']) %></strong></h3>
         <p class="govuk-body-s app-chart-row__chart--intro">The current stage of the Programme, consistent with the International Aid Transparency Initiative's (IATI) classifications.</p>
@@ -173,16 +202,15 @@
                     <% if participatingOrgType != nil && participatingOrgData.length > 0%>
                         <li>
                             <span><%= participatingOrgType %></span>
-                            <% participatingOrgData.each_with_index { |org, index| %>
-                                <% begin %>
-                                    <a href="/search?query=<%= org%>&includeClosed=0" class="govuk-link" target="_blank"><%= org%></a>
-                                <% rescue %>
-                                    Name not available
-                                <% end %>
-                                <% if index != participatingOrgData.size - 1 %>
-                                    ¦ 
-                                <% end %>
-                            <% } %>
+                            <div class="app-display-flex-column">
+                                <% participatingOrgData.each_with_index { |org, index| %>
+                                    <% begin %>
+                                        <a href="/search?query=<%= org%>&includeClosed=0" class="govuk-link govuk-!-display-block govuk-!-margin-bottom-2" target="_blank"><%= org%></a>
+                                    <% rescue %>
+                                        Name not available
+                                    <% end %>
+                                <% } %>
+                            </div>
                         </li>
                     <% end %>
                 <% } %>
@@ -212,7 +240,6 @@
 
 
 <div class="row">
-
     <div class="twelve columns">
         <%if policyMarkers.length > 0%>
             <div class="country-info-container policy-marker-container">  
@@ -433,14 +460,15 @@
  </script>
 </div>
 
-<div class="govuk-grid-row govuk-!-margin-top-8">
+  <div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-full">
-        <strong class="govuk-tag govuk-tag--blue govuk-!-margin-bottom-3">JSON DATA</strong>
-        <div>
-            <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="govuk-link" target="_blank">Download IATI Data for <%= project['iati_identifier']%></a>
-            <%if !project['last_updated_datetime'].nil?%>
-                <span class="govuk-!-margin-left-1"> - Programme data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></span>
-            <% end %>        
+        <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Data for <%= project['iati_identifier']%></p>
+        <%if !project['last_updated_datetime'].nil?%>
+            <span class="govuk-caption-m govuk-!-font-size-16">Programme data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></span>
+        <% end %>
+        </p>
+        <div class="app-download-data">
+            <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>
         </div>
     </div>
 </div>

@@ -1,69 +1,59 @@
 <%= erb :'partials/_projects-header', :locals => { :project => project, :active => "documents"} %>
 
-<div class="row">
-    <div class="twelve columns summary">
-      <h2>Documents</h2>
-      <div class="row">
-      </div>
-      <div style="color: grey; margin-top: 5px; font-size: 1em">
-        <% if(is_dfid_project(project['iati_identifier'])) %>
-          <p>Some documents can be excluded due to privacy or security risks. Dates in brackets refer to the date the document was first published.</p>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-m">Documents</h2>
+      <% if(is_dfid_project(project['iati_identifier'])) %>
+        <p class="govuk-body">Some documents can be excluded due to privacy or security risks. Dates in brackets refer to the date the document was first published.</p>
+      <% end %>
+      <div class="govuk-!-margin-top-8">
+        <%if project.has_key?('document_link_title_narrative') %>
+          <% project['document_link_title_narrative'].each_with_index do |document, index| %>
+              <%begin%>
+                <%
+                t_url = project['document_link_url'][index]
+                if t_url.include? "http://iati.fcdo."
+                  t_url = t_url.sub! 'http:', 'https:'
+                end
+                t_url_txt = document.gsub(/\.[^.]*$/, '')
+                t_code = project.has_key?('document_link_language_code') ? project['document_link_language_code'][index] : 'en'
+                t_title = project['document_link_title_narrative_lang'][index]
+                categoryCodes = project['document-link.category-codes-combined'][index].split(',')
+              %>                
+              <div class="app-document">
+                  <div class="app-document--name">
+                      <img src="/assets/images/icon-document.svg" alt="Document Icon">
+                      <a class="govuk-body govuk-link govuk-!-margin-bottom-0" href="<%= t_url %>"><%= t_url_txt %></a>
+                  </div>
+                  <% if t_code != "en" then%>
+                    <p class="govuk-body app-document--info">
+                        <span class="type">
+                            <abbr title="<%= t_title %>"><%= t_title %></abbr>
+                        </span>
+                    </p>
+                  <% end %>
+                  <div class="app-document--tags">
+                  <% categoryCodes.each do |category| %>
+                      <%
+                        begin
+                          cat = cateogies.select{|s| s['code'].to_s == category.to_s}.first
+                        rescue
+                          print(category)
+                        end
+                      %>
+                      <strong class="govuk-tag app-document--tags-tag">
+                        <%= cat['text']%>
+                      </strong>
+                    <% end %>
+                  </div>
+              </div>
+            <%rescue%>
+              <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk" class="govuk-link">site admins</a> know of this.</p>
+            <%end%>
+          <% end %>
         <% end %>
       </div>
-        <table class="results-list">
-            <thead class="visually-hidden">
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Doc Type</th>
-                    <th scope="col">Categories</th>
-                </tr>
-            </thead>
-            <tbody>
-              <%if project.has_key?('document_link_title_narrative') %>
-                <% project['document_link_title_narrative'].each_with_index do |document, index| %>
-                  <%begin%>
-                    <%
-                    t_url = project['document_link_url'][index]
-                    if t_url.include? "http://iati.fcdo."
-                      t_url = t_url.sub! 'http:', 'https:'
-                    end
-                    t_url_txt = document.gsub(/\.[^.]*$/, '')
-                    t_code = project.has_key?('document_link_language_code') ? project['document_link_language_code'][index] : 'en'
-                    t_title = project['document_link_title_narrative_lang'][index]
-                    categoryCodes = project['document-link.category-codes-combined'][index].split(',')
-                    %>
-                    <tr class="result-list-row">
-                        <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
-                        <% if t_code != "en" then%>
-                          <td scope="col">
-                              <span class="language">
-                                <%= t_title %>
-                              </span>
-                          </td>
-                        <% end %>
-                        <td scope="col">
-                          <% categoryCodes.each do |category| %>
-                            <%
-                              begin
-                                cat = cateogies.select{|s| s['code'].to_s == category.to_s}.first
-                              rescue
-                                print(category)
-                              end
-                            %>
-                            <span class="category">
-                              <%= cat['text']%>
-                            </span>
-                          <% end %>
-                        </td>
-                    </tr>
-                  <%rescue%>
-                    <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk">site admins</a> know of this.</p>
-                  <%end%>
-                <% end %>
-              <% end %>
-            </tbody>
-        </table>
-    </div>
+  </div>
 </div>
 
 <script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>

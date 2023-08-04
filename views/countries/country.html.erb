@@ -50,7 +50,7 @@
 
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-full">
-                <p>Download location data for <%= country['name'] %></p>
+                <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-3 govuk-!-margin-bottom-0">Download location data for <%= country['name'] %></p>
                 <div class="app-download-data">
                     <a href="/downloadLocationDataCountriesCSV/<%=country['code']%>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">CSV</strong></a>
                 </div>
@@ -124,7 +124,7 @@
         <% if(country['code'] != 'UA2') %>
             <div class="govuk-grid-row govuk-!-margin-top-3 govuk-!-margin-bottom-5">
                 <div class="govuk-grid-column-full">
-                    <p>Download IATI Activity Data for <%= country['name']%></p>
+                    <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Activity Data for <%= country['name']%></p>
                     <div class="app-download-data">
                         <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country['name'].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country['code']%>.xml" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">XML</strong></a>
                         <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country['code']%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>

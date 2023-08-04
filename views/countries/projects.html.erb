@@ -1,24 +1,18 @@
-<div class="hero">
-    <div id="page-title" class="row">
-        <div class="twelve columns">
-            <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-            <div>
-                <div class="govuk-breadcrumbs">
-                    <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country/">Aid by Location</a></li>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country['name'] %></li>
-                    </ol>
-                </div>
-                <h1>
-                    <%= country[:name] %>
-                </h1>
-            </div>
-        </div>
-    </div>
-
-    <%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects } %>
+<div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country/">Aid by Location</a></li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country['name'] %></li>
+    </ol>
 </div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l"><%= country['name'] %></h1>
+        <%= erb :'partials/_countries-tabs', :locals => { :active => "projects", :country => country, :project_count => total_projects } %>
+    </div>
+</div>
+
 <%#= erb :'partials/_project_list_countries', :locals => { :projects => projects, :oipa_api_url => oipa_api_url, :country => country, :project_count => total_projects, :countryAllProjectFilters => countryAllProjectFilters, :highLevelSectorList => highLevelSectorList, :oipa_api_url => oipa_api_url, :total_projects => total_projects, :budgetHigherBound => budgetHigherBound, :actualStartDate => actualStartDate, :plannedEndDate => plannedEndDate, :documentTypes => documentTypes, :implementingOrgTypes => implementingOrgTypes, :reportingOrgTypes => reportingOrgTypes} %>
 <%= erb :'partials/_solr-template', 
     :locals => {
