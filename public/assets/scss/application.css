@@ -8070,6 +8070,11 @@ l .app-collapsible-title__link:focus {
   color: #636a6d;
 }
 
+.app-grey-text {
+  color: #505a5f;
+  font-weight: 400;
+}
+
 .app-button {
   background-color: #012169;
 }
@@ -8806,4 +8811,9 @@ table.dataTable thead .sorting_desc::after {
 
 .govuk-table__cell--numeric {
   padding-right: 0 !important;
+}
+
+.govuk-table th,
+.govuk-table td {
+  font-size: 16px;
 }

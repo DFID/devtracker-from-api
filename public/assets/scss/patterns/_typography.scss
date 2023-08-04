@@ -21,3 +21,8 @@
         @extend %govuk-list--bullet;
     }
 }
+
+.app-grey-text {
+    color: govuk-colour("dark-grey");
+    font-weight: 400;
+}

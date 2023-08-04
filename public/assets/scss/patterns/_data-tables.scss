@@ -74,3 +74,11 @@ table.dataTable thead .sorting_desc::after {
 .govuk-table__cell--numeric {
     padding-right: 0 !important;
 }
+
+.govuk-table {
+
+    th,
+    td {
+        font-size: 16px;
+    }
+}
