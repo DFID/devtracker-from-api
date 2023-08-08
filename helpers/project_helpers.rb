@@ -174,7 +174,7 @@ module ProjectHelpers
 
     def get_funding_project_countv2(projectId)
         begin
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=iati_identifier:#{projectId}* AND transaction_type:1&fl=iati_identifier")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}* AND transaction_type:1&fl=iati_identifier")
             project = JSON.parse(oipa)['response']['numFound']
         rescue
             project = 0
@@ -183,7 +183,7 @@ module ProjectHelpers
 
     def get_funded_project_countv2(projectId)
         begin
-            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/transaction/?q=transaction_provider_org_provider_activity_id:#{projectId}* AND !iati_identifier:(#{projectId}*)&fl=iati_identifier&rows=1")
+            oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=transaction_provider_org_provider_activity_id:#{projectId}* AND !iati_identifier:(#{projectId}*)&fl=iati_identifier&rows=1")
             project = JSON.parse(oipa)['response']['numFound']
         rescue
             project = 0
@@ -451,7 +451,7 @@ module ProjectHelpers
     end
 
     def get_transaction_countv2(projectId)
-        oipaTransactionURL = settings.oipa_api_url_other + "/transaction/?q=iati_identifier:#{projectId}*&fl=transaction_ref"
+        oipaTransactionURL = settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}*&fl=transaction_ref"
         tCount = 0
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)['response']['numFound']
         # initialPull.each do |item|
@@ -805,7 +805,7 @@ module ProjectHelpers
         staticCountriesList = JSON.parse(File.read('data/dfidCountries.json')).sort_by{ |k| k["name"]}
         # current_first_day_of_financial_year = first_day_of_financial_year(DateTime.now)
         # current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,related_activity_type,related_activity_ref&rows=50000"
         projectTracker = []
         pulledData = RestClient.get newApiCall
         pulledData  = JSON.parse(pulledData)['response']['docs']
@@ -1955,7 +1955,7 @@ module ProjectHelpers
         current_last_day_of_financial_year = last_day_of_financial_year(DateTime.now)
         #OIPA V3.1
         #oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{current_first_day_of_financial_year}&budget_period_end=#{current_last_day_of_financial_year}&group_by=recipient_country&aggregations=count,value&order_by=recipient_country")
-        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + 'budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
+        oipaCountryProjectBudgetValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND budget_period_start_iso_date:['+current_first_day_of_financial_year.to_s+'T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO '+current_last_day_of_financial_year.to_s+'T00:00:00Z]&json.facet={"items":{"type":"terms","field":"recipient_country_code","limit":-1,"facet":{"value":"sum(budget_value)","name":{"type":"terms","field":"recipient_country_name","limit":1},"region":{"type":"terms","field":"recipient_region_code","limit":1}}}}&rows=0')
         projectBudgetValues = JSON.parse(oipaCountryProjectBudgetValuesJSON)
         projectBudgetValues = projectBudgetValues['facets']['items']['buckets']
         #oipaCountryProjectCountJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/aggregations/?format=json&hierarchy=1&group_by=recipient_country&aggregations=count&reporting_org_identifier=#{settings.goverment_department_ids}&activity_status=2")

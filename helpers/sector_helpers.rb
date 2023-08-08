@@ -40,7 +40,7 @@ module SectorHelpers
 	end	
 
 	def high_level_sector_listv2(apiUrl, listType)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -106,7 +106,7 @@ module SectorHelpers
 	end
 
 	def sector_parent_data_listv2(apiUrl, sectorHierarchy)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		finalData = []
@@ -160,7 +160,7 @@ module SectorHelpers
 	end
 
 	def sector_parent_data_dac5(apiUrl, sectorHierarchy)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		finalData = []

@@ -57,13 +57,13 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-  set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
+  set :oipa_api_url, 'https://fcdo-prod.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
-set :oipa_api_url_other, 'https://fcdo-direct-indexing.iati.cloud/search/'
+set :oipa_api_url_other, 'https://fcdo-prod.iati.cloud/search/'
 #set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
@@ -88,8 +88,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -164,7 +164,7 @@ get '/' do  #homepage
 		## pick budget percentage for each dac5 sector code2
 		## calculate the budget amount against that perentage and add it to
 		## the high level related sector code
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(high_level_sector_list( RestClient.get newApiCall, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 'what_we_do')
 		#storeCacheData(high_level_sector_list( RestClient.get newApiCall, "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 'what_we_do')
@@ -771,7 +771,7 @@ get '/sector/?' do
 	# Get the high level sector data from the API
 	high_level_sector_list = ''
 	if (!canLoadFromCache('high_level_sector_list'))
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		storeCacheData(high_level_sector_listv2(pulledData, 'all_sectors'), 'high_level_sector_list')
 		high_level_sector_list = getCacheData('high_level_sector_list')
@@ -804,7 +804,7 @@ get '/sector/:high_level_sector_code/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
@@ -841,7 +841,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1186,7 +1186,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
@@ -1254,7 +1254,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1322,7 +1322,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1613,8 +1613,8 @@ end
 #     countriesInfo = Oj.load(File.read('data/countries.json'))
 #     country = countriesInfo.select {|country| country['code'] == countryCode}.first
 #     ## new api call
-#     #newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
-# 		newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
+#     #newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
+# 		newApiCall = settings.oipa_api_url_other + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
 #     puts newApiCall
 #     pulledData = RestClient.get newApiCall
 #     pulledData  = JSON.parse(pulledData)['response']['docs']
