@@ -3,6 +3,7 @@ module SolrHelper
     ## Filter handling driver goes below ##
     def filterDriver(filter, apiUrl, mappingFileUrl)
         finalData = []
+        apiUrl = apiUrl + '&fl=iati_identifier&rows=1'
         case filter
         ## ADDING A NEW FILTER ##
         # Main logic is to prepare an array of key/val pairs which will work as the DevTracker left hand side filter checkbox titles and values.
@@ -202,8 +203,11 @@ module SolrHelper
         mainQueryString = prepareQuery(query, queryType)
         finalFilterList = {}
         filters.each do |filter|
-            finalFilterList[filter['field']] = []
-            finalFilterList[filter['field']] = filterDriver(filter['field'], apiLink + filter['url'] + mainQueryString, filter['mappingFile'])
+            begin
+                finalFilterList[filter['field']] = []
+                finalFilterList[filter['field']] = filterDriver(filter['field'], apiLink + filter['url'] + mainQueryString, filter['mappingFile'])
+            rescue
+            end
         end
         finalFilterList
     end
