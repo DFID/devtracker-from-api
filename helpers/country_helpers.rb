@@ -207,173 +207,8 @@ module CountryHelpers
       results = resultsInfo.select {|result| result['code'] == countryCode}
   end
 
-
-  def get_country_or_region(projectId)
-      #get the data
-      # if is_dfid_project(projectId) then
-      #    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?related_activity_id=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&hierarchy=2&format=json&page_size=500")
-      # else
-      #    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_countries,recipient_regions&format=json&page_size=500")
-      # end
-      countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_country,recipient_region&format=json&page_size=500")
-      countryOrRegionData = JSON.parse(countryOrRegionAPI)
-      data = countryOrRegionData['results']
-      data.each do |d|
-        begin
-          d['recipient_country'][0].delete('id')
-          #This is a special check in place because the API is returning a different name
-          if(d['recipient_country'][0]['country']['code'].to_s == 'PS')
-            d['recipient_country'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
-          end
-        rescue
-        end
-        begin
-          d['recipient_region'][0].delete('id')
-        rescue
-        end
-      end
-      #iterate through the array
-      #countries = data.collect{ |activity| activity['recipient_countries'][0]}.uniq.compact
-      #regions = data.collect{ |activity| activity['recipient_regions'][0]}.uniq.compact
-      countries = data[0]['recipient_country']
-      regions = data[0]['recipient_region']
-      #project type logic
-      if(!countries.empty?) then 
-        numberOfCountries = countries.count
-      else 
-        numberOfCountries = 0
-      end
-
-      if(!regions.empty?) then 
-        numberOfRegions = regions.count
-      else numberOfRegions = 0
-      end
-
-      #single country case
-      if(numberOfCountries == 1 && numberOfRegions == 0) then 
-        projectType = "country"
-        name = countries[0]['country']['name']
-        code = countries[0]['country']['code']
-        breadcrumbLabel = name
-        breadcrumbUrl = "/countries/" + code
-      #single region case
-      elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
-        projectType = "region"
-        name = regions[0]['region']['name']
-        code = regions[0]['region']['code']
-        breadcrumbLabel = name
-        breadcrumbUrl = "/regions/" + code
-      #other cases - multiple countries/regions
-      #elsif (numberOfRegions > 1 && numberOfCountries == 0) then
-      #  projectType = "region"
-      else 
-        projectType = "global"
-        breadcrumbLabel = "Global"
-        breadcrumbUrl = "/location/global"
-      end
-
-      #generate the text label for the country or region
-      globalLabel = []
-      countries.map do |c|
-        country = get_country_code_name(c['country']['code'])
-        globalLabel << country[:name]
-      end
-      regions.map do |r|
-        globalLabel << r['region']['name']
-      end
-      label = globalLabel.sort.join(", ")
-
-      if (label.length == 0 && projectType == "global") then 
-        label = "Global project" 
-      end
-      puts 'country or region details sgrabbed'
-      returnObject = {
-            :recipient_countries  => countries,
-            :recipient_regions => regions,
-            :name => name,
-            :code => code,
-            :projectType => projectType,
-            :label => label,
-            :breadcrumbLabel => breadcrumbLabel,
-            :breadcrumbUrl => breadcrumbUrl,
-            :countriesCount => numberOfCountries,
-            :regionsCount => numberOfRegions
-            }
-  end
-
   def get_country_or_regionv2(projectId)
-    # countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name")
-    # #countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?iati_identifier=#{projectId}&fields=iati_identifier,recipient_country,recipient_region&format=json&page_size=500")
-    # countryOrRegionData = JSON.parse(countryOrRegionAPI)['response']['docs'].first
-    # data = countryOrRegionData
-    # data.each do |d|
-    #   begin
-    #     d['recipient_country'][0].delete('id')
-    #     #This is a special check in place because the API is returning a different name
-    #     if(d['recipient_country'][0]['country']['code'].to_s == 'PS')
-    #       d['recipient_country'][0]['country']['name'] = 'Occupied Palestinian Territories (OPT)'
-    #     end
-    #   rescue
-    #   end
-    #   begin
-    #     d['recipient_region'][0].delete('id')
-    #   rescue
-    #   end
-    # end
-    # #iterate through the array
-    # countries = data[0]['recipient_country']
-    # regions = data[0]['recipient_region']
-    # #project type logic
-    # if(!countries.empty?) then 
-    #   numberOfCountries = countries.count
-    # else 
-    #   numberOfCountries = 0
-    # end
-
-    # if(!regions.empty?) then 
-    #   numberOfRegions = regions.count
-    # else numberOfRegions = 0
-    # end
-
-    # #single country case
-    # if(numberOfCountries == 1 && numberOfRegions == 0) then 
-    #   projectType = "country"
-    #   name = countries[0]['country']['name']
-    #   code = countries[0]['country']['code']
-    #   breadcrumbLabel = name
-    #   breadcrumbUrl = "/countries/" + code
-    # #single region case
-    # elsif (numberOfRegions == 1 && numberOfCountries == 0) then 
-    #   projectType = "region"
-    #   name = regions[0]['region']['name']
-    #   code = regions[0]['region']['code']
-    #   breadcrumbLabel = name
-    #   breadcrumbUrl = "/regions/" + code
-    # #other cases - multiple countries/regions
-    # #  projectType = "region"
-    # else 
-    #   projectType = "global"
-    #   breadcrumbLabel = "Global"
-    #   breadcrumbUrl = "/location/global"
-    # end
-
-    # #generate the text label for the country or region
-    # globalLabel = []
-    # countries.map do |c|
-    #   country = get_country_code_name(c['country']['code'])
-    #   globalLabel << country[:name]
-    # end
-    # regions.map do |r|
-    #   globalLabel << r['region']['name']
-    # end
-    # label = globalLabel.sort.join(", ")
-
-    # if (label.length == 0 && projectType == "global") then 
-    #   label = "Global project" 
-    # end
-    # puts 'country or region details sgrabbed'
-    #############################################
-    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url_other + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name,recipient_country_percentage,recipient_region_percentage")
+    countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name,recipient_country_percentage,recipient_region_percentage")
     countryOrRegionData = JSON.parse(countryOrRegionAPI)['response']['docs'].first
     countries = []
     regions = []
@@ -427,7 +262,6 @@ module CountryHelpers
       breadcrumbLabel = name
       breadcrumbUrl = "/regions/" + code
     #other cases - multiple countries/regions
-    #  projectType = "region"
     else 
       projectType = "global"
       breadcrumbLabel = "Global"
@@ -442,7 +276,6 @@ module CountryHelpers
     regions.map do |r|
       globalLabel << r['region']['name']
     end
-    print(globalLabel)
     label = globalLabel.sort.join(", ")
 
     if (label.length == 0 && projectType == "global") then 
@@ -511,120 +344,9 @@ module CountryHelpers
     data
   end
 
-  def budgetBarGraphDataD(apiLink, type)
-    if type == 'i'
-      tempInfo = get_reporting_orgWise_yearly_country_budgetsSplit(RestClient.get  api_simple_log(apiLink))  
-    else
-      tempInfo = get_reporting_orgWise_yearly_country_budgetsD(RestClient.get  api_simple_log(apiLink))
-    end
-    reportingOrgList = []
-    reportingOrgList = tempInfo.keys
-    finYearList = []
-    tempInfo.each do |v|
-      tempArr = []
-      tempArr = v[1].keys
-      finYearList = (finYearList+tempArr).uniq
-    end
-    finYearList = finYearList.sort
-    columnData = {}
-    reportingOrgList.each do |o|
-      tempData = []
-      i = finYearList.length
-      j = 0
-      while j < i
-        tempData.push(0)
-        j = j + 1
-      end
-      columnData[o] = {}
-      columnData[o] = tempData
-    end
-    tempInfo.each do |key, val|
-      val.each do |k , v|
-        columnData[key][finYearList.index(k)] = v.to_f.floor(2)
-      end
-    end
-    finalData = []
-    columnData.each do |key, val|
-      tempData = []
-      tempData.push(key)
-      tempData = tempData + val
-      finalData.push(tempData)
-    end
-    finalData.each do |x|
-      x[0] = returnDepartmentName(x[0])
-    end
-    finalReportingOrgList = []
-    reportingOrgList.each do |x|
-      finalReportingOrgList.push(returnDepartmentName(x))
-    end
-    data = []
-    data.push(finalReportingOrgList)
-    data.push(finYearList)
-    data.push(finalData)
-    data
-  end
-
-  def budgetBarGraphDataDv2(countryCode)
-    #Process budgets
-    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
-    apiData = JSON.parse(apiData)['response']['docs']
-    fyTracker = []
-    repOrgs = {}
-    apiData.each do |activity|
-      if activity.has_key?('budget_period_start_iso_date')
-          activity['budget_period_start_iso_date'].each_with_index do |item, index|
-            if !repOrgs.has_key?(activity['reporting_org_ref'])
-              repOrgs[activity['reporting_org_ref']] = {}
-              repOrgs[activity['reporting_org_ref']]['orgName'] = activity['reporting_org_narrative'].first
-              repOrgs[activity['reporting_org_ref']]['orgFinYears'] = {}
-            end
-            t = Time.parse(item)
-            fy = if activity['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-            if repOrgs[activity['reporting_org_ref']]['orgFinYears'].has_key?(fy)
-              repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] + activity['budget_value'][index]
-            else
-              repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = activity['budget_value'][index]
-              if !fyTracker.include?(fy)
-                fyTracker.push(fy)
-              end
-            end
-          end
-      end
-    end
-    repOrgs
-    fyTracker.sort!
-    titleArray = []
-    fyArray = []
-    dataArray = []
-    repOrgs.each do |key, val|
-      titleArray.push(val['orgName'])
-      tempDataArray = []
-      tempDataArray.push(val['orgName'])
-      fyTracker.each do |fy|
-        if val['orgFinYears'].has_key?(fy)
-          tempDataArray.push(val['orgFinYears'][fy].round(2))
-        else
-          tempDataArray.push(0)
-        end
-      end
-      dataArray.push(tempDataArray)
-    end
-    fyTracker.each do |item|
-      e = item+1
-      f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
-      fyArray.push(f)
-    end
-    finalData = []
-    finalData.push(titleArray)
-    finalData.push(fyArray)
-    finalData.push(dataArray)
-    finalData
-  end
-
   def budgetBarGraphDataDv3(countryCode)
     #Process budgets
-    apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
-    #apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "budget/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-13&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
+    apiData = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
     apiData = JSON.parse(apiData)['response']['docs']
     fyTracker = []
     repOrgs = {}
@@ -643,7 +365,6 @@ module CountryHelpers
           end
         end
       end
-      ##
       if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
         if element.has_key?('related_budget_value')
           element['related_budget_value'].each_with_index do |data, index|
@@ -699,7 +420,6 @@ module CountryHelpers
           end
         end
       end
-		##
     end
     repOrgs
     fyTracker.sort!
@@ -731,24 +451,8 @@ module CountryHelpers
     finalData
   end
 
-
-  def get_country_region_yearwise_budget_graph_data(apiLink)
-
-      yearWiseBudgets = Oj.load(apiLink)
-      #oipa v2.2
-      #yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
-      #oipa v3.1
-      yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['value'].nil?}
-      budgetYearData = financial_year_wise_budgets(yearWiseBudgets['results'],"C")
-
-  end
-
   def get_country_region_yearwise_budget_graph_datav2(apiLink)
-
     yearWiseBudgets = Oj.load(apiLink)['response']['docs']
-    #oipa v2.2
-    #yearWiseBudgets['results'] = yearWiseBudgets['results'].select {|project| !project['budget'].nil?}
-    #oipa v3.1
     budgetYearData = financial_year_wise_budgetsv2(yearWiseBudgets,"C")
 
 end
@@ -859,67 +563,9 @@ end
       end
   end
 
-  def get_country_sector_graph_data_jsCompatible(countrySpecificsectorValuesJSONLink)
-    budgetArray = Array.new
-    resultCount = Oj.load(countrySpecificsectorValuesJSONLink)
-    c3ReadyDonutData = Array.new
-    if resultCount["count"] > 0
-        highLevelSectorListData = high_level_sector_list( countrySpecificsectorValuesJSONLink, "all_sectors", "High Level Code (L1)", "High Level Sector Description")
-        sectorWithTopBudgetHash = {}
-        highLevelSectorListData[:sectorsData].each do |sector|
-          sectorGroupPercentage = (100*sector[:budget].to_f/highLevelSectorListData[:totalBudget].to_f).round(2)
-          sectorWithTopBudgetHash[sector[:name]] = sectorGroupPercentage
-          budgetArray.push(sectorGroupPercentage)
-        end
-        budgetArray.sort!
-        #Fixing the donut data here
-        topFiveTracker = 0
-        c3ReadyDonutData[0] = []
-        otherBudgetPercentage = 0.0
-        c3ReadyDonutData[1] = []
-        while !budgetArray.empty?
-          if(topFiveTracker < 5)
-            topFiveTracker = topFiveTracker + 1
-            tempBudgetValue = budgetArray.pop
-            tempData = []
-            tempData.push(sectorWithTopBudgetHash.key(tempBudgetValue))
-            tempData.push(tempBudgetValue)
-            c3ReadyDonutData[0].push(tempData)
-            #c3ReadyDonutData[0].concat("['"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',"+tempBudgetValue.to_s+"],")
-            c3ReadyDonutData[1].push(sectorWithTopBudgetHash.key(tempBudgetValue))
-
-            #c3ReadyDonutData[1].concat("'"+sectorWithTopBudgetHash.key(tempBudgetValue)+"',")
-          else
-            otherBudgetPercentage = otherBudgetPercentage + budgetArray.pop
-          end
-        end
-        if(topFiveTracker == 5)
-          tempData = []
-          tempData.push('Others')
-          tempData.push(otherBudgetPercentage.round(2))
-          c3ReadyDonutData[0].push(tempData)
-          #c3ReadyDonutData[0].concat("['Others',"+ otherBudgetPercentage.round(2).to_s+"]")
-          #c3ReadyDonutData[1].concat("'Others']")
-          c3ReadyDonutData[1].push('Others')
-          return c3ReadyDonutData
-        else
-          # c3ReadyDonutData[1].concat(']')
-          return c3ReadyDonutData
-        end
-    else
-        #c3ReadyDonutData[0] = '["No data available for this view",0]'
-        tempData = []
-        tempData.push("No data available for this view")
-        tempData.push(0)
-        c3ReadyDonutData[0].push(tempData)
-        c3ReadyDonutData[1].push('No data available for this view')
-        return c3ReadyDonutData
-    end
-  end
-
   def get_country_sector_graph_data_jsCompatibleV2(countryCode)
     secHi = JSON.parse(File.read('data/sectorHierarchies.json'))
-    api = RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
+    api = RestClient.get settings.oipa_api_url + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
     pulledData = JSON.parse(api)['response']['docs']
     sectorBudgets = {}
     totalBudget = 0
@@ -976,7 +622,7 @@ end
   end
   
   def total_country_budget_locationv2
-    newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
+    newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
     pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
     totalBudget = 0
@@ -1297,7 +943,7 @@ end
   def getCountryLevelImplOrgs(countryCode, activityCount)
     implementingOrgs = {}
     newtempActivityCount = 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+countryCode+') AND activity_status_code:2 AND hierarchy:1 AND participating_org_role:4&fl=participating_org_role,participating_org_narrative,participating_org_ref&rows=10000'
-    newAPIResponse = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_other + newtempActivityCount))['response']['docs']
+    newAPIResponse = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + newtempActivityCount))['response']['docs']
     newAPIResponse.each do |activity|
       activity['participating_org_role'].each_with_index do | element, index |
         if (element.to_i == 4 && activity['participating_org_ref'][index] != '')

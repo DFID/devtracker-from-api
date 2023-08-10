@@ -60,15 +60,11 @@ include SolrHelper
   set :oipa_api_url, 'https://fcdo-prod.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
-set :oipa_api_url_other, 'https://fcdo-prod.iati.cloud/search/'
-#set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
-# set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
+# set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/api/'
-
-#set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
 
 
@@ -259,13 +255,6 @@ end
 get '/country-sector-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	country = ''
-	# if (!canLoadFromCache('country_sector_graph_data_'+n))
-	# 	storeCacheData(get_country_sector_graph_data_jsCompatible(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}")), 'country_sector_graph_data_'+n)
-	# 	country = getCacheData('country_sector_graph_data_'+n)
-	# else
-	# 	country = getCacheData('country_sector_graph_data_'+n)
-	# end
-	#json :output => country
 	json :output => get_country_sector_graph_data_jsCompatibleV2(n)
 end
 
@@ -277,7 +266,6 @@ end
 
 get '/country-budget-bar-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
-	#json :output => budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
 	json :output => budgetBarGraphDataDv3(n)
 end 
 ##
@@ -293,7 +281,6 @@ get '/countries/:country_code/projects/?' do |n|
 	settings.devtracker_page_title = 'Search Results For : ' + query
 	projectData = ''
 	country = get_country_code_name(n)
-	puts country
   	settings.devtracker_page_title = 'Country ' + country['name'] + ' Programmes Page'
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
@@ -359,30 +346,15 @@ end
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
     region = get_region_detailsv2(n)
-	#oipa v3.1
-	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	#regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
-	#regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
- 			#regionYearWiseBudgets: regionYearWiseBudgets,
-			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url_other + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter')),
- 			# regionSectorGraphData: regionSectorGraphData,
+			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter')),
  			mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
-end
-
-get '/ta/:region_code/?' do |n|
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
-	json :output => regionSectorGraphData
-end
-
-get '/ta-solr/:region_code/?' do |n|
-	json :output => get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url_other + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter'))
 end
 
 #Region Project List Page
@@ -452,17 +424,6 @@ get '/projects/*/summary' do
 	end
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_datav2(n)
-	# begin
-	# 	getPolicyMarkers = get_policy_markers(n)
-	# rescue
-	# 	getPolicyMarkers = Array.new
-	# end
-	# policyMarkerCount = 0
-	# getPolicyMarkers.each do |marker|
-	# 	if(marker['significance']['code'].to_i != 0)
-	# 		policyMarkerCount += 1
-	# 	end
-	# end
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -549,16 +510,6 @@ get '/transaction-count/*?' do
 	json :output => get_transaction_countv2(n)
 end
 
-post '/transaction-details-page' do
-	project = sanitize_input(params['projectID'].to_s,"newId")
-	transactionType = sanitize_input(params['transactionType'].to_s, "a")
-	resultCount = 20
-	nextPage = sanitize_input(params['nextPage'].to_s, "a")
-	data = get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
-	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
-	#json :output => data
-end
-
 post '/transaction-details-pagev2' do
 	project = sanitize_input(params['data']['projectID'].to_s,"newId")
 	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
@@ -577,15 +528,8 @@ end
 
 get '/component-list/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	#oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
-	oipa = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}&fl=related_activity_ref&rows=1")
+	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=related_activity_ref&rows=1")
     project = JSON.parse(oipa)['response']['docs'].first
-	#tempData = []
-	# project['related_activity_ref'].each do |item|
-	# 	if(item['type']['code'].to_i == 2)
-	# 		tempData.push(item['ref'])
-	# 	end
-	# end
 	json :output => project['related_activity_ref']
 end
 
@@ -624,7 +568,7 @@ end
 
 get '/total-project-budgetv2/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency&rows=200")
+	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency&rows=200")
 	programmeBudgets = JSON.parse(programmeBudgets)['response']['docs']
 	totalBudget = 0
 	programmeBudgets.each do |project|
@@ -645,7 +589,7 @@ end
 get '/project-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	#oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
-	oipa = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=iati_identifier:#{n}&fl=iati_identifier,title_narrative,description_narrative,activity_date_type,activity_date_iso_date&rows=1")
+	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=iati_identifier,title_narrative,description_narrative,activity_date_type,activity_date_iso_date&rows=1")
 	oipa = JSON.parse(oipa)['response']['docs'].first
 	tempData = {}
 	tempData['iati_identifier'] = oipa['iati_identifier']
@@ -669,16 +613,6 @@ end
 
 # Get funded project counts
 get '/get-funded-projects/*?' do
-	# n = ERB::Util.url_encode (params['splat'][0]).to_s
-	# fundedProjectsCount = 0
-	# getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-	# 	begin
-	# 		fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-	# 	rescue
-	# 		puts id
-	# 	end
-	# end
-	# json :output=> fundedProjectsCount
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	json :output=> get_funded_project_countv2(n)
 end
@@ -725,7 +659,7 @@ get '/sector/?' do
 	# Get the high level sector data from the API
 	high_level_sector_list = ''
 	if (!canLoadFromCache('high_level_sector_list'))
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		storeCacheData(high_level_sector_listv2(pulledData, 'all_sectors'), 'high_level_sector_list')
 		high_level_sector_list = getCacheData('high_level_sector_list')
@@ -758,7 +692,7 @@ get '/sector/:high_level_sector_code/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
@@ -795,7 +729,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1140,7 +1074,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
@@ -1208,7 +1142,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1276,7 +1210,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
 			end
 		end
-		newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		pulledData = RestClient.get newApiCall
 		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
 		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
@@ -1349,302 +1283,6 @@ get '/downloadCSV/:proj_id/:transaction_type?' do
 	end
 	tempTransactions
 end
-
-# get '/generatecsv?' do
-# 	response = g3('AF')
-# 	##
-# 	response.each do |item|
-# 		File.open('data/cache/export-country-budgets-bar.txt', "a") { |f| f.puts item['rep-org'] + ',' + item['startDate'].to_s + ',' + item['endDate'].to_s + ',' + item['countryPercentage'].to_s + ',' + item['cBudget'].to_s }	
-# 	end
-# 	##
-# 	json :output => 'CSV Generated'
-# end
-
-# def g2(countryCode)
-#     #Process budgets
-#     apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
-#     apiData = JSON.parse(apiData)['response']['docs']
-#     fyTracker = []
-#     repOrgs = {}
-# 	tracker = []
-#     apiData.each do |element|
-# 		if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
-# 			if element.has_key?('related_budget_value')
-# 			  element['related_budget_value'].each_with_index do |data, index|
-# 				# if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
-# 				#   tempTotalBudget = tempTotalBudget + data.to_f
-# 				#   tempT = {}
-# 				#   tempT['activityID'] = element['iati_identifier']
-# 				#   tempT['start_iso_date'] = element['related_budget_period_start_iso_date'][index]
-# 				#   tempT['end_iso_date'] = element['related_budget_period_end_iso_date'][index]
-# 				#   tempT['budget'] = data.to_f
-# 				#   tracker.append(tempT)
-# 				# end
-# 				##
-# 				if !repOrgs.has_key?(element['reporting_org_ref'])
-# 					repOrgs[element['reporting_org_ref']] = {}
-# 					repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
-# 					repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
-# 					end
-# 					t = Time.parse(item)
-# 					fy = if element['related_budget_period_start_quarter'][index].to_i == 1 then t.year - 1 else t.year end
-# 					if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
-# 					repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + element['related_budget_value'][index]
-# 					else
-# 					repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = element['related_budget_value'][index]
-# 					if !fyTracker.include?(fy)
-# 						fyTracker.push(fy)
-# 					end
-# 				end
-# 			  end
-# 			end
-# 		else
-# 			if element.has_key?('budget_value')
-# 			  element['budget_value'].each_with_index do |data, index|
-# 				if activity.has_key?('budget_period_start_iso_date')
-# 					activity['budget_period_start_iso_date'].each_with_index do |item, index|
-# 					  if !repOrgs.has_key?(activity['reporting_org_ref'])
-# 						repOrgs[activity['reporting_org_ref']] = {}
-# 						repOrgs[activity['reporting_org_ref']]['orgName'] = activity['reporting_org_narrative'].first
-# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'] = {}
-# 					  end
-# 					  t = Time.parse(item)
-# 					  fy = if activity['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-# 					  if repOrgs[activity['reporting_org_ref']]['orgFinYears'].has_key?(fy)
-# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] + activity['budget_value'][index]
-# 					  else
-# 						repOrgs[activity['reporting_org_ref']]['orgFinYears'][fy] = activity['budget_value'][index]
-# 						if !fyTracker.include?(fy)
-# 						  fyTracker.push(fy)
-# 						end
-# 					  end
-# 					end
-# 				end
-# 			  end
-# 			end
-# 		end
-# 		##
-#     end
-#     repOrgs
-#     fyTracker.sort!
-#     titleArray = []
-#     fyArray = []
-#     dataArray = []
-#     repOrgs.each do |key, val|
-#       titleArray.push(val['orgName'])
-#       tempDataArray = []
-#       tempDataArray.push(val['orgName'])
-#       fyTracker.each do |fy|
-#         if val['orgFinYears'].has_key?(fy)
-#           tempDataArray.push(val['orgFinYears'][fy].round(2))
-#         else
-#           tempDataArray.push(0)
-#         end
-#       end
-#       dataArray.push(tempDataArray)
-#     end
-#     fyTracker.each do |item|
-#       e = item+1
-#       f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
-#       fyArray.push(f)
-#     end
-#     finalData = []
-#     finalData.push(titleArray)
-#     finalData.push(fyArray)
-#     finalData.push(dataArray)
-#     finalData
-#   end
-
-#   def g3(countryCode)
-#     #Process budgets
-#     apiData = RestClient.get api_simple_log(settings.oipa_api_url_other + "activity/?q=recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
-#     apiData = JSON.parse(apiData)['response']['docs']
-#     fyTracker = []
-#     repOrgs = {}
-# 	  tracker = []
-#     apiData.each do |element|
-#       ## Process country Code percentage
-#       countryPercentage = 0
-#       if element.has_key?('recipient_country_code')
-#         element['recipient_country_code'].each_with_index do |c, i|
-#           if c.to_s == countryCode
-#             countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
-#             break
-#           end
-#         end
-#       end
-#       ##
-#       if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
-#         if element.has_key?('related_budget_value')
-#           element['related_budget_value'].each_with_index do |data, index|
-#             if !repOrgs.has_key?(element['reporting_org_ref'])
-#               repOrgs[element['reporting_org_ref']] = {}
-#               repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
-#               repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
-#               end
-#               t = Time.parse(element['related_budget_period_start_iso_date'][index])
-#               fy = if element['related_budget_period_start_quarter'][index].to_i == 1 then t.year - 1 else t.year end
-#               if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
-#                 repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + (data.to_f*countryPercentage/100)
-#               else
-#                 repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
-#               if !fyTracker.include?(fy)
-#                 fyTracker.push(fy)
-#               end
-#               tempT = {}
-#               tempT['rep-org'] = element['reporting_org_ref']
-#               tempT['startDate'] = element['related_budget_period_start_iso_date'][index]
-#               tempT['endDate'] = element['related_budget_period_end_iso_date'][index]
-#               tempT['countryPercentage'] = countryPercentage
-#               tempT['cBudget'] = data.to_f*countryPercentage/100
-#               tracker.append(tempT)
-#             end
-#           end
-#         end
-#       else
-#         if element.has_key?('budget_value')
-#           element['budget_value'].each_with_index do |data, index|
-#             if !repOrgs.has_key?(element['reporting_org_ref'])
-#               repOrgs[element['reporting_org_ref']] = {}
-#               repOrgs[element['reporting_org_ref']]['orgName'] = element['reporting_org_narrative'].first
-#               repOrgs[element['reporting_org_ref']]['orgFinYears'] = {}
-#               end
-#               t = Time.parse(element['budget_period_start_iso_date'][index])
-#               fy = if element['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-#               if repOrgs[element['reporting_org_ref']]['orgFinYears'].has_key?(fy)
-#               repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] + data.to_f*countryPercentage/100
-#               else
-#               repOrgs[element['reporting_org_ref']]['orgFinYears'][fy] = data.to_f*countryPercentage/100
-#               if !fyTracker.include?(fy)
-#                 fyTracker.push(fy)
-#               end
-#               tempT = {}
-#               tempT['rep-org'] = element['reporting_org_ref']
-#               tempT['startDate'] = element['budget_period_start_iso_date'][index]
-#               tempT['endDate'] = element['budget_period_end_iso_date'][index]
-#               tempT['countryPercentage'] = countryPercentage
-#               tempT['cBudget'] = data.to_f*countryPercentage/100
-#               tracker.append(tempT)
-#             end
-#           end
-#         end
-#       end
-# 		##
-#     end
-#     repOrgs
-#     fyTracker.sort!
-#     titleArray = []
-#     fyArray = []
-#     dataArray = []
-#     repOrgs.each do |key, val|
-#       titleArray.push(val['orgName'])
-#       tempDataArray = []
-#       tempDataArray.push(val['orgName'])
-#       fyTracker.each do |fy|
-#         if val['orgFinYears'].has_key?(fy)
-#           tempDataArray.push(val['orgFinYears'][fy].round(2))
-#         else
-#           tempDataArray.push(0)
-#         end
-#       end
-#       dataArray.push(tempDataArray)
-#     end
-#     fyTracker.each do |item|
-#       e = item+1
-#       f = 'FY' + item.to_s.chars.last(2).join + '/' + e.to_s.chars.last(2).join
-#       fyArray.push(f)
-#     end
-#     finalData = []
-#     finalData.push(titleArray)
-#     finalData.push(fyArray)
-#     finalData.push(dataArray)
-#     tracker
-#   end
-
-# def g1(countryCode)
-#     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
-#     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-#     countriesInfo = Oj.load(File.read('data/countries.json'))
-#     country = countriesInfo.select {|country| country['code'] == countryCode}.first
-#     ## new api call
-#     #newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
-# 		newApiCall = settings.oipa_api_url_other + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
-#     puts newApiCall
-#     pulledData = RestClient.get newApiCall
-#     pulledData  = JSON.parse(pulledData)['response']['docs']
-#     puts pulledData.count
-#     countryTotalBudget = 0
-# 	tracker = []
-# 	tracker2 = []
-#     pulledData.each do |element|
-#       if element['hierarchy'].to_i == 1
-#         tempTotalBudget = 0
-#         if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
-#           if element.has_key?('related_budget_value')
-#             element['related_budget_value'].each_with_index do |data, index|
-#               if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
-#                 tempTotalBudget = tempTotalBudget + data.to_f
-# 				tempT = {}
-# 				tempT['activityID'] = element['iati_identifier']
-# 				tempT['start_iso_date'] = element['related_budget_period_start_iso_date'][index]
-# 				tempT['end_iso_date'] = element['related_budget_period_end_iso_date'][index]
-# 				tempT['budget'] = data.to_f
-# 				tracker.append(tempT)
-#               end
-#             end
-#           end
-#         else
-#           if element.has_key?('budget_value')
-#             element['budget_value'].each_with_index do |data, index|
-#               if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
-#                 tempTotalBudget = tempTotalBudget + data.to_f
-# 				tempT = {}
-# 				tempT['activityID'] = element['iati_identifier']
-# 				tempT['start_iso_date'] = element['budget_period_start_iso_date'][index]
-# 				tempT['end_iso_date'] = element['budget_period_end_iso_date'][index]
-# 				tempT['budget'] = data.to_f
-# 				tracker.append(tempT)
-#               end
-#             end
-#           end
-#         end
-#         if element.has_key?('recipient_country_code')
-#           element['recipient_country_code'].each_with_index do |c, i|
-#             if c.to_s == countryCode
-#             	countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
-#             	countryBudget = tempTotalBudget*countryPercentage/100
-#               	countryTotalBudget = countryTotalBudget + countryBudget
-# 			  	tempT = {}
-# 			  	tempT['activityID'] = element['iati_identifier']
-# 				tempT['countryBudgetPercentage'] = countryPercentage
-# 				tempT['countryBudget'] = countryBudget
-# 				tempT['TotalActivityBudget'] = tempTotalBudget
-# 				tracker2.append(tempT)
-#               break
-#             end
-#           end
-#         end
-#       end
-#     end
-#     # returnObject = {
-#     #       :code => country['code'],
-#     #       :name => country['name'],
-#     #       :description => country['description'],
-#     #       :population => country['population'],
-#     #       :population_year => country['population_year'],
-#     #       :lifeExpectancy => country['lifeExpectancy'],
-#     #       :incomeLevel => country['incomeLevel'],
-#     #       :belowPovertyLine => country['belowPovertyLine'],
-#     #       :belowPovertyLine_year => country['belowPovertyLine_year'],
-#     #       :fertilityRate => country['fertilityRate'],
-#     #       :fertilityRate_year => country['fertilityRate_year'],
-#     #       :gdpGrowthRate => country['gdpGrowthRate'],
-#     #       :gdpGrowthRate_year => country['gdpGrowthRate_year'],
-#     #       :countryBudget => countryTotalBudget,
-#     #       :countryBudgetCurrency => "GBP",
-#     #     }
-# 	tracker2
-#   end
 
 get '/downloadLocationDataCSV/:proj_id?' do
 	projID = sanitize_input(params[:proj_id],"newId")
@@ -1771,52 +1409,21 @@ end
 get '/faq/?' do
   	settings.devtracker_page_title = 'FAQ: What does this mean?'
 	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
-end 
-
-# get '/feedback/?' do
-#   	settings.devtracker_page_title = 'Feedback Page'
-# 	erb :'feedback/index', :layout => :'layouts/layout_forms',
-# 	:locals => {
-# 		googlePublicKey: settings.google_recaptcha_publicKey,
-# 		oipa_api_url: settings.oipa_api_url
-# 	}
-# end 
+end
 
 get '/whats-new/?' do
   	settings.devtracker_page_title = "What's New Page"
 	erb :'about/whats-new', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
-end 
+end
 
-# post '/feedback/index' do
-#   	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
-# 	if status == true
-# 		Pony.mail({
-# 			:from => "devtracker-feedback@fcdo.gov.uk",
-# 		    :to => "devtracker-feedback@fcdo.gov.uk",
-# 		    :subject => "DevTracker Feedback",
-# 		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
-# 		    :via => :smtp,
-# 		    :via_options => {
-# 		    	:address              => '127.0.0.1',
-# 		     	:port                 => '25',
-# 		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
-# 		    }
-# 		})
-# 		redirect '/'
-# 	else
-# 		puts "Failed to send email."
-# 		redirect '/'
-# 	end
-# end
-
-	get '/test-cache?' do
-		randomNumber = rand(2)
-		if (randomNumber.to_i.even?)
-			json :output => xx['xx']
-		else
-			json :output => randomNumber
-		end
+get '/test-cache?' do
+	randomNumber = rand(2)
+	if (randomNumber.to_i.even?)
+		json :output => xx['xx']
+	else
+		json :output => randomNumber
 	end
+end
 
 #####################################################################
 #  RSS FEED
@@ -1883,8 +1490,4 @@ error 500 do
   settings.devtracker_page_title = "Error 500 Page"
   erb :'500', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
-
-#error do
-#    redirect to('/')
-#end
 
