@@ -20,7 +20,7 @@ module CommonHelpers
 
   def get_total_spend()
     count = 20
-    apiCall = settings.oipa_api_url_other +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
+    apiCall = settings.oipa_api_url +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
     apiCall = JSON.parse(RestClient.get apiCall)
     page = 1
     page = page.to_i - 1
@@ -32,7 +32,7 @@ module CommonHelpers
       for p in 2..pages do
         p = p - 1
         finalPage = p * count
-        tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=#{finalPage}&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code")
+        tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=#{finalPage}&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code")
         tempData = tempData['response']['docs']
         tempData.each do |item|
           pulledData.push(item)
@@ -49,7 +49,6 @@ module CommonHelpers
         end
       end
     end
-    #Money.new(totalSpend.to_f.round(0)*100, 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false)
     totalSpend
   end
 

@@ -61,70 +61,12 @@ module CountryHelpers
     end
   end
 
-  def get_top_5_countries()
-
-      firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
-      lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-
-      countriesInfo = JSON.parse(File.read('data/countries.json'))
-      #newApiCall = settings.oipa_api_url_other + 'activity?q=activity_status_code:2'+add_exclusions_to_solr2()+' AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(GB-GOV-1 OR GB-1) AND budget_period_start_iso_date:[2022-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2023-03-31T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=100'
-      #newApiCall = settings.oipa_api_url_other + 'activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(GB-GOV-1 OR GB-1) AND budget_period_start_iso_date:[2022-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2023-03-31T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=100'
-      #oldCall = settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json"
-      #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&order_by=-value&page_size=10&format=json")
-      
-      newApiCall = settings.oipa_api_url_other + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=5000"
-      
-      #top5countriesJSON = RestClient.get  api_simple_log(settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")} AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[#{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code&rows=5000")
-      puts settings.oipa_api_url_other + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code,recipient_country_name,budget_period_start_iso_date,budget_period_end_iso_date&rows=5000xx"
-      #top5countries = JSON.parse(top5countriesJSON)
-      newTop5countries = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity?q=activity_status_code:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code,recipient_country_name,budget_period_start_iso_date,budget_period_end_iso_date&rows=5000")
-      puts settings.oipa_api_url_other + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{firstDayOfFinYear}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{lastDayOfFinYear}T00:00:00Z]&fl=budget_value,recipient_country_code,json.budget,recipient_region_code,recipient_country_name,budget_period_start_iso_date,budget_period_end_iso_date&rows=5000"
-      newTop5countriesBudget = {}
-      for item in newTop5countries['response']['docs']
-        begin
-          if !newTop5countriesBudget.has_key?(item['recipient_country_code'].first)
-            newTop5countriesBudget[item['recipient_country_code'].first] = {}
-            newTop5countriesBudget[item['recipient_country_code'].first]['name'] = item['recipient_country_name'].first
-            newTop5countriesBudget[item['recipient_country_code'].first]['code'] = item['recipient_country_code'].first
-            newTop5countriesBudget[item['recipient_country_code'].first]['budget'] = 0
-            item['budget_value'].each_with_index do | element, index |
-              if(item['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && item['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
-                newTop5countriesBudget[item['recipient_country_code'].first]['budget'] = newTop5countriesBudget[item['recipient_country_code'].first]['budget'] + element.to_f
-              end
-            end
-          else
-            item['budget_value'].each_with_index do | element, index |
-              if(item['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && item['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
-                newTop5countriesBudget[item['recipient_country_code'].first]['budget'] = newTop5countriesBudget[item['recipient_country_code'].first]['budget'] + element.to_f
-              end
-            end
-          end
-        rescue
-          
-        end
-      end
-      finalResult = []
-      newTop5countriesBudget.each do |key, val|
-        finalResult.push(val)
-      end
-      # top5countriesBudget = top5countries["results"].map do |elem| 
-      #    {  
-      #       :code     => elem["recipient_country"]["code"],  
-      #       :name     => countriesInfo.find do |source|
-      #                      source["code"].to_s == elem["recipient_country"]["code"]
-      #                    end["name"],
-      #       :budget   => elem["value"].to_i                                                                                  
-      #    } 
-      # end
-      finalResult
-  end
-
   def get_top_5_countriesv2()
     firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
     lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
     countriesInfo = JSON.parse(File.read('data/countries.json'))
     count = 20
-    newApiCall = settings.oipa_api_url_other + "activity?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     page = 1
     page = page.to_i - 1
@@ -133,14 +75,13 @@ module CountryHelpers
     pd = RestClient.get newApiCall
     pd  = JSON.parse(pd)
     numOActivities = pd['response']['numFound'].to_i
-    #puts ('Number of activities: ' + numOActivities.to_s)
     pulledData = pd['response']['docs'] 
     if (numOActivities > count)
       pages = (numOActivities.to_f/count).ceil
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=hierarchy:1 AND activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             pulledData.push(item)
@@ -183,7 +124,6 @@ module CountryHelpers
         end
       end
     end
-    #######################
     finalResult = []
     newTop5countriesBudget.each do |key, val|
       finalResult.push(val)
@@ -207,12 +147,9 @@ module CountryHelpers
     countriesInfo = Oj.load(File.read('data/countries.json'))
     country = countriesInfo.select {|country| country['code'] == countryCode}.first
     ## new api call
-    #newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:#{countryCode}&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,budget_value_gbp&rows=50000"
-		newApiCall = settings.oipa_api_url_other + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
-    puts newApiCall
+		newApiCall = settings.oipa_api_url + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{countryCode}&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,recipient_region_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&rows=50000"
     pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
-    puts pulledData.count
     countryTotalBudget = 0
     pulledData.each do |element|
       if element['hierarchy'].to_i == 1
@@ -264,47 +201,6 @@ module CountryHelpers
           :countryBudgetCurrency => "GBP",
         }
   end
-
-  def get_country_details(countryCode)
-
-      firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
-      lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-      
-      countriesInfo = Oj.load(File.read('data/countries.json'))
-      country = countriesInfo.select {|country| country['code'] == countryCode}.first
-            
-      #oipa v3.1
-      currentTotalCountryBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_country&aggregations=value&recipient_country=#{countryCode}"))
-
-      if currentTotalCountryBudget['count'] > 0 then
-          #oipa v2.2
-          #countryBudget = currentTotalCountryBudget['results'][0]['budget']
-          #oipa v3.1
-          countryBudget = currentTotalCountryBudget['results'][0]['value']
-      else
-          countryBudget = 0
-      end
-    
-      returnObject = {
-            :code => country['code'],
-            :name => country['name'],
-            :description => country['description'],
-            :population => country['population'],
-            :population_year => country['population_year'],
-            :lifeExpectancy => country['lifeExpectancy'],
-            :incomeLevel => country['incomeLevel'],
-            :belowPovertyLine => country['belowPovertyLine'],
-            :belowPovertyLine_year => country['belowPovertyLine_year'],
-            :fertilityRate => country['fertilityRate'],
-            :fertilityRate_year => country['fertilityRate_year'],
-            :gdpGrowthRate => country['gdpGrowthRate'],
-            :gdpGrowthRate_year => country['gdpGrowthRate_year'],
-            :countryBudget => countryBudget,
-            :countryBudgetCurrency => "GBP",
-            }
-  end
-
-  
 
   def get_country_results(countryCode)
       resultsInfo = Oj.load(File.read('data/results.json'))
@@ -1344,12 +1240,8 @@ end
 
     #Get a list of map markers for visualisation
     def getCountryMapMarkers(countryCode)
-      # https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND recipient_country_code:BD AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code
-      #puts settings.oipa_api_url_other + 'xxxactivity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:#{countryCode} AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'
-      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
+      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:'+countryCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
       newRawMapMakers = newRawMapMakers['response']['docs']
-      # rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
-      # rawMapMarkers = rawMapMarkers['results']
       mapMarkers = Array.new
       ar = 0
       newRawMapMakers.each do |data|
@@ -1377,35 +1269,6 @@ end
           end
         end
       end
-      # rawMapMarkers.each do |data|
-      #   if(data['recipient_country'].count == 1)
-      #     data['location'].each do |location|
-      #       begin
-      #         tempStorage = {}
-      #         tempStorage["geometry"] = {}
-      #         tempStorage['geometry']['type'] = 'Point'
-      #         tempStorage['geometry']['coordinates'] = Array.new
-      #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-      #         tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-      #         tempStorage['iati_identifier'] = location['iati_identifier']
-      #         begin
-      #           tempStorage['loc'] = location['name']['narrative'][0]['text']
-      #         rescue
-      #           tempStorage['loc'] = 'N/A'
-      #         end
-      #         begin
-      #           tempStorage['title'] = data['title']['narrative'][0]['text']
-      #         rescue
-      #           tempStorage['title'] = 'N/A'
-      #         end
-      #         mapMarkers.push(tempStorage)
-      #         ar = ar + 1
-      #       rescue
-      #         puts 'Data missing in API response.'
-      #       end
-      #     end
-      #   end
-      # end
       mapMarkers
     end
 
