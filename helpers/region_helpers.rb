@@ -72,8 +72,7 @@ module RegionHelpers
     region = regionInfo.select {|region| region['code'] == regionCode}.first
     totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
     totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
-    print(settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")
+    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
     totalRegionBudget = 0
     currentFinYear = financial_year
     allRelatedctivities.each do |activity|
@@ -89,7 +88,6 @@ module RegionHelpers
           end
         end
       end
-      print(activityBudget)
       if activity.has_key?('recipient_region_code')
         activity['recipient_region_code'].each_with_index do |data, index|
           if data.to_i == regionCode.to_i
@@ -123,9 +121,9 @@ module RegionHelpers
 
     def dfid_regional_projects_datav2(regionType)
       if regionType == 'all'
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
       else
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url_other + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
       end
       pulledData = RestClient.get newApiCall
       pulledData  = JSON.parse(pulledData)['response']['docs']
