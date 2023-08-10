@@ -12,28 +12,29 @@ title: Development Tracker
       <%# ------------------------------------------------------------------------ %>
       <%#                       B U D G E T S   T A B L E                          %>
       <%# ------------------------------------------------------------------------ %>    
+      <div id="budget_container" style="display: none">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Budget</h3>
+        <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-2">The total amount of money available to spend. Some budgets may not be shown if programmes are in an active procurement phase.</p>
+        <div class="app-flex-container">
+            <div class="govuk-heading-l govuk-!-padding-top-2 govuk-!-margin-bottom-1"><span id="totalProjectBudget"></span></div>
+            <div class="app-flex-container--item-right">
+                <p class="govuk-!-font-size-16 govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download data</p>
+                <a href="/downloadCSV/<%= project['iati_identifier']%>/0" style="margin-left: 5px" class="api-link button"><strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-1">CSV</strong></a>
+            </div>
+        </div>  
 
-      <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Budget</h3>
-      <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-2">The total amount of money available to spend. Some budgets may not be shown if programmes are in an active procurement phase.</p>
-      <div class="app-flex-container">
-          <div class="govuk-heading-l govuk-!-padding-top-2 govuk-!-margin-bottom-1"><span id="totalProjectBudget"></span></div>
-          <div class="app-flex-container--item-right">
-              <p class="govuk-!-font-size-16 govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download data</p>
-              <a href="/downloadCSV/<%= project['iati_identifier']%>/0" style="margin-left: 5px" class="api-link button"><strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-1">CSV</strong></a>
-          </div>
-      </div>  
+        <div id="waiting" class="app-display-none govuk-!-margin-top-5"><strong class="govuk-tag govuk-tag--yellow">Loading Data - Please wait</strong></div>
 
-      <div id="waiting" class="app-display-none govuk-!-margin-top-5"><strong class="govuk-tag govuk-tag--yellow">Loading Data - Please wait</strong></div>
-
-      <table class="govuk-table govuk-!-margin-top-4 govuk-!-margin-bottom-8 transactions-tablev2 display" data-module="moj-sortable-table">
-        <thead>
-          <tr>
-            <th scope="col">Financial Year</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body"></tbody>
-      </table>
+        <table class="govuk-table govuk-!-margin-top-4 govuk-!-margin-bottom-8 transactions-tablev2 display" data-module="moj-sortable-table">
+          <thead>
+            <tr>
+              <th scope="col"><span>Financial Year</span></th>
+              <th scope="col" class="govuk-table__header--numeric"><span>Value</span></th>
+            </tr>
+          </thead>
+          <tbody class="app-table__body--numeric"></tbody>          
+        </table>
+      </div>
 
       <%# ------------------------------------------------------------------------ %>
       <%#                   C O M P O N E N T S   T A B L E                        %>
@@ -48,10 +49,10 @@ title: Development Tracker
         <table id="transactionsv3" class="govuk-table govuk-!-margin-top-4 govuk-!-margin-bottom-8 display">
           <thead>
             <tr>
-              <th>Project Title</th>
-              <th>IATI Activity ID</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+              <th><span>Project Title</span></th>
+              <th><span>IATI Activity ID</span></th>
+              <th><span>Start Date</span></th>
+              <th><span>End Date</span></th>
             </tr>
           </thead>
           <tbody class="govuk-table__body"></tbody>  
@@ -60,7 +61,7 @@ title: Development Tracker
   </div>
 <div>
 
-    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
 <script src="/javascripts/dataTables.buttons.min.js" type="text/javascript"></script>
 <script src="/javascripts/buttons.flash.min.js" type="text/javascript"></script>
@@ -100,7 +101,7 @@ title: Development Tracker
       "paging": false,
       "searching": false,
       dom: 'Bfrtip',
-      buttons: [
+      buttons: [ 
         'csvHtml5'
       ],
       initComplete: function(){
@@ -153,7 +154,7 @@ title: Development Tracker
     .done(function(response){
       res = response.output;
       if (res.length > 0) {
-        //jq3('#budget_container').slideDown('slow');
+        jq3('#budget_container').show();
       }
       jq3.each(res, function(i, data){
         var amount = convertCurrency(data['value']);

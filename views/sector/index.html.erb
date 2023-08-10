@@ -14,8 +14,8 @@
         <table class="govuk-table datatable">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header" aria-sort="ascending">Sector</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">Budget</th>
+                    <th scope="col" class="govuk-table__header" aria-sort="ascending"><span>Sector</span></th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"><span>Budget</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -28,7 +28,7 @@
                                 <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
                             </div>
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=format_round_m sector['budget'].to_f || 0.0 %>"><span class="sector-value" style="float:right;">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %> </span></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=format_round_m sector['budget'].to_f || 0.0 %>"><span class="sector-value">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %> </span></td>
                     </tr>
                 <% end %>
             </tbody>

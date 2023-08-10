@@ -101,9 +101,9 @@ title: Development Tracker
         <table class="govuk-table datatable">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header" aria-sort="ascending">Department</th>
-                    <th scope="col" class="govuk-table__header" aria-sort="none">&pound;m</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">% UK ODA%</th>
+                    <th scope="col" class="govuk-table__header" aria-sort="ascending"><span>Department</span></th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"><span>&pound;m</span></th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"><span>% UK ODA%</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -111,7 +111,7 @@ title: Development Tracker
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell"  data-order="<%= oda[1][0]["name"] %>"><%= oda[1][0]["name"] %></td>
                   <% if oda[1][0]["value"] >= 0 %>
-                    <td class="govuk-table__cell" data-order="<%= oda[1][0]["value"]%>">&pound;<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" data-order="<%= oda[1][0]["value"]%>">&pound;<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" data-order="<%= oda[1][0]["percentage"] %>"><%= oda[1][0]["percentage"] %>%</td>
                   <%else%>
                     <td class="govuk-table__cell">~</td>

@@ -6,13 +6,18 @@
 
 table.dataTable th {
     color: $govuk-link-colour;
+    text-align: left;
+}
+
+table.dataTable th.govuk-table__header--numeric {
+    text-align: right;
 }
 
 table.dataTable th,
 table.dataTable tbody th,
 table.dataTable tbody td {
     padding: 10px 0 10px 0 !important;
-    text-align: left;
+    // text-align: left;
 }
 
 table.dataTable.row-border tbody th,
@@ -36,43 +41,68 @@ table.dataTable thead .sorting_desc {
     cursor: pointer;
 }
 
-table.dataTable thead .sorting_asc::after,
-table.dataTable thead .sorting_desc::after {
+table.dataTable thead .sorting span,
+table.dataTable thead .sorting_asc span,
+table.dataTable thead .sorting_desc span {
+    position: relative;
+}
+
+table.dataTable thead .sorting_asc span::after,
+table.dataTable thead .sorting_desc span::after {
     content: '';
     position: absolute;
-    right: 10px;
-    top: 15px;
+    right: -20px;
+    top: 2px;
     font-size: 11px;
 }
 
-table.dataTable thead .sorting::before,
-table.dataTable thead .sorting::after {
+table.dataTable thead .sorting span::before,
+table.dataTable thead .sorting span::after {
     position: absolute;
-    right: 10px;
+    right: -20px;
     font-size: 10px;
     color: $govuk-border-colour;
 }
 
-table.dataTable thead .sorting::before {
+table.dataTable thead .sorting span::before {
     content: "▼";
-    top: 12px;
+    top: -1px;
 }
 
-table.dataTable thead .sorting::after {
+table.dataTable thead .sorting span::after {
     content: "▲";
-    top: 20px;
+    top: 7px;
 }
 
-table.dataTable thead .sorting_asc::after {
+table.dataTable thead .govuk-table__header--numeric.sorting_asc span,
+table.dataTable thead .govuk-table__header--numeric.sorting_desc span,
+table.dataTable thead .govuk-table__header--numeric.sorting span {
+    padding-right: 20px;
+}
+
+table.dataTable thead .govuk-table__header--numeric.sorting_asc span::before,
+table.dataTable thead .govuk-table__header--numeric.sorting_desc span::before,
+table.dataTable thead .govuk-table__header--numeric.sorting_asc span::after,
+table.dataTable thead .govuk-table__header--numeric.sorting_desc span::after,
+table.dataTable thead .govuk-table__header--numeric.sorting span::before,
+table.dataTable thead .govuk-table__header--numeric.sorting span::after {
+    right: 0;
+}
+
+table.dataTable thead .sorting_asc span::after {
     content: "▲" !important;
 }
 
-table.dataTable thead .sorting_desc::after {
+table.dataTable thead .sorting_desc span::after {
     content: "▼";
 }
 
 .govuk-table__cell--numeric {
     padding-right: 0 !important;
+}
+
+.govuk-table__header--numeric>td {
+    border-color: orange !important;
 }
 
 .govuk-table {
@@ -81,4 +111,8 @@ table.dataTable thead .sorting_desc::after {
     td {
         font-size: 16px;
     }
+}
+
+.app-table__body--numeric td:last-child {
+    text-align: right;
 }

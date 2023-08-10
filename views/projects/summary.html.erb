@@ -238,23 +238,21 @@
     </div>
 </div>
 
-
-<div class="row">
-    <div class="twelve columns">
-        <%if policyMarkers.length > 0%>
-            <div class="country-info-container policy-marker-container">  
-                <span class="country-info">Policy Marker(s)</span>
-                <p>ODA measures in relation to their realisation of OECD development policy objectives</p>
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <% policyMarkers.each do |marker|  %>
-                        <span class="policy_marker"><%= marker['title']%>: <span class="policy_marker_significance"><%= marker['significance'] %></span></span>
-                    <%end%>
-                </div>
-            </div>
-        <%end%>
+<%if policyMarkers.length > 0%>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h3 class="govuk-heading-s">Policy Marker(s)</h3>
+            <p class="govuk-body govuk-!-margin-bottom-8">ODA measures in relation to their realisation of OECD development policy objectives</p>
+            <% policyMarkers.each do |marker|  %>
+                <div class="app-policy-marker">
+                    <span class="app-policy-marker--title"><%= marker['title']%></span>
+                    <strong class="app-policy-marker--significance govuk-tag govuk-tag--green   "><%= marker['significance'] %></strong>
+                </div>                    
+            <%end%>
+        </div>
     </div>
+<%end%>
+
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
@@ -458,9 +456,8 @@
             <% end %>
     });
  </script>
-</div>
 
-  <div class="govuk-grid-row govuk-!-margin-top-8">
+  <div class="govuk-grid-row govuk-!-margin-top-4">
     <div class="govuk-grid-column-full">
         <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Data for <%= project['iati_identifier']%></p>
         <%if !project['last_updated_datetime'].nil?%>

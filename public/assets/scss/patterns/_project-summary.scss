@@ -1,0 +1,21 @@
+.app-policy-marker {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid $govuk-border-colour;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    &--title {
+        font-size: 17px;
+    }
+
+    &--significance {
+        margin-top: 10px;
+        font-size: 14px;
+        align-self: self-start;
+    }
+}
