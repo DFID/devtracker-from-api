@@ -21,7 +21,7 @@
             <tbody class="govuk-table__body">
                 <% (high_level_sector_list['sectorsData'] || []).each do |sector| %>
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" data-sort-value="<%=sector['name']%>">
+                        <td class="govuk-table__cell" data-order="<%=sector['name']%>">
                             <a href="/sector/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a>
                             <div class="app-progress-bar">
                                 <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*sector['budget'].to_f/high_level_sector_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>

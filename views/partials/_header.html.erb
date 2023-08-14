@@ -78,17 +78,17 @@
                         Home
                     </a>
                 </li>
-                <li class="govuk-header__navigation-item app-header__navigation-item">
+                <li class="govuk-header__navigation-item app-header__navigation-item" id="navItemSector">
                     <a class="govuk-header__link app-header__link" href="/sector">
                         Aid by Sector
                     </a>
                 </li>
-                <li class="govuk-header__navigation-item app-header__navigation-item">
+                <li class="govuk-header__navigation-item app-header__navigation-item" id="navItemLocation">
                     <a class="govuk-header__link app-header__link" href="/location/country">
                         Aid by Location
                     </a>
                 </li>
-                <li class="govuk-header__navigation-item app-header__navigation-item">
+                <li class="govuk-header__navigation-item app-header__navigation-item" id="navItemDepartment">
                     <a class="govuk-header__link app-header__link" href="/department">
                         Aid by Department
                     </a>
@@ -110,5 +110,13 @@
             headerSearchInput.className = "govuk-input govuk-input--error";
             return false;
         }
+    }
+    const currentPage = location.pathname.split('/')[1];
+    if (currentPage == "sector") {
+        document.getElementById("navItemSector").classList.add("app-header__navigation-item--active");
+    } else if (currentPage == "location") {
+        document.getElementById("navItemLocation").classList.add("app-header__navigation-item--active");
+    } else if (currentPage == "department") {
+        document.getElementById("navItemDepartment").classList.add("app-header__navigation-item--active");
     }
 </script>

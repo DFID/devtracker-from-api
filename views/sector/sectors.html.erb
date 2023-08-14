@@ -22,7 +22,7 @@
             <tbody class="govuk-table__body">
                 <% (sector_list['sectorData']).each do |sector| %>
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" data-sort-value="<%=sector['name']%>">
+                        <td class="govuk-table__cell" data-order="<%=sector['name']%>">
                             <a href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sector_list['sectorHierarchyPath']['categoryCode']%>/projects/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a>
                             <div class="app-progress-bar">
                                 <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*sector['budget'].to_f/sector_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>
