@@ -1,0 +1,118 @@
+<div class="govuk-width-container app-width-container">
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="app-card app-card-search app-card-search-no-margin">
+                    <img src="/assets/images/homepage-search.svg" class="app-card-search__image" alt="Search programmes">
+                    <div class="govuk-form-group app-card-search__input">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="search">
+                                Search programmes
+                            </label>
+                        </h1>
+                        <div id="event-name-hint" class="govuk-hint">
+                            Enter location, sector, organisation or keyword
+                        </div>
+                        <form action="/search" class="app-search-form" method="post" enctype="multipart/form-data">
+                            <div class="app-search-form__textbox">
+                                <input class="govuk-input" id="query" name="query" type="text">
+                                <button class="app-search-form__button" data-module="govuk-button"></button>
+                            </div>
+                            <div class="app-search-form__checkbox">
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
+                                        <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                            Include closed programmes
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8AyKK_x9RQ1EhOi-5ICxTzOxIfKabRMlDqbgrIr1yAGhYwznAUUZK09tgiO792wRx9zeKS-F2ABDxaHOAWDhUw_NxNdAX6JotdXw-smcPD3LJfrMFVohHQEswsEUJYLv0MjeBCShxSjcUZSGXI4OpwQ" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-headline-stats">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                    <div class="app-headline-stats__data">
+                        <span class="govuk-caption-m">Top location - <%= top_5_countries.first['name']%></span>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value">£<%= format_round_m(top_5_countries.first['budget'])%></h1>
+                    </div>
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    <div class="app-headline-stats__data">
+                        <span class="govuk-caption-m">Current global spend</span>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value" id="total-global-spend">~</h1>
+                    </div>
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    <div class="app-headline-stats__data">
+                        <span class="govuk-caption-m">Active programmes</span>
+                        <h1 class="govuk-heading-xl app-headline-stats__data--value"><%= activiteProjectCount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse%></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2 class="govuk-heading-l">UK Government priorities</h2>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="app-card">
+                    <h4 class="govuk-heading-m">Top 10 things we do</h4>
+                    <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">
+                        The sectors that Programmes have allocated their budget to, consistent
+                        with the Development Assistance Committee's classifications.
+                    </p>
+                    <%if !what_we_do.nil?  %>
+                        <div class="app-progress-bar">
+                            <% what_we_do.each do |item|%>
+                                <label class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%=item['name']%></label>
+                                <div class="app-progress-bar__meter govuk-!-margin-bottom-2" style="width:<%= item['budget']/whatWeDoTotal*100 %>%;" onclick="location.href = '/sector/<%=item['code']%>';">
+                                    <span class="govuk-body-s app-progress-bar__meter--tooltip">Budget: £<%= format_round_m(item['budget'])%></span>
+                                </div>
+                            <%end%>
+                        </div>
+                    <%end%>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="app-card">
+                    <h4 class="govuk-heading-m">Top 10 places we work</h4>
+                    <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">The countries where most money has been identified as being spent.</p>
+                    <%if !top_5_countries.nil?  %>
+                        <div class="app-progress-bar">
+                            <% top_5_countries.each do |item|%>
+                                <label class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%=item['name']%></label>
+                                <div class="app-progress-bar__meter govuk-!-margin-bottom-2" style="width:<%= item['budget']/top5CountryTotal*100 %>%;" onclick="location.href = '/countries/<%=item['code']%>';">
+                                    <span class="govuk-body-s app-progress-bar__meter--tooltip">Budget: £<%= format_round_m(item['budget'])%></span>
+                                </div>
+                            <%end%>
+                        </div>
+                    <%end%>
+                </div>
+            </div>
+            <div class="govuk-grid-column-full">
+                <div class="app-card app-top10-departments">
+                    <h4 class="govuk-heading-m">Top 10 departments</h4>
+                    <p class="govuk-body-s app-card__intro">UK ODA spend by government department </p>
+                    <% odas.each do |oda| %>
+                        <div class="app-top10-department">
+                            <%if oda[0] == 'PF' || oda[0] == 'CSSF'%>
+                                <span class="govuk-body-s app-top10-department__name"><%= oda[1][0]["name"] %></span>
+                            <%else%>
+                                <span class="govuk-body-s app-top10-department__name"><a title="<%= oda[1][0]['note']%>" href="department/<%= oda[0]%>" class="govuk-link"><%= oda[1][0]["name"] %></a></span>
+                            <%end%>
+                            <% if oda[1][0]["value"] >= 0 %>
+                                <span class="govuk-body-s app-top10-department__spend">&pound;<%= oda[1][0]["value"].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse %>m</span>
+                            <%else%>
+                                <span class="govuk-body-s app-top10-department__spend">~</span>
+                            <%end%>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

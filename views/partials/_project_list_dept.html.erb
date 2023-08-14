@@ -43,9 +43,9 @@
                 <div><div>Loading Data <br> Please Wait</div></div>
             </div>
             <div id="showResults">
-                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active programmes. To see programmes at other stages, use the status filters.</div>
                 <div class="tweleve columns">
-                    Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
+                    Now showing programmes <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
                     <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <%= project_count%>
@@ -158,7 +158,7 @@
                     <div class="four columns">
                             <div class="bottom-table row">
                                 <div class="tweleve columns">
-                                    <span>Project Identifier:</span>
+                                    <span>Programme Identifier:</span>
                                 </div>
                             </div>
                             <div class="bottom-table row">
@@ -486,9 +486,9 @@
                 <div><div>Loading Data <br> Please Wait</div></div>
             </div>
             <div id="showResults">
-                <div class="govuk-inset-text" style="font-size: 14px;"><p>Default filter shows currently active projects. To see projects at other stages, use the status filters.</p></div>
+                <div class="govuk-inset-text" style="font-size: 14px;"><p>Default filter shows currently active programmes. To see programmes at other stages, use the status filters.</p></div>
                 <div>
-                    Now showing projects <span name="afterFilteringAmount" style="display:inline;"></span>
+                    Now showing programmes <span name="afterFilteringAmount" style="display:inline;"></span>
                     <% if (project_count > 20) %><span id="numberofResults" value="" style="display:inline;">1 - 20</span> of <%= project_count%>
                     <% else %>
                     <span id="numberofResults" value="" style="display:inline;"><%= project_count%></span> of <span style="display:inline;"><%= project_count%></span>
@@ -515,7 +515,7 @@
                         <%end%>
                     </em></span>
                     <%unless project['iati_identifier'].nil? %>
-                    <span>Project Identifier: <em><%= project['iati_identifier']%></em></span>
+                    <span>Programme Identifier: <em><%= project['iati_identifier']%></em></span>
                     <%end%>
                     <%unless project['activity_status']['name'].nil? %>
                     <span>Activity Status: <em><%=project['activity_status']['name'].to_s %></em></span>

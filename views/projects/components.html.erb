@@ -99,7 +99,7 @@ title: Development Tracker
       }
       return tempData;
     }
-    var projectCurrency = "<%= begin project['default_currency']['code'] rescue 'GBP' end%>" ;
+    var projectCurrency = "<%= begin project['default-currency'] rescue 'GBP' end%>" ;
     var tab1 = jq3('#transactionsv3').DataTable({
       "info":false,
       "paging":false,
@@ -156,7 +156,7 @@ title: Development Tracker
       });
     });
     jq3('#transactionsv3').show();
-    var call3 = jq3.get('/total-project-budget/<%= project["iati_identifier"]%>')
+    var call3 = jq3.get('/total-project-budgetv2/<%= project["iati_identifier"]%>')
     .done(function(response){
       $('#totalProjectBudget').html(response.output);
     });

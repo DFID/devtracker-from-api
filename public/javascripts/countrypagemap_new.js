@@ -261,7 +261,7 @@ $(document).ready(function() {
   $.each(mapMarkers,function(index, marker){
     var dtUrl = "/projects/" + encodeURIComponent(marker['iati_identifier']).toString() + "/summary";
     var title = marker['title'];
-    var prepAltText = 'Project title: ' + title + '. Project identifier: ' + marker['iati_identifier'] + '. Project location on map: ' + marker['loc'];
+    var prepAltText = 'Programme title: ' + title + '. Programme identifier: ' + marker['iati_identifier'] + '. Programme location on map: ' + marker['loc'];
     var tempMarker = L.marker(L.latLng(marker.geometry.coordinates[1],marker.geometry.coordinates[0]),{
       title: title,
       keyboard: true,

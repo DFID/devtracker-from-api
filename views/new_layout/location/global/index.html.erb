@@ -1,0 +1,49 @@
+<div class="govuk-width-container app-width-container">  
+    <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/">Home</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">
+                Current Programmes
+            </li>
+        </ol>
+    </div>
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <nav class="moj-sub-navigation" aria-label="Sub navigation">
+                    <ul class="moj-sub-navigation__list">
+                        <li class="moj-sub-navigation__item">
+                            <a href="/location/country" class="moj-sub-navigation__link" <%if active_sub_link=='country'%> aria-current="page" <%end%>>Current programmes</a>
+                        </li>
+                        <li class="moj-sub-navigation__item">
+                            <a href="/location/regional" class="moj-sub-navigation__link" <%if active_sub_link=='region'%> aria-current="page" <%end%>>Regional programmes</a>
+                        </li>
+                        <li class="moj-sub-navigation__item">
+                            <a href="/location/global" class="moj-sub-navigation__link" <%if active_sub_link=='global'%> aria-current="page" <%end%>>Global programmes</a>
+                        </li>
+                    </ul>
+                </nav>
+                <h1 class="govuk-heading-l">Regional programmes</h1>
+                <div class="govuk-grid-row">
+                     <div class="govuk-grid-column-full">
+                        <div id="map" class="static-background"></div>
+                     </div>
+                </div>
+                <span class="govuk-caption-m govuk-!-font-size-14 govuk-!-margin-bottom-5">Disclaimer: Country borders do not necessarily reflect the UK Government's official position.</span>
+                <h2 class="govuk-heading-m">All Global Recipients</h2>
+                <ul class="govuk-list">
+                    <% dfid_complete_region_list("Global").each do |region| %> 
+                        <li>
+                            <a class="govuk-link" href="/regions/<%=region['code']%>"><%= region['name'] %></a>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>

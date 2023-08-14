@@ -9,7 +9,7 @@
 				
                 <div class="govuk-grid-row">
 					<div class="govuk-grid-column-full">
-					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active projects. To see projects at other stages, use the status filters.</div>
+					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active programmes. To see programmes at other stages, use the status filters.</div>
 					</div>
 				</div>
                        <div class="govuk-grid-row">
@@ -21,7 +21,7 @@
                             </h1>
                         <%else%>
                             <h1>
-								<span>Now showing projects related to:</span>
+								<span>Now showing programmes related to:</span>
                                 "<%= query %>"
                             </h1>
                         <%end%>
@@ -252,8 +252,8 @@
                                         </p>
 										</div>
 										<div class="govuk-grid-column-one-quarter">
-                                            <h4>Project identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
+                                            <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
+                                            <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common'])%></p>
                                             <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                             <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
 										</div>
@@ -272,11 +272,11 @@
         <div class="row">
             <div class="twelve columns">
                 <div class="search-result nine columns push-three">
-                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any projects.</p><p style="margin-top:1em">Suggestions:</p>
+                    <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any programmes.</p><p style="margin-top:1em">Suggestions:</p>
                     <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
                         <li>Make sure all words are spelled correctly or try different keywords</li>
                     </ul>
-                    <p>Search results only show active projects. To see projects that have been completed, select the "Include Completed Projects" checkbox and click the Search button.</p>
+                    <p>Search results only show active programmes. To see programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
                 </div>
                 <div class="three columns pull-nine"></div>
             </div>
@@ -477,6 +477,7 @@
 	
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
+                    var startDate = new Date(result.activity_date_start_common);
                     if (result.reporting_org_narrative[0] != 'UK - Department for International Development (DFID)') {
                         var reporting_org = result.reporting_org_narrative[0];
                     }
@@ -484,10 +485,10 @@
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Project identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);

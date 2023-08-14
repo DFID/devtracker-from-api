@@ -1,0 +1,15 @@
+﻿.app-button {
+    background-color: $app-fcdo-blue;
+
+    &:hover {
+        background-color: govuk-shade($app-fcdo-blue, 20%);
+    }
+
+    &--disabled, &[disabled="disabled"], [disabled=disabled] {
+        opacity: 0.5;
+
+        &:hover {
+            background-color: $app-fcdo-blue;
+        }
+    }
+}

@@ -1,0 +1,41 @@
+.app-card {
+    background-color: #f8f8f8;
+    padding: govuk-spacing(4);
+    margin-bottom: govuk-spacing(4);
+
+    &__intro {
+        color: $govuk-secondary-text-colour;
+
+       &--fixed-height {
+            min-height: 60px;
+        }
+    }
+
+    &-search {
+        display: flex;
+        padding: 0;
+
+        &-no-margin {
+            margin-top: -40px;
+        }
+
+        &__image {
+            display: none;
+            width: 300px;
+
+            @include govuk-media-query($from: tablet) {
+                display: block;
+            }
+        }
+
+        &__input {
+            flex-grow: 1;
+            padding: 20px;
+            margin-bottom: 0;
+
+            @include govuk-media-query($from: tablet) {
+                padding: 20px 40px;
+            }
+        }
+    }
+}

@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex">
+    <title>Home page - Development Tracker</title>
+    <link rel="stylesheet" href="/assets/scss/moj-frontend.min.css" />
+    <link rel="stylesheet" href="/assets/scss/application.min.css" />
+    <link rel="stylesheet" href="/assets/scss/extend.css"/>
+</head>
+<body>
+    <header class="govuk-header app-header " role="banner" data-module="govuk-header">
+        <div class="app-header__container">
+            <div class="app-width-container app-header__content">
+                <div class="app-header__content--logo">
+                    <a href="/" class="govuk-header__link govuk-header__link--homepage app-header__link">
+                        <span class="govuk-header__logotype">
+                            <img src="/assets/images/govuk-crown.svg" class="govuk-header__logotype-crown" alt="GovUK" />
+                            <span class="govuk-header__logotype-text">
+                                GOV.UK
+                            </span>
+                        </span>
+                    </a>
+                    <a href="/" class="app-header__link">
+                        <span class="govuk-header__product-name app-header__product-name">
+                            Development Tracker
+                        </span>
+                    </a>
+                </div>
+                    <div class="app-header__content--controls">
+                        <button class="app-header__menu-button" data-module="govuk-button" id="toggleGlobalMenu" onclick="toggleGlobalMenu()">Menu</button>
+                        <button class="app-header__search-button" data-module="govuk-button" id="toggleGlobalSearch" onclick="toggleGlobalSearch()"></button>
+
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <form action="/search" method="post" enctype="multipart/form-data">
+        <div id="globalSearch" class="app-header__search app-element-hidden">
+            <div class="govuk-width-container">
+                <div class="govuk-form-group">
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--m" for="event-name">
+                            Search Development Tracker
+                        </label>
+                    </h1>
+                    <div id="event-name-hint" class="govuk-hint">
+                        Enter location, sector, organisation or keyword
+                    </div>
+                    <div class="app-header__search-input">
+                        <input class="govuk-input" id="query" name="query" type="text">
+                        <button data-module="govuk-button"></button>
+                    </div>
+                    <div class="app-search-form__checkbox">
+                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
+                                <label class="govuk-label govuk-checkboxes__label" for="includeClosed">
+                                    Include closed programmes
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="app-header__navigation" id="globalMenu">
+    <nav aria-label="Menu" class="govuk-width-container app-width-container">
+        <div class="app-header__navigation-content">
+            <ul id="navigation" class="govuk-header__navigation-list">
+                <li class="govuk-header__navigation-item app-header__navigation-item">
+                    <a class="govuk-header__link app-header__link" href="/">
+                        Home
+                    </a>
+                </li>
+                <li class="govuk-header__navigation-item app-header__navigation-item ">
+                    <a class="govuk-header__link app-header__link <%if active_link=='sector'%> app-header__navigation-item--active <%end%>" href="/sector">
+                        Aid by Sector
+                    </a>
+                </li>
+                <li class="govuk-header__navigation-item app-header__navigation-item ">
+                    <a class="govuk-header__link app-header__link <%if active_link=='aidByLoc'%> app-header__navigation-item--active <%end%>" href="/location/country">
+                        Aid by Location
+                    </a>
+                </li>
+                <li class="govuk-header__navigation-item app-header__navigation-item ">
+                    <a class="govuk-header__link app-header__link <%if active_link=='aidByDept'%> app-header__navigation-item--active <%end%>" href="/departments">
+                        Aid by Department
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+    <script>
+        function toggleGlobalSearch() {
+            var toggleGlobalSearch = document.getElementById("toggleGlobalSearch")
+            var toggleGlobalMenu = document.getElementById("toggleGlobalMenu");
+            var globalMenu = document.getElementById("globalMenu");
+
+            if (toggleGlobalMenu.classList.contains("app-header__menu-button--active")) {
+                toggleGlobalMenu.classList.remove("app-header__menu-button--active")
+                globalMenu.style.display = "none";
+            }
+
+            var globalSearch = document.getElementById("globalSearch");
+            if (globalSearch.style.display === "block") {
+                globalSearch.style.display = "none";
+            } else {
+                globalSearch.style.display = "block";
+            }
+            toggleGlobalSearch.classList.toggle("app-header__search-button--active");
+        }
+
+        function toggleGlobalMenu() {
+            var toggleGlobalMenu = document.getElementById("toggleGlobalMenu");
+            var toggleGlobalSearch = document.getElementById("toggleGlobalSearch");
+            var globalSearch = document.getElementById("globalSearch");
+
+            if (toggleGlobalSearch.classList.contains("app-header__search-button--active")) {
+                toggleGlobalSearch.classList.remove("app-header__search-button--active")
+                globalSearch.style.display = "none";
+            }
+
+            var globalMenu = document.getElementById("globalMenu");
+            if (globalMenu.style.display === "block") {
+                globalMenu.style.display = "none";
+            } else {
+                globalMenu.style.display = "block";
+            }
+            toggleGlobalMenu.classList.toggle("app-header__menu-button--active");
+        }
+    </script>
+    <%= yield %>
+</div>
+
+
+    <footer class="govuk-footer " role="contentinfo">
+    <div class="govuk-width-container app-width-container">
+        
+    <div class="govuk-footer__meta">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+        <h2 class="govuk-visually-hidden">Footer links</h2>
+            <ul class="govuk-footer__inline-list">
+
+                <li class="govuk-footer__inline-list-item">
+                    <a class="govuk-footer__link" href="/about">
+                        About
+                    </a>
+                </li>
+
+                <li class="govuk-footer__inline-list-item">
+                    <a class="govuk-footer__link" href="/accessibility-statement">
+                        Accessibility Statement
+                    </a>
+                </li>
+
+                <li class="govuk-footer__inline-list-item">
+                    <a class="govuk-footer__link" href="/custom-codes">
+                        Custom Codes
+                    </a>
+                </li>
+
+                <li class="govuk-footer__inline-list-item">
+                    <a class="govuk-footer__link" href="/faq">
+                        Glossary
+                    </a>
+                </li>
+
+                <li class="govuk-footer__inline-list-item">
+                    <a class="govuk-footer__link" href="/privacy-policy">
+                        Privacy Policy
+                    </a>
+                </li>
+
+                <li class="govuk-footer__inline-list-item">
+                    <a target="_BLANK" class="govuk-footer__link" href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office?_ga=2.164820735.1535445563.1675569120-188307593.1659519762">
+                        Contact Us
+                    </a>
+                </li>
+
+            </ul>
+            <div class="govuk-footer__meta-custom">
+                This site uses <a href="/cookies" class="govuk-footer__link">cookies</a>
+            </div>
+
+
+            <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
+                <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"></path>
+            </svg>
+            <span class="govuk-footer__licence-description">
+
+                All content is available under the
+                <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+
+            </span>
+        </div>
+        <div class="govuk-footer__meta-item">
+            <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+        </div>
+    </div>
+    </div>
+</footer>
+
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/moj-frontend.min.js"></script>
+    <script src="/assets/govuk/all.js"></script>
+    <%# <script src="/assets/js/dev-tracker.js"></script> %>
+    <script>
+        window.GOVUKFrontend.initAll();
+        window.MOJFrontend.initAll();
+    </script>
+    <!-- -->
+    
+    <!-- -->
+    <%if active_link=='aidByLoc'%>
+        <script src="/javascripts/d3.v3.js" type="text/javascript"></script>
+        <script src="/javascripts/c3.min-12912fb6.js" type="text/javascript"></script>
+        <link href="/stylesheets/c3-b03125fa.css" rel="stylesheet" type="text/css">
+        <%if active_sub_link=='country'%>
+            <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
+            <script src="/javascripts/leaflet/leaflet_new.js"></script>
+            <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
+            <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
+            <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
+        <%end%>
+        <%if active_sub_link=='region'%>
+            <script src="/javascripts/circlegraph.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var regionsData = {
+                    totalSpend : <%= dfid_regional_projects_data ['totalBudget'] %>,
+                    regionalProjects : <%= dfid_regional_projects_data ['regionsData'] %>	    		
+                    }
+                    var labels = {
+                        header : 'Total regional budget ' + '<%= current_financial_year %> ',
+                        amount : '\u00A3' + '<%= dfid_regional_projects_data ['totalBudgetFormatted']%>' 
+                    }
+                    var container = $('#map');
+                    var graph = new CircleGraph(container);
+                    graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                    $(window).resize(function() {
+                        if (container.width != graph.width) {
+                            graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                        }	        	
+                    });
+                });
+            </script>
+        <%end%>
+        <%if active_sub_link=='region'%>
+            <script src="/javascripts/circlegraph.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var regionsData = {
+                    totalSpend : <%= dfid_regional_projects_data ['totalBudget'] %>,
+                    regionalProjects : <%= dfid_regional_projects_data ['regionsData'] %>	    		
+                    }
+                    var labels = {
+                        header : 'Total regional budget ' + '<%= current_financial_year %> ',
+                        amount : '\u00A3' + '<%= dfid_regional_projects_data ['totalBudgetFormatted']%>' 
+                    }
+                    var container = $('#map');
+                    var graph = new CircleGraph(container);
+                    graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                    $(window).resize(function() {
+                        if (container.width != graph.width) {
+                            graph.drawRegionalProjectsGraph(labels, regionsData, "regions");
+                        }	        	
+                    });
+                });
+            </script>
+        <%end%>
+        <%if active_sub_link=='countrySummary'%>
+            <script src="/javascripts/jquery.color.min.js"></script>
+            <script src="/javascripts/jquery.animateNumber.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
+                    //Prepare the ajax calls
+                    $('#waiting-impl-orgs').slideDown('slow');
+                    var call1 = $.get('/country-implementing-org-list/<%= country['code'] %>/<%= activityCount%>')
+                    .done(function(response){
+                        if(Object.keys(response.output).length > 0){
+                            tempString = '';
+                            $.each(response.output, function(i, data){
+                                tempString = tempString + '<tr class="govuk-table__row"><th scope="row" class="govuk-table__header">' 
+                                + data.orgName 
+                                + '</th><td class="govuk-table__cell">' + data.count + '</td></tr>';
+                            });
+                            $('#implementing_org_table_body').html(tempString);
+                            $('#implementing_org_container').slideDown('slow');
+                            $('#waiting-impl-orgs').slideUp('slow');
+                        }
+                        //console.log(response.output.length);
+                        // if(response)
+                        // if(response.projectType == 'country'){
+                        //     $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
+                        // }
+                    });
+
+                    var sectorGraphDataVar = $.get('/country-sector-graph-data/<%= country['code'] %>')
+                    .done(function(response){
+                        if(response.output.length > 0){
+                            var graphData = response.output[0];
+                            var groups = [response.output[1]];
+                            var fColors = {};
+                            for(i = 0; i<graphData.length; i++){
+                                fColors[graphData[i][0]] = colors[i];
+                            };
+
+                            var stacked = c3.generate({
+                                bindto: '#sectorChart',
+                                data: {
+                                    columns: graphData,
+                                    type: 'bar',
+                                    labels: false,
+                                    colors: fColors,
+                                    groups: groups,
+                                    order: 'asc'
+                                },
+                                tooltop: {
+                                    grouped: false
+                                },
+                                padding: {left: 10, right: 10},
+                                axis: {
+                                    rotated: true,
+                                    x: {
+                                        show: false
+                                    },
+                                    y: {
+                                        label: '%',
+                                        min: 0,
+                                        max: 100,
+                                        padding: {top: 0, bottom: 0}
+                                    }
+                                },
+                                bar: {
+                                    width: {
+                                        ratio: .6
+                                    }
+                                },
+                                
+                                tooltip: {
+                                    format: {
+                                        title: function (x) { return 'Sector %' }
+                                    }
+                                }
+                            });
+                            $('#sect-container').slideDown('slow');
+                        }
+                    });
+
+                    var budgetBarGraphData = $.get('/country-budget-bar-graph-data/<%= country['code'] %>')
+                    .done(function(response){
+                        if(response.output.length > 0){
+                            var yTicks = [];
+                            var chartv5 = c3.generate({
+                                bindto: '#budget-year-chart5',
+                            data: {
+                                columns: response.output[2],
+                                type: 'bar',
+                                groups: [response.output[0]],
+                            },
+                            color: {
+                                pattern: colors
+                            },
+                            tooltip: {
+                                    format: {
+                                        value: function(value){
+                                            return "£" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                        }
+                                    }
+                                },
+                            axis: { 
+                                x: {
+                                type: 'category',
+                                categories: response.output[1],
+                            },
+                            y: {
+                                        tick: {
+                                            format: function(d){ 
+                                                yTicks.push(d3.format(".2s")(d)); 
+                                                return "£" + d3.format(".2s")(d);
+                                            } /*This code is used for converting the raw data into data with scientific prefix like 'M' for millions.*/
+                                        },
+                                    }
+                                },
+                            });
+                            /*This code is for generating the grid line values for the bar chart*/
+                            var tempString = [];
+                            yTicks.pop();
+                            for(i = 0; i < 5; i++) {
+                                tempString[i] = yTicks.pop().replace("M","") + '000000';
+                            }
+                            /*Cleaned the ticks array that stored pointers for the grid line generating locations*/
+                            yTicks = [];
+                            /* Generating the grid lines */
+                            for(i=0;i<tempString.length;i++){
+                                yTicks = [];
+                            }
+                        }
+                    });
+                    //End the ajax calls
+                    $('#populationCount').animateNumber(
+                    {
+                    number: <%if country['population'] != "" then%><%= (country['population']/1000000.0).round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                    $('#livingBelowCount').animateNumber(
+                    {
+                    number: <%if country['belowPovertyLine'] != "" then%><%= country['belowPovertyLine'].to_f.round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                    $('#gdpGrowthRateCount').animateNumber(
+                    {
+                    number: <%if country['gdpGrowthRate'] != "" then%><%= country['gdpGrowthRate'].to_f.round(2)%><%else%>0<%end%>
+                    },
+                    2000
+                )
+                });
+                
+            </script>
+            <script type="text/javascript">
+                var mapType = "country";
+                window.countryCode = "<%= country['code']%>";
+                window.countryName = "<%= country['name']%>";
+                window.geometryType = "<%= countryGeoJsonData['type'] %>";
+                window.coordinates = <%= countryGeoJsonData['coordinates'].to_json %>
+                window.mainMarkers = <%= mapMarkers.to_json%>;
+            </script>
+            <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
+            <script src="/javascripts/leaflet/leaflet_new.js"></script>
+            <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
+            <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
+            <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
+        <%end%>
+    <%end%>
+</body>
+</html>

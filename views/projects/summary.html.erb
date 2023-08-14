@@ -2,28 +2,48 @@
 
 <div class="row">
     <div class="twelve columns summary">
-        <%if project['description'].length == 1%>
-            <b class="more-info-title">Description</b>
-            <%begin%>
-                <p class="project-description"><%= project['description'][0]['narrative'][0]['text'] %></p>
-            <%rescue%>
-                <p class="project-description">N/A</p>
-            <%end%>
-        <%else%>
-            <%project['description'].sort_by{|item| item['type']['code']}.each do |description|%>
-                <%if description['type']['code'] == '1'%>
-                    <b class="more-info-title">Description</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '2'%>
-                    <b class="more-info-title">Objectives</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '3'%>
-                    <b class="more-info-title">Target Groups</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%elsif description['type']['code'] == '4'%>
-                    <b class="more-info-title">Other</b>
-                    <p class="project-description"><%= description['narrative'][0]['text'] %></p>
-                <%end%> 
+        <%if project.has_key?('description_narrative')%>
+            <%if project['description_narrative'].length == 1%>
+                <b class="more-info-title">Description</b>
+                <%begin%>
+                    <p class="project-description"><%= project['description_narrative'].first %></p>
+                <%rescue%>
+                    <p class="project-description">N/A</p>
+                <%end%>
+            <%else%>
+                <%
+                jDesc = 0
+                jObj = 0
+                jTar = 0
+                jOth = 0 
+                %>
+                <%project['description_narrative'].each_with_index do |description, index|%>
+                    <%if project['description_type'][index].to_i == 1%>
+                        <%if jDesc == 0%>
+                            <b class="more-info-title">Description</b>
+                            <%jDesc = 1%>
+                        <%end%>
+                        <p class="project-description"><%= description %></p>
+                    <%elsif project['description_type'][index].to_i == 2%>
+                        <%if jObj == 0%>
+                            <b class="more-info-title">Objectives</b>
+                            <%jObj = 1%>
+                        <%end%>
+                        <p class="project-description"><%= description %></p>
+                    <%elsif project['description_type'][index].to_i == 3%>
+                        <%if jTar == 0%>
+                            <b class="more-info-title">Target Groups</b>
+                            <%jTar = 1%>
+                        <%end%>
+                        <p class="project-description"><%= description %></p>
+                    <%elsif project['description_type'][index].to_i == 4%>
+                        <%if jOth == 0%>
+                            <b class="more-info-title">Other</b>
+                            <%jOth = 1%>
+                        <%end%>
+                        <p class="project-description"><%= description %></p>
+                    <%end%> 
+                <%end%>
             <%end%>
         <%end%>
     </div>
@@ -34,7 +54,7 @@
 
     <div class="six columns">
         <div class="more-info-container">  
-            <span class="more-info-title">Status - <%= activity_status(project['activity_status']['code']) %></span> 
+            <span class="more-info-title">Status - <%= activity_status(project['activity_status_code']) %></span> 
             <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme status" class="more-info-link-middle"/></a>
             <aside id="moreinfo3" class="more-info">            
                     <div class="more-info-content">
@@ -58,7 +78,7 @@
 
         <div id="funding-progress" style="height: 150px;" class="progress"></div>
         <% if participatingOrgList == nil %>
-            <% implementingOrgs=get_implementing_orgs(projectId)%>
+            <% implementingOrgs=get_implementing_orgsv2(projectId)%>
             <% if (implementingOrgs.length>0)  %>
 
                 <div class="more-info-container">  
@@ -103,7 +123,7 @@
                                 <td>
                                     <% participatingOrgData.each_with_index { |org, index| %>
                                         <% begin %>
-                                            <a target="_BLANK" href="/search?query=<%= org['narrative'][0]['text']%>&includeClosed=0"><%= org['narrative'][0]['text']%></a>
+                                            <a target="_BLANK" href="/search?query=<%= org%>&includeClosed=0"><%= org%></a>
                                         <% rescue %>
                                             Name not available
                                         <% end %>
@@ -126,7 +146,7 @@
     <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
         <div style="margin-top: 15px" class="project-country-title"> 
           <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
-          <%if project['location'].length > 0%>
+          <%if project.has_key?('location')%>
             <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link button" style="position: absolute;right: 30px;">CSV</a>
           <%end%>
            <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
@@ -163,7 +183,7 @@
         <script type="text/javascript">
             var mapType = "project";
             window.mainMarkers = <%= mapMarkers.to_json%>;
-            var ProjectTitle = "<%= project['title']['narrative'][0]['text'] %>";
+            var ProjectTitle = "<%= project['title_narrative_text'].first %>";
             var countryCount = <%= countryOrRegion[:countriesCount]%>;
             var regionCount = <%= countryOrRegion[:regionsCount]%>;
         </script>
@@ -196,8 +216,8 @@
         </div>
         <div id="budget-plan-spend" style="height: 300px; width: 100%" class="row budget_container"></div>
     </div>
-    <div style="display: none" class="twelve columns">
-        <%if policyMarkersCount > 0%>
+    <div class="twelve columns">
+        <%if policyMarkers.length > 0%>
             <div class="country-info-container policy-marker-container">  
                 <span class="country-info">Policy Marker(s)</span>
                 <p>ODA measures in relation to their realisation of OECD development policy objectives</p>
@@ -205,9 +225,7 @@
             <div class="row">
                 <div class="twelve columns">
                     <% policyMarkers.each do |marker|  %>
-                        <%if marker['significance']['code'].to_i != 0%>
-                            <span class="policy_marker"><%= marker['policy_marker']['name']%>: <span class="policy_marker_significance"><%= marker['significance']['name'] %></span></span>
-                        <%end%>
+                        <span class="policy_marker"><%= marker['title']%>: <span class="policy_marker_significance"><%= marker['significance'] %></span></span>
                     <%end%>
                 </div>
             </div>
@@ -227,26 +245,20 @@
     %>
         (function(){
             // This condition is added to avoid double counting if someone publishes their project budget information at H2 level instead of H1.
-            <%if project['activity_plus_child_aggregation']['activity']['budget_value'].to_i > 0 %>
                 var funding = [ {label: "", text: "", value: 0},
-                                {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0))*100 , choose_better_currency(dis_curr,exp_curr,default_curr)).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0) %>},
-                                {label: "Programme budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity']['budget_value'].to_f.round(0) %>}]
-            <%else%>
-                var funding = [ {label: "", text: "", value: 0},
-                                {label: "Spend to date", text: "<%= Money.new((project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0))*100 , choose_better_currency(dis_curr,exp_curr,default_curr)).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['disbursement_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['expenditure_value'].to_f.round(0) + project['activity_plus_child_aggregation']['activity_children']['purchase_of_equity_value'].to_f.round(0) %>},
-                                {label: "Programme budget", text: "<%= Money.new(project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0)*100 , if project['activity_plus_child_aggregation']['activity_children']['budget_currency'].nil? then project['default_currency']['code'] else project['activity_plus_child_aggregation']['activity_children']['budget_currency'] end).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= project['activity_plus_child_aggregation']['activity_children']['budget_value'].to_f.round(0) %>}]
-            <%end%>
+                                {label: "Spend to date", text: "<%= Money.new(spendToDate.to_f.round(0)*100 , 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= spendToDate.to_f.round(0) %>},
+                                {label: "Programme budget", text: "<%= Money.new(programmeBudget.to_f.round(0)*100 , 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false) %>", value: <%= programmeBudget.to_f.round(0) %>}]
             charts.progressBar("#funding-progress", funding, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
 
-            var time = [ {label: "<%=choose_better_date_label(actualStartDate(project['activity_date']),plannedStartDate(project['activity_date'])) %> Start",
-                          text: "<%= format_date(choose_better_date(actualStartDate(project['activity_date']),plannedStartDate(project['activity_date'])))%>",
-                          value: <%= choose_better_date(actualStartDate(project['activity_date']), plannedStartDate(project['activity_date'])) %>},
+            var time = [ {label: "<%=choose_better_date_label(actualStartDate(project),plannedStartDate(project)) %> Start",
+                          text: "<%= format_date(choose_better_date(actualStartDate(project),plannedStartDate(project)))%>",
+                          value: <%= choose_better_date(actualStartDate(project), plannedStartDate(project)) %>},
                          {label: "Progress by time",
                           text: "",
                           value: new Date().getTime()},
-                         {label: "<%=choose_better_date_label(actualEndDate(project['activity_date']),plannedEndDate(project['activity_date'])) %> End",
-                          text: "<%= format_date(choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date']))) %>",
-                          value: <%= choose_better_date(actualEndDate(project['activity_date']), plannedEndDate(project['activity_date'])) %>}];
+                         {label: "<%=choose_better_date_label(actualEndDate(project),plannedEndDate(project)) %> End",
+                          text: "<%= format_date(choose_better_date(actualEndDate(project), plannedEndDate(project))) %>",
+                          value: <%= choose_better_date(actualEndDate(project), plannedEndDate(project)) %>}];
             charts.progressBar("#time-progress", time, function(d) { return d.value; }, function(d) { return d.label; }, function(d) { return d.text; });
         })()
     </script>
@@ -332,12 +344,12 @@
                 }
             }
         });
-        <% budgetYearData = project_budget_per_fy(project['iati_identifier']) %>
+        <% budgetYearData = project_budget_per_fyv2(project['iati_identifier']) %>
         <% if !budgetYearData.nil? && budgetYearData[0].length>0 then %>
             $('.budget_container').slideDown('slow');
             <% begin %>
-                <%if !project["default_currency"]["code"].nil? %>
-                    var graphCurrency = '<%= Money.new(0,project["default_currency"]["code"]).format %>'
+                <%if project.has_key?("default_currency") %>
+                    var graphCurrency = '<%= Money.new(0,project["default_currency"]).format %>'
                     //var graphCurrency = '<%#= Money.new(0,"GBP").format %>'
                 <% elsif !project["aggregations"]["activity_children"]["budget_currency"].nil? %>
                     var graphCurrency = '<%= Money.new(0,project["aggregations"]["activity_children"]["budget_currency"]).format %>'
@@ -419,12 +431,9 @@
             <% else %>
             $('.budget_container').hide();
             $('#budget-plan-spend').html("Data not found");
-
             <% end %>
-        
     });
  </script>
-
 </div>
 
     <div class="row">

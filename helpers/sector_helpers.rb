@@ -39,61 +39,183 @@ module SectorHelpers
 		      end
 	end	
 
-
-	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
-
-  		sectorValues  = JSON.parse(apiUrl)
-  		sectorValues  = sectorValues['results']
-		iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
-		sectorValues.each do |sector|
-			sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
-		end
-		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
-		highLevelSector = map_sector_data()
-		#Create a data structure to map each DAC 5 sector code to a high level sector code
-		highLevelSectorBudget = []
-		sectorValues.each do |elem|
-			begin
-			selectedData = highLevelSector.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
-			tempData = {}
-			tempData[:code] = selectedData[codeType]
-			tempData[:name] = selectedData[sectorDescription]
-			tempData[:budget] = elem["value"].to_i
-			highLevelSectorBudget.push(tempData)
-			rescue
-				tempData = {}
-				tempData[:code] = 0
-				tempData[:name] = 'Uncategorised'
-				tempData[:budget] = elem["value"].to_i
-				highLevelSectorBudget.push(tempData)
+	def high_level_sector_listv2(apiUrl, listType)
+		sectorValues  = JSON.parse(apiUrl)['response']['docs']
+		# Load the high-level sector data from static contents
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+		#####
+		## logic
+		## get budget data, then check if they fall within date range
+		## do a summation of the budget amount within date range
+		## pick dac5 sector code and then get the underlying high level sector code
+		## if the sector is present, add the new budget info to this sector
+		## Else create a new ref to the high level sector code and add
+		## budget value starting from 0
+		## pick budget percentage for each dac5 sector code2
+		## calculate the budget amount against that perentage and add it to
+		## the high level related sector code
+		finalData = []
+		sectorValues.each do |element|
+			tempTotalBudget = 0
+			element['budget_period_start_iso_date'].each_with_index do |data, index|
+				if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+					tempTotalBudget = tempTotalBudget + element['budget_value'][index].to_f
+				end
 			end
-		end          
-        
-	    #Aggregate the budget for each high level sector code (i.e. remove duplicate sector codes from the data structure and aggregate the budgets)
-	   	highLevelSectorBudgetAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
-  	
-  		#remove unallocated sector as we don't want to show that
-  		highLevelSectorBudgetAggregatedNoUnalloc = highLevelSectorBudgetAggregated.reject{|h| h[:name] == "Unallocated"}
-	    
-	    if listType == "top_five_sectors"
-	    	hiLevSecBudAggSorted = highLevelSectorBudgetAggregatedNoUnalloc.sort_by{ |k| k[:budget].to_f}.reverse
+			if element.has_key?('sector_code')
+				element['sector_code'].each_with_index do |data, index|
+					if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
+						selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
+						if !finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['High Level Code (L1)'].to_i}.nil?
+							if(element.has_key?('sector_percentage'))
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['High Level Code (L1)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['High Level Code (L1)'].to_i}]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+							else
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['High Level Code (L1)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['High Level Code (L1)'].to_i}]['budget'] + tempTotalBudget
+							end
+						else
+							tempData = {}
+							tempData['code'] = selectedHiLvlSectorData['High Level Code (L1)']
+							tempData['name'] = selectedHiLvlSectorData['High Level Sector Description']
+							if(element.has_key?('sector_percentage'))
+								tempData['budget'] = tempTotalBudget * (element['sector_percentage'][index].to_f/100)
+							else
+								tempData['budget'] = tempTotalBudget
+							end
+							finalData.push(tempData)
+						end
+					end
+				end
+			end
+		end
+		if listType == "top_five_sectors"
+	    	hiLevSecBudAggSorted = finalData.select{|s| s['code'].to_i != 22}.sort_by{ |k| k['budget'].to_f}.reverse
 	    	hiLevSecBudAggSorted.first(10)	    	  
 		else 
 			#Sort the sectors by name
-			sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}
+			sectorsData = finalData.sort_by{ |k| k['name']}
+			#sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}
 			#Find the total budget for all of the sectors
-	  	 	totalBudget = Float(sectorsData.map { |s| s[:budget].to_f }.inject(:+))
+	  	 	totalBudget = Float(sectorsData.map { |s| s['budget'].to_f }.inject(:+))
 
 	  	 	returnObject = {
-				  :sectorsData => sectorsData,
-				  :totalBudget => totalBudget				 				  
+				  'sectorsData' => sectorsData,
+				  'totalBudget' => totalBudget				 				  
 				}
-	    end 
+	    end
+	end
 
+	def sector_parent_data_listv2(apiUrl, sectorHierarchy)
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		sectorValues  = JSON.parse(apiUrl)['response']['docs']
+		# Load the high-level sector data from static contents
+		finalData = []
+		sectorValues.each do |element|
+			tempTotalBudget = 0
+			element['budget_period_start_iso_date'].each_with_index do |data, index|
+				if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+					tempTotalBudget = tempTotalBudget + element['budget_value'][index].to_f
+				end
+			end
+			if element.has_key?('sector_code')
+				element['sector_code'].each_with_index do |data, index|
+					if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
+						selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
+						if !finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Category (L2)'].to_i}.nil?
+							if(element.has_key?('sector_percentage'))
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Category (L2)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Category (L2)'].to_i}]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+							else
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Category (L2)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Category (L2)'].to_i}]['budget'] + tempTotalBudget
+							end
+						else
+							tempData = {}
+							tempData['code'] = selectedHiLvlSectorData['Category (L2)']
+							tempData['name'] = selectedHiLvlSectorData['Category Name']
+							tempData['parentCode'] = selectedHiLvlSectorData['High Level Code (L1)']
+							if(element.has_key?('sector_percentage'))
+								tempData['budget'] = tempTotalBudget * (element['sector_percentage'][index].to_f/100)
+							else
+								tempData['budget'] = tempTotalBudget
+							end
+							finalData.push(tempData)
+						end
+					end
+				end
+			end
+		end
+		#Sort the sectors by name
+		sectorsData = finalData.sort_by{ |k| k['name']}
+		#sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}
+		#Find the total budget for all of the sectors
+		totalBudget = Float(sectorsData.map { |s| s['budget'].to_f }.inject(:+))
+		highLevelSectorInfo = {}
+		highLevelSectorInfo['highLevelSectorCode'] = sectorHierarchy.first['High Level Code (L1)']
+		highLevelSectorInfo['highLevelSectorDescription'] = sectorHierarchy.first['High Level Sector Description']
+
+		returnObject = {
+			'sectorData' => sectorsData,
+			'totalBudget' => totalBudget,
+			'sectorHierarchyPath' => highLevelSectorInfo		 				  
+		}
+	end
+
+	def sector_parent_data_dac5(apiUrl, sectorHierarchy)
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		sectorValues  = JSON.parse(apiUrl)['response']['docs']
+		# Load the high-level sector data from static contents
+		finalData = []
+		sectorValues.each do |element|
+			tempTotalBudget = 0
+			element['budget_period_start_iso_date'].each_with_index do |data, index|
+				if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+					tempTotalBudget = tempTotalBudget + element['budget_value'][index].to_f
+				end
+			end
+			if element.has_key?('sector_code')
+				element['sector_code'].each_with_index do |data, index|
+					if !sectorHierarchy.find_index{|k,_| k['Code (L3)'].to_i == data.to_i}.nil?
+						selectedHiLvlSectorData = sectorHierarchy.find{|k,_| k['Code (L3)'].to_i == data.to_i}
+						if !finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Code (L3)'].to_i}.nil?
+							if(element.has_key?('sector_percentage'))
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Code (L3)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Code (L3)'].to_i}]['budget'] + (tempTotalBudget * (element['sector_percentage'][index].to_f/100))
+							else
+								finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Code (L3)'].to_i}]['budget'] = finalData[finalData.find_index{|j,_| j['code'].to_i == selectedHiLvlSectorData['Code (L3)'].to_i}]['budget'] + tempTotalBudget
+							end
+						else
+							tempData = {}
+							tempData['code'] = selectedHiLvlSectorData['Code (L3)']
+							tempData['name'] = selectedHiLvlSectorData['Name']
+							tempData['parentCode'] = selectedHiLvlSectorData['Category (L2)']
+							if(element.has_key?('sector_percentage'))
+								tempData['budget'] = tempTotalBudget * (element['sector_percentage'][index].to_f/100)
+							else
+								tempData['budget'] = tempTotalBudget
+							end
+							finalData.push(tempData)
+						end
+					end
+				end
+			end
+		end
+		#Sort the sectors by name
+		sectorsData = finalData.sort_by{ |k| k['name']}
+		#sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}
+		#Find the total budget for all of the sectors
+		totalBudget = Float(sectorsData.map { |s| s['budget'].to_f }.inject(:+))
+		highLevelSectorInfo = {}
+		highLevelSectorInfo['highLevelSectorCode'] = sectorHierarchy.first['High Level Code (L1)']
+		highLevelSectorInfo['highLevelSectorDescription'] = sectorHierarchy.first['High Level Sector Description']
+		highLevelSectorInfo['categoryCode'] = sectorHierarchy.first['Category (L2)']
+		highLevelSectorInfo['categoryDescription'] = sectorHierarchy.first['Category Name']
+
+		returnObject = {
+			'sectorData' => sectorsData,
+			'totalBudget' => totalBudget,
+			'sectorHierarchyPath' => highLevelSectorInfo		 				  
+		}
 	end
 
 	def map_sector_data()
-		sectorValuesJSON = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
+		sectorValuesJSON = RestClient.get  api_simple_log('https://devtracker.fcdo.gov.uk/api/' + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=sector&aggregations=value&budget_period_start=#{settings.current_first_day_of_financial_year}&budget_period_end=#{settings.current_last_day_of_financial_year}&format=json")
 		sectorValues  = JSON.parse(sectorValuesJSON)
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
 		sectorValues['results'].each do |elem|

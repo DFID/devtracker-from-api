@@ -1,0 +1,33 @@
+.app-container-full-width {
+    max-width: 100%;
+}
+
+.app-banner {
+    padding-top: govuk-spacing(6);
+    padding-bottom: govuk-spacing(6);
+    background-color: govuk-colour("blue");
+    color: #fff;
+    margin-bottom: govuk-spacing(6);
+
+    &__content {
+        display: flex;
+        flex-direction: row;
+
+        div:first-of-type {
+            margin-right: govuk-spacing(8);
+        }
+    }
+
+    &__title {
+        color: #fff;
+    }
+
+    &__text {
+        color: #fff;
+    }
+
+    &__image {
+        max-width: 95px;
+    }
+}
+

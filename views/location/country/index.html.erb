@@ -17,7 +17,7 @@
                   var mapType = 'location';
                     var countriesData = <%= dfid_country_map_data %>;
                     var countryMapData = <%= countryMapData.to_json%>;
-                    var TotalCountryBudget = '<%= total_country_budget_location%>';
+                    var TotalCountryBudget = '<%= total_country_budget_locationv2%>';
                     var finYear = '<%=current_financial_year%>';
                     var maxBudget = <%= maxBudget%>
                 </script>  
@@ -69,20 +69,22 @@
             <tr>
                 <th>Country</th>
                 <th>Programme Budget</th>
-                <th>Top Sector</th>
             </tr>
         </thead>
         <tbody>
           <%dfid_country_stats_data.each do |key,val|%>
-            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA22'%>
+            <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA2'%>
               <tr>
-                <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
-                <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-                <td>
-                <% if sectorData.key?(key) %>
-                  <%= sectorData[key].first[1]['name']%> (<%= ((sectorData[key].first[1]['budget']*100)/val['budget']).round(1) %>%)
+                <%if val['id'].to_s.downcase == 'fk'%>
+                  <td><img class="flag" alt="Falkland Islands Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>">Falkland Islands</a></td>
+                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
+                <%elsif val['id'].to_s.downcase == 'ps'%>
+                  <td><img class="flag" alt="Occupied Palestinian Territories (OPT) Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>">Occupied Palestinian Territories (OPT)</a></td>
+                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
+                <%else%>
+                  <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
+                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
                 <%end%>
-              </td>
               </tr>
             <%end%>
           <%end%>

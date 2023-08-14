@@ -1,0 +1,68 @@
+﻿.app-components-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+    background-color: $app-fcdo-blue;
+/*    max-width: 1260px;*/
+    margin-left: auto;
+    margin-right: auto;
+
+    &__logo {
+        width: 40px;
+        margin-right: 10px;
+    }
+
+    &__service {
+        color: #fff;
+        margin: 0 10px 0 0;
+        font-weight: 700;
+
+        a {
+            color: #fff;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+        }
+
+    }
+
+    &__product-name {
+        color: #fff;
+        margin: 0;
+    }
+}
+
+.app-components {
+    display: flex;
+/*    max-width: 1280px;*/
+    margin-left: auto;
+    margin-right: auto;
+
+    &-menu {
+        width: 250px;
+        min-width: 250px;
+        padding: 10px 25px;
+    }
+
+    &-container {
+        max-width: 1200px;
+        margin-bottom: 40px;
+
+        &__buttons {
+            margin-bottom: 20px;
+        }
+
+    }
+
+    &-component {
+        flex-grow: 1;
+        padding: 25px;
+    }
+
+    &-footer {
+        padding: 0 25px;
+    }
+}

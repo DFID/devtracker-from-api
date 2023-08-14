@@ -1,0 +1,40 @@
+﻿.app-document {
+    display: flex;
+    flex-direction: column;
+
+    &--name {
+        display: flex;
+        align-items: center;
+
+        &-not-ready {
+            padding: 5px 0;
+        }
+
+        img {
+            opacity: 0.5;
+            margin-right: 10px;
+        }
+    }
+
+    &--status {
+        margin-left: auto;
+    }
+
+    &--info {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    &--tags {
+        margin-bottom: 40px;
+        display: flex;
+        gap: 10px;
+
+        &-tag {
+            font-size: 15px;
+            text-transform: capitalize;
+            font-weight: 400;
+        }
+
+    }
+}

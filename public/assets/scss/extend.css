@@ -1,0 +1,16 @@
+#map.static-background svg { height: 100%; width: 100%; margin-top: 5px;}
+#map {
+    width: 100%; 
+    height: 545px;
+    margin-top: 15px;
+}
+
+.static-background {
+    background-image: url(/images/map_transparent.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#countryMap {
+    height: 450px;
+}

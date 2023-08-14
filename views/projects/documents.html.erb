@@ -19,30 +19,39 @@
                 </tr>
             </thead>
             <tbody>
-                <% project['document_links'].each do |document| %>
+              <%if project.has_key?('document_link_title_narrative') %>
+                <% project['document_link_title_narrative'].each_with_index do |document, index| %>
                   <%begin%>
                     <%
-                    t_url = document['url']
+                    t_url = project['document_link_url'][index]
                     if t_url.include? "http://iati.fcdo."
                       t_url = t_url.sub! 'http:', 'https:'
                     end
-                    t_url_txt = document['title']['narrative'][0]['text'].gsub(/\.[^.]*$/, '')
-                    t_code = document['title']['narrative'][0]['lang']['code']
-                    t_title = document['title']['narrative'][0]['lang']['name']
+                    t_url_txt = document.gsub(/\.[^.]*$/, '')
+                    t_code = project.has_key?('document_link_language_code') ? project['document_link_language_code'][index] : 'en'
+                    t_title = project['document_link_title_narrative_lang'][index]
+                    categoryCodes = project['document-link.category-codes-combined'][index].split(',')
                     %>
                     <tr class="result-list-row">
                         <th scope="row"><a href="<%= t_url %>"><%= t_url_txt %></a></th>
                         <% if t_code != "en" then%>
-                           <td scope="col">
+                          <td scope="col">
                               <span class="language">
                                 <%= t_title %>
                               </span>
-                           </td>
+                          </td>
                         <% end %>
                         <td scope="col">
-                          <% document['category'].each do |category| %>
+                          <% categoryCodes.each do |category| %>
+                            <%
+                              begin
+                                cat = cateogies.select{|s| s['code'].to_s == category.to_s}.first
+                              rescue
+                                print(category)
+                              end
+                            %>
                             <span class="category">
-                              <%= category['category']['name']%>
+                              <%= cat['text']%>
                             </span>
                           <% end %>
                         </td>
@@ -51,6 +60,7 @@
                     <p>Document link(s) not available. Please let the <a href="mailto:IATI-feedback@fcdo.gov.uk">site admins</a> know of this.</p>
                   <%end%>
                 <% end %>
+              <% end %>
             </tbody>
         </table>
     </div>

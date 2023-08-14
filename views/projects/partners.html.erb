@@ -57,19 +57,19 @@
                 var fp_title = '';
                 var fp_description = '';
                 try {
-                  fp_reporting_org = data.reporting_org.narrative[0].text;
+                  fp_reporting_org = data.reporting_org_title;
                 }
                 catch {
                   fp_reporting_org = 'N/A';
                 }
                 try {
-                  fp_title = data.title.narrative[0].text;
+                  fp_title = data.title;
                 }
                 catch {
                   fp_title = 'N/A';
                 }
                 try {
-                  fp_description = data.description[0].narrative[0].text;
+                  fp_description = data.description;
                 }
                 catch {
                   fp_description = 'N/A';
@@ -96,21 +96,28 @@
                 }
               }
             });
-            if(response.output['hasNext'] != null){
-              htmlString = htmlString + '</div></div>'
+            htmlString = htmlString + '</div></div>'
               +'<div class="twelve columns"><button '
               +'id="fundedProjects_more" class="govuk-button" data-module="govuk-button"' 
               +'style="margin-top: 10px; float: right;">Load more</button>'
               +'<input id="fundedProjects_more_data" type="hidden" value="1" /></div>';
-            }
-            else {
-              htmlString = htmlString + '</div></div>';
-            }
+            // if(response.output['hasNext'] != null){
+            //   htmlString = htmlString + '</div></div>'
+            //   +'<div class="twelve columns"><button '
+            //   +'id="fundedProjects_more" class="govuk-button" data-module="govuk-button"' 
+            //   +'style="margin-top: 10px; float: right;">Load more</button>'
+            //   +'<input id="fundedProjects_more_data" type="hidden" value="1" /></div>';
+            // }
+            // else {
+            //   htmlString = htmlString + '</div></div>';
+            // }
+            jq3('#fundedProjects_more').show();
             jq3('#fundedProjects').html(htmlString);
             jq3('#fundedProjects_more').click(function(){
                 var p = parseInt(jq3('#fundedProjects_more_data').val()) + 1;
                 jq3('#fundedProjects_more_data').val(p);
                 fundedProjects(false,p);
+                $(this).hide();
             });
             $('#waiting').slideUp('slow');
           }
@@ -123,28 +130,29 @@
           res = response.output['projectsByKeys'];
           var htmlString = '';
           if (Object.keys(res).length > 0) {
-            if(response.output['hasNext'] == null){
-              jq3('#fundedProjects_more').hide();
-            }
+            // if(response.output['hasNext'] == null){
+            //   jq3('#fundedProjects_more').hide();
+            // }
+            jq3('#fundedProjects_more').show();
             jq3.each(res, function(i, data){
               if(data.iati_identifier.toString() !=  projectID.toString()){
                 var fp_reporting_org = '';
                 var fp_title = '';
                 var fp_description = '';
                 try {
-                  fp_reporting_org = data.reporting_org.narrative[0].text;
+                  fp_reporting_org = data.reporting_org_title;
                 }
                 catch {
                   fp_reporting_org = 'N/A';
                 }
                 try {
-                  fp_title = data.title.narrative[0].text;
+                  fp_title = data.title;
                 }
                 catch {
                   fp_title = 'N/A';
                 }
                 try {
-                  fp_description = data.description[0].narrative[0].text;
+                  fp_description = data.description;
                 }
                 catch {
                   fp_description = 'N/A';
@@ -177,22 +185,45 @@
         });
       }
     }
+    // function fundingProjects() {
+    //   $('#waiting').slideDown('slow');
+    //   jq3.get('/get-funding-projects-details/'+projectID)
+    //     .done(function(response){
+    //       res = response.output;
+    //       var htmlString = '';
+    //       if (res.length > 0) {
+    //         var htmlString = '';
+    //         // 2 divs open
+    //         htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Programme</h3>';
+    //         jq3.each(res, function(i, data){
+    //           htmlString = htmlString + '<div class="row"><div class="four columns summary">'
+    //           + '<h4>'+data[2]+'</h4>'
+    //           + '</div><div class="eight columns"><ul><li>'
+    //           + '<a href="/projects/'+encodeURI(data[0])+'/summary">'+data[3]+'</a>' + data[4]
+    //           + '<span>'+data[1]+'</span></li></ul></div></div>';
+    //         });
+    //         htmlString = htmlString + '</div></div>';
+    //         jq3('#fundingProjects').html(htmlString);
+    //       }
+    //       $('#waiting').slideUp('slow');
+    //     });
+    // }
     function fundingProjects() {
       $('#waiting').slideDown('slow');
       jq3.get('/get-funding-projects-details/'+projectID)
         .done(function(response){
-          res = response.output;
+          res = response.output.projectsByKeys;
           var htmlString = '';
-          if (res.length > 0) {
+          if (Object.keys(res).length > 0) {
             var htmlString = '';
             // 2 divs open
             htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Programme</h3>';
             jq3.each(res, function(i, data){
               htmlString = htmlString + '<div class="row"><div class="four columns summary">'
-              + '<h4>'+data[2]+'</h4>'
+              + '<h4>'+data.reporting_org_title+'</h4>'
               + '</div><div class="eight columns"><ul><li>'
-              + '<a href="/projects/'+encodeURI(data[0])+'/summary">'+data[3]+'</a>' + data[4]
-              + '<span>'+data[1]+'</span></li></ul></div></div>';
+              + '<a href="/projects/'+encodeURI(data.iati_identifier)+'/summary">'+data.title+'</a>' + data.description
+              + '<span>'+data.total_funding+'</span></li></ul></div></div>';
             });
             htmlString = htmlString + '</div></div>';
             jq3('#fundingProjects').html(htmlString);

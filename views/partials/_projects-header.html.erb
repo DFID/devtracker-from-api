@@ -2,36 +2,38 @@
 <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
-        <% if (!project['contact_info'][0].nil? && project['contact_info'][0]['email'].length > 0) %>
-            <%
-            tempMail = project['contact_info'][0]['email']
-            tempMailFirst = Array.new
-            tempMailSecond = Array.new
-            tempMailFirst = tempMail.split('@')
-            tempMailSecond = tempMailFirst[1].split('.')
-            finalEmail = Array.new
-            finalEmail.push(tempMailFirst[0])
-            tempMailSecond.each do |part|
-                finalEmail.push(part)
-            end
-            %>
-            var EmailArray = <%= finalEmail %>;
-            $('#showEmail').click(function(){
-                var tempEmail = '';
-                //sample a@y.gov.uk
-                //sameple a@y.com
-                tempEmail = tempEmail + EmailArray[0] + '@';
-                if(EmailArray.length > 3){
-                    for(i=1;i<EmailArray.length-1;i++){
-                        tempEmail = tempEmail + EmailArray[i] + '.';
+        <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
+            <% if (!project['contact_info_organisation_narrative'].first.nil?) %>
+                <%
+                tempMail = project.has_key?('contact_info_email') ? project['contact_info_email'].first : ''
+                tempMailFirst = Array.new
+                tempMailSecond = Array.new
+                tempMailFirst = tempMail.split('@')
+                tempMailSecond = tempMailFirst[1].split('.')
+                finalEmail = Array.new
+                finalEmail.push(tempMailFirst[0])
+                tempMailSecond.each do |part|
+                    finalEmail.push(part)
+                end
+                %>
+                var EmailArray = <%= finalEmail %>;
+                $('#showEmail').click(function(){
+                    var tempEmail = '';
+                    //sample a@y.gov.uk
+                    //sameple a@y.com
+                    tempEmail = tempEmail + EmailArray[0] + '@';
+                    if(EmailArray.length > 3){
+                        for(i=1;i<EmailArray.length-1;i++){
+                            tempEmail = tempEmail + EmailArray[i] + '.';
+                        }
+                        tempEmail = tempEmail + EmailArray[EmailArray.length-1];
                     }
-                    tempEmail = tempEmail + EmailArray[EmailArray.length-1];
-                }
-                else{
-                    tempEmail = tempEmail + EmailArray[1] + '.' + EmailArray[2];
-                }
-                $('#showEmail').html('<a href="mailto:'+tempEmail+'">'+tempEmail+'</a>');
-            });
+                    else{
+                        tempEmail = tempEmail + EmailArray[1] + '.' + EmailArray[2];
+                    }
+                    $('#showEmail').html('<a href="mailto:'+tempEmail+'">'+tempEmail+'</a>');
+                });
+            <%end%>
         <%end%>
     });
 </script>
@@ -43,14 +45,14 @@
                     <ol class="govuk-breadcrumbs__list">
                         <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
                         <li id="countryOrRegion" style="display: none" class="govuk-breadcrumbs__list-item"></li>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title']['narrative'][0]['text'] %>"><%= project['title']['narrative'][0]['text'] %></li>
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page" title="<%= project['title_narrative_text'].first %>"><%= project['title_narrative_text'].first %></li>
                     </ol>
                 </div>
                 <h2 style="color: rgba(255,255,255,0.5);font-size: 1em;clear: left;margin: 0px 0px -10px 0px;padding-top: 20px;font-weight: normal">
-                    <%= reporting_organisation(project) %>
+                    <%= reporting_organisationv2(project) %>
                 </h2>
                 <h1 style="font-size:1.5em">
-                    <%= project['title']['narrative'][0]['text'] %>
+                    <%= project['title_narrative_text'].first %>
                 </h1>
             </div>
             <div class="two columns">
@@ -68,7 +70,7 @@
                         <nav>
                             <ul class="tab-bar">
                                 <li <%= active=="summary" ? "class='active'" : ""%>><a id='summary' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/summary">Summary</a></li>
-                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project['document_links'].count %>)</a></li>
+                                <li <%= active=="documents" ? "class='active'" : ""%>><a id='documents' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/documents">Documents (<%= project.has_key?('document_link_url') ? project['document_link_url'].count : 0 %>)</a></li>
                                 <li <%= active=="components" ? "class='active'" : ""%>><a id='components' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/components">Projects</a></li>
                                 <li <%= active=="transactions" ? "class='active transactions-tab'" : "class='transactions-tab'"%> style="display: none"><a id='transactions' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/transactions">Transactions</a></li>
                                 <li <%= active=="partners" ? "class='active partner-tab'" : "class='partner-tab'"%> style="display: none"><a id='partners' href="/projects/<%=ERB::Util.url_encode(project['iati_identifier']).to_s%>/partners">Partners</a></li>
@@ -90,11 +92,13 @@
     <div class="twelve columns">
         <% if(!is_dfid_project(project['iati_identifier'])) %>
         <div class="govuk-inset-text" style="font-size: 14px;">
-          <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project['reporting_org']['narrative'][0]['text'] || "" %></strong>. 
-             <% if (!project['contact_info'][0].nil? && project['contact_info'][0]['email'].length > 0) %>
-                Please contact them (<span id='showEmail' style='color: blue; cursor: pointer'>Show Email Address</span>) if you have any questions about their data.
-            <% else %>
-                Please contact them if you have any questions about their data.
+          <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
+            <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
+                <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
+                    Please contact them (<span id='showEmail' style='color: blue; cursor: pointer'>Show Email Address</span>) if you have any questions about their data.
+                <% else %>
+                    Please contact them if you have any questions about their data.
+                <% end %>
             <% end %>
         </div>
         <% end %>
@@ -102,8 +106,8 @@
 </div>
 <div class="row">
     <div class="twelve columns">
-        <%if !project['last_updated_datetime'].nil?%>
-        <p class="last-updated"><strong>Programme Data Last Updated: <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></strong></p>
+        <%if !project['last_updated_datetime_f'].nil?%>
+        <p class="last-updated"><strong>Programme Data Last Updated: <%= Date.parse(project['last_updated_datetime_f']).strftime("%d/%m/%Y")%></strong></p>
         <% end %>
         <%if !project['iati_identifier'].nil?%>
             <p class="iati-id"><strong>IATI Identifier: <%= project['iati_identifier'] %></strong></p>

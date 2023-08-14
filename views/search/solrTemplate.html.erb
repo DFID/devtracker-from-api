@@ -20,10 +20,10 @@
                                 <%end%>
                             <%elsif searchType == 'S'%>
                                 <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
-                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/"><%=sector_list[:sectorHierarchyPath][:highLevelSectorDescription]%></a></li>
+                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/"><%=sector_list['sectorHierarchyPath']['highLevelSectorDescription']%></a></li>
                                 <%#if !(defined?(sectorData['categoryCode'])).nil? %>
                                 <%if sectorData['categoryCode'].length > 0 %>
-                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list[:sectorHierarchyPath][:highLevelSectorCode]%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list[:sectorHierarchyPath][:categoryDescription]%></a></li>
+                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list['sectorHierarchyPath']['categoryDescription']%></a></li>
                                 <%end%>
                                 <%if !(defined?(sectorData['sectorName'])).nil?%>
                                     <% if sectorData['sectorName'] != ''%>
@@ -108,9 +108,9 @@
 				<%if searchType == 'F'%>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full">
-                            <% if !fcdoCountryBudgets.empty? %>
+                            <% if !fcdoCountryBudgets.nil? %>
                                 <% fcdoCountryBudgets.each do |results| %>
-                                    <%if results[0] != 'UA22'%>
+                                    <%if results[0] != 'UA2'%>
                                         <div class="govuk-inset-text" style="font-size: 14px;">
                                         <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
                                             <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
@@ -423,7 +423,7 @@
 										</div>
 										<div class="govuk-grid-column-one-quarter">
                                             <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
+                                            <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common_f'])%></p>
                                             <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                             <h4>Total Budget:</h4>  <p><%=item['totalBudgetWithCurrency']%></p>
 										</div>
@@ -684,7 +684,7 @@
                                             </div>
                                             <div class="govuk-grid-column-one-quarter">
                                                 <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                                <h4>Start Date:</h4>  <p><%=item['activity_date_start_common']%></p>
+                                                <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common'])%></p>
                                                 <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
                                                 <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
                                             </div>
@@ -893,6 +893,7 @@
 	
                 var prepareContainer = '';
                 $.each(response.output.docs,function(i, result){
+                    var startDate = new Date(result.activity_date_start_common);
                     if (result.reporting_org_narrative[0] != 'UK - Department for International Development (DFID)') {
                         var reporting_org = result.reporting_org_narrative[0];
                     }
@@ -900,10 +901,10 @@
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + result.activity_date_start_common + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
                     }
                 })
                 $('#response-container').html(prepareContainer);

@@ -1,0 +1,15 @@
+﻿.app-project-data {
+    margin: -10px 0 25px 0;
+
+    &__item {
+        flex-grow: 1;
+        margin-bottom:2px;
+        font-size: 15px;
+
+        span {
+            display: inline-block;
+            min-width: 110px;
+            font-weight: 700;
+        }
+    }
+}

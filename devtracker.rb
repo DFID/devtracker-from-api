@@ -57,17 +57,15 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-# set :oipa_api_url, 'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
-set :oipa_api_url_solr, 'https://fcdo.iati.cloud/search/'
-# set :oipa_api_url, 'https://devtracker-staging.oipa.nl/api/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+# set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
+#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/api/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 
-#set :oipa_api_url, 'https://iatidatastore.iatistandard.org/api/'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -82,6 +80,7 @@ Money.default_currency = "GBP"
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+#set :goverment_department_ids, 'GB-GOV-1,GB-1'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -97,22 +96,107 @@ set :devtracker_page_title, ''
 get '/' do  #homepage
 	#read static data from JSON files for the front page
 	top5results = JSON.parse(File.read('data/top5results.json'))
-  	top5countries = get_top_5_countries()
+	top5countries = ''
+	Benchmark.bm(7) do |x|
+		x.report("Loading Time: ") {
+			if (!canLoadFromCache('top5Countries'))
+				storeCacheData(get_top_5_countriesv2(), 'top5Countries')
+				top5countries = getCacheData('top5Countries')
+			else
+				top5countries = getCacheData('top5Countries')
+			end
+		   #oipa v3.1
+		}
+   end
+	## cache storing ends here
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
   	settings.devtracker_page_title = ''
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
-	erb :index,
+	what_we_do = ''
+	if (!canLoadFromCache('what_we_do'))
+		## logic
+		## get budget data, then check if they fall within date range
+		## do a summation of the budget amount within date range
+		## pick dac5 sector code and then get the underlying high level sector code
+		## if the sector is present, add the new budget info to this sector
+		## Else create a new ref to the high level sector code and add
+		## budget value starting from 0
+		## pick budget percentage for each dac5 sector code2
+		## calculate the budget amount against that perentage and add it to
+		## the high level related sector code
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
+		what_we_do = getCacheData('what_we_do')
+	else
+		what_we_do = getCacheData('what_we_do')
+	end
+	whatWeDoTotal = what_we_do.first['budget']
+	top5countries = top5countries.select{|i| i.has_key?('budget')}
+	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
+	top5CountryTotal = top5countries.first['budget']
+	activiteProjectCount = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND hierarchy:1 AND activity_status_code:2&rows=1&fl=iati_identifier")['response']['numFound'].to_i
+
+	erb :'index',
  		:layout => :'layouts/landing', 
  		:locals => {
- 			top_5_countries: top5countries, 
- 			what_we_do: high_level_sector_list( get_5_dac_sector_data(), "top_five_sectors", "High Level Code (L1)", "High Level Sector Description"), 
+ 			top_5_countries: top5countries.first(10), 
+ 			what_we_do: what_we_do,
  			what_we_achieve: top5results,
  			odas: odas,
- 			oipa_api_url: settings.oipa_api_url
+ 			oipa_api_url: settings.oipa_api_url,
+			whatWeDoTotal: whatWeDoTotal,
+			top5CountryTotal: top5CountryTotal,
+			activiteProjectCount: activiteProjectCount,
  		}
 end
+
+get '/total_spend/?' do
+	if (!canLoadFromCache('totalGlobalSpend'))
+		storeCacheData(get_total_spend(), 'totalGlobalSpend')
+		totalSpend = getCacheData('totalGlobalSpend')
+	else
+		totalSpend = getCacheData('totalGlobalSpend')
+	end
+	totalSpend = format_billion_stg(totalSpend.to_f)
+	json :output => totalSpend
+end
+
+############## RUBY APP LEVEL CACHING OF DATA######################
+def canLoadFromCache(fileName)
+	if File.exists?('data/cache/'+fileName+'.json')
+		data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
+		updatedDate = data['updatedDate'].to_date
+		updatedDate = updatedDate.next_day(7)
+		if (DateTime.now.to_date <= updatedDate)
+			puts 'date time check passed and sending true'
+			return true
+		else
+			puts 'date time check failed and sending false'
+			return false
+		end
+	else
+		puts 'file does not exist, sending false'
+		return false
+	end
+end
+
+def storeCacheData(data, fileName)
+	tempData = {}
+	tempData['updatedDate'] = DateTime.now.to_date
+	tempData['data'] = data
+	File.open('data/cache/'+fileName+'.json', "w") { |f| f.puts tempData.to_json }
+end
+
+def getCacheData(fileName)
+	data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
+	data['data']
+end
+
+####################################################################
+
 
 #####################################################################
 #  COUNTRY PAGES
@@ -123,22 +207,22 @@ get '/countries/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
 	country = ''
 	results = ''
+	if (!canLoadFromCache('country_'+n))
+		storeCacheData(get_country_detailsv2(n), 'country_'+n)
+		country = getCacheData('country_'+n)
+	else
+		country = getCacheData('country_'+n)
+	end
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&recipient_country="+n+"&reporting_org_identifier=#{settings.goverment_department_ids}&page_size=1"))
-	if n == 'UA22'
-		tempActivityCount['count'] = 0
+	newtempActivityCount = 'activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+')&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
+	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + newtempActivityCount))['response']['numFound']
+	if n == 'UA2'
+		tempActivityCount = 0
 	end
-	Benchmark.bm(7) do |x|
-	 	x.report("Loading Time: ") {
-	 		country = get_country_details(n)
-	 		results = get_country_results(n)
-			#oipa v3.1
-	 	}
-	end
-
+	results = get_country_results(n)
 	#----- Following project count code needs to be deprecated before merging with main solr branch work ----------------------
-	country[:totalProjects] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url_solr + 'activity?q=participating_org_ref:GB-GOV-*'+add_exclusions_to_solr2()+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
+	country['totalProjects'] = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + 'activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+') AND hierarchy:1 AND activity_status_code:2&fl=iati_identifier&rows=1'))['response']['numFound']
 
 	ogds = Oj.load(File.read('data/OGDs.json'))
 	topSixResults = pick_top_six_results(n)
@@ -146,7 +230,7 @@ get '/countries/:country_code/?' do |n|
 	geoJsonData = getCountryBounds(n)
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Summary Page'
+  	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -154,9 +238,11 @@ get '/countries/:country_code/?' do |n|
  			results: results,
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
- 			activityCount: tempActivityCount['count'],
+ 			activityCount: tempActivityCount,
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
+			active_link: 'aidByLoc',
+			active_sub_link: 'countrySummary'
  		}
 end
 ## country summary page related api calls
@@ -168,12 +254,19 @@ end
 
 get '/country-sector-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
-	json :output => get_country_sector_graph_data_jsCompatible(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_country=#{n}"))
+	country = ''
+	json :output => get_country_sector_graph_data_jsCompatibleV2(n)
+end
+
+get '/region-sector-graph-data/:country_code/?' do |n|
+	n = sanitize_input(n,"p").upcase
+	country = ''
+	json :output => get_region_sector_graph_data_jsCompatibleV2(n)
 end
 
 get '/country-budget-bar-graph-data/:country_code/?' do |n|
 	n = sanitize_input(n,"p").upcase
-	json :output => budgetBarGraphDataD(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country,reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_country=#{n}&order_by=budget_period_start_year,budget_period_start_quarter", 'i')
+	json :output => budgetBarGraphDataDv3(n)
 end 
 ##
 # solr route
@@ -188,7 +281,7 @@ get '/countries/:country_code/projects/?' do |n|
 	settings.devtracker_page_title = 'Search Results For : ' + query
 	projectData = ''
 	country = get_country_code_name(n)
-  	settings.devtracker_page_title = 'Country ' + country[:name] + ' Programmes Page'
+  	settings.devtracker_page_title = 'Country ' + country['name'] + ' Programmes Page'
 	erb :'countries/projects', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -252,23 +345,17 @@ end
 # Region summary page
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
-    region = get_region_details(n)
-	#oipa v3.1
-	#regionYearWiseBudgets = budgetBarGraphData("budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=reporting_organisation,budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter")
-	regionYearWiseBudgets= get_country_region_yearwise_budget_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=budget_period_start_quarter&aggregations=value&recipient_region=#{n}&order_by=budget_period_start_year,budget_period_start_quarter"))
-	regionSectorGraphData = get_country_sector_graph_data(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&order_by=-value&group_by=sector&aggregations=value&format=json&recipient_region=#{n}"))
+    region = get_region_detailsv2(n)
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
- 			regionYearWiseBudgets: regionYearWiseBudgets,
- 			regionSectorGraphData: regionSectorGraphData,
- 			mapMarkers: getRegionMapMarkers(region[:code]),
+			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter')),
+ 			mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
-
 
 #Region Project List Page
 get '/regions/:region_code/projects/?' do |n|
@@ -314,24 +401,29 @@ get '/projects/*/summary' do
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
-  	project = get_h1_project_details(n)
-  	participatingOrgList = get_participating_organisations(project)
+  	project = get_h1_project_detailsv2(n)
+  	participatingOrgList = get_participating_organisationsv2(project)
   	#get the country/region data from the API
-  	countryOrRegion = get_country_or_region(n)
-
-  	#get project sectorwise graph  data
-  	projectSectorGraphData = get_project_sector_graph_data(n)
-	begin
-		getPolicyMarkers = get_policy_markers(n)
-	rescue
-		getPolicyMarkers = Array.new
-	end
-	policyMarkerCount = 0
-	getPolicyMarkers.each do |marker|
-		if(marker['significance']['code'].to_i != 0)
-			policyMarkerCount += 1
+  	countryOrRegion = get_country_or_regionv2(n)
+	spendToDate = spendToDatev2(n)
+	programmeBudget = 0
+	if(project.has_key?('activity_plus_child_aggregation_budget_value_gbp'))
+		programmeBudget = programmeBudget + project['activity_plus_child_aggregation_budget_value_gbp'].to_f
+	elsif(project.has_key?('related_budget_value'))
+		project['related_budget_value'].each do |b|
+			programmeBudget = programmeBudget + b.to_f
+		end
+	elsif(project.has_key?('activity_aggregation_budget_value_gbp'))
+		programmeBudget = programmeBudget + project['activity_aggregation_budget_value_gbp'].to_f
+	else
+		if project.has_key?('budget_value')
+			project['budget_value'].each do |budget|
+				programmeBudget = programmeBudget + budget
+			end
 		end
 	end
+  	#get project sectorwise graph  data
+  	projectSectorGraphData = get_project_sector_graph_datav2(n)
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']
 	erb :'projects/summary', 
 		:layout => :'layouts/layout',
@@ -342,9 +434,10 @@ get '/projects/*/summary' do
  			countryOrRegion: countryOrRegion,	 					 			
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
- 			policyMarkers: getPolicyMarkers,
- 			policyMarkersCount: policyMarkerCount,
- 			mapMarkers: getProjectMapMarkers(n)
+ 			policyMarkers: get_policy_markersv2(project),
+ 			mapMarkers: getProjectMapMarkersv2(project),
+			spendToDate: spendToDate,
+			programmeBudget: programmeBudget
  		}
 end
 
@@ -353,14 +446,15 @@ get '/projects/*/documents/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
-  	
+	project = get_h1_project_documents(n)
+	doc_categories = Oj.load(File.read('data/doc_category_list.json'))
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Documents'
 	erb :'projects/documents', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			project: project,
+			cateogies: doc_categories,
  		}
 end
 
@@ -369,8 +463,8 @@ get '/projects/*/transactions/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
-		
+	project = get_h1_project_detailsv2(n)
+	
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/transactions', 
 		:layout => :'layouts/layout',
@@ -385,7 +479,7 @@ get '/projects/*/components/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Transactions'
 	erb :'projects/components', 
@@ -413,41 +507,36 @@ end
 
 get '/transaction-count/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output => get_transaction_count(n)
+	json :output => get_transaction_countv2(n)
 end
 
-post '/transaction-details-page' do
+post '/transaction-details-pagev2' do
 	project = sanitize_input(params['data']['projectID'].to_s,"newId")
 	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
 	resultCount = 20
 	nextPage = sanitize_input(params['data']['nextPage'].to_s, "a")
-	json :output => get_transaction_details_page(project,transactionType, nextPage, resultCount)
+	json :output => get_transaction_details_pagev2(project,transactionType, nextPage, resultCount)
 end
 
 post '/transaction-total' do
 	project = sanitize_input(params['data']['project'].to_s,"newId")
 	transactionType = sanitize_input(params['data']['transactionType'].to_s, "a")
 	currency = sanitize_input(params['data']['currency'].to_s, "newId")
-	json :output => get_transaction_total(project,transactionType, currency)
+	#json :output => get_transaction_total(project,transactionType, currency)
+	json :output => get_transaction_totalv2(project,transactionType)
 end
 
 get '/component-list/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,related_activity")
-    project = JSON.parse(oipa)
-	tempData = []
-	project['related_activity'].each do |item|
-		if(item['type']['code'].to_i == 2)
-			tempData.push(item['ref'])
-		end
-	end
-	json :output => tempData
+	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=related_activity_ref&rows=1")
+    project = JSON.parse(oipa)['response']['docs'].first
+	json :output => project['related_activity_ref']
 end
 
 # Get yearly budget for H1 Activity from the API
 get '/project-yearwise-budget/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	projectYearWiseBudgets= get_project_yearwise_budget(n)
+	projectYearWiseBudgets= get_project_yearwise_budgetv2(n)
 	json :output=> projectYearWiseBudgets
 end
 
@@ -466,7 +555,7 @@ end
 # Get total project budget
 get '/total-project-budget/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 	totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f
 	begin
@@ -477,53 +566,68 @@ get '/total-project-budget/*?' do
 	json :output=> data
 end
 
+get '/total-project-budgetv2/*?' do
+	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency&rows=200")
+	programmeBudgets = JSON.parse(programmeBudgets)['response']['docs']
+	totalBudget = 0
+	programmeBudgets.each do |project|
+		if project.has_key?('budget_value')
+			project['budget_value'].each do |budget|
+				totalBudget = totalBudget + budget
+			end
+		end
+	end
+	begin
+		data = Money.new(totalBudget.round(0)*100, if programmeBudgets.first.has_key?('default-currency') then programmeBudgets.first['default-currency'] else 'GBP' end).format(:no_cents_if_whole => true,:sign_before_symbol => false)
+	rescue
+		data = "£#{totalBudget}"
+	end
+	json :output=> data
+end
+
 get '/project-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
-	oipa = JSON.parse(oipa)
+	#oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
+	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=iati_identifier,title_narrative,description_narrative,activity_date_type,activity_date_iso_date&rows=1")
+	oipa = JSON.parse(oipa)['response']['docs'].first
 	tempData = {}
 	tempData['iati_identifier'] = oipa['iati_identifier']
-	tempData['title'] = begin oipa['title']['narrative'][0]['text'] rescue 'N/A' end
-	tempData['description'] = begin oipa['description'][0]['narrative'][0]['text'] rescue 'N/A' end
+	tempData['title'] = oipa['title_narrative'].first
+	tempData['description'] = oipa['description_narrative'].first
 	tempData['activity_date'] = {}
-	tempData['activity_dates'] = bestActivityDate(oipa['activity_date'])
+	tempData['activity_dates'] = bestActivityDatev2(oipa)
 	json :output=> tempData
 end
 
 get '/country-or-region/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_country_or_region(n)
+	json :output=> get_country_or_regionv2(n)
 end
 
 # Get the funding projects Count from the API
 get '/get-funding-projects/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_funding_project_count(n)
+	json :output=> get_funding_project_countv2(n)
 end
 
 # Get funded project counts
 get '/get-funded-projects/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	fundedProjectsCount = 0
-	getProjectIdentifierList(n)['projectIdentifierListArray'].each do |id|
-		begin
-			fundedProjectsCount = fundedProjectsCount + JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&transaction_provider_activity=#{id}&page_size=1&fields=id&ordering=title"))['count'].to_i
-		rescue
-			puts id
-		end
-	end
-	json :output=> fundedProjectsCount
+	json :output=> get_funded_project_countv2(n)
 end
 
+# projects that are funded by this target project
 get '/get-funded-projects-page/:page/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	page = ERB::Util.url_encode params[:page].to_s
-	json :output=> get_funded_project_details_page(n, page, 20)
+	json :output=> get_funded_project_details_pagev2(n, page, 20)
 end
 
+# projects that are funding this target project
 get '/get-funding-projects-details/*?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	json :output=> get_funding_project_details(n)
+	json :output=> get_funding_project_detailsv2(n)
 end
 
 ######################################################################
@@ -533,10 +637,10 @@ get '/projects/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
-	project = get_h1_project_details(n)
+	project = get_h1_project_detailsv2(n)
 
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']+' Partners'
-	erb :'projects/partners', 
+	erb :'projects/partners',
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
@@ -553,25 +657,57 @@ end
 # High Level Sector summary page
 get '/sector/?' do
 	# Get the high level sector data from the API
+	high_level_sector_list = ''
+	if (!canLoadFromCache('high_level_sector_list'))
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		storeCacheData(high_level_sector_listv2(pulledData, 'all_sectors'), 'high_level_sector_list')
+		high_level_sector_list = getCacheData('high_level_sector_list')
+	else
+		high_level_sector_list = getCacheData('high_level_sector_list')
+	end
   	settings.devtracker_page_title = 'Sector Page'
   	erb :'sector/index', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			high_level_sector_list: high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+ 			high_level_sector_list: high_level_sector_list,#high_level_sector_list( get_5_dac_sector_data(), "all_sectors", "High Level Code (L1)", "High Level Sector Description")
+			active_link: 'sector'
  		}		
 end
 
 # Category Page (e.g. Three Digit DAC Sector) 
 get '/sector/:high_level_sector_code/?' do
 	# Get the three digit DAC sector data from the API
-  	settings.devtracker_page_title = 'Sector '+sanitize_input(params[:high_level_sector_code],"p")+' Page'
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_'+dac2Code
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['High Level Code (L1)'].to_i == dac2Code.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+  	settings.devtracker_page_title = 'Sector '+dac2Code+' Page'
   	erb :'sector/categories', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			category_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
- 		}		
+ 			category_list: high_level_sector_list,#sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sanitize_input(params[:high_level_sector_code],"p"), "category")
+			active_link: 'sector'
+		}		
 end
 
 # List of all the High level sector projects (e.g. Three Digit DAC Sector) 
@@ -579,13 +715,37 @@ end
 # Sector Page (e.g. Five Digit DAC Sector) 
 get '/sector/:high_level_sector_code/categories/:category_code/?' do
 	# Get the three digit DAC sector data from the API
-  	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Page'
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	catCode = sanitize_input(params[:category_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_'+dac2Code+'_'+catCode
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['Category (L2)'].to_i == catCode.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
+		#storeCacheData(sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p")), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+  	settings.devtracker_page_title = 'Sector Category '+catCode+' Page'
   	erb :'sector/sectors', 
 		:layout => :'layouts/layout',
 		 :locals => {
 		 	oipa_api_url: settings.oipa_api_url,
- 			sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
- 		}		
+ 			sector_list: high_level_sector_list,#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p"))
+			active_link: 'sector'
+		}
 end
 
 #####################################################################
@@ -595,43 +755,78 @@ end
 #Aid By Location Page
 get '/location/country/?' do
   	settings.devtracker_page_title = 'Aid by Location Page'
-  	map_data = dfid_country_map_data2()
-  	getMaxBudget = map_data[1].sort_by{|k,val| val['budget']}.reverse!.first
-  	getMaxBudget = getMaxBudget[1]['budget']
+	fileName = 'map_data'
+	map_data = ''
+	dfid_complete_country_list = ''
+	total_coun_bud_loc = ''
+	country_sector_data = ''
+	getMaxBudget = ''
+	if (!canLoadFromCache('country_sector_data'))
+		storeCacheData(generateCountryDatav5(), 'country_sector_data')
+		getMainData = getCacheData('country_sector_data')
+		map_data = getMainData['map_data']
+		storeCacheData(map_data[1].sort_by{|k,val| val['budget']}.reverse!.first[1]['budget'], 'getMaxBudgetCountryLocation')
+		country_sector_data = getMainData['countryHash']
+		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
+	else
+		getMainData = getCacheData('country_sector_data')
+		map_data = getMainData['map_data']
+		country_sector_data = getMainData['countryHash']
+		getMaxBudget = getCacheData('getMaxBudgetCountryLocation')
+	end
 	erb :'location/country/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
 			:dfid_country_map_data => 	map_data[0],
 			:dfid_country_stats_data => map_data[1],
-			:dfid_complete_country_list => dfid_complete_country_list_region_wise_sorted.sort_by{|k| k},
-			:dfid_total_country_budget => total_country_budget_location,
-			:sectorData => generateCountryData(),
+			:sectorData => country_sector_data,
 			:countryMapData => getCountryBoundsForLocation(map_data[1]),
-			:maxBudget => getMaxBudget
+			:maxBudget => getMaxBudget,
+			active_link: 'aidByLoc',
+			active_sub_link: 'country',
 		}
 end
 
 # Aid by Region Page
 get '/location/regional/?' do 
   	settings.devtracker_page_title = 'Aid by Region Page'
+	  dfid_regional_projects_data = ''
+	  generateRegionData = ''
+	if (!canLoadFromCache('dfid_regional_projects_data_regions'))
+		storeCacheData(dfid_regional_projects_datav2("all"), 'dfid_regional_projects_data_regions')
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
+	else
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_regions')
+	end
 	erb :'location/regional/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_regional_projects_data => dfid_regional_projects_data("region"),
-			:generateRegionData => generateRegionData()	
+			:dfid_regional_projects_data => dfid_regional_projects_data,
+			#:generateRegionData => generateRegionData
+			active_link: 'aidByLoc',
+			active_sub_link: 'region',
 		}
 end
 
 # Aid by Global Page
 get '/location/global/?' do
+	dfid_regional_projects_data = ''
+	if (!canLoadFromCache('dfid_regional_projects_data_global'))
+		storeCacheData(dfid_regional_projects_datav2("global"), 'dfid_regional_projects_data_global')
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
+	else
+		dfid_regional_projects_data = getCacheData('dfid_regional_projects_data_global')
+	end
   	settings.devtracker_page_title = 'Aid by Global Page'
 	erb :'location/global/index', 
 		:layout => :'layouts/layout',
 		:locals => {
 			:oipa_api_url => settings.oipa_api_url,
-			:dfid_global_projects_data => dfid_regional_projects_data("global")
+			:dfid_global_projects_data => dfid_regional_projects_data,
+			active_link: 'aidByLoc',
+			active_sub_link: 'global',
 		}
 end
 
@@ -699,7 +894,7 @@ post '/search/?' do
 	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	didYouMeanQuery = sanitize_input(params['query'],"a")
-	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
+	#didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
 	#erb :'search/solrSearch',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -714,8 +909,8 @@ post '/search/?' do
 		searchType: 'F',
 		breadcrumbURL: '',
 		breadcrumbText: '',
-		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
- 		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		fcdoCountryBudgets: nil,#didYouMeanData['dfidCountryBudgets'],
+ 		fcdoRegionBudgets: nil,#didYouMeanData['dfidRegionBudgets'],
 		isIncludeClosedProjects: isIncludeClosedProjects
 	}
 end
@@ -842,7 +1037,7 @@ end
 get '/sector/:high_level_sector_code/projects/?' do
 	highLevelCode = sanitize_input(params[:high_level_sector_code],"p")
 	sectorCode = ''
-	sectorJsonData = map_sector_data()
+	sectorJsonData = JSON.parse(File.read('data/sectorHierarchies.json'))#map_sector_data()
 	sectorJsonData = sectorJsonData.select {|sector| sector['High Level Code (L1)'] == highLevelCode.to_i}
 	#Segment
 	sectorData = {}
@@ -858,12 +1053,36 @@ get '/sector/:high_level_sector_code/projects/?' do
 	sectorData['sectorName'] = ""
 	#Segment
 	query = "(" + sectorCode[0, sectorCode.length - 3] + ")"
+	puts query
 	filters = prepareFilters(query.to_s, 'S')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'S', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
 	settings.devtracker_page_title = 'Sector '+highLevelCode+' Programmes Page'
+	#####
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_search_'+dac2Code
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['High Level Code (L1)'].to_i == dac2Code.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_listv2(pulledData, sectorHierarchy), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+	#####
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
@@ -879,7 +1098,7 @@ get '/sector/:high_level_sector_code/projects/?' do
 		searchType: 'S',
 		breadcrumbURL: '/sector',
 		breadcrumbText: 'Aid by Department',
-		sector_list: sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
+		sector_list: high_level_sector_list,#sector_parent_data_listv2( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", sectorData['highLevelCode'], "category"),
 		sectorData: sectorData
 	}
 end
@@ -896,7 +1115,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	sectorData['categoryCode'] = categoryCode
 	sectorData['sectorName'] = ""
 	#Segment
-	sectorJsonData = map_sector_data()
+	sectorJsonData = JSON.parse(File.read('data/sectorHierarchies.json'))#map_sector_data()
 	sectorJsonData = sectorJsonData.select {|sector| sector['Category (L2)'] == categoryCode.to_i}
 	sectorJsonData.each do |sdata|
 		sectorCode.concat(sdata['Code (L3)'].to_s + " OR ")
@@ -908,6 +1127,31 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
+	##
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	catCode = sanitize_input(params[:category_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_search_'+dac2Code+'_'+catCode
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['Category (L2)'].to_i == catCode.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
+		#storeCacheData(sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p")), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+	##
 	settings.devtracker_page_title = 'Sector Category '+sanitize_input(params[:category_code],"p")+' Programmes Page'
   	#erb :'search/solrSectors',
 	erb :'search/solrTemplate',
@@ -924,7 +1168,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/?' do
 		searchType: 'S',
 		breadcrumbURL: '/sector',
 		breadcrumbText: 'Aid by Department',
-		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+		sector_list: high_level_sector_list,#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
 		sectorData: sectorData
 	}
 end
@@ -941,7 +1185,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	sectorData['sectorCode'] = dac5Code
 	#Segment
 	# Get the five digit DAC sector project data from the API
-	sectorJsonData = map_sector_data()
+	sectorJsonData = JSON.parse(File.read('data/sectorHierarchies.json'))#map_sector_data()
 	sectorJsonData = sectorJsonData.select {|sector| sector['Code (L3)'] == dac5Code.to_i}.first
 	dac5SectorName = sectorJsonData['Name']
 	sectorData['sectorName'] = sectorJsonData['Name']
@@ -951,6 +1195,31 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
+	##
+	dac2Code = sanitize_input(params[:high_level_sector_code],"p")
+	catCode = sanitize_input(params[:category_code],"p")
+	high_level_sector_list = ''
+	fileName = 'sector_dac2_search_'+dac2Code+'_'+catCode+'_'+dac5Code
+	if (!canLoadFromCache(fileName))
+		prepSectorCodeFilter = ''
+		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json')).select{|s| s['Category (L2)'].to_i == catCode.to_i}
+		sectorHierarchy.each_with_index do |elem, index|
+			if index == sectorHierarchy.length-1
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s
+			else
+				prepSectorCodeFilter = prepSectorCodeFilter + elem['Code (L3)'].to_s + ' OR '
+			end
+		end
+		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND sector_code:("+prepSectorCodeFilter+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		pulledData = RestClient.get newApiCall
+		#storeCacheData(sector_parent_data_list( settings.oipa_api_url, "category", "Category (L2)", "Category Name", "High Level Code (L1)", "High Level Sector Description", dac2Code, "category"), fileName)
+		storeCacheData(sector_parent_data_dac5(pulledData, sectorHierarchy), fileName)
+		#storeCacheData(sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sanitize_input(params[:high_level_sector_code],"p"), sanitize_input(params[:category_code],"p")), fileName)
+		high_level_sector_list = getCacheData(fileName)
+	else
+		high_level_sector_list = getCacheData(fileName)
+	end
+	##
 	#getSectorProjects = get_sector_projects(sectorData['sectorCode'])
   	settings.devtracker_page_title = 'Sector ' + dac5Code + ' Programmes Page'
   	#erb :'search/solrSectors',
@@ -968,7 +1237,7 @@ get '/sector/:high_level_sector_code/categories/:category_code/projects/:sector_
 		searchType: 'S',
 		breadcrumbURL: '/sector',
 		breadcrumbText: 'Aid by Sector',
-		sector_list: sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
+		sector_list: high_level_sector_list,#sector_parent_data_list(settings.oipa_api_url, "sector", "Code (L3)", "Name", "Category (L2)", "Category Name", sectorData['highLevelCode'], sectorData['categoryCode']),
  		sectorData: sectorData
 	}	
 end
@@ -995,12 +1264,20 @@ end
 get '/downloadCSV/:proj_id/:transaction_type?' do
 	projID = sanitize_input(params[:proj_id],"newId")
 	transactionType = sanitize_input(params[:transaction_type],"p")
-	transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
-	tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
-	tempTitle = transactionsForCSV.first
+	#transactionsForCSV = convert_transactions_for_csv(projID,transactionType)
+	#tempTransactions = transaction_data_hash_table_for_csv(transactionsForCSV,transactionType,projID)
+	if transactionType.to_i == 0
+		data = get_project_yearwise_budgetv2(projID)
+	else
+		data = get_transactionsv2(projID,transactionType)
+	end
+	tempTransactions = transaction_data_hash_table_for_csvv2(data,transactionType,projID)
+	#tempTitle = transactionsForCSV.first
+	transactionTypes = Oj.load(File.read('data/custom-codes/TransactionType.json'))['data']
+	t = transactionTypes.select{|s| s['code'].to_i == transactionType.to_i}.first
 	content_type 'text/csv'
 	if transactionType != '0'
-		attachment "Export-" +tempTitle['transaction_type']['name']+ "s.csv"
+		attachment "Export-" +t['name']+ "s.csv"
 	else
 		attachment "Export-Budgets.csv"
 	end
@@ -1021,6 +1298,11 @@ get '/downloadLocationDataCountriesCSV/:countryCode?' do
 	content_type 'text/csv'
 	attachment "Export-locations-"+countryCode+".csv"
 	locationData
+end
+
+get '/clear-cache' do
+	FileUtils.rm_rf(Dir['data/cache/*'])
+	json :output => 'cache cleared'
 end
 
 #####################################################################
@@ -1127,52 +1409,21 @@ end
 get '/faq/?' do
   	settings.devtracker_page_title = 'FAQ: What does this mean?'
 	erb :'faq/faq', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url }
-end 
-
-# get '/feedback/?' do
-#   	settings.devtracker_page_title = 'Feedback Page'
-# 	erb :'feedback/index', :layout => :'layouts/layout_forms',
-# 	:locals => {
-# 		googlePublicKey: settings.google_recaptcha_publicKey,
-# 		oipa_api_url: settings.oipa_api_url
-# 	}
-# end 
+end
 
 get '/whats-new/?' do
   	settings.devtracker_page_title = "What's New Page"
 	erb :'about/whats-new', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
-end 
+end
 
-# post '/feedback/index' do
-#   	status = verify_google_recaptcha(settings.google_recaptcha_privateKey,sanitize_input(params[:captchaResponse],"a"))
-# 	if status == true
-# 		Pony.mail({
-# 			:from => "devtracker-feedback@fcdo.gov.uk",
-# 		    :to => "devtracker-feedback@fcdo.gov.uk",
-# 		    :subject => "DevTracker Feedback",
-# 		    :body => "<p>" + sanitize_input(params[:email],"e") + "</p><p>" + sanitize_input(params[:name],"a") + "</p><p>" + sanitize_input(params[:description],"a") + "</p>",
-# 		    :via => :smtp,
-# 		    :via_options => {
-# 		    	:address              => '127.0.0.1',
-# 		     	:port                 => '25',
-# 		     	:openssl_verify_mode  => OpenSSL::SSL::VERIFY_NONE
-# 		    }
-# 		})
-# 		redirect '/'
-# 	else
-# 		puts "Failed to send email."
-# 		redirect '/'
-# 	end
-# end
-
-	get '/test-cache?' do
-		randomNumber = rand(2)
-		if (randomNumber.to_i.even?)
-			json :output => xx['xx']
-		else
-			json :output => randomNumber
-		end
+get '/test-cache?' do
+	randomNumber = rand(2)
+	if (randomNumber.to_i.even?)
+		json :output => xx['xx']
+	else
+		json :output => randomNumber
 	end
+end
 
 #####################################################################
 #  RSS FEED
@@ -1239,8 +1490,4 @@ error 500 do
   settings.devtracker_page_title = "Error 500 Page"
   erb :'500', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
-
-#error do
-#    redirect to('/')
-#end
 

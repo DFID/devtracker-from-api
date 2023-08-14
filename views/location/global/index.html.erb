@@ -15,13 +15,13 @@
 	    <script type="text/javascript">
 		        
 	       var regionsData = {
-	          totalSpend : <%= dfid_global_projects_data[:totalBudget] %>,
-	          regionalProjects : <%= dfid_global_projects_data[:regionsData] %>
+	          totalSpend : <%= dfid_global_projects_data['totalBudget'] %>,
+	          regionalProjects : <%= dfid_global_projects_data['regionsData'] %>
 		    }
 
 	        var labels = {
 	           header : 'Total global budget ' + '<%= current_financial_year %>',
-	           amount : '\u00A3' + '<%= dfid_global_projects_data[:totalBudgetFormatted]%>' 
+	           amount : '\u00A3' + '<%= dfid_global_projects_data['totalBudgetFormatted']%>' 
 	        }
 
 	        var container = $('#map');

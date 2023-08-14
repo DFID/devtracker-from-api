@@ -1,0 +1,49 @@
+<div class="govuk-width-container app-width-container">  
+    <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/">Home</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/sectors">Aid by sector</a>
+            </li>
+        </ol>
+    </div>
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Aid by sector</h1>
+                <p class="govuk-body">Sector budgets are aggregated from Programme level data. Government Programme budgets tied to specific sector codes for the current financial year are aggregated and the total is shown.</p><p>
+                </p><p class="govuk-body">These figures are updated monthly from all available data sources.</p>
+                <h2 class="govuk-heading-m">Sector Breakdown</h2>
+                <table class="govuk-table" data-module="moj-sortable-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button" data-index="0">Sector</button></th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="descending"><button type="button" data-index="1">Budget</button></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <% (high_level_sector_list['sectorsData'] || []).each do |sector| %>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" data-sort-value="<%=sector['name']%>">
+                                    <a href="/sector/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a>
+                                    <%budgetPercentage = 100*sector['budget'].to_f/high_level_sector_list['totalBudget'].to_f %>
+                                    <div class="app-progress-bar">
+                                        <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%=format_percentage budgetPercentage %></span>
+                                        <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage budgetPercentage %> + 25px);"></div>
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=sector['budget'].to_f %>">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <p class="govuk-body">
+                    <a href="/sectors/sector?sector-name=Health&amp;view=projects" class="govuk-link">View all Health programmes</a>
+                </p>
+                <div aria-live="polite" role="status" aria-atomic="true" class="govuk-visually-hidden">Sort by Budget (descending)</div>
+            </div>
+        </div>
+    </main>
+</div>

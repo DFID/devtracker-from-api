@@ -1,0 +1,85 @@
+<div class="govuk-width-container app-width-container">  
+    <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/">Home</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">
+                <%= country['name'] %>
+            </li>
+        </ol>
+    </div>
+    <main role="main" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing app-main-wrapper">
+        <div class="govuk-grid-row">
+            <div>
+                <span class="govuk-caption-l">Country</span>
+                <h1 class="govuk-heading-l"><%= country['name'] %></h1>
+                <nav class="moj-sub-navigation" aria-label="Sub navigation">
+                    <ul class="moj-sub-navigation__list">
+                        <li class="moj-sub-navigation__item">
+                            <a href="/countries/<%= country['code'] %>" class="moj-sub-navigation__link" <%if active_sub_link=='countrySummary'%> aria-current="page" <%end%>>Summary</a>
+                        </li>
+                        <li class="moj-sub-navigation__item">
+                            <a href="/countries/<%= country['code'] %>/projects" class="moj-sub-navigation__link" <%if active_sub_link=='region'%> aria-current="page" <%end%>>Active Programmes (<%=country['totalProjects']%>)</a>
+                        </li>
+                    </ul>
+                </nav>
+                <% if(country['code'] == 'AF') %>
+                    <div class="twelve columns">
+                        <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (Programme title, description and channel of delivery) from Devtracker. As Programmes are reviewed and republished, the Programme and financial information will become available on DevTracker.</div>
+                    </div>
+                <%end%>
+                <% if(country['code'] == 'UA2') %>
+                    <div class="twelve columns">
+                        <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
+                    </div>
+                <%end%>
+                <% if country['description'].length > 0%>
+                    <p class="govuk-body-l">
+                        <%= markdown_to_html(country['description'])%>
+                    </p>
+                <%else%>
+                    <p class="govuk-body">
+                        Description Not Available.
+                    </p>
+                <%end%>
+                <div class="govuk-inset-text">
+                    Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.
+                </div>
+                <div id="countryMap" class="countryMap">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <div id="countryMap" class="countryMap"></div>
+                        <input type="hidden" id="countryName" value="<%=country['name'] %>">
+                        <input type="hidden" id="countryCode" value="<%=country['code'] %>">
+                    </div>
+                </div>
+                <span class="govuk-caption-m govuk-!-font-size-14 govuk-!-margin-bottom-5">Disclaimer: Country borders do not necessarily reflect the UK Government's official position.</span>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            <div class="app-chart-row">
+                <div class="app-chart-row__chart">
+                    <h3 class="govuk-heading-s app-chart-row__chart--heading">
+                        Sectors
+                    </h3>
+                    <p class="govuk-body-s app-chart-row__chart--intro">
+                        Sector groups as a percentage of total Programme budget according to the OECD Development Assistance Committee (DAC) classifications.
+                    </p>
+                    <div class="app-chart-row__chart--data">
+                        <div id="sectorChart"></div>
+                    </div>
+                </div>
+                <div class="app-chart-row__chart">
+                    <h3 class="govuk-heading-s app-chart-row__chart--heading">Budget</h3>
+                    <p class="govuk-body-s app-chart-row__chart--intro">A comparison across financial years of forecast budget and spend to date on the Programme.</p>
+                    <div class="app-chart-row__chart--data">
+                        <div id="budget-year-chart5" style="height: 300px; width: 100%;" class="row"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
