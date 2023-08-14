@@ -57,14 +57,14 @@ include RecaptchaHelper
 include SolrHelper
 
 # Developer Machine: set global settings
-set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
+#set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/api/'
+# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 
 
 
@@ -169,7 +169,7 @@ def canLoadFromCache(fileName)
 	if File.exists?('data/cache/'+fileName+'.json')
 		data = JSON.parse(File.read('data/cache/'+fileName+'.json'))
 		updatedDate = data['updatedDate'].to_date
-		#updatedDate = updatedDate.next_day(10)
+		updatedDate = updatedDate.next_day(7)
 		if (DateTime.now.to_date <= updatedDate)
 			puts 'date time check passed and sending true'
 			return true
