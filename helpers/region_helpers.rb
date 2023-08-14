@@ -14,66 +14,12 @@ module RegionHelpers
             }
   end
 
-  def get_region_details(regionCode)
-
-      firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
-      lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
-      
-      regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
-      region = regionInfo.select {|region| region['code'] == regionCode}.first
-
-      #oipa v3.1
-      currentTotalRegionBudget= get_current_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=recipient_region&aggregations=value&recipient_region=#{regionCode}"))
-      currentTotalDFIDBudget = get_current_dfid_total_budget(RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?format=json&reporting_organisation_identifier=#{settings.goverment_department_ids}&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&group_by=reporting_organisation&aggregations=value"))
-      totalProjectsDetails = get_total_project(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&format=json&fields=activity_status&page_size=2500&activity_status=2"))
-      totalActiveProjects = totalProjectsDetails['results'].select {|status| status['activity_status']['code'] =="2" }.length
-      totalActiveProjects = totalProjectsDetails['results'].length
-      
-      if currentTotalRegionBudget['count'] > 0 then
-          #oipa v2.2
-          #if currentTotalRegionBudget['results'][0]['budget'].nil? then
-          #oipa v3.1
-          if currentTotalRegionBudget['results'][0]['value'].nil? then
-              regionBudget = 0
-          else
-              #oipa v2.2
-              #regionBudget = currentTotalRegionBudget['results'][0]['budget']
-              #oipa v3.1
-              regionBudget = currentTotalRegionBudget['results'][0]['value']
-          end    
-      else
-          regionBudget = 0
-      end
-
-      #oipa v2.2
-      #totalDfidBudget = currentTotalDFIDBudget['results'][0]['budget']
-      #oipa v3.1
-      totalDfidBudget = currentTotalDFIDBudget['results'][0]['value']
-      
-      projectBudgetPercentToDfidBudget = ((regionBudget.round(2) / totalDfidBudget.round(2))*100).round(2)
-
-    
-      returnObject = {
-            :code => region['code'],
-            :name => region['name'],
-            :description => region['descriptions'],
-            :type => region['type'],
-            :url => region['url'],
-            :totalProjects => totalProjectsDetails['count'],
-            :totalActiveProjects => totalActiveProjects,
-            :regionBudget => regionBudget,
-            :regionBudgetCurrency => "GBP",
-            :projectBudgetPercentToDfidBudget => projectBudgetPercentToDfidBudget
-            }
-  end
-
   def get_region_detailsv2(regionCode)
     regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
     region = regionInfo.select {|region| region['code'] == regionCode}.first
-    totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
-    print(settings.oipa_api_url_other + "activity/?q=iati_identifier:GB-GOV-1-300351 AND recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-1 AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")
+    totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
     totalRegionBudget = 0
     currentFinYear = financial_year
     allRelatedctivities.each do |activity|
@@ -89,7 +35,6 @@ module RegionHelpers
           end
         end
       end
-      print(activityBudget)
       if activity.has_key?('recipient_region_code')
         activity['recipient_region_code'].each_with_index do |data, index|
           if data.to_i == regionCode.to_i
@@ -123,9 +68,9 @@ module RegionHelpers
 
     def dfid_regional_projects_datav2(regionType)
       if regionType == 'all'
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
       else
-        newApiCall = settings.oipa_api_url_other + "budget?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
       end
       pulledData = RestClient.get newApiCall
       pulledData  = JSON.parse(pulledData)['response']['docs']
@@ -341,54 +286,9 @@ module RegionHelpers
       geoJsonData
     end
 
-    #Get a list of map markers for visualisation
-    def getRegionMapMarkers(regionCode)
-      response = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2"))
-      rawMapMarkers = response['results']
-      if(response['count'] > 20)
-        pages = (response['count'].to_f/20).ceil
-        for page in 2..pages do
-          tempData = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_region=#{regionCode}&fields=title,iati_identifier,location&page_size=20&activity_status=2&page=#{page}"))
-          tempData['results'].each do |item|
-            rawMapMarkers.push(item)
-          end
-        end
-      end
-      mapMarkers = Array.new
-      ar = 0
-      rawMapMarkers.each do |data|
-        data['location'].each do |location|
-          begin
-            tempStorage = {}
-            tempStorage["geometry"] = {}
-            tempStorage['geometry']['type'] = 'Point'
-            tempStorage['geometry']['coordinates'] = Array.new
-            tempStorage['geometry']['coordinates'].push(location['point']['pos']['longitude'].to_f)
-            tempStorage['geometry']['coordinates'].push(location['point']['pos']['latitude'].to_f)
-            tempStorage['iati_identifier'] = location['iati_identifier']
-            begin
-              tempStorage['loc'] = location['name']['narrative'][0]['text']
-            rescue
-              tempStorage['loc'] = 'N/A'
-            end
-            begin
-              tempStorage['title'] = data['title']['narrative'][0]['text']
-            rescue
-              tempStorage['title'] = 'N/A'
-            end
-            mapMarkers.push(tempStorage)
-            ar = ar + 1
-          rescue
-            puts 'Data missing in API response.'
-          end
-        end
-      end
-      mapMarkers
-    end
-
     def get_region_sector_graph_data_jsCompatibleV2(regionCode)
       secHi = JSON.parse(File.read('data/sectorHierarchies.json'))
-      api = RestClient.get settings.oipa_api_url_other + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
+      api = RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-*&fl=sector*,iati_identifier,child_aggregation_budget_value_gbp&start=0&rows=1000"
       pulledData = JSON.parse(api)['response']['docs']
       sectorBudgets = {}
       totalBudget = 0
@@ -439,10 +339,8 @@ module RegionHelpers
     end
 
     def getRegionMapMarkersv2(regionCode)
-      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url_other + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_region_code:'+regionCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
+      newRawMapMakers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + 'activity?q=reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_region_code:'+regionCode+' AND activity_status_code:2 AND hierarchy:1&rows=500&fl=recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country_narrative_lang,recipient_country_narrative_text,recipient_region_code,recipient_region_name,recipient_region_vocabulary,recipient_region_percentage,recipient_region_narrative_lang,recipient_region_narrative_text,title_narrative_first,title_narrative_lang,title_narrative_text,iati_identifier,location_ref,location_reach_code,location_id_vocabulary,location_id_code,location_point_pos,location_exactness_code,location_class_code,location_feature_designation_code,location_name_narrative_text,location_name_narrative_lang,location_description_narrative_text,location_description_narrative_lang,location_activity_description_narrative_text,location_activity_description_narrative_lang,location_administrative_vocabulary,location_administrative_level,location_administrative_code'))
       newRawMapMakers = newRawMapMakers['response']['docs']
-      # rawMapMarkers = JSON.parse(RestClient.get  api_simple_log(settings.oipa_api_url + "activities/?format=json&reporting_org_identifier=#{settings.goverment_department_ids}&hierarchy=1&recipient_country=#{countryCode}&fields=recipient_country,recipient_region,title,iati_identifier,location&page_size=500&activity_status=2"))
-      # rawMapMarkers = rawMapMarkers['results']
       mapMarkers = Array.new
       ar = 0
       newRawMapMakers.each do |data|

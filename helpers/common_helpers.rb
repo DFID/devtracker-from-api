@@ -20,7 +20,7 @@ module CommonHelpers
 
   def get_total_spend()
     count = 20
-    apiCall = settings.oipa_api_url_other +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
+    apiCall = settings.oipa_api_url +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
     apiCall = JSON.parse(RestClient.get apiCall)
     page = 1
     page = page.to_i - 1
@@ -32,7 +32,7 @@ module CommonHelpers
       for p in 2..pages do
         p = p - 1
         finalPage = p * count
-        tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=#{finalPage}&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code")
+        tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=#{finalPage}&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code")
         tempData = tempData['response']['docs']
         tempData.each do |item|
           pulledData.push(item)
@@ -49,7 +49,6 @@ module CommonHelpers
         end
       end
     end
-    #Money.new(totalSpend.to_f.round(0)*100, 'GBP').format(:no_cents_if_whole => true,:sign_before_symbol => false)
     totalSpend
   end
 
@@ -64,84 +63,11 @@ module CommonHelpers
   def get_total_project(apiLink)
       totalProjects = JSON.parse(apiLink)
   end
-  
-  def financial_year_wise_budgets(yearWiseBudgets,type)
-
-      finYearWiseBudgets = get_actual_budget_per_fy(yearWiseBudgets)
-      puts finYearWiseBudgets
-      # determine what range to show
-      #current_financial_year = first_day_of_financial_year(DateTime.now)
-      currentFinancialYear = financial_year
-
-      # if range is 6 or less just show it
-      if (type=="C") then
-        range = if finYearWiseBudgets.size < 7 then
-                 finYearWiseBudgets
-                # if the last item in the list is less than or equal to 
-                # the current financial year get the last 6
-                elsif finYearWiseBudgets.last['fy'] <= currentFinancialYear
-                  finYearWiseBudgets.last(6)
-                # other wise show current FY - 3 years and cuurent FY + 3 years
-                else
-                  index_of_now = finYearWiseBudgets.index { |i| i['fy'] == currentFinancialYear }
-
-                  if index_of_now.nil? then
-                    finYearWiseBudgets.last(6)
-                  else
-                    finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
-                  end
-                end
-                tempFYear = ""
-                tempFYAmount = ""
-                finalData = []
-                # finally convert the range into a label format
-                range.each { |item| 
-                  item['fy'] = financial_year_formatter(item['fy'])
-                  tempFYear  = tempFYear + "'" + item['fy'] + "'" + ","
-                  tempFYAmount = tempFYAmount + "'" + item['value'].to_s + "'" + ","
-                }
-                finalData[0] = tempFYear
-                finalData[1] = tempFYAmount
-                return finalData
-      elsif (type=='C2') then
-        range = if finYearWiseBudgets.size < 7 then
-                 finYearWiseBudgets
-                # if the last item in the list is less than or equal to 
-                # the current financial year get the last 6
-                elsif finYearWiseBudgets.last['fy'] <= currentFinancialYear
-                  finYearWiseBudgets.last(6)
-                # other wise show current FY - 3 years and cuurent FY + 3 years
-                else
-                  index_of_now = finYearWiseBudgets.index { |i| i['fy'] == currentFinancialYear }
-
-                  if index_of_now.nil? then
-                    finYearWiseBudgets.last(6)
-                  else
-                    finYearWiseBudgets[[index_of_now-3,0].max..index_of_now+2]
-                  end
-                end
-                tempFYear = ""
-                tempFYAmount = ""
-                finalData = {}
-                # finally convert the range into a label format
-                range.each { |item| 
-                  item['fy'] = financial_year_formatter(item['fy'])
-                  finalData[item['fy']] = item['value']
-                }
-                return finalData
-      elsif (type=="P") then
-        finYearWiseBudgets.each { |item| 
-          item['fy'] = financial_year_formatterv2(item['fy']) 
-        }
-                  	          
-      end
-  end
 
   def financial_year_wise_budgetsv2(yearWiseBudgets,type)
 
     finYearWiseBudgets = get_actual_budget_per_fyv2(yearWiseBudgets)
     # determine what range to show
-    #current_financial_year = first_day_of_financial_year(DateTime.now)
     currentFinancialYear = financial_year
 
     # if range is 6 or less just show it
@@ -214,7 +140,6 @@ def get_actual_budget_per_fyv2(yearWiseBudgets)
       project['budget_period_start_iso_date'].each_with_index do |data, index|
         t = Time.parse(data)
         fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-        #quarter = if project['budget.period-start.quarter'][index].to_i == 1 then 4 else project['budget.period-start.quarter'][index].to_i - 1 end
         if hash.has_key?(fy)
           hash[fy] = hash[fy] + project['budget_value'][index]
         else
@@ -224,7 +149,6 @@ def get_actual_budget_per_fyv2(yearWiseBudgets)
     end
   end
   finalData = []
-  #hash.each do |key, val|
   hash.sort.map do |key, val|
     tempData = {}
     tempData['fy'] = key
@@ -234,49 +158,6 @@ def get_actual_budget_per_fyv2(yearWiseBudgets)
   end
   finalData
 end
-
-  #oipa v2.2
-  # def get_actual_budget_per_fy(yearWiseBudgets)      
-  #     yearWiseBudgets.to_a.group_by { |b| 
-  #         # we want to group them by the first day of 
-  #         # the financial year. This allows for calculations
-  #         fy =  if  b["quarter"]==1 then
-  #                   b["year"]-1
-  #               else
-  #                   b["year"]
-  #               end
-  #         #first_day_of_financial_year(date)
-  #       }.map { |fy, bs| 
-  #           # then we sum up all the values for that financial year
-  #           {
-  #               "fy"    => fy,
-  #               "type"  => "budget",
-  #               "value" => bs.inject(0) { |v, b| v + b["value"] },
-  #           }
-  #       }
-  # end
-
-  #oipa v3.1
-
-  def get_actual_budget_per_fy(yearWiseBudgets)      
-      yearWiseBudgets.to_a.group_by { |b| 
-          # we want to group them by the first day of 
-          # the financial year. This allows for calculations
-          fy =  if  b["budget_period_start_quarter"]==1 then
-                    b["budget_period_start_year"]-1
-                else
-                    b["budget_period_start_year"]
-                end
-          #first_day_of_financial_year(date)
-        }.map { |fy, bs| 
-            # then we sum up all the values for that financial year
-            {
-                "fy"    => fy,
-                "type"  => "budget",
-                "value" => bs.inject(0) { |v, b| v + b["value"] },
-            }
-        }
-  end
 
   def get_actual_budget_per_dept_per_fy(yearWiseDeptBudgets)      
       yearWiseDeptBudgets.to_a.group_by { |b| 
@@ -563,28 +444,19 @@ end
     rescue
       allProjectsData['actualStartDate'] = '1990-01-01T00:00:00'
     end
-
-    #unless allProjectsData['actualStartDate']['results'][0].nil? 
-    #  allProjectsData['actualStartDate'] = allProjectsData['actualStartDate']['results'][0]['activity_dates'][1]['iso_date']
-    #end
     begin
       allProjectsData['plannedEndDate'] = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[3])
       allProjectsData['plannedEndDate'] = JSON.parse(allProjectsData['plannedEndDate'])
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'].select{|activityDate| activityDate['type']['code'] == '3' || activityDate['type']['code'] == '4'}.first
       allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['iso_date']
     rescue
-      #allProjectsData['plannedEndDate'] = '2000-01-01T00:00:00'
       allProjectsData['plannedEndDate'] = Date.today
     end
-    #unless allProjectsData['plannedEndDate']['results'][0].nil?
-    #  allProjectsData['plannedEndDate'] = allProjectsData['plannedEndDate']['results'][0]['activity_dates'][2]['iso_date']
-    #end
     oipa_document_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[4])
     document_type_list = JSON.parse(oipa_document_type_list)
     allProjectsData['document_types'] = document_type_list['results']
 
     #Implementing org type filters
-    #participatingOrgInfo = JSON.parse(File.read('data/participatingOrgList.json'))
     # Get the list of valid iati publisher identifiers
     iatiPublisherList = JSON.parse(File.read('data/iati_publishers_list.json'))
     oipa_implementingOrg_type_list = RestClient.get  api_simple_log(settings.oipa_api_url + apiList[5])
@@ -592,7 +464,6 @@ end
     allProjectsData['implementingOrg_types'] = implementingOrg_type_list['results']
     allProjectsData['implementingOrg_types'].each do |implementingOrgs|
       if implementingOrgs['participating_organisation'].length < 1
-        #tempImplmentingOrgData = participatingOrgInfo.select{|implementingOrg| implementingOrg['Code'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first
         tempImplmentingOrgData = iatiPublisherList.select{|implementingOrg| implementingOrg['IATI Organisation Identifier'].to_s == implementingOrgs['participating_organisation_ref'].to_s}.first        
         if tempImplmentingOrgData.nil?
           implementingOrgs['participating_organisation_ref'] = 'na'
@@ -773,10 +644,10 @@ end
 
   #Serve the aid by location country page table data
   def generateCountryDatav2()
-    #newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+    #newApiCall = settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
     count = 20
-    #newApiCall = settings.oipa_api_url_other + "budget?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
-    newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    #newApiCall = settings.oipa_api_url + "activity?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     puts newApiCall
     page = 1
@@ -793,7 +664,7 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             if item.has_key?('activity_status_code')
@@ -1034,10 +905,10 @@ end
   ###############################
   #Serve the aid by location country page table data
   def generateCountryDatav3()
-    #newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+    #newApiCall = settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
     count = 20
-    #newApiCall = settings.oipa_api_url_other + "budget?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
-    newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    #newApiCall = settings.oipa_api_url + "activity?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     puts newApiCall
     page = 1
@@ -1054,7 +925,7 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:NE&fl=recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             if item.has_key?('activity_status_code')
@@ -1179,10 +1050,10 @@ end
   ###############################
   ###############################
   def generateCountryDatav4()
-    #newApiCall = settings.oipa_api_url_other + "budget?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+    #newApiCall = settings.oipa_api_url + "activity?q=reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:AL&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
     count = 20
-    #newApiCall = settings.oipa_api_url_other + "budget?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
-    newApiCall = settings.oipa_api_url_other + "budget?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    #newApiCall = settings.oipa_api_url + "activity?q=iati_identifier:(GB-1-204158* OR GB-GOV-1-301371* OR GB-GOV-1-301433* OR GB-GOV-1-301465* OR GB-GOV-1-301511* OR GB-GOV-1-301527* OR GB-GOV-1-300420* OR GB-GOV-1-300708* OR GB-GOV-1-301019* OR GB-GOV-1-301095*) AND hierarchy:2 AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     puts newApiCall
     page = 1
@@ -1200,8 +1071,8 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          puts settings.oipa_api_url_other + "budget?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}"
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          puts settings.oipa_api_url + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}"
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=activity_status_code:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             if item.has_key?('activity_status_code')
@@ -1397,7 +1268,7 @@ end
   ###############################
   def generateCountryDatav5()
     count = 20
-    newApiCall = settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
     page = 1
     page = page.to_i - 1
@@ -1413,7 +1284,7 @@ end
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url_other + "budget?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             pulledData.push(item)
@@ -1463,7 +1334,13 @@ end
             projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
           else
             projectDataHash[c] = {}
-            projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+            if c =='FK'
+              projectDataHash[c]["country"] = 'Falkland Islands'
+            elsif c =='PS'
+              projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+            else
+              projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+            end
             projectDataHash[c]["id"] = c
             if(element['activity_status_code'].to_i == 2)
               projectDataHash[c]["projects"] = 1

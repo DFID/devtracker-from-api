@@ -40,7 +40,6 @@ module SectorHelpers
 	end	
 
 	def high_level_sector_listv2(apiUrl, listType)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
@@ -106,7 +105,7 @@ module SectorHelpers
 	end
 
 	def sector_parent_data_listv2(apiUrl, sectorHierarchy)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		finalData = []
@@ -160,7 +159,7 @@ module SectorHelpers
 	end
 
 	def sector_parent_data_dac5(apiUrl, sectorHierarchy)
-		#new api path: https://fcdo-direct-indexing.iati.cloud/search/budget?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
+		#new api path: https://fcdo-direct-indexing.iati.cloud/search/activity?q=reporting_org_ref:(GB-GOV-1 GB-1) AND budget_period_start_iso_date:[2021-04-01T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO 2022-03-31T00:00:00Z]&rows=10000&fl=sector_code,sector_percentage,budget_value_gbp_sum
 		sectorValues  = JSON.parse(apiUrl)['response']['docs']
 		# Load the high-level sector data from static contents
 		finalData = []
@@ -213,58 +212,6 @@ module SectorHelpers
 			'totalBudget' => totalBudget,
 			'sectorHierarchyPath' => highLevelSectorInfo		 				  
 		}
-	end
-
-	def high_level_sector_list(apiUrl, listType, codeType, sectorDescription )
-
-  		sectorValues  = JSON.parse(apiUrl)
-  		sectorValues  = sectorValues['results']
-		iatiSectorCodes = Oj.load(File.read('data/Sector.json'))
-		sectorValues.each do |sector|
-			sector['sector']['name'] = iatiSectorCodes['data'].select{|s| s['code'].to_i == sector['sector']['code'].to_i}[0]['name']
-		end
-		#highLevelSector = JSON.parse(File.read('data/sectorHierarchies.json'))
-		highLevelSector = map_sector_data()
-		#Create a data structure to map each DAC 5 sector code to a high level sector code
-		highLevelSectorBudget = []
-		sectorValues.each do |elem|
-			begin
-			selectedData = highLevelSector.find {|item| item['Code (L3)'].to_s == elem["sector"]["code"]}
-			tempData = {}
-			tempData[:code] = selectedData[codeType]
-			tempData[:name] = selectedData[sectorDescription]
-			tempData[:budget] = elem["value"].to_i
-			highLevelSectorBudget.push(tempData)
-			rescue
-				tempData = {}
-				tempData[:code] = 0
-				tempData[:name] = 'Uncategorised'
-				tempData[:budget] = elem["value"].to_i
-				highLevelSectorBudget.push(tempData)
-			end
-		end          
-        
-	    #Aggregate the budget for each high level sector code (i.e. remove duplicate sector codes from the data structure and aggregate the budgets)
-	   	highLevelSectorBudgetAggregated = group_hashes  highLevelSectorBudget, [:code,:name]
-  	
-  		#remove unallocated sector as we don't want to show that
-  		highLevelSectorBudgetAggregatedNoUnalloc = highLevelSectorBudgetAggregated.reject{|h| h[:name] == "Unallocated"}
-	    
-	    if listType == "top_five_sectors"
-	    	hiLevSecBudAggSorted = highLevelSectorBudgetAggregatedNoUnalloc.sort_by{ |k| k[:budget].to_f}.reverse
-	    	hiLevSecBudAggSorted.first(10)	    	  
-		else 
-			#Sort the sectors by name
-			sectorsData = highLevelSectorBudgetAggregated.sort_by{ |k| k[:name]}
-			#Find the total budget for all of the sectors
-	  	 	totalBudget = Float(sectorsData.map { |s| s[:budget].to_f }.inject(:+))
-
-	  	 	returnObject = {
-				  :sectorsData => sectorsData,
-				  :totalBudget => totalBudget				 				  
-				}
-	    end
-
 	end
 
 	def map_sector_data()
