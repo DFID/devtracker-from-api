@@ -59,12 +59,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
- set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 
 
 
@@ -834,7 +834,7 @@ end
 #  SOLR BASED PAGES
 #####################################################################
 
-get '/search/?' do
+get '/search_p/?' do
 	if (!params['query'])
 		query= ''
 		filters = []
@@ -878,7 +878,7 @@ get '/search/?' do
 	}
 end
 
-post '/search/?' do
+post '/search_p/?' do
 	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
