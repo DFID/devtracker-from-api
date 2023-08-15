@@ -8677,6 +8677,7 @@ embed {
 }
 
 .leaflet-popup-content {
+  min-width: 350px;
   margin: 10px 25px 10px 20px !important;
 }
 
@@ -8688,6 +8689,17 @@ embed {
 
 .leaflet-container a.leaflet-popup-close-button {
   color: #0b0c0c !important;
+}
+
+.app-country-map-data {
+  display: flex;
+  font-size: 14px;
+}
+.app-country-map-data--title {
+  font-weight: bold;
+}
+.app-country-map-data--stat {
+  margin-left: auto;
 }
 
 .app-top6-stats {
@@ -8868,4 +8880,45 @@ table.dataTable thead .sorting_desc span::after {
   margin-top: 10px;
   font-size: 14px;
   align-self: self-start;
+}
+
+.app-region-stat {
+  width: 100%;
+  margin-bottom: 30px;
+  background-color: #f3f2f1;
+}
+.app-region-stat--total {
+  background-color: #1d70b8;
+  background-image: url(/assets/images/countries-map.svg);
+  background-position: right -55px center;
+  background-size: 40%;
+  background-repeat: no-repeat;
+}
+.app-region-stat--total *,
+.app-region-stat--total .govuk-link {
+  color: #fff;
+}
+.app-region-stat__data {
+  display: flex;
+  flex-direction: column;
+  min-height: 110px;
+  padding: 15px;
+}
+@media (min-width: 40.0625em) {
+  .app-region-stat__data {
+    margin-top: 0;
+  }
+}
+.app-region-stat__data--caption {
+  min-height: 55px;
+}
+.app-region-stat__data--value {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+.app-region-stat__source {
+  display: flex;
+  gap: 10px;
+  padding: 5px 15px 15px;
+  border-bottom: 1px solid #b1b4b6;
 }

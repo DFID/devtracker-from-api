@@ -15,40 +15,18 @@ $(document).ready(function () {
     else
       currentFY = "FY" + date.getFullYear() + "/" + (date.getFullYear() + 1);
     return "" +
-      "<div class='popup' style='min-width:350px;'>" +
-      "   <h1><img class='flag' alt='Country Flag' src='" + countryData.flag + "' /> " + countryData.country + "</h1>" +
-      "   <div class='row'>" +
-      "       <div class='six columns'>" +
-      "           <div class='stat'>" +
-      "               <h3>Country budget " + currentFY + "</h3>" +
-      "           </div>" +
-      "       </div>" +
-      "       <div class='six columns'>" +
-      "           <div class='stat'>" +
-      "              <h3>Number of Active Project(s)</h3>" +
-      "          </div>" +
-      "       </div>" +
+      "<div class='popup' style='width: auto;'>" +
+      "   <h3 class='govuk-heading-s'>" + countryData.country + "</h3>" +
+      "   <div class='app-country-map-data'>" +
+      "       <div class='app-country-map-data--title'>Country budget " + currentFY + "</div>" +
+      "       <div class='app-country-map-data--stat'>\u00A3" + addCommas(countryData.budget) + "</div>" +
       "   </div>" +
-      "   <div class='row'>" +
-      "       <div class='six columns'>" +
-      "           <div class='stat'>" +
-      "               <p>\u00A3" + addCommas(countryData.budget) + "</p>" +
-      "           </div>" +
-      "       </div>" +
-      "       <div class='six columns'>" +
-      "           <div class='stat'>" +
-      "              <p>" + countryData.projects + "</p>" +
-      "          </div>" +
-      "       </div>" +
+      "   <div><a href='/countries/" + countryData.id + "' class='govuk-link govuk-!-font-size-14'>View country information</a></div>" +
+      "   <div class='app-country-map-data govuk-!-margin-top-3'>" +
+      "       <div class='app-country-map-data--title'>Number of Active Project(s)</div>" +
+      "       <div class='app-country-map-data--stat'>" + countryData.projects + "</div>" +
       "   </div>" +
-      "   <div class='row'>" +
-      "       <div class='six columns'>" +
-      "           <div class='stat'><a href='/countries/" + countryData.id + "'>View country info</a></div>" +
-      "       </div>" +
-      "       <div class='six columns'> " +
-      "          <div class='stat'><a href='/countries/" + countryData.id + "/projects'>View projects list</a></div>" +
-      "        </div>" +
-      "   </div>" +
+      "   <div><a href='/countries/" + countryData.id + "/projects' class='govuk-link govuk-!-font-size-14'>View projects list</a></div>" +
       "</div>";
   }
 

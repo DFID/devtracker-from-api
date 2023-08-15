@@ -83,6 +83,7 @@ embed {
 }
 
 .leaflet-popup-content {
+    min-width: 350px;
     margin: 10px 25px 10px 20px !important;
 }
 
@@ -94,4 +95,17 @@ embed {
 
 .leaflet-container a.leaflet-popup-close-button {
     color: #0b0c0c !important;
+}
+
+.app-country-map-data {
+    display: flex;
+    font-size: 14px;
+
+    &--title {
+        font-weight: bold;
+    }
+
+    &--stat {
+        margin-left: auto;
+    }
 }

@@ -1,0 +1,46 @@
+.app-region-stat {
+    width: 100%;
+    margin-bottom: 30px;
+    background-color: govuk-colour("light-grey");
+
+    &--total {
+        background-color: $govuk-brand-colour;
+        background-image: url(/assets/images/countries-map.svg);
+        background-position: right -55px center;
+        background-size: 40%;
+        background-repeat: no-repeat;
+
+        *,
+        .govuk-link {
+            color: #fff;
+        }
+    }
+
+    &__data {
+        display: flex;
+        flex-direction: column;
+        min-height: 110px;
+        padding: govuk-spacing(3);
+
+        @include govuk-media-query($from: tablet) {
+            margin-top: 0;
+        }
+
+        &--caption {
+            min-height: 55px;
+        }
+
+        &--value {
+            margin-top: auto;
+            margin-bottom: 0;
+        }
+    }
+
+    &__source {
+        display: flex;
+        gap: 10px;
+        padding: govuk-spacing(1) govuk-spacing(3) govuk-spacing(3);
+        // background-color: #fff;
+        border-bottom: 1px solid $govuk-border-colour;
+    }
+}
