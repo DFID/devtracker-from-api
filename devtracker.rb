@@ -21,6 +21,7 @@ require "action_view"
 require 'csv'
 require "sinatra/cookies"
 require "cgi"
+require 'socket'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -65,7 +66,8 @@ include SolrHelper
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/search/'
-
+set :prod_api_url, 'https://fcdo.iati.cloud/search/'
+set :dev_api_url, 'https://fcdo-staging.iati.cloud/search/'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -108,6 +110,7 @@ get '/' do  #homepage
 		   #oipa v3.1
 		}
    end
+   hostname = Socket.gethostname
 	## cache storing ends here
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
@@ -150,6 +153,7 @@ get '/' do  #homepage
 			whatWeDoTotal: whatWeDoTotal,
 			top5CountryTotal: top5CountryTotal,
 			activiteProjectCount: activiteProjectCount,
+			hostname: hostname
  		}
 end
 
