@@ -834,7 +834,7 @@ end
 #  SOLR BASED PAGES
 #####################################################################
 
-get '/search/?' do
+get '/search_p/?' do
 	if (!params['query'])
 		query= ''
 		filters = []
@@ -878,7 +878,7 @@ get '/search/?' do
 	}
 end
 
-post '/search/?' do
+post '/search_p/?' do
 	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
