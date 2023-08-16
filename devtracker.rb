@@ -66,8 +66,8 @@ include SolrHelper
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/search/'
-set :prod_api_url, 'https://fcdo.iati.cloud/search/'
-set :dev_api_url, 'https://fcdo-staging.iati.cloud/search/'
+set :prod_api_url, 'https://fcdo.iati.cloud'
+set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -235,6 +235,13 @@ get '/countries/:country_code/?' do |n|
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
+	json_link = ''
+	if request.url.start_with?('https://devtracker.')
+		json_link = json_link + settings.prod_api_url
+	else
+		json_link = json_link + settings.dev_api_url
+	end
+	json_link = json_link + '/search/activity/?q=recipient_country_code:'+n+' AND reporting_org_ref:GB-GOV-* AND hierarchy:1&format='
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -246,7 +253,8 @@ get '/countries/:country_code/?' do |n|
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
 			active_link: 'aidByLoc',
-			active_sub_link: 'countrySummary'
+			active_sub_link: 'countrySummary',
+			json_url_link: json_link
  		}
 end
 ## country summary page related api calls
