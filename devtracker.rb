@@ -21,7 +21,6 @@ require "action_view"
 require 'csv'
 require "sinatra/cookies"
 require "cgi"
-require 'socket'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -110,7 +109,6 @@ get '/' do  #homepage
 		   #oipa v3.1
 		}
    end
-   hostname = Socket.gethostname
 	## cache storing ends here
   	odas = Oj.load(File.read('data/odas.json'))
   	odas = odas.first(10)
@@ -152,8 +150,7 @@ get '/' do  #homepage
  			oipa_api_url: settings.oipa_api_url,
 			whatWeDoTotal: whatWeDoTotal,
 			top5CountryTotal: top5CountryTotal,
-			activiteProjectCount: activiteProjectCount,
-			hostname: hostname
+			activiteProjectCount: activiteProjectCount
  		}
 end
 
