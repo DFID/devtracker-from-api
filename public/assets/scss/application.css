@@ -7702,6 +7702,18 @@ body {
   border: 1px solid #b1b4b6;
 }
 
+.app-homepage-notifications {
+  margin-top: -40px;
+}
+.app-homepage-notifications .govuk-notification-banner__content > * {
+  max-width: 100%;
+  font-size: 17px;
+}
+.app-homepage-notifications .govuk-details__text {
+  padding-left: 0;
+  border-left: none;
+}
+
 .app-headline-stats {
   margin: 25px 0 50px 0;
 }
@@ -7810,7 +7822,7 @@ body {
   padding: 0;
 }
 .app-card-search-no-margin {
-  margin-top: -40px;
+  margin-top: -20px;
 }
 .app-card-search__image {
   display: none;
