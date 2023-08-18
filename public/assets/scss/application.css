@@ -7826,7 +7826,7 @@ body {
 }
 .app-card-search__image {
   display: none;
-  width: 300px;
+  width: 295px;
 }
 @media (min-width: 40.0625em) {
   .app-card-search__image {

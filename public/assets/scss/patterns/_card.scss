@@ -21,7 +21,7 @@
 
         &__image {
             display: none;
-            width: 300px;
+            width: 295px;
 
             @include govuk-media-query($from: tablet) {
                 display: block;
