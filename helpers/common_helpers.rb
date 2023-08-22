@@ -1322,6 +1322,9 @@ end
           end
         end
       end
+      if tempTotalBudget > 0
+        puts ('total budget: ' + tempTotalBudget.to_s)
+      end
       ## Process project budget and count now
       if element.has_key?('recipient_country_code')
         element['recipient_country_code'].each_with_index do |c, i|

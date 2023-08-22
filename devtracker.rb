@@ -59,12 +59,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 
 
 
@@ -84,8 +84,8 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
