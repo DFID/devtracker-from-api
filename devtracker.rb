@@ -431,6 +431,12 @@ get '/projects/*/summary' do
 			end
 		end
 	end
+	if(project.has_key?('activity_aggregation_incoming_funds_value_gbp'))
+		programmeBudget = programmeBudget + project['activity_aggregation_incoming_funds_value_gbp'].to_f
+	end
+	if(project.has_key?('activity_aggregation_commitment_value_gbp'))
+		programmeBudget = programmeBudget + project['activity_aggregation_commitment_value_gbp'].to_f
+	end
   	#get project sectorwise graph  data
   	projectSectorGraphData = get_project_sector_graph_datav2(n)
   	settings.devtracker_page_title = 'Programme '+project['iati_identifier']
