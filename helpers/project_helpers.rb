@@ -1372,7 +1372,7 @@ module ProjectHelpers
 
             currentFinancialYear = financial_year
 
-            range = if series.size < 7 then
+            range = if series.size < 900 then
                         series
                     # if the last item in the list is less than or equal to 
                     # the current financial year get the last 6
