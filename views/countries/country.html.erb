@@ -126,8 +126,7 @@
                 <div class="govuk-grid-column-full">
                     <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Activity Data for <%= country['name']%></p>
                     <div class="app-download-data">
-                        <a href="https://iati.fcdo.gov.uk/iati_files/Country/FCDO-<%= country['name'].gsub(/ /,'-').gsub(/[()]/,"").gsub(/,/,"")%>-<%= country['code']%>.xml" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">XML</strong></a>
-                        <a href="https://devtracker.fcdo.gov.uk/api/activities/?format=json&recipient_country=<%= country['code']%>&reporting_organisation_identifier=<%= settings.goverment_department_ids%>&page_size=<%= activityCount %>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>
+                        <a href="<%= json_url_link%>json" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>
                     </div>
                 </div>
             </div>
