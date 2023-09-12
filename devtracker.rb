@@ -65,7 +65,8 @@ include SolrHelper
 
 # Server Machine: set global settings to use varnish cache
 #set :oipa_api_url, 'http://127.0.0.1:6081/search/'
-
+set :prod_api_url, 'https://fcdo.iati.cloud'
+set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -149,7 +150,7 @@ get '/' do  #homepage
  			oipa_api_url: settings.oipa_api_url,
 			whatWeDoTotal: whatWeDoTotal,
 			top5CountryTotal: top5CountryTotal,
-			activiteProjectCount: activiteProjectCount,
+			activiteProjectCount: activiteProjectCount
  		}
 end
 
@@ -231,6 +232,13 @@ get '/countries/:country_code/?' do |n|
 	# Get a list of map markers
 	mapMarkers = getCountryMapMarkers(n)
   	settings.devtracker_page_title = 'Country ' + country['name'] + ' Summary Page'
+	json_link = ''
+	if request.url.start_with?('https://devtracker.')
+		json_link = json_link + settings.prod_api_url
+	else
+		json_link = json_link + settings.dev_api_url
+	end
+	json_link = json_link + '/search/activity/?q=recipient_country_code:'+n+' AND reporting_org_ref:GB-GOV-* AND hierarchy:1&format='
 	erb :'countries/country', 
 		:layout => :'layouts/layout',
 		:locals => {
@@ -242,7 +250,8 @@ get '/countries/:country_code/?' do |n|
  			countryGeoJsonData: geoJsonData,
 			mapMarkers: mapMarkers,
 			active_link: 'aidByLoc',
-			active_sub_link: 'countrySummary'
+			active_sub_link: 'countrySummary',
+			json_url_link: json_link
  		}
 end
 ## country summary page related api calls
@@ -420,6 +429,14 @@ get '/projects/*/summary' do
 			project['budget_value'].each do |budget|
 				programmeBudget = programmeBudget + budget
 			end
+		end
+	end
+	if(!project['reporting_org_ref'].to_s == 'GB-GOV-1')
+		if(project.has_key?('activity_aggregation_incoming_funds_value_gbp'))
+			programmeBudget = programmeBudget + project['activity_aggregation_incoming_funds_value_gbp'].to_f
+		end
+		if(project.has_key?('activity_aggregation_commitment_value_gbp'))
+			programmeBudget = programmeBudget + project['activity_aggregation_commitment_value_gbp'].to_f
 		end
 	end
   	#get project sectorwise graph  data
@@ -834,7 +851,7 @@ end
 #  SOLR BASED PAGES
 #####################################################################
 
-get '/search/?' do
+get '/search_p/?' do
 	if (!params['query'])
 		query= ''
 		filters = []
@@ -878,7 +895,7 @@ get '/search/?' do
 	}
 end
 
-post '/search/?' do
+post '/search_p/?' do
 	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
