@@ -8575,7 +8575,9 @@ l .app-collapsible-title__link:focus {
   display: none;
 }
 
-.rm-link {
+.rm-link,
+#fundingProjects a,
+#fundedProjects a {
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -8584,26 +8586,73 @@ l .app-collapsible-title__link:focus {
   display: inline-block;
   margin-bottom: 20px;
 }
-.rm-link:focus {
+.rm-link:focus,
+#fundingProjects a:focus,
+#fundedProjects a:focus {
   color: #0b0c0c;
   background-color: #ffdd00;
   box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
   text-decoration: none;
 }
-.rm-link:link, .rm-link:visited {
+.rm-link:link, .rm-link:visited,
+#fundingProjects a:link,
+#fundingProjects a:visited,
+#fundedProjects a:link,
+#fundedProjects a:visited {
   color: #1d70b8;
 }
-.rm-link:hover {
+.rm-link:hover,
+#fundingProjects a:hover,
+#fundedProjects a:hover {
   color: #003078;
 }
-.rm-link:active, .rm-link:focus {
+.rm-link:active, .rm-link:focus,
+#fundingProjects a:active,
+#fundingProjects a:focus,
+#fundedProjects a:active,
+#fundedProjects a:focus {
   color: #0b0c0c;
+}
+
+#fundingProjects a,
+#fundedProjects a {
+  display: block;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 @media (min-width: 40.0625em) {
   .app-summary-list__key {
     width: 60%;
   }
+}
+
+#fundingProjects h4,
+#fundedProjects h4 {
+  margin-top: 30px !important;
+  font-size: 19px;
+  font-size: 1.1875rem;
+  line-height: 1.3157894737;
+  color: #0b0c0c;
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 15px;
+}
+
+#fundingProjects ul,
+#fundedProjects ul {
+  padding-left: 0;
+  list-style-type: none;
+}
+#fundingProjects ul li,
+#fundedProjects ul li {
+  font-size: 19px;
+  font-size: 1.1875rem;
+  line-height: 1.3157894737;
+  margin-bottom: 5px;
 }
 
 .map {
