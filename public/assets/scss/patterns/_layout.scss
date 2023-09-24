@@ -1,8 +1,14 @@
+body {
+    font-family: "GDS Transport",
+        arial,
+        sans-serif
+}
+
 .app-main-wrapper {
     padding-top: govuk-spacing(4);
 
     &-homepage {
-        padding-top:0
+        padding-top: 0
     }
 }
 
@@ -38,11 +44,12 @@
     }
 
     &__left {
-        min-width: 225px;
+        width: 240px;
     }
 
     &__right {
         padding-left: 0;
+        flex: 1;
 
         @include govuk-media-query($from: 1024px) {
             padding-left: 40px;
@@ -53,10 +60,10 @@
 .app-flex-container {
     display: flex;
     align-items: center;
-    width:100%;
+    width: 100%;
 
     &__column {
-        flex-direction:column;
+        flex-direction: column;
     }
 
     &--item-right {

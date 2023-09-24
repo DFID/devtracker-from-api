@@ -4,253 +4,78 @@
     <% chartDataColumnDataSplit2 = []%>
     <% countrySectorGraphData = []%>
 <%end%>
-<div class="hero"><div id="page-title" class="row">
-    <div class="twelve columns">
-        <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-        <div>
-            <div class="govuk-breadcrumbs">
-                <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
-                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country['name'] %></li>
-                </ol>
-            </div>
-            <h1>
-                <%= country['name'] %>
-            </h1>
-        </div>
-    </div>
+
+<div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= country['name'] %></li>
+    </ol>
 </div>
-<% if(country['code'] != 'UA2') %>
-    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country['totalProjects'] } %>
-<%else%>
-    <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => 0 } %>
-<%end%>
-</div>
-<div class="row">
-    <% if(country['code'] == 'AF') %>
-        <div class="twelve columns">
-            <div class="govuk-inset-text" style="font-size: 14px;">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (Programme title, description and channel of delivery) from Devtracker. As Programmes are reviewed and republished, the Programme and financial information will become available on DevTracker.</div>
-        </div>
-    <%end%>
-    <% if(country['code'] == 'UA2') %>
-        <div class="twelve columns">
-            <div class="govuk-inset-text" style="font-size: 14px;">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
-        </div>
-    <%end%>
-    <div class="eight columns summary">
-        <h2 class="visually-hidden">Summary</h2>
-        <% if country['description'].length > 0%>
-            <div class="country-description" style="height: 235px; overflow: hidden; text-align: justify">
-                <%= markdown_to_html(country['description'])%>
-                <p style="font-style: italic;">Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.</p>
-                <%if country['description'].length > 500%>
-                    <div class="description-overlay" style="position: absolute;left: 0px;bottom: 0px;width: 100%;text-align: center;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(255, 255, 255, 0)),color-stop(1, rgb(255, 255, 255)));padding: 80px 0 0 0;color: blue;text-decoration: blink;font-weight: bold;background-image: -moz-linear-gradient(top, transparent, white)">
-                        <div class="description-expander" style="text-align: center; color: #2e3191; cursor: pointer">Read more about <%= country['name'] %></div>
-                    </div>
-                <%else%>
-                    <div class="description-overlay" style="display: none">
-                        <div class="description-expander">Read more about <%= country['name'] %></div>
-                    </div>
-                <%end%>
-                <div class="description-collapse" style="text-align: center; color: #2e3191; cursor: pointer; display: none; position: absolute; width: 100%">Read less</div>
-            </div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l"><%= country['name'] %></h1>
+
+        <% if(country['code'] != 'UA2') %>
+            <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => country['totalProjects'] } %>
         <%else%>
-            <div class="country-description" style="height: 235px; overflow: hidden; text-align: center; margin-top: 112px;">
-                Description Not Available.
-            </div>
+            <%= erb :'partials/_countries-tabs', :locals => { :active => "summary", :country => country, :project_count => 0 } %>
         <%end%>
+
+        <% if(country['code'] == 'AF') %>
+            <div class="govuk-inset-text">Due to the security situation in Afghanistan, we have temporarily removed potentially sensitive information (Programme title, description and channel of delivery) from Devtracker. As Programmes are reviewed and republished, the Programme and financial information will become available on DevTracker.</div>
+        <%end%>
+        
+        <% if(country['code'] == 'UA2') %>
+            <div class="govuk-inset-text">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
+        <%end%>
+
+        <h2 class="govuk-heading-m">Summary</h2>
+
         <% if country['description'].length > 0%>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    var curHeight = $('.country-description').height();
-                    $('.country-description').css('height', 'auto');
-                    var autoHeight = $('.country-description').height();
-                    $('.country-description').height(curHeight);
-                    $('.description-expander').click(function(){
-                        $('.country-description').animate({
-                            height: autoHeight
-                        },1000,function(){
-                            $('.description-collapse').fadeIn();
-                        });
-                        $(this).parent().fadeOut('slow');
-                    });
+                <div class="app-country-description"><%= markdown_to_html(country['description'])%></div>
+                <div class="govuk-inset-text govuk-!-margin-bottom-8">Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.</div>
+        <%else%>
+            <p class="govuk-body">
+                Description Not Available.
+            </p>
+        <%end%>             
 
-                    $('.description-collapse').click(function(){
-                        $(this).hide();
-                        $('.description-overlay').fadeIn('slow');
-                        $('.country-description').animate({
-                            height: curHeight
-                        },1000);
-                    });
-                });
-            </script>
-        <%end%>
-    </div>
-    <div class="four columns country-flag">
-        <img alt="Country flag" src="/images/flags_l/<%= country['code'] %>.png">
-    </div>
-</div>
-<div style="margin: 15px auto" class="row">
-    <div class="four columns"></div>
-    <div class="four columns"><hr></div>
-    <div class="four columns"></div>
-</div>
-<div style="margin: 15px auto" class="row">
-    <div class="four columns"></div>
-    <div class="four columns"></div>
-    <div class="four columns"></div>
-</div>
-<!-- Map position -->
-<div class="row">
-    <div class="twelve columns" role="presentation">
-        <div id="countryMap" class="countryMap">
-        </div>
-
+        <div id="countryMap" class="countryMap"></div>
         <input type="hidden" id="countryName" value="<%=country['name'] %>">
         <input type="hidden" id="countryCode" value="<%=country['code'] %>">
        
-        <div id="countryMapDisclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
+        <%= erb :'partials/_map_disclaimer'%>
+
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
+            <div class="govuk-grid-column-full">
+                <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-3 govuk-!-margin-bottom-0">Download location data for <%= country['name'] %></p>
+                <div class="app-download-data">
+                    <a href="/downloadLocationDataCountriesCSV/<%=country['code']%>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">CSV</strong></a>
+                </div>
+            </div>
         </div>
-    </div>
-    <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country['code']%>" class="api-link button">CSV</a></span>
-</div>
-<div class="stuffs">
-<!-- Top six results -->
-<div id="topSixResults" style="margin-top: 25px" class="row">
-    <%if topSixResults.count > 0%>
-        <%i = 1%> 
-        <%tempCount = topSixResults.count%>
-        <%topSixResults.each do |result|%>
-            <%if i < 4%>
-                <%if topSixResults.count < 4%>
-                    <%
-                    case tempCount
-                    when 1 %>
-                        <div class="twelve columns">
-                            <div class="mi-style" style="text-align: center">
-                                <span></span>
-                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                                <p><%= result['title']%></p>
-                                <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                            </div>
+
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+        <%if topSixResults.count > 0%>
+            <h2 class="govuk-heading-m">Top projects in <%= country['name'] %></h2>
+            <div class="app-top6-stats">
+                <%topSixResults.each do |result|%>
+                    <div class="app-top6-stat">
+                        <div class="app-top6-stat__data">
+                            <span class="govuk-caption-m app-top6-stat__data--caption"><%= result['title']%></span>                    
+                            <h1 class="govuk-heading-xl app-top6-stat__data--value"><%= convert_numbers_to_human_readable_format(result['totals'])%></h1>
                         </div>
-                    <%when 2 %>
-                        <div class="six columns">
-                            <div class="mi-style" style="text-align: center">
-                                <span></span>
-                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                                <p><%= result['title']%></p>
-                                <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                            </div>
-                        </div>
-                    <%
-                    when 3 %>
-                        <div class="four columns">
-                            <div class="mi-style" style="text-align: center">
-                                <span></span>
-                                <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                                <p><%= result['title']%></p>
-                                <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                            </div>
-                        </div>
-                    <%end%>
-                <%else%>
-                    <div class="four columns">
-                        <div class="mi-style" style="text-align: center">
-                            <span></span>
-                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                            <p><%= result['title']%></p>
-                            <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                        </div>
+                        <div class="app-top6-stat__source govuk-caption-m govuk-!-font-size-14">2015 - 2020 <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external" class="govuk-link">Source Information</a></div>
                     </div>
                 <%end%>
-            <%else%>
-                <%
-                case tempCount
-                when 4 %>
-                    <div class="twelve columns">
-                        <div class="mi-style" style="text-align: center">
-                            <span></span>
-                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                            <p><%= result['title']%></p>
-                            <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                        </div>
-                    </div>
-                <%when 5 %>
-                    <div class="six columns">
-                        <div class="mi-style" style="text-align: center">
-                            <span></span>
-                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                            <p><%= result['title']%></p>
-                            <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                        </div>
-                    </div>
-                <%
-                when 6 %>
-                    <div class="four columns">
-                        <div class="mi-style" style="text-align: center">
-                            <span></span>
-                            <h3><%= convert_numbers_to_human_readable_format(result['totals'])%></h3>
-                            <p><%= result['title']%></p>
-                            <p>2015 - 2020, <a target="_BLANK" href="https://www.gov.uk/government/publications/dfid-results-estimates-2015-to-2020" rel="external">Source</a></p>
-                        </div>
-                    </div>
-                <%end%>
-            <%end%>
-            <%i = i+1%>
+            </div>
         <%end%>
-    <%end%>
-</div>
-    </div>
-<div class="row">
-    <div class="six columns">
-        <div class="country-info-container">  
-            <div class="more-info-container">  
-                <span class="more-info-title">Sectors</span> 
-            </div>
-            <p>Sectors groups as a percentage of country budgets according to the Development Assistance Committee's classifications.</p>
-        </div>
-        <div class="row">
-            <div id="sect-container" style="display: none" class="twelve columns">
-                <div id="sectorChart"></div>
-            </div>
-        </div>
-    </div>
-    <div class="six columns">
-         <div class="country-info-container">  
-            <div class="more-info-container">  
-                <span class="more-info-title">Budget</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme status" class="more-info-link-middle"/></a>
-                <aside id="moreinfo3" class="more-info">            
-                        <div class="more-info-content">
-                            Please note that although budgets are generally split by year, some departments publish budgets that span multiple years. These are represented in the first year of their allocation.
-                        </div>
-                </aside>
-            </div>
-            <p>Programme budget total by year approved at the Programme level to date.</p>
-         </div>
-         <div id="budget-year-chart5" style="height: 300px; width: 100%;" class="row"></div>
-         <!--<div style="text-align: center">Budgets approved at a project level to date. This may be different from the overall operational plan budget for <%#= country[:name] %>.</div> -->
-         <div class="row">
-            <div style="text-align: center" class="six columns">
-                <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(0)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
-                <% if(country['code'] == 'UA2') %>
-                    <span style="font-size: 1.5em">£0</span>
-                <%else%>
-                    <span style="font-size: 1.5em"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
-                <%end%>
-                <p><strong><%= current_financial_year %></strong></p>
-            </div>
-            <div style="text-align: center" class="six columns">
-                <!-- <span style="font-size: 1.5em"><%#= country[:projectBudgetPercentToDfidBudget] %>%</span> -->
-                <!-- <p><strong>FCDO Total</strong></p> -->
-            </div>
-         </div>
-    </div>
-    <div class="twelve columnns">
+
+        <h2 class="govuk-heading-m govuk-!-margin-top-7">Sectors and budgets in <%= country['name'] %></h2>
+
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
@@ -261,35 +86,69 @@
                 Please note that although budgets are generally split by year, some departments publish budgets that span multiple years. These are represented in the first year of their allocation. Cross-government allocations such as Prosperity Fund and Conflict, Stability and Security Fund are known to duplicate budgets published by other departments, as well as using multi-year budgets.
             </div>
         </details>
-    </div>
-</div>
 
-<div class="row">
-    <div class="twelve columns download-link">
+        <div class="app-chart-row">
+            <div class="app-chart-row__chart">
+                <h3 class="govuk-heading-s app-chart-row__chart--heading">Sectors</h3>
+                <p class="govuk-body-s app-chart-row__chart--intro">Sectors groups as a percentage of country budgets according to the Development Assistance Committee's classifications.</p>
+                <div class="app-chart-row__chart--data">
+                    <div id="sectorChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-chart-row">
+            <div class="app-chart-row__chart">
+                <h3 class="govuk-heading-s app-chart-row__chart--heading">Budget</h3>
+                <p class="govuk-body-s app-chart-row__chart--intro govuk-!-margin-bottom-3">
+                    Programme budget total by year approved at the Programme level to date.
+                </p>
+
+                <div class="govuk-!-margin-top-4">
+                    <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(0)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                    <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
+                    <span class="govuk-body-s app-chart-row__chart--intro govuk-!-margin-bottom-0">Current finacial year - <%= current_financial_year %></span>
+                    <% if(country['code'] == 'UA2') %>
+                        <span class="govuk-heading-l govuk-!--padding-top-1">£0</span>
+                    <%else%>
+                        <span class="govuk-heading-l govuk-!-padding-top-1"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                    <%end%>
+                </div>                
+
+                <div class="app-chart-row__chart--data">
+                    <div id="budget-year-chart5" style="height: 300px; width: 100%;" class="budget_container"></div>
+                </div>
+            </div>
+        </div>
+
         <% if(country['code'] != 'UA2') %>
-            <p>Download IATI Activity Data for <%= country['name']%>: <a href="<%= json_url_link%>json" class="api-link button" target="_blank">JSON</a></p>
+            <div class="govuk-grid-row govuk-!-margin-top-3 govuk-!-margin-bottom-5">
+                <div class="govuk-grid-column-full">
+                    <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Activity Data for <%= country['name']%></p>
+                    <div class="app-download-data">
+                        <a href="<%= json_url_link%>json" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
         <%end%>
-    </div>
-</div>
-<%if country['code'] != 'UA2'%>
-    <div class="row">
-        <div id="waiting-impl-orgs" class="twelve columns"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Implementing organisations list.. Please wait..</strong></p></div>
-        <div class="twelve columns">
+
+        <%if country['code'] != 'UA2'%>
+            <h2 class="govuk-heading-m">Implementing Partners</h2>
+            <div id="waiting-impl-orgs" class="twelve columns"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Implementing organisations list.. Please wait..</strong></p></div>
             <table class="govuk-table">
-              <caption class="govuk-table__caption">Implementing Partners</caption>
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Partner(s)</th>
-                  <th scope="col" class="govuk-table__header">Active Programmes</th>
+                  <th scope="col" class="govuk-table__header govuk-table__header--numeric">Active Programmes</th>
                 </tr>
               </thead>
               <tbody id="implementing_org_table_body" class="govuk-table__body">
-                
               </tbody>
             </table>
-        </div>
+        <%end%>
     </div>
-<%end%>
+</div>
 
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>
@@ -306,9 +165,9 @@
             if(Object.keys(response.output).length > 0){
                 tempString = '';
                 $.each(response.output, function(i, data){
-                    tempString = tempString + '<tr class="govuk-table__row"><th scope="row" class="govuk-table__header">' 
-                    + data.orgName 
-                    + '</th><td class="govuk-table__cell">' + data.count + '</td></tr>';
+                    tempString = tempString + '<tr class="govuk-table__row"><td scope="row" class="govuk-table__cell">' 
+                    + data.orgName
+                    + '</td><td class="govuk-table__cell govuk-table__cell--numeric">' + data.count + '</td></tr>';
                 });
                 $('#implementing_org_table_body').html(tempString);
                 $('#implementing_org_container').slideDown('slow');

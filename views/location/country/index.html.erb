@@ -1,110 +1,89 @@
-<div class="hero" style="margin-bottom: 0px">
-  <%= erb :'partials/_location-title-bar'%>
-  <%= erb :'partials/_location-tabs', :locals => { :active => "country" } %>
-</div>
-<!--[if lte IE 8]>
-    <div class="row">
-      <div class="disclaimer grey">
-          <p>The interactive map functionality is not supported by your browser.</p>
-      </div>
-    </div>
-<![endif]-->
-
-<!--[if lte IE 8]><div class="hide-interactive-map"><![endif]-->
+<%= erb :'partials/_location-tabs', :locals => { :active => "country" } %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <!--[if lte IE 8]>
         <div class="row">
-            <div class="twelve columns map">
-                <script type="text/javascript">
-                  var mapType = 'location';
-                    var countriesData = <%= dfid_country_map_data %>;
-                    var countryMapData = <%= countryMapData.to_json%>;
-                    var TotalCountryBudget = '<%= total_country_budget_locationv2%>';
-                    var finYear = '<%=current_financial_year%>';
-                    var maxBudget = <%= maxBudget%>
-                </script>  
-<!--                <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
-                <!-- New leaflet libraries -->
-                <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
-                <!-- Make sure you put this AFTER Leaflet's CSS -->
-                <script src="/javascripts/leaflet/leaflet_new.js"></script>
-                <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
-                <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
-                <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
-                <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
-                <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
-                <!--[if lte IE 8]><link rel="stylesheet" href="/javascripts/leaflet/leaflet.ie.css /><![endif]-->
-
-                <div id="countryMap" role="presentation">
-                  <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
-                    <img alt="Map legend" src="/images/country-map-legend.png" style="Map Legend"/>
-                    <!-- <h3>Current Projects: Total Project Budget for <%#=current_financial_year%></h3> -->
-                  </div>
-                </div>
-
-                <div class="disclaimer grey">
-                   <p><em>Disclaimer: </em>Country borders do not necessarily reflect the UK Government's official position.</p>
-                </div>
-<!--                 <script src="/javascripts/leaflet/indexmap.js" type="text/javascript"></script> -->
-            </div>
-        </div>
-<!--[if lte IE 8]></div><![endif]-->
-
-
-<div class="row">
-  <div class="twelve columns">
-    <div style="margin: 15px 0;">
-      <details class="govuk-details" data-module="govuk-details">
-          <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">
-                  Help with Sector and Budget Figures
-              </span>
-          </summary>
-          <div class="govuk-details__text">
-          Programme budgets benefiting specific countries are totaled for the current financial year across all UK government departments. Sector groups are calculated as a percentage of country budgets according to OECD Development Assistance Committee (DAC) classifications.
+          <div class="disclaimer grey">
+              <p>The interactive map functionality is not supported by your browser.</p>
           </div>
-      </details>
-    </div>
-    <div id="country-list">
-      <table id="dataTable" class="display" style="width: 100%; display: none">
-        <thead>
-            <tr>
-                <th>Country</th>
-                <th>Programme Budget</th>
+        </div>
+    <![endif]-->
+    <!--[if lte IE 8]><div class="hide-interactive-map"><![endif]-->
+        <div class="map">
+            <script type="text/javascript">
+              var mapType = 'location';
+                var countriesData = <%= dfid_country_map_data %>;
+                var countryMapData = <%= countryMapData.to_json%>;
+                var TotalCountryBudget = '<%= total_country_budget_locationv2%>';
+                var finYear = '<%=current_financial_year%>';
+                var maxBudget = <%= maxBudget%>
+            </script>  
+            <!-- <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
+            <!-- New leaflet libraries -->
+            <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
+            <!-- Make sure you put this AFTER Leaflet's CSS -->
+            <script src="/javascripts/leaflet/leaflet_new.js"></script>
+            <script src="/javascripts/leaflet/countryBounds.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster_new.css">
+            <link rel="stylesheet" href="/javascripts/leaflet/MarkerCluster.Default_new.css">
+            <script src="/javascripts/leaflet/leaflet.markercluster_new.js"></script>
+            <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
+            <!--[if lte IE 8]><link rel="stylesheet" href="/javascripts/leaflet/leaflet.ie.css /><![endif]-->
+            <div id="countryMap" role="presentation">
+              <div style="position:absolute; bottom: 10px;z-index:999; left: 10px;">
+                <img alt="Map legend" src="/images/country-map-legend.png" style="Map Legend"/>
+                <!-- <h3>Current Projects: Total Project Budget for <%#=current_financial_year%></h3> -->
+              </div>
+            </div>
+          <!-- <script src="/javascripts/leaflet/indexmap.js" type="text/javascript"></script> -->
+        </div>
+    <!--[if lte IE 8]></div><![endif]-->
+
+    <%= erb :'partials/_map_disclaimer'%> 
+
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Help with Sector and Budget Figures
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            Programme budgets benefiting specific countries are totaled for the current financial year across all UK government departments. Sector groups are calculated as a percentage of country budgets according to OECD Development Assistance Committee (DAC) classifications.
+        </div>
+    </details>
+    
+    <table class="govuk-table datatable">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header" aria-sort="ascending"><span>Country</span></th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"><span>Programme Budget</span></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
           <%dfid_country_stats_data.each do |key,val|%>
             <%if val["projects"] > 0 && val["budget"] > 0 && val['id'].to_s != 'UA2'%>
               <tr>
-                <%if val['id'].to_s.downcase == 'fk'%>
-                  <td><img class="flag" alt="Falkland Islands Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>">Falkland Islands</a></td>
-                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-                <%elsif val['id'].to_s.downcase == 'ps'%>
-                  <td><img class="flag" alt="Occupied Palestinian Territories (OPT) Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>">Occupied Palestinian Territories (OPT)</a></td>
-                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-                <%else%>
-                  <td><img class="flag" alt="<%= val['country']%> Flag" src="/images/flags/<%= val['id'].to_s.downcase%>.png" style="float: left;"><a style="margin: 8px 0px 8px 5px; float: left" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
-                  <td><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
-                <%end%>
+             <td class="govuk-table__cell" data-sort-value="<%= val['country']%>"><a class="govuk-link" href="/countries/<%= val['id']%>"><%= val['country']%></a></td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="<%= Money.new(val['budget'])%>"><%= Money.new(val['budget'].to_f*100,"GBP").format(:no_cents_if_whole => true,:sign_before_symbol => false)%></td>
               </tr>
             <%end%>
-          <%end%>
+          <% end %>
         </tbody>
-      </table>
-    </div>
+    </table>
   </div>
 </div>
+
 <script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>
 <script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/javascripts/jquery.dataTables.min.css">
 <script type="text/javascript">
   var jq3 = jQuery.noConflict(true);
   jq3(document).ready(function() {
-    jq3('#dataTable').DataTable({
+    jq3('.datatable').DataTable({
       "info": false,
       "paging": false,
       "searching": false
     });
-    jq3('#dataTable').show();
     jq3('.repOrgTable').DataTable({
       "info":     false,
       "paging": false,
@@ -125,33 +104,3 @@
     });
   });
 </script>
-<!-- <div class="row">
-  <div class="twelve columns">
-    <h2 class="section-group-title">Countries with Active Projects</h2>
-  </div>
-</div>
-<div class="row">
-  <div id="country-list" class="twelve columns">
-    <%# dfid_complete_country_list.each do |country| %>
-      <a href="/countries/<%#=country["recipient_country"]["code"]%>"><%#= country["recipient_country"]["name"] %></a> | 
-    <%# end %>
-  </div>
-</div> -->
-
-<!-- <div class="row">
-  <div id="country-list">
-    <%# dfid_complete_country_list.each do |key,data|%>
-      <%#if key == 'Oceania'%>
-      <%# else %>
-        <div class="three columns">
-          <h4><%#= key %></h4>
-          <%# data.each do |item| %>
-            <%#if item[1]['activeProjects'].to_i > 0 %>
-              <a href="/countries/<%#= item[0] %>"><%#= item[1]["name"]%></a>
-            <%# end %>
-          <%# end %>
-        </div>
-      <%# end %>
-    <%# end %>
-  </div>
-</div> -->

@@ -1,14 +1,35 @@
 <%= erb :'partials/_projects-header', :locals => { :project => project, :active => "summary"} %>
 
-<div class="row">
-    <div class="twelve columns summary">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <% if(!is_dfid_project(project['iati_identifier'])) %>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Project disclaimer
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <strong>Disclaimer</strong>: The data for this page has been produced from IATI data published by <strong><%= project.has_key?('reporting_org_narrative') ? project['reporting_org_narrative'].first : '' %></strong>.
+                    <%if project.has_key?('contact_info_organisation_narrative') && project.has_key?('contact_info_email') %>
+                        <% if (!project['contact_info_organisation_narrative'].first.nil? && project['contact_info_email'].first.length > 0) %>
+                            Please contact them (<a href="#" id='showEmail' class="govuk-link">Show Email Address</a>) if you have any questions about their data.
+                        <% else %>
+                            Please contact them if you have any questions about their data.
+                        <% end %>
+                    <% end %>
+                </div>
+            </details>
+        <%end%>
+
         <%if project.has_key?('description_narrative')%>
             <%if project['description_narrative'].length == 1%>
-                <b class="more-info-title">Description</b>
+            <h2 class="govuk-heading-m">Description</h2>
                 <%begin%>
-                    <p class="project-description"><%= project['description_narrative'].first %></p>
+                    <p class="govuk-body"><%= project['description_narrative'].first %></p>
                 <%rescue%>
-                    <p class="project-description">N/A</p>
+                    <p class="govuk-body">N/A</p>
                 <%end%>
             <%else%>
                 <%
@@ -20,146 +41,58 @@
                 <%project['description_narrative'].each_with_index do |description, index|%>
                     <%if project['description_type'][index].to_i == 1%>
                         <%if jDesc == 0%>
-                            <b class="more-info-title">Description</b>
+                            <h2 class="govuk-heading-m">Description</h2>
                             <%jDesc = 1%>
                         <%end%>
-                        <p class="project-description"><%= description %></p>
+                        <p class="govuk-body"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 2%>
                         <%if jObj == 0%>
-                            <b class="more-info-title">Objectives</b>
+                            <h2 class="govuk-heading-m">Objectives</h2>
                             <%jObj = 1%>
                         <%end%>
-                        <p class="project-description"><%= description %></p>
+                        <p class="govuk-body"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 3%>
                         <%if jTar == 0%>
-                            <b class="more-info-title">Target Groups</b>
+                             <h2 class="govuk-heading-m">Target Groups</h2>
                             <%jTar = 1%>
                         <%end%>
-                        <p class="project-description"><%= description %></p>
+                        <p class="govuk-body"><%= description %></p>
                     <%elsif project['description_type'][index].to_i == 4%>
                         <%if jOth == 0%>
-                            <b class="more-info-title">Other</b>
+                            <h2 class="govuk-heading-m">Other</h2>
                             <%jOth = 1%>
                         <%end%>
                         <p class="project-description"><%= description %></p>
                     <%end%> 
                 <%end%>
             <%end%>
-        <%end%>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+        <%end%>            
     </div>
-
 </div>
 
-<div class="row">
-
-    <div class="six columns">
-        <div class="more-info-container">  
-            <span class="more-info-title">Status - <%= activity_status(project['activity_status_code']) %></span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme status" class="more-info-link-middle"/></a>
-            <aside id="moreinfo3" class="more-info">            
-                    <div class="more-info-content">
-                        The current stage of the Programme, consistent with the International Aid Transparency Initiative's (IATI) classifications.
-                    </div>
-            </aside>
-        </div> 
-
-
-        <div id="time-progress" style="height: 150px;" class="progress"></div>
-        
-         <div class="more-info-container">  
-            <span class="more-info-title">Programme Spend</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about Programme funding" class="more-info-link-middle"/></a>
-            <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                        Programme budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
-                    </div>
-            </aside>
-         </div> 
-
-        <div id="funding-progress" style="height: 150px;" class="progress"></div>
-        <% if participatingOrgList == nil %>
-            <% implementingOrgs=get_implementing_orgsv2(projectId)%>
-            <% if (implementingOrgs.length>0)  %>
-
-                <div class="more-info-container">  
-                    <span class="more-info-title">Implementing Organisation(s)</span> 
-                    <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
-                    <aside id="moreinfo4" class="more-info">            
-                            <div class="more-info-content">
-                                These organisations have received funding disbursements from this IATI activity.
-                            </div>
-                    </aside>
-                </div>
-
-                <div id="implementing-organisations">
-                    <ul>
-                        <% implementingOrgs.each {|implementingOrg| %>
-                        <li>
-                           <%= implementingOrg %>
-                        </li>
-                        <% } %>
-                    </ul>
-                </div>
-            <% end %>
-        <% end %>
-         <% if participatingOrgList != nil %>
-            <div style="border-top: 1px solid #ddd; padding-top: 20px" class="more-info-container">  
-                <span class="more-info-title">Participating Organisation(s)</span> 
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink4" target="4"><img src="/images/icon-information.png" alt="More information about implementing organisation(s)" class="more-info-link-middle"/></a>
-                <aside id="moreinfo4" class="more-info">            
-                        <div class="more-info-content">
-                            Accountable: Organisation responsible for oversight of the activity.<br/>Extending: Organisation that manages the budget on behalf of the funding organisation.<br/>Funding: Organisation which provides funds.<br/>Implementing: Organisations implementing the activity.
-                        </div>
-                </aside>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
+            <h3 class="govuk-heading-s">Location</h3>
+            <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    The country, countries or regions that benefit from this Programme.
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <%= countryOrRegion[:label] %>
             </div>
-            <div class="more-info-container">
-                <table>
-                  <tbody>
-                    <% participatingOrgList = participatingOrgList.sort_by{|key| key} %>
-                    <%participatingOrgList.each { |participatingOrgType, participatingOrgData| %>
-                        <% if participatingOrgType != nil && participatingOrgData.length > 0%>
-                            <tr>
-                                <td><b><%= participatingOrgType %>:</b></td>
-                                <td>
-                                    <% participatingOrgData.each_with_index { |org, index| %>
-                                        <% begin %>
-                                            <a target="_BLANK" href="/search?query=<%= org%>&includeClosed=0"><%= org%></a>
-                                        <% rescue %>
-                                            Name not available
-                                        <% end %>
-                                        <% if index != participatingOrgData.size - 1 %>
-                                            ¦ 
-                                        <% end %>
-                                    <% } %>
-                                </td>
-                            </tr>
-                        <% end %>
-                    <% } %>
-                  </tbody>
-                </table>
-            </div>
-        <% end %>
-    </div>
-
-
-    <div class="six columns" role="presentation">
-    <%#if !project['allRecipients'].nil? && project['allRecipients'].length > 0 %>
-        <div style="margin-top: 15px" class="project-country-title"> 
-          <span style="font-weight: bold">Location:</span> <%= countryOrRegion[:label] %>
-          <%if project.has_key?('location')%>
-            <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link button" style="position: absolute;right: 30px;">CSV</a>
-          <%end%>
-           <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1"> <img src="/images/icon-information.png" alt="More information about: country, countries and regions" class="more-info-link-middle"/> </a>
-           <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content more-info-limit-size">
-                        The country/countries/regions that benefit from this Programme.
-                    </div>
-            </aside>
-        </div>  
-    <%#end%>
+        </details>
+        <%#end%>            
+        <%if project.has_key?('location')%>
+            <a href="/downloadLocationDataCSV/<%= project['iati_identifier']%>" class="api-link govuk-link">CSV</a>
+        <%end%>
 
         <div><%#= countryOrRegion %></div>
         <div><%#= countryOrRegion[:label] %></div>
+
         <div id="countryMap" aria-hidden="true" class="countryMap"></div>
 
         <!--TODO - do some logic to get these  types-->
@@ -188,49 +121,138 @@
             var regionCount = <%= countryOrRegion[:regionsCount]%>;
         </script>
         <script src="/javascripts/countrypagemap_new.js" type="text/javascript"></script>
-
-        <div id="countryMapDisclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
-        </div>
+        <%= erb :'partials/_map_disclaimer'%> 
     </div>
-
 </div>
 
+<div class="app-chart-row govuk-!-margin-top-6">
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">Status <strong class="govuk-tag govuk-tag--green app-chart-row__chart--heading-tag"><%= activity_status(project['activity_status_code']) %></strong></h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">The current stage of the Programme, consistent with the International Aid Transparency Initiative's (IATI) classifications.</p>
+        <div class="app-chart-row__chart--data">
+            <div id="time-progress" style="height: 150px;" class="progress"></div>
+        </div>
+    </div>
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">Programme Spend</h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">
+            Programme budget and spend to date, as per the amounts loaded in financial system(s), and for which procurement has been finalised. 
+        </p>
+        <div class="app-chart-row__chart--data">
+            <div id="funding-progress" style="height: 150px;" class="progress"></div>
+        </div>
+    </div>
+</div>
 
-<div class="row">
-    <div class="six columns">
-        <div style="display: none" class="country-info-container sector_chart_container">  
-            <span class="country-info">Sectors</span> 
-                <p>Sector groups as a percentage of total Programme budget according to the OECD Development Assistance Committee (DAC) classifications.</p>
-        </div>
-        <div class="row">
-            <div style="display: none" class="twelve columns sector_chart_container">
-                <div id="sectorChart"></div>
-            </div>
-        </div>
-    </div>
-    <div class="six columns">
-        <div style="display: none" class="country-info-container budget_container">  
-                <span class="country-info">Budget</span> 
-                <p>A comparison across financial years of forecast budget and spend to date on the Programme.</p>
-        </div>
-        <div id="budget-plan-spend" style="height: 300px; width: 100%" class="row budget_container"></div>
-    </div>
-    <div class="twelve columns">
-        <%if policyMarkers.length > 0%>
-            <div class="country-info-container policy-marker-container">  
-                <span class="country-info">Policy Marker(s)</span>
-                <p>ODA measures in relation to their realisation of OECD development policy objectives</p>
-            </div>
-            <div class="row">
-                <div class="twelve columns">
-                    <% policyMarkers.each do |marker|  %>
-                        <span class="policy_marker"><%= marker['title']%>: <span class="policy_marker_significance"><%= marker['significance'] %></span></span>
-                    <%end%>
+<% if participatingOrgList == nil %>
+    <% implementingOrgs=get_implementing_orgsv2(projectId)%>
+    <div class="app-chart-row">
+        <div class="app-chart-row__chart">
+            <h3 class="govuk-heading-s app-chart-row__chart--heading">Participating Organisation(s)</h3>
+            <details class="govuk-details app-chart-row__chart--details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with participating organisations
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                  These organisations have received funding disbursements from this IATI activity.
                 </div>
-            </div>
-        <%end%>
+            </details>
+            <% if (implementingOrgs.length>0)  %>
+                <ul class="govuk-body-s govuk-list app-chart-row__chart--ul">
+                    <% implementingOrgs.each {|implementingOrg| %>
+                        <li><%= implementingOrg %></li>
+                    <% } %>
+                </ul>
+            <% end %>
+        </div>
     </div>
+<%end%>
+
+<% if participatingOrgList != nil %>
+    <div class="app-chart-row">
+        <div class="app-chart-row__chart">
+            <h3 class="govuk-heading-s app-chart-row__chart--heading">Participating Organisation(s)</h3>
+            <details class="govuk-details app-chart-row__chart--details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Help with participating organisations
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body-s app-chart-row__chart--intro">
+                        <span>Accountable:</span>Organisation responsible for oversight of the activity
+                    </p>
+                    <p class="govuk-body-s app-chart-row__chart--intro">
+                        <span>Extending:</span> Organisation that manages the budget on behalf of the funding organisation.
+                    </p>
+                    <p class="govuk-body-s app-chart-row__chart--intro">
+                        <span>Funding:</span> Organisation which provides funds.
+                    </p>
+                    <p class="govuk-body-s app-chart-row__chart--intro">
+                        <span>Implementing:</span> Organisations implementing the activity.
+                    </p>
+                </div>
+            </details>
+
+            <ul class="govuk-body-s govuk-list app-chart-row__chart--ul">
+                <% participatingOrgList = participatingOrgList.sort_by{|key| key} %>
+                <%participatingOrgList.each { |participatingOrgType, participatingOrgData| %>
+                    <% if participatingOrgType != nil && participatingOrgData.length > 0%>
+                        <li>
+                            <span><%= participatingOrgType %></span>
+                            <div class="app-display-flex-column">
+                                <% participatingOrgData.each_with_index { |org, index| %>
+                                    <% begin %>
+                                        <a href="/search?query=<%= org%>&includeClosed=0" class="govuk-link govuk-!-display-block govuk-!-margin-bottom-2" target="_blank"><%= org%></a>
+                                    <% rescue %>
+                                        Name not available
+                                    <% end %>
+                                <% } %>
+                            </div>
+                        </li>
+                    <% end %>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+<% end %>
+
+<div class="app-chart-row">
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">Sectors</h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">Sector groups as a percentage of total Programme budget according to the OECD Development Assistance Committee (DAC) classifications.</p>
+        <div class="app-chart-row__chart--data">
+             <div id="sectorChart"></div>
+        </div>
+    </div>
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">Budget</h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">
+            A comparison across financial years of forecast budget and spend to date on the Programme.
+        </p>
+        <div class="app-chart-row__chart--data">
+            <div id="budget-plan-spend" style="height: 300px; width: 100%" class="row budget_container"></div>
+        </div>
+    </div>
+</div>
+
+<%if policyMarkers.length > 0%>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h3 class="govuk-heading-s">Policy Marker(s)</h3>
+            <p class="govuk-body govuk-!-margin-bottom-8">ODA measures in relation to their realisation of OECD development policy objectives</p>
+            <% policyMarkers.each do |marker|  %>
+                <div class="app-policy-marker">
+                    <span class="app-policy-marker--title"><%= marker['title']%></span>
+                    <strong class="app-policy-marker--significance govuk-tag govuk-tag--green   "><%= marker['significance'] %></strong>
+                </div>                    
+            <%end%>
+        </div>
+    </div>
+<%end%>
+
     <script type="text/javascript" src="/javascripts/donut.js"></script>
     <script type="text/javascript" src="/javascripts/progress.js"></script>
     <script type="text/javascript" src="/javascripts/bar.js"></script>
@@ -434,16 +456,19 @@
             <% end %>
     });
  </script>
-</div>
 
-    <div class="row">
-        <div class="twelve columns download-link">
-            <p>Download IATI Data for <%= project['iati_identifier']%>: <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="api-link button" target="_blank">JSON</a></p>
-            <%if !project['last_updated_datetime'].nil?%>
-                <p>Programme data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></p>
-            <% end %>
+  <div class="govuk-grid-row govuk-!-margin-top-4">
+    <div class="govuk-grid-column-full">
+        <p class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-bottom-0">Download IATI Data for <%= project['iati_identifier']%></p>
+        <%if !project['last_updated_datetime'].nil?%>
+            <span class="govuk-caption-m govuk-!-font-size-16">Programme data last updated on <%= Date.parse(project['last_updated_datetime']).strftime("%d/%m/%Y")%></span>
+        <% end %>
+        </p>
+        <div class="app-download-data">
+            <a href="<%=activityUrlOipa(project['iati_identifier'],'json')%>" class="govuk-link" target="_blank"><strong class="govuk-tag govuk-tag--blue">JSON</strong></a>
         </div>
     </div>
+</div>
 
 
 <script src="/javascripts/jquery-3.3.1.js" type="text/javascript"></script>

@@ -1,31 +1,21 @@
-<div class="hero">
-    <div id="page-title" class="row">
-        <div class="twelve columns">
-            <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-            <div>
-                <div class="govuk-breadcrumbs">
-                    <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                        <% if region[:type] == "Regional" then %>
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
-                        <% else %>
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/global">Aid by Location</a></li>
-                        <% end %>
-                        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= region[:name] %></li>
-                    </ol>
-                </div>
-                <h1>
-                    <%= region[:name] + " Region"%>
-                </h1>
-            </div>
-        </div>
-    </div>
-    <%= erb :'partials/_regions-tabs', :locals => { :active => "summary", :region => region, :project_count => region[:totalActiveProjects] } %>
+<div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <% if region[:type] == "Regional" then %>
+            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
+        <% else %>
+            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/global">Aid by Location</a></li>
+        <% end %>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= region[:name] %></li>
+    </ol>
 </div>
-<div class="row">
-    <div class="twelve columns summary">
-        <h2 class="visually-hidden">Summary</h2>
-        <div class="description"><%= markdown_to_html(region[:description])%></div>
+
+<%= erb :'partials/_regions-tabs', :locals => { :active => "summary", :region => region, :project_count => region[:totalActiveProjects] } %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Summary</h2>
+        <p class="govuk-body description"><%= markdown_to_html(region[:description])%></p>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('div.description').expander({
@@ -36,104 +26,79 @@
                 });
             });
         </script>
-    </div>
-</div>
-
-<div class="row row-summary">
-    <div class="six columns">
-        <h3>Key Info</h3>
-        <ul class="info-list vertical">
-            <li id='approved-project-budget-info' class="fact-item">
-                Programme budget approved for <strong><%= current_financial_year %></strong>
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink1" target="1">
-                    <img src="/images/icon-information.png" alt="More information about the total Programme budget"/>
-                </a>
-                <aside id="moreinfo1" class="more-info">            
-                    <div class="more-info-content">
-                       Sum of programme budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if programmes are in an active procurement phase.
-                    </div>
-                </aside>
-                <span><strong>
+        <h3 class="govuk-heading-s">Key information</h3>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-4">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key app-summary-list__key govuk-!-font-weight-regular">
+                    Programme budget approved for <%= current_financial_year %>
+                </dt>
+                <dd class="govuk-summary-list__value">
                     <%= Money.new(region[:regionBudget].to_f.round(0)*100, region[:regionBudgetCurrency]).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                </strong></span>
-            </li>
-            <!-- <li class="fact-item">
-                Project budget as % of DFID budget
-                <a class="more-info-link more-info-link-spacer" id="moreinfolink7" target="7">
-                    <img src="/images/icon-information.png" alt="More information about the total project budget"/>
-                </a>
-                <aside id="moreinfo7" class="more-info">            
-                    <div class="more-info-content">
-                       Total approved project budget for this financial year as a percentage of the total approved project budget for DFID.
-                    </div>
-                </aside>
-                <span><strong><%= region[:projectBudgetPercentToDfidBudget] %>%</strong></span>
-            </li> -->
-            <li class="fact-item">
-                Active Programmes
-                <span><strong><%= region[:totalActiveProjects] || "&nbsp;" %></strong></span>
-            </li>
-            <!--removed key stats from region pages -->
-        </ul>
-    </div>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-border">
+                <dt class="govuk-summary-list__key app-summary-list__key govuk-!-font-weight-regular">
+                    Active Programmes
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <%= region[:totalActiveProjects] || "&nbsp;" %>
+                </dd>
+            </div>
+        </dl>
 
-    <div class="six columns" role="presentation">
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Programme budget information
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                Sum of programme budget for this financial year, as approved to date and this figure may change over time. Some values may not be included if programmes are in an active procurement phase.
+            </div>
+        </details>
+        
         <div id="countryMap" aria-hidden="true" class="countryMap"></div>
 
         <input type="hidden" id="countryName" value="<%=region[:name] %>">
         <input type="hidden" id="countryCode" value="<%=region[:code] %>">
+
         <% if region[:code] == "NS" || region[:code] == "ZZ" || region[:code] == "998" %>
             <input id="projectType" value="global" type="hidden">
         <%else%>
             <input type="hidden" id="projectType" value="region">
         <%end%>
-        <div id="countryMapDisclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
+        
+        <%= erb :'partials/_map_disclaimer'%> 
+    </div>
+</div>
+
+<div class="app-chart-row govuk-!-margin-top-5">
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">Sector groups as a percentage of region budget</h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">The highest ranking sectors by Programme spend, consistent with the Development Assistance Committee's (DAC) classifications.</p>
+        <div class="app-chart-row__chart--data">
+            <div id="sectorChart"></div>
         </div>
     </div>
-
-</div>
-
-<div class="row">
-    <div class="six columns">
-            <div class="country-info-container">  
-            <span class="country-info">Sector groups as a percentage of region budget</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img src="/images/icon-information.png" alt="More information about the sector groups" class="more-info-link-middle"/></a>
-            <aside id="moreinfo2" class="more-info">            
-                    <div class="more-info-content">
-                        The highest ranking sectors by Programme spend, consistent with the Development Assistance Committee's (DAC) classifications.
-                    </div>
-            </aside>
-         </div>
-         <div class="row">
-            <div class="twelve columns">
-                <div id="sectorChart"></div>
-            </div>
-         </div>
-         
-    </div>
-    <div class="six columns">
-         <div class="country-info-container">  
-            <span class="country-info">Programme budget total by year</span> 
-            <a class="more-info-link more-info-link-spacer" id="moreinfolink3" target="3"><img src="/images/icon-information.png" alt="More information about Programme funding" class="more-info-link-middle"/></a>
-            <aside id="moreinfo3" class="more-info">            
-                    <div class="more-info-content">
-                        Budgets approved at a programme level to date. This may be different from the overall operational plan budget for <%= region[:name] %>
-                    </div>
-            </aside>
-         </div>
-        <div id="budget-year-chart" style="height: 250px;" class="standard">
+    <div class="app-chart-row__chart">
+        <h3 class="govuk-heading-s app-chart-row__chart--heading">
+            Programme budget total by year
+        </h3>
+        <p class="govuk-body-s app-chart-row__chart--intro">
+            Budgets approved at a programme level to date. This may be different from the overall operational plan budget for <%= region[:name] %>
+        </p>
+        <div class="app-chart-row__chart--data">
+            <div id="budget-year-chart" style="height: 250px;" class="standard"></div>
         </div>
-        <div style="text-align: center">Budgets approved at a programme level to date. This may be different from the overall operational plan budget for <%= region[:name] %>.</div>
     </div>
 </div>
 
-<div class="row">
-    <div class="twelve columns download-link">
-        <p>Download IATI Data for <%= region[:name]%>: <a href="<%= region[:url]%>" class="api-link button">XML</a></p>
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-full">
+        <strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-4 govuk-!-margin-bottom-3">XML DATA</strong>
+        <div><a href="<%= region[:url]%>" class="govuk-link" target="_blank">Download IATI Data for <%= region[:name]%></a></div>
     </div>
 </div>
-
 
 <!-- <script src="/javascripts/donut.js"></script>
  <script src="/javascripts/progress.js"></script>

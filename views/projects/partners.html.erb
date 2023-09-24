@@ -46,10 +46,10 @@
           var htmlString = '';
           if (Object.keys(res).length > 0) {
             if (isFCDOProj(projectID)){
-              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Partner Programmes</h3>';
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="govuk-heading-m">Partner Programmes</h3>';
             }
             else {
-              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="section-group-title">Funded Programmes</h3>';
+              htmlString = htmlString + '<div id="fundedProjList" class="twelve columns results-info"><h3 class="govuk-heading-m">Funded Programmes</h3>';
             }
             jq3.each(res, function(i, data){
               if(data.iati_identifier.toString() !=  projectID.toString()){
@@ -75,7 +75,7 @@
                   fp_description = 'N/A';
                 }
                 if (isFCDOProj(projectID)) {
-                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4 class="govuk-heading-s">'
                   +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
                   + '<li><a href="/projects/'
                   +encodeURI(data.iati_identifier)+'/summary">'
@@ -85,7 +85,7 @@
                   +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
                 }
                 else {
-                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4 class="govuk-heading-s">'
                   +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
                   + '<li><a href="/projects/'
                   +encodeURI(data.iati_identifier)+'/summary">'
@@ -99,7 +99,7 @@
             htmlString = htmlString + '</div></div>'
               +'<div class="twelve columns"><button '
               +'id="fundedProjects_more" class="govuk-button" data-module="govuk-button"' 
-              +'style="margin-top: 10px; float: right;">Load more</button>'
+              +'style="margin-top: 10px;">Load more</button>'
               +'<input id="fundedProjects_more_data" type="hidden" value="1" /></div>';
             // if(response.output['hasNext'] != null){
             //   htmlString = htmlString + '</div></div>'
@@ -168,7 +168,7 @@
                   +data.total_project_budget + '</span>'+'<span>Total Funding: ' + data.total_funding + '</span></li></ul></div></div>';
                 }
                 else {
-                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4>'
+                  htmlString = htmlString + '<div class="row"><div class="four columns summary"><h4 class="govuk-heading-s">'
                   +fp_reporting_org+'</h4></div><div class="eight columns"><ul>' 
                   + '<li><a href="/projects/'
                   +encodeURI(data.iati_identifier)+'/summary">'
@@ -217,10 +217,10 @@
           if (Object.keys(res).length > 0) {
             var htmlString = '';
             // 2 divs open
-            htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="section-group-title">Funding Programme</h3>';
+            htmlString = htmlString + '<div class="row"><div class="twelve columns results-info"><h3 class="govuk-heading-m">Funding Programme</h3>';
             jq3.each(res, function(i, data){
               htmlString = htmlString + '<div class="row"><div class="four columns summary">'
-              + '<h4>'+data.reporting_org_title+'</h4>'
+              + '<h4 class="govuk-heading-s">'+data.reporting_org_title+'</h4>'
               + '</div><div class="eight columns"><ul><li>'
               + '<a href="/projects/'+encodeURI(data.iati_identifier)+'/summary">'+data.title+'</a>' + data.description
               + '<span>'+data.total_funding+'</span></li></ul></div></div>';

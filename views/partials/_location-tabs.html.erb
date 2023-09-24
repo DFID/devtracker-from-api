@@ -1,24 +1,38 @@
-<div class="row">
-    <div class="twelve columns">
-        <div class="tab-bar-container">
-            <div class="row">
-                <div class="projects-nav six columns">
-                    <p>Programme Level</p>
-                    <nav>
-                        <ul class="tab-bar">
-                            <li <%= active=="country" ? "class='active'" : ""%>><a href="/location/country">Current <span>Programmes</span></a></li>
-                            <li <%= active=="regional" ? "class='active'" : ""%>><a href="/location/regional">Regional <span>Programmes</span></a></li>
-                            <li <%= active=="global" ? "class='active'" : ""%>><a href="/location/global">Global <span>Programmes</span></a></li>
-                        </ul>
-                    </nav>
-                </div>          
-
-                <div class="button-row six columns">
-                    <span>
-                        <a id='Subscribe' href="https://public.govdelivery.com/accounts/UKDFID/subscriber/new" title="Subscribe to receive updates on countries by email" class="button inform">&#9993; Subscribe</a>
-                    </span>
-                </div>  
-            </div> 
-        </div>
-    </div>
+ <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/country">Aid by Location</a></li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page">
+            <% if active=="country" %>
+                Current
+            <% end %>
+            <% if active=="regional" %>
+                Regional
+            <% end %>
+            <% if active=="global" %>
+                Global
+            <% end %>
+            programmes
+        </li>
+    </ol>
 </div>
+<nav class="moj-sub-navigation" aria-label="Sub navigation">
+    <ul class="moj-sub-navigation__list">
+        <li class="moj-sub-navigation__item"><a href="/location/country" class="moj-sub-navigation__link"  <%= active=="country" ? "aria-current='page'" : ""%>>Current <span>Programmes</span></a></li>
+        <li class="moj-sub-navigation__item"><a href="/location/regional" class="moj-sub-navigation__link" <%= active=="regional" ? "aria-current='page'" : ""%>>Regional <span>Programmes</span></a></li>
+        <li class="moj-sub-navigation__item"><a href="/location/global" class="moj-sub-navigation__link" <%= active=="global" ? "aria-current='page'" : ""%>>Global <span>Programmes</span></a></li>
+    </ul>
+</nav>
+
+<h1 class="govuk-heading-l">
+            <% if active=="country" %>
+                Current
+            <% end %>
+            <% if active=="regional" %>
+                Regional
+            <% end %>
+            <% if active=="global" %>
+                Global
+            <% end %>
+            programmes
+</h1>

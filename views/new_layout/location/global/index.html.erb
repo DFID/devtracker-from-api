@@ -34,7 +34,7 @@
                         <div id="map" class="static-background"></div>
                      </div>
                 </div>
-                <span class="govuk-caption-m govuk-!-font-size-14 govuk-!-margin-bottom-5">Disclaimer: Country borders do not necessarily reflect the UK Government's official position.</span>
+                <%= erb :'partials/_map_disclaimer'%> 
                 <h2 class="govuk-heading-m">All Global Recipients</h2>
                 <ul class="govuk-list">
                     <% dfid_complete_region_list("Global").each do |region| %> 

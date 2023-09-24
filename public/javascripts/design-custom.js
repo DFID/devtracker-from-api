@@ -1,21 +1,20 @@
-$(document).ready(function() {
-
-  $(".show-advance-button").click(function(e){
-    $(".advance-toggle").addClass("active");
+$(document).ready(function () {
+  $(".app-modal--open").click(function (e) {
+    $(".app-modal").addClass("app-modal--active");
     e.preventDefault();
   });
 
 
-  $(".close-advance-button").click(function(e){
-    $(".advance-toggle").removeClass("active");
+  $(".app-modal--cancel").click(function (e) {
+    $(".app-modal").removeClass("app-modal--active");
     e.preventDefault();
   });
 });
 
-$(document).click(function(event) {
-	//event.preventDefault();
+$(document).click(function (event) {
+  //event.preventDefault();
   //if you click on anything except the modal itself or the "open modal" link, close the modal
-  if (!$(event.target).closest(".advance-toggle .inner,.show-advance-button").length) {
-    $("body").find(".advance-toggle").removeClass("active");
+  if (!$(event.target).closest(".app-modal .app-modal-content, .app-modal--open").length) {
+    $("body").find(".app-modal").removeClass("app-modal--active");
   }
 });

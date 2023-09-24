@@ -6,7 +6,7 @@
     &__intro {
         color: $govuk-secondary-text-colour;
 
-       &--fixed-height {
+        &--fixed-height {
             min-height: 60px;
         }
     }
@@ -16,12 +16,12 @@
         padding: 0;
 
         &-no-margin {
-            margin-top: -40px;
+            margin-top: -20px;
         }
 
         &__image {
             display: none;
-            width: 300px;
+            width: 295px;
 
             @include govuk-media-query($from: tablet) {
                 display: block;

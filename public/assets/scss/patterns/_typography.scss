@@ -2,3 +2,27 @@
     font-size: 14px;
     color: #636a6d;
 }
+
+.app-country-description {
+    P {
+        @extend %govuk-body-m;
+    }
+
+    h2 {
+        @extend %govuk-heading-m;
+    }
+
+    a {
+        @extend %govuk-link;
+    }
+
+    ul {
+        @extend %govuk-list;
+        @extend %govuk-list--bullet;
+    }
+}
+
+.app-grey-text {
+    color: govuk-colour("dark-grey");
+    font-weight: 400;
+}

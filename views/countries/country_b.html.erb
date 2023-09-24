@@ -126,9 +126,7 @@
         <input type="hidden" id="countryName" value="<%=country[:name] %>">
         <input type="hidden" id="countryCode" value="<%=country[:code] %>">
        
-        <div id="countryMapDisclaimer" class="disclaimer grey">
-            <p><strong>Disclaimer</strong>: Country borders do not necessarily reflect the UK Government's official position.</p>
-        </div>
+        <%= erb :'partials/_map_disclaimer'%> 
     </div>
     <span style="float: right;margin-right: 14px;margin-top: 8px;"> Download location data: <a href="/downloadLocationDataCountriesCSV/<%=country[:code]%>" class="api-link button">CSV</a></span>
 </div>

@@ -1,718 +1,456 @@
-<div class="page-wrapper">
-    <div class="hero hero-notabs" style="margin-bottom:0">
-        <div class="row" id="page-title">
-            <div class="twelve columns">
-                <img src="/images/cw_ukaid_logo.png" alt="UK aid from the British people">
-                <div>
-                    <div class="govuk-breadcrumbs">
-                        <ol class="govuk-breadcrumbs__list">
-                            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
-                            <%if searchType == 'F'%>
-                                <li class="govuk-breadcrumbs__list-item" aria-current="page">Search Results</li>
-                            <%elsif searchType == 'O' %>
-                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/department">Aid by Department</a></li>
-                                <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= ogd_title %></li>
-                            <%elsif searchType == 'R' %>
-                                <%if region[:name] == 'All'%>
-                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
-                                <%else%>
-                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/global">Aid by Location</a></li>
-                                <%end%>
-                            <%elsif searchType == 'S'%>
-                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
-                                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/"><%=sector_list['sectorHierarchyPath']['highLevelSectorDescription']%></a></li>
-                                <%#if !(defined?(sectorData['categoryCode'])).nil? %>
-                                <%if sectorData['categoryCode'].length > 0 %>
-                                    <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list['sectorHierarchyPath']['categoryDescription']%></a></li>
-                                <%end%>
-                                <%if !(defined?(sectorData['sectorName'])).nil?%>
-                                    <% if sectorData['sectorName'] != ''%>
-                                        <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= sectorData['sectorName'] %></li>
-                                    <%end%>
-                                <%end%>
-                            <%end%>
-                        </ol>
-                    </div>
-                    <%if searchType == 'O'%>
-                        <h1>
-                            <%= ogd_title %>
-                        </h1>
-                    <%end%>
-                    <%if searchType == 'S'%>
-                        <h1>
-                            Aid by Sector
-                        </h1>
-                    <%end%>
-                    <%if searchType == 'R'%>
-                        <%if region[:name] == 'All'%>
-                            <h1>
-                                All Region
-                            </h1>
-                        <%else%>
-                            <h1>
-                                Global Programmes
-                            </h1>
-                        <%end%>
-                    <%end%>
-                </div>
-				                  <div class="govuk-grid-row">
-					<div class="govuk-grid-column-three-quarters">
-                <%if searchType == 'F'%>
-                    <div id="search-bar">
-                <%else%>
-                    <div style="display: none" id="search-bar">
+<link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
+<script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/formatDate.js"></script>
+
+<div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+        <%if searchType == 'F'%>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page">Search Results</li>
+        <%elsif searchType == 'O' %>
+            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/department">Aid by Department</a></li>
+            <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= ogd_title %></li>
+        <%elsif searchType == 'R' %>
+            <%if region[:name] == 'All'%>
+                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/regional">Aid by Location</a></li>
+            <%else%>
+                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/location/global">Aid by Location</a></li>
+            <%end%>
+        <%elsif searchType == 'S'%>
+            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector">Aid by Sector</a></li>
+            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/"><%=sector_list['sectorHierarchyPath']['highLevelSectorDescription']%></a></li>
+            <%#if !(defined?(sectorData['categoryCode'])).nil? %>
+            <%if sectorData['categoryCode'].length > 0 %>
+                <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="/sector/<%=sector_list['sectorHierarchyPath']['highLevelSectorCode']%>/categories/<%=sectorData['categoryCode']%>"><%=sector_list['sectorHierarchyPath']['categoryDescription']%></a></li>
+            <%end%>
+            <%if !(defined?(sectorData['sectorName'])).nil?%>
+                <% if sectorData['sectorName'] != ''%>
+                    <li class="govuk-breadcrumbs__list-item" aria-current="page"><%= sectorData['sectorName'] %></li>
                 <%end%>
-		
-                    <form id="mid-search-form" method="POST" action="/search_p">
-											<div class="govuk-grid-column-full">
-                                <label for="query">
-                                    <h3>Search Programmes</h3>
-                                </label>
-                                <a style="top: 0px; text-decoration: none" class="more-info-link more-info-link-spacer" id="moreinfolink2" target="2"><img class="more-info-link-middle" src="/images/icon-information.png" alt="More Information about the top 10 things we do"/></a>
-                                <aside id="moreinfo2" class="more-info">            
-                                    <div class="more-info-content">
-                                        To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tag:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each_with_index do |(key, val), i|%><%=key%><%if solrConfig['SearchTags'].length - 1 != i%>, <%end%><%end%></strong></i>. To search for a specific Programme, please use quotations around the search term e.g. "GB-1-204766"
-                                     </div>
-                                </aside>
-						</div>
-						<div class="govuk-grid-column-three-quarters">
-                            <input type="text" value="<%= query %>" placeholder="e.g. location, sector, organisation or keyword" name="query" id="query">
-						    <!-- <strong>Please note:</strong> The terms that are related to the search tags must align with IATI published standard and data.</p> -->
-                            <div class="govuk-checkboxes govuk-checkboxes--small includeClosedProject">
-                                <div class="govuk-checkboxes__item">                            
-                                        <input class="govuk-checkboxes__input" name="includeClosedProject" type="checkbox" value="1">
-                                        <label style="color: white" class="govuk-label govuk-checkboxes__label">
-                                            Include closed Programmes
-                                        </label>
-                                </div>
+            <%end%>
+        <%end%>
+    </ol>
+</div>
+
+<h1 class="govuk-heading-l govuk-!-margin-bottom-0">
+    <%if searchType == 'F'%>
+        Search results
+    <%end%>
+    <%if searchType == 'O'%>
+        <%= ogd_title %>
+    <%end%>
+    <%if searchType == 'S'%>
+        Aid by Sector
+    <%end%>
+
+    <%if searchType == 'R'%>
+        <%if region[:name] == 'All'%>
+            All Region
+        <%else%>
+            Global Programmes
+        <%end%>
+    <%end%>
+</h1>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <%if searchType == 'F'%>
+            <div class="app-card govuk-!-margin-top-5 govuk-!-margin-bottom-2">
+                <form id="searchForm" action="/search_p" class="app-search-form govuk-!-margin-top-1" method="post" onsubmit="return validateSearch()">
+                    <div id="event-name-hint" class="govuk-hint">
+                        Enter location, sector, organisation or keyword
+                    </div>
+                    <p id="searchQueryError" class="govuk-error-message app-display-none">
+                        <span class="govuk-visually-hidden">Error:</span> Please enter a search query
+                    </p>                    
+                    <div class="app-search-form__textbox">
+                        <input class="govuk-input" value="<%= query %>" id="query" name="query" type="text">
+                        <button class="app-search-form__button" data-module="govuk-button"></button>
+                    </div>
+                    <div class="app-search-form__checkbox">
+                        <div class="govuk-checkboxes govuk-checkboxes--small includeClosedProject" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="includeClosedProject" name="includeClosedProject" type="checkbox" value="1">
+                            <label class="govuk-label govuk-checkboxes__label" for="includeClosedProject">
+                            Include closed programmes
+                            </label>
                             </div>
                         </div>
-                        <div class="govuk-grid-column-one-quarter">
-                                    <input type="submit" class="govuk-button button" value="Search Again">
-                        </div>
-					</form>
-        
-
-                </div>
-            </div>                </div>
+                    </div>
+                </form>
+                <script>
+                    function validateSearch() {
+                        let searchQuery = document.forms["searchForm"]["query"].value;
+                        let searchErrorMessage = document.getElementById("searchQueryError");
+                        if (searchQuery == "") {
+                            searchErrorMessage.style.display = "block";
+                            document.forms["searchForm"]["query"].className = "govuk-input govuk-input--error";
+                            return false;
+                        }   
+                    }
+                </script>
             </div>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                    Search help
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    To search based on a filter use the filters option or type the chosen filter and description e.g. <i><strong>tag:ICF</strong></i>. Available search types are: <i><strong><%solrConfig['SearchTags'].each_with_index do |(key, val), i|%><%=key%><%if solrConfig['SearchTags'].length - 1 != i%>, <%end%><%end%></strong></i>. To search for a specific Programme, please use quotations around the search term e.g. "GB-1-204766"
+                </div>
+            </details>
+        <%end%>
+        <div class="govuk-inset-text govuk-!-margin-bottom-8">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
     </div>
 </div>
 
-    <link type="text/css" rel="stylesheet" href="/stylesheets/jquery-ui-1.10.2.custom.min.css" >
-    <script src="/javascripts/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/javascripts/formatDate.js"></script>
-    <% if response['numFound'] > 0 %>
-        <div class="govuk-width-container">
-            <main class="govuk-main-wrapper search-results-page">
-				<%if searchType == 'F'%>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                            <% if !fcdoCountryBudgets.nil? %>
-                                <% fcdoCountryBudgets.each do |results| %>
-                                    <%if results[0] != 'UA2'%>
-                                        <div class="govuk-inset-text" style="font-size: 14px;">
-                                        <%# <div style="background-color: #F0F0F0;font-size: 1.1em;margin: 20px 0;padding: 15px;" class="suggested-country"> %>
-                                            <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
-                                            <p></p>
-                                            <h3><em><%= results[1][1]%></em></h3>
-                                            Budget: <em><%= results[1][0]%></em>
-                                            <p></p>
+
+<div class="app-has-side-bar">
+    <%if response['numFound'] > 0 || searchType == 'O' %>
+        <div class="app-has-side-bar__left">
+            <button class="govuk-button app-button-toggle-filters" id="toggleFilters" onclick="toggleFilters()">Show filters</button>
+            <div class="app-search-filters" id="searchFilters">
+                <div class="app-search-filters-title">
+                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Filters</span>
+                    <a href="#/" id="clearAll" class="govuk-link app-search-filters-title-clear">Clear all</a>
+                    <a href="#/" onclick="toggleFilters()" class="govuk-link app-search-filters-title-return govuk-!-margin-left-3">Return to results</a>
+                </div>
+                <%filters.each do |key, val|%>
+                    <%if (val.length > 0)%>
+                        <fieldset class="govuk-fieldset app-collapsible">
+
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s app-search-filters__legend app-collapsible-title">
+                                <div class="app-flex-container">
+                                    <div class="app-search-filters-chevron"></div>
+                                    <a href="#" class="govuk-link app-collapsible-title__link"><%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %></a>
+                                </div>
+                            </legend>
+
+                            <div class="app-collapsible__content">
+                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
+                                    <%val.each.with_index do |item, index|%>
+                                        <div class="govuk-checkboxes__item">
+                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
+                                                <input class="govuk-checkboxes__input" id="<%= key%>_<%= index%>" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                <label for="<%= key%>_<%= index%>" class="govuk-label govuk-checkboxes__label govuk-!-font-size-16">
+                                                    <%= item['key']%>
+                                                </label>
+                                            <%else%>
+                                                <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
+                                                    <input class="govuk-checkboxes__input" id="<%= key%>_<%= index%>" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
+                                                    <label for="<%= key%>_<%= index%>" class="govuk-label govuk-checkboxes__label govuk-!-font-size-16">
+                                                        <%= item['key']%>
+                                                    </label>
+                                                <%else%>
+                                                    <input class="govuk-checkboxes__input" id="<%= key%>_<%= index%>" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
+                                                    <label for="<%= key%>_<%= index%>" class="govuk-label govuk-checkboxes__label govuk-!-font-size-16">
+                                                        <%= item['key']%>
+                                                    </label>
+                                                <%end%>
+                                            <%end%>
                                         </div>
                                     <%end%>
+                                    <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
+                                        <input class="selectedFilters" type="hidden">
+                                    <%else%>
+                                        <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
+                                            <input class="selectedFilters" type="hidden">
+                                        <%else%>
+                                            <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
+                                        <%end%>
+                                    <%end%>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    <%end%>
+                <%end%>
+              </div>
+        </div>
+    <%end%>
+    <div class="app-has-side-bar__right <%= 'govuk-!-padding-left-0' if response['numFound'] == 0 && searchType == 'F' %>">
+        <div class="govuk-body app-search-count">
+            <div class="app-search-count--text">
+                Results<span name="afterFilteringAmount" style="display:inline;"></span>
+                <div id="resultCountHolder" class="govuk-!-display-inline>
+                    <% if (response['numFound'] > solrConfig['PageSize']) %>
+                        <span id="numberofResults" style="display:inline;">1 - <%= solrConfig['PageSize']%></span> of <%= response['numFound']%>
+                    <% else %>
+                        <span id="numberofResults" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
+                    <%end%>
+                </div>
+            </div>
+            <div class="app-search-count--filters">
+                <a class="govuk-body-s govuk-link app-modal--open" href="#">Advanced filters</a>
+            </div>
+        </div>
+
+        <% if response['numFound'] > 0 %>
+            <%if searchType == 'F'%>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <% if !fcdoCountryBudgets.nil? %>
+                            <% fcdoCountryBudgets.each do |results| %>
+                                <%if results[0] != 'UA2'%>
+                                    <div class="govuk-inset-text" style="font-size: 14px;">
+                                        <p>Did you mean the <em>country <a href="/countries/<%= results[0] %>"><%= results[1][1] %></a></em>?</p>
+                                        <p></p>
+                                        <h3><em><%= results[1][1]%></em></h3>
+                                        Budget: <em><%= results[1][0]%></em>
+                                        <p></p>
+                                    </div>
                                 <%end%>
                             <%end%>
+                        <%end%>
+                    </div>
+                </div>
+            <%end%>
+
+            <%if searchType == 'F'%>
+                <%if response['numFound'] != -1%>
+                    <p class="govuk-body">
+                        <span>Now showing Programmes related to:</span>
+                        "<%= query %>"
+                    </p>
+                <%end%>
+            <%end%>
+             <div id="response-container">
+                <%response['docs'].each do |item|%>                 
+                    <div class="app-search-result">
+                        <h3 class="govuk-heading-s app-search-result-title"><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary" class="govuk-link--no-visited-state"><%=item['title_narrative_first']%></a></h3>
+                        <p class="govuk-body-s app-search-result-department">
+                            <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
+                                UK - Foreign, Commonwealth and Development Office
+                            <%else%>
+                                <%=item['reporting_org_narrative'].first%>
+                            <%end%>
+                        </p>
+
+                        <p class="govuk-body-s description">
+                            <%begin%>
+                                <%=item['description_narrative'].first%>
+                            <%rescue%>
+                                No Description Available
+                            <%end%>
+                        </p>
+                        <div class="app-search-result-info">
+                            <div>
+                                <span class="govuk-body-s app-search-result-info__title">Programme Id</span>
+                                <span class="govuk-body-s app-search-result-info__value"><%=item['iati_identifier']%></span>
+                            </div>
+                            <div>
+                                <span class="govuk-body-s app-search-result-info__title">Start date</span>
+                                <span class="govuk-body-s app-search-result-info__value"><%=format_datev2(item['activity_date_start_common_f'])%></span>
+                            </div>
+                            <div>
+                                <span class="govuk-body-s app-search-result-info__title">Status</span>
+                                <span class="govuk-body-s app-search-result-info__value"><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></span>
+                            </div>
+                            <div>
+                                <span class="govuk-body-s app-search-result-info__title">Total budget</span>
+                                <span class="govuk-body-s app-search-result-info__value"><%=item['totalBudgetWithCurrency']%></span>
+                            </div>
                         </div>
                     </div>
                 <%end%>
-                <div class="govuk-grid-row">
-					<div class="govuk-grid-column-full">
-					                        <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
-					</div>
-				</div>
-                       <div class="govuk-grid-row">
-						                               <div class="govuk-grid-column-two-thirds">
-						                       <%if  searchType == 'F'%>
-                        <%if response['numFound'] == -1%>
-                            <h1>
-                                Search Page
-                            </h1>
-                        <%else%>
-                            <h1>
-								<span>Now showing Programmes related to:</span>
-                                "<%= query %>"
-                            </h1>
-                        <%end%>
+            </div>
+            <div class="light-pagination"></div>
+
+        <%elsif response['numFound'] == 0%>
+            <%if searchType == 'F'%>
+                <p class="govuk-body">Your search - <b><em><%= query %></em></b> - did not match any Programmes.</p>
+                <p class="govuk-body">Suggestions:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>Make sure all words are spelled correctly or try different keywords</li>
+                    <li>Search results only show active Programmes. </li>
+                </ul>
+                <p class="govuk-body govuk-!-font-size-16">To see Programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
+            <%elsif searchType == 'O'%>
+                <div id="response-container">
+                    <%response['docs'].each do |item|%>
+                        <div class="app-search-result">
+                            <h3 class="govuk-heading-s app-search-result-title"><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary" class="govuk-link--no-visited-state"><%=item['title_narrative_first']%></a></h3>
+                            <p class="govuk-body-s app-search-result-department">
+                                <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
+                                    UK - Foreign, Commonwealth and Development Office
+                                <%else%>
+                                    <%=item['reporting_org_narrative'].first%>
+                                <%end%>
+                            </p>
+                            <p class="govuk-body-s description">
+                                <%begin%>
+                                    <%=item['description_narrative'].first%>
+                                <%rescue%>
+                                    No Description Available
+                                <%end%>
+                            </p>
+                            <div class="app-search-result-info">
+                                <div>
+                                    <span class="govuk-body-s app-search-result-info__title">Programme Id</span>
+                                    <span class="govuk-body-s app-search-result-info__value"><%=item['iati_identifier']%></span>
+                                </div>
+                                <div>
+                                    <span class="govuk-body-s app-search-result-info__title">Start date</span>
+                                    <span class="govuk-body-s app-search-result-info__value"><%=format_datev2(item['activity_date_start_common_f'])%></span>
+                                </div>
+                                <div>
+                                    <span class="govuk-body-s app-search-result-info__title">Status</span>
+                                    <span class="govuk-body-s app-search-result-info__value"><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></span>
+                                </div>
+                                <div>
+                                    <span class="govuk-body-s app-search-result-info__title">Total budget</span>
+                                    <span class="govuk-body-s app-search-result-info__value"><%=item['totalBudgetWithCurrency']%></span>
+                                </div>
+                            </div>
+                        </div>
                     <%end%>
-						   </div>
-						                               <div class="govuk-grid-column-one-third text-align-right">
-                        <a href="#" class="show-advance-button"><i class="fas fa-list"></i> Advanced Filters</a>
-						<div class="advance-toggle">
-							<div class="inner">
-                        <div class="govuk-grid-row">
-							<div class="govuk-grid-column-full">
-								<h3>Advanced Filters</h3>
-								<p>To search for Programmes in a specific time period, please enter the start and end dates.</p>
-							</div>
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-form-group">
-                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
-                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-                                            Start Date
-                                        </legend>
-                                        <div id="passport-issued-hint" class="govuk-hint">
-                                        For example, 01 01 2007
-                                        </div>
-                                        <div class="govuk-date-input" id="passport-issued">
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="s1">
-                                                Day
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="s2">
-                                                Month
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s2" name="s2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="s3">
-                                                Year
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="s3" name="s3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                        </div>
-
-                                    </fieldset>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-column-one-half">
-                                <div class="govuk-form-group">
-                                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
-                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-                                           End Date
-                                        </legend>
-                                        <div id="passport-issued-hint" class="govuk-hint">
-                                        For example, 12 11 2007
-                                        </div>
-                                        <div class="govuk-date-input" id="passport-issued">
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="e1">
-                                                Day
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e1" name="e1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="e2">
-                                                Month
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e2" name="e2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                        <div class="govuk-date-input__item">
-                                            <div class="govuk-form-group">
-                                            <label class="govuk-label govuk-date-input__label" for="e3">
-                                                Year
-                                            </label>
-                                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="e3" name="e3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                        </div>
-                                    </div>
-
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </div>
-						<div class="govuk-grid-row">
-							<div class="govuk-grid-column-full">
-								<span id="show-error" style="display: none" class="govuk-error-message">
-									<span class="govuk-visually-hidden">Error:</span> Please enter a valid date or date range.
-								</span>
-							</div>
-						</div>
-						<div class="govuk-grid-row">
-							<div class="govuk-grid-column-one-half">
-								<div class="govuk-form-group">
-									<label class="govuk-label" for="sort">
-										Sort by
-									</label>
-									<select class="govuk-select" id="sort" name="sort">
-										<option value="">Select a sorting option</option>
-										<%solrConfig['SortingOptions'].each do |val|%>
-											<option value="<%=val['field']%>"><%=val['title']%></option>    
-										<%end%>
-									</select>
-								</div>
-								<button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-									Apply Filter
-								</button>
-								<button class="close-advance-button govuk-button govuk-button--secondary">Cancel</button>
-							</div>
-                            <div class="govuk-grid-column-one-half">
-								<div class="govuk-form-group">
-									<label class="govuk-label" for="orderBy">
-										Order by
-									</label>
-									<select class="govuk-select" id="orderBy" name="orderBy">
-										<option value="asc">Ascending Order</option>
-                                        <option value="desc">Descending Order</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						   </div>
-						   </div>
-						   </div>
-				</div> 
-                       <div class="govuk-grid-row divider">
-						   
-                            <div class="govuk-grid-column-one-third results-number">
-                                <strong>Results:</strong> <span name="afterFilteringAmount" style="display:inline;"></span>
-                                <div id="resultCountHolder">
-                                    <% if (response['numFound'] > solrConfig['PageSize']) %>
-                                        <span id="numberofResults" style="display:inline;">1 - <%= solrConfig['PageSize']%></span> of <%= response['numFound']%>
-                                    <% else %>
-                                        <span id="numberofResults" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
-                                    <%end%>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-column-two-thirds">
-                                <div class="light-pagination"></div>
-                            </div>
-                            <!-- <div class="govuk-grid-column-one-half">
-                                
-                                <div class="govuk-form-group">
-                                  <select class="govuk-select" id="sort" name="sort">
-                                    <option value="20">20</option>
-                                    <option value="50" selected>50</option>
-                                    <option value="80">80</option>
-                                    <option value="100">100</option>
-                                  </select>
-                                </div>
-                            </div> -->
-                        </div>
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-quarter filters-column">
-						<div>
-                        <h2 class="govuk-heading-m">
-                            <span>Filters</span>
-                            <span id="clearAll" style="float: right; font-size: 0.9em; font-weight: 100; cursor: pointer;color: #2e3191">Clear all</span>
-                        </h2>
-                        <div class="govuk-body">
-                            <div class="govuk-form-group">
-                                <%filters.each do |key, val|%>
-                                    <%if (val.length > 0)%>
-                                            <fieldset class="govuk-fieldset">
-                                                <legend style="width: 100%" class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                    <h3 style="float: left" class="govuk-fieldset__heading proj-filter-exp-collapse-text">
-                                                        <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                    </h3>
-                                                    <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
-                                                </legend>
-                                                <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
-                                                    <%val.each do |item|%>
-                                                        <div class="govuk-checkboxes__item">
-                                                            <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
-                                                                <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                <label class="govuk-label govuk-checkboxes__label">
-                                                                    <%= item['key']%>
-                                                                </label>
-                                                            <%else%>
-                                                                <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
-                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                    <label class="govuk-label govuk-checkboxes__label">
-                                                                        <%= item['key']%>
-                                                                    </label>
-                                                                <%else%>
-                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
-                                                                    <label class="govuk-label govuk-checkboxes__label">
-                                                                        <%= item['key']%>
-                                                                    </label>
-                                                                <%end%>
-                                                            <%end%>
-                                                        </div>
-                                                    <%end%>
-                                                    <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
-                                                        <input class="selectedFilters" type="hidden">
-                                                    <%else%>
-                                                        <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
-                                                            <input class="selectedFilters" type="hidden">
-                                                        <%else%>
-                                                            <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
-                                                        <%end%>
-                                                    <%end%>
-                                                </div>
-                                            </fieldset>
-                                              <!-- <div class="govuk-accordion__section ">
-                                                    <div class="govuk-accordion__section-header">
-                                                      <h4 class="govuk-accordion__section-heading">
-                                                        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
-                                                          <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                        </span>
-                                                      </h4>
-                                                    </div>
-                                                    <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
-                                                      <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
-                                                            <%val.each do |item|%>
-                                                                <div class="govuk-checkboxes__item">
-                                                                    <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == item['value'])%>
-                                                                        <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                        <label class="govuk-label govuk-checkboxes__label">
-                                                                            <%= item['key']%>
-                                                                        </label>
-                                                                    <%else%>
-                                                                        <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
-                                                                            <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                            <label class="govuk-label govuk-checkboxes__label">
-                                                                                <%= item['key']%>
-                                                                            </label>
-                                                                        <%else%>
-                                                                            <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
-                                                                            <label class="govuk-label govuk-checkboxes__label">
-                                                                                <%= item['key']%>
-                                                                            </label>
-                                                                        <%end%>
-                                                                    <%end%>
-                                                                </div>
-                                                            <%end%>
-                                                            <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
-                                                                <input class="selectedFilters" type="hidden">
-                                                            <%else%>
-                                                                <%if searchType == 'F' && isIncludeClosedProjects.to_i == 1%>
-                                                                    <input class="selectedFilters" type="hidden">
-                                                                <%else%>
-                                                                    <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
-                                                                <%end%>
-                                                            <%end%>
-                                                        </div>
-                                                    </div>
-                                              </div> -->
-                                    <%end%>
-                                <%end%>
-                            </div>
-                        </div>
-                    </div> 
-				</div>
-                    <div id="response-container" class="govuk-grid-column-three-quarters">
-
-                        <!-- <h2 class="govuk-heading-l">Results</h2> -->
-                        <!-- <div class="light-pagination"></div> -->
-                            <%response['docs'].each do |item|%>
-                                    <div class="govuk-grid-row divider">
-										<div class="govuk-grid-column-three-quarters">
-                                        <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative_first']%></a></h3>
-                                        <p>
-                                            <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
-                                                UK - Foreign, Commonwealth and Development Office
-                                            <%else%>
-                                                <%=item['reporting_org_narrative'].first%>
-                                            <%end%>
-                                        </p>
-                                        <p class="govuk-body description">
-                                            <%begin%>
-                                                <%=item['description_narrative'].first%>
-                                            <%rescue%>
-                                                No Description Available
-                                            <%end%>
-                                        </p>
-											<!-- <a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary">Learn more</a> -->
-										</div>
-										<div class="govuk-grid-column-one-quarter">
-                                            <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                            <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common_f'])%></p>
-                                            <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
-                                            <h4>Total Budget:</h4>  <p><%=item['totalBudgetWithCurrency']%></p>
-										</div>
-                                    </div>
-                                <br />
-                            <%end%>
-                    </div>
-                </div>
-            </main>
-            </div>
-        <br/>
-        <br />
-    <%elsif response['numFound'] == 0%>
-        <%if searchType == 'F'%>
-            <div class="row">
-                <div class="twelve columns">
-                    <div class="search-result nine columns push-three">
-                        <p style="padding-top:.33em">Your search - <b><em><%= query %></em></b> - did not match any Programmes.</p><p style="margin-top:1em">Suggestions:</p>
-                        <ul style="margin:0 0 2em;margin-left:1.3em; line-height: 3em; list-style: none">
-                            <li>Make sure all words are spelled correctly or try different keywords</li>
-                        </ul>
-                        <p>Search results only show active Programmes. To see Programmes that have been completed, select the "Include Completed Programmes" checkbox and click the Search button.</p>
-                    </div>
-                    <div class="three columns pull-nine"></div>
-                </div>
-            </div>
-        <%elsif searchType == 'O'%>
-            <div class="govuk-width-container">
-                <main class="govuk-main-wrapper search-results-page">
-                    
-                    
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                                                <div class="govuk-inset-text" style="font-size: 14px;">Default filter shows currently active Programmes. To see Programmes at other stages, use the status filters.</div>
-                        </div>
-                    </div>
-                        <div class="govuk-grid-row">
-                                                        <div class="govuk-grid-column-two-thirds">
-                                                <%if  searchType == 'F'%>
-                            <%if response['numFound'] == -1%>
-                                <h1>
-                                    Search Page
-                                </h1>
-                            <%else%>
-                                <h1>
-                                    <span>Now showing Programmes related to:</span>
-                                    "<%= query %>"
-                                </h1>
-                            <%end%>
-                        <%end%>
-                            </div>
-                                                        <div class="govuk-grid-column-one-third text-align-right">
-                            <a href="#" class="show-advance-button"><i class="fas fa-list"></i> Advanced Filters</a>
-                            <div class="advance-toggle">
-                                <div class="inner">
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    <h3>Advanced Filters</h3>
-                                    <p>To search for Programmes in a specific time period, please enter the start and end dates.</p>
-                                </div>
-                                <div class="govuk-grid-column-one-half">
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-                                                Start Date
-                                            </legend>
-                                            <div id="passport-issued-hint" class="govuk-hint">
-                                            For example, 01 01 2007
-                                            </div>
-                                            <div class="govuk-date-input" id="passport-issued">
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="s1">
-                                                    Day
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="s2">
-                                                    Month
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s2" name="s2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="s3">
-                                                    Year
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="s3" name="s3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                            </div>
-
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                <div class="govuk-grid-column-one-half">
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-                                            End Date
-                                            </legend>
-                                            <div id="passport-issued-hint" class="govuk-hint">
-                                            For example, 12 11 2007
-                                            </div>
-                                            <div class="govuk-date-input" id="passport-issued">
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="e1">
-                                                    Day
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e1" name="e1" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="e2">
-                                                    Month
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e2" name="e2" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                            <div class="govuk-date-input__item">
-                                                <div class="govuk-form-group">
-                                                <label class="govuk-label govuk-date-input__label" for="e3">
-                                                    Year
-                                                </label>
-                                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="e3" name="e3" type="text" pattern="[0-9]*" inputmode="numeric"></div>
-                                            </div>
-                                        </div>
-
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    <span id="show-error" style="display: none" class="govuk-error-message">
-                                        <span class="govuk-visually-hidden">Error:</span> Please enter a valid date or date range.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-one-half">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label" for="sort">
-                                            Sort by
-                                        </label>
-                                        <select class="govuk-select" id="sort" name="sort">
-                                            <option value="">Select a sorting option</option>
-                                            <%solrConfig['SortingOptions'].each do |val|%>
-                                                <option value="<%=val['field']%>"><%=val['title']%></option>    
-                                            <%end%>
-                                        </select>
-                                    </div>
-                                    <button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-                                        Apply Filter
-                                    </button>
-                                    <button class="close-advance-button govuk-button govuk-button--secondary">Cancel</button>
-                                </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                    </div> 
-                        <div class="govuk-grid-row divider">
-                            
-                                <div class="govuk-grid-column-one-third results-number">
-                                    <strong>Results:</strong> <span name="afterFilteringAmount" style="display:inline;"></span>
-                                    <div id="resultCountHolder">
-                                        <% if (response['numFound'] > solrConfig['PageSize']) %>
-                                            <span id="numberofResults" style="display:inline;">1 - <%= solrConfig['PageSize']%></span> of <%= response['numFound']%>
-                                        <% else %>
-                                            <span id="numberofResults" style="display:inline;"><%= response['numFound']%></span> of <%= response['numFound']%>
-                                        <%end%>
-                                    </div>
-                                </div>
-                                <div class="govuk-grid-column-two-thirds">
-                                    <div class="light-pagination"></div>
-                                </div>
-                                <!-- <div class="govuk-grid-column-one-half">
-                                    
-                                    <div class="govuk-form-group">
-                                    <select class="govuk-select" id="sort" name="sort">
-                                        <option value="20">20</option>
-                                        <option value="50" selected>50</option>
-                                        <option value="80">80</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    </div>
-                                </div> -->
-                            </div>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-quarter filters-column">
-                            <div>
-                            <h2 class="govuk-heading-m">Filters</h2>
-                            <div class="govuk-body">
-                                <div class="govuk-form-group">
-                                    <%filters.each do |key, val|%>
-                                        <%if (val.length > 0)%>
-                                                <fieldset class="govuk-fieldset">
-                                                    <legend style="width: 100%" class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                                        <h3 style="float: left" class="govuk-fieldset__heading proj-filter-exp-collapse-text">
-                                                            <%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['title'] %>
-                                                        </h3>
-                                                        <div class="proj-filter-exp-collapse-sign proj-filter-exp-collapse-sign-up"></div>
-                                                    </legend>
-                                                    <div class="govuk-checkboxes govuk-checkboxes--small <%= key%>">
-                                                        <%val.each do |item|%>
-                                                            <div class="govuk-checkboxes__item">
-                                                                <%if !(solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'].to_s == item['value'].to_s)%>
-                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" type="checkbox" value="<%= item['value']%>">
-                                                                    <label class="govuk-label govuk-checkboxes__label">
-                                                                        <%= item['key']%>
-                                                                    </label>
-                                                                <%else%>
-                                                                    <input class="govuk-checkboxes__input" name="<%= key%>" checked type="checkbox" value="<%= item['value']%>">
-                                                                    <label class="govuk-label govuk-checkboxes__label">
-                                                                        <%= item['key']%>
-                                                                    </label>
-                                                                <%end%>
-                                                            </div>
-                                                        <%end%>
-                                                        <%if (solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue'] == '')%>
-                                                            <input class="selectedFilters" type="hidden">
-                                                        <%else%>
-                                                            <input class="selectedFilters" type="hidden" value="<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['field']%>:(<%= solrConfig['Filters'].select {|filter| filter['field'] == key}.first['defaultValue']%>)">
-                                                        <%end%>
-                                                    </div>
-                                                </fieldset>
-                                        <%end%>
-                                    <%end%>
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                        <div id="response-container" class="govuk-grid-column-three-quarters">
-
-                            <!-- <h2 class="govuk-heading-l">Results</h2> -->
-                            <!-- <div class="light-pagination"></div> -->
-                                <%response['docs'].each do |item|%>
-                                        <div class="govuk-grid-row divider">
-                                            <div class="govuk-grid-column-three-quarters">
-                                            <h3><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary"><%=item['title_narrative_first'].first%></a></h3>
-                                            <p>
-                                                <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
-                                                    UK - Foreign, Commonwealth and Development Office
-                                                <%else%>
-                                                    <%=item['reporting_org_narrative'].first%>
-                                                <%end%>
-                                            </p>
-                                            <p class="govuk-body description">
-                                                <%begin%>
-                                                    <%=item['description_narrative'].first%>
-                                                <%rescue%>
-                                                    No Description Available
-                                                <%end%>
-                                            </p>
-                                                <!-- <a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary">Learn more</a> -->
-                                            </div>
-                                            <div class="govuk-grid-column-one-quarter">
-                                                <h4>Programme identifier:</h4> <p><%=item['iati_identifier']%></p>
-                                                <h4>Start Date:</h4>  <p><%=format_datev2(item['activity_date_start_common'])%></p>
-                                                <h4>Activity Status:</h4>  <p><%= activityStatus.select {|filter| filter['code'] == item['activity_status_code']}.first['name']%></p>
-                                                <h4>Total Budget:</h4>  <p><%= item['totalBudgetWithCurrency']%></p>
-                                            </div>
-                                        </div>
-                                    <br />
-                                <%end%>
-                        </div>
-                    </div>
-                </main>
-                </div>
-            <br/>
-            <br />
+                </div>                        
+                <div class="light-pagination"></div>
         <%end%>
     <%end%>
+    </div>
 </div>
+
+<div class="app-modal app-modal--advanced-filters">
+    <div class="app-modal-content">
+        <button class="app-modal--close app-modal--cancel"></button>
+        <h3 class="govuk-heading-m">Advanced filters</h3>
+        <p class="govuk-body-s">To search for Programmes in a specific time period, please enter the start and end dates.</p>
+        <div class="govuk-grid-row" id="show-error" style="display: none">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> Please enter a valid date or date range.
+                </span>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" role="group" aria-describedby="start-date">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                Start date
+                            </legend>
+                        <div id="start-date" class="govuk-hint">
+                            For example, 01 01 2007
+                        </div>
+                        <div class="govuk-date-input" id="passport-issued">
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="s1">
+                                Day
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s1" name="s1" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="s2">
+                                Month
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="s2" name="s2" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="s3">
+                                Year
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="s3" name="s3" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" role="group" aria-describedby="end-date">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            End Date
+                        </legend>
+                        <div id="end-date" class="govuk-hint">
+                            For example, 12 11 2007
+                        </div>
+                        <div class="govuk-date-input" id="passport-issued">
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="e1">
+                                Day
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e1" name="e1" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="e2">
+                                Month
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="e2" name="e2" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="e3">
+                                Year
+                                </label>
+                                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="e3" name="e3" type="text" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>    
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="sort">
+                        Sort by
+                    </label>
+                    <select class="govuk-select" id="sort" name="sort">
+                        <option value="">Select a sorting option</option>
+                        <%solrConfig['SortingOptions'].each do |val|%>
+                            <option value="<%=val['field']%>"><%=val['title']%></option>    
+                        <%end%>
+                    </select>
+                </div>
+
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="orderBy">
+                        Order by
+                    </label>
+                    <select class="govuk-select" id="orderBy" name="orderBy">
+                        <option value="asc">Ascending Order</option>
+                        <option value="desc">Descending Order</option>
+                    </select>
+                </div>
+            </div>
+        </div>  
+        <div class="govuk-button-group">
+            <button id="av" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">Apply Filter</button>
+            <a class="app-modal--cancel govuk-button govuk-button--secondary" href="#">Cancel</a>
+        </div>
+    </div>
+</div>  
+
 <script src="/javascripts/jquery.simplePagination.js" type="text/javascript"></script>
 <script type="text/javascript">
-        $readMoreJS.init({
-            target: '.description',
-            numOfWords: 25,
-            toggle: true,
-            moreLink: 'Read more ...',
-            lessLink: 'Read less'
-        });
+    $readMoreJS.init({
+        target: '.description',
+        numOfWords: 25,
+        toggle: true,
+        moreLink: 'Read more',
+        lessLink: 'Read less'
+    });
 </script>
+
 <script>
     $(document).ready(function (){
-        $('#clearAll').click(function(){
+        $('#clearAll').click(function(e){
+            e.preventDefault();
             $('.govuk-checkboxes__input').prop("checked", false);
             $('.selectedFilters').val('');
             getFilteredResponse(0, true, 0);
@@ -835,7 +573,8 @@
             $('.light-pagination').pagination({
                 items: projectCount,
                 itemsOnPage: pageSize,
-                cssStyle: 'compact-theme',
+                prevText: "Previous",
+                cssStyle: 'app-pagination govuk-body',
                 onPageClick: function(pageNumber, event){
                     getFilteredResponse((pageNumber-1)*pageSize, false, pageNumber)
                 }
@@ -869,7 +608,7 @@
                 data: data
             })
             .done(function(response){
-                $(".close-advance-button").trigger("click");
+                $(".app-modal--cancel").trigger("click");
                 if(isResetPagination){
                     initiatePagination(response.output.numFound);
                     if(response.output.numFound > pageSize)
@@ -901,10 +640,10 @@
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + 'No description available' + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</a></h3><p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><p class="govuk-body-s description">' + 'No description available' + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="govuk-grid-row divider"><div class="govuk-grid-column-three-quarters"><h3><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary">' + result.title_narrative_first + '</a></h3><p>' + reporting_org + '</p><p class="govuk-body description">' + result.description_narrative[0] + '</p></div><div class="govuk-grid-column-one-quarter"><h4>Programme identifier:</h4> <p>' + result.iati_identifier + '</p><h4>Start Date:</h4><p> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</p><h4>Activity Status:</h4><p>' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</p><h4>Total Budget:</h4><p>'+result.totalBudgetWithCurrency+'</p></div></div><br />';
+                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</a></h3><p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><p class="govuk-body-s description">' + result.description_narrative[0] + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
                     }
                 })
                 $('#response-container').html(prepareContainer);
@@ -913,8 +652,9 @@
                     target: '.description',
                     numOfWords: 25,
                     toggle: true,
-                    moreLink: 'Read more ...',
-                    lessLink: 'Read less'
+                    moreLink: 'Read more',
+                    lessLink: 'Read less',
+                    linkClass: 'govuk-link'
                 });
             });
         }
@@ -925,38 +665,33 @@
             var dt = new Date(y + '/' + m + '/' + d);
             return !!(dt && (dt.getMonth() + 1) == m && dt.getDate() == Number(d));
         }
-
-        /*This method attaches the +/- sign to the relevant filter expansion label*/
-        function attachFilterExpColClickEvent(){
-        $('.proj-filter-exp-collapse-sign').click(function(){
-            if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
-                $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
-                //$(this).text('-');
-                $(this).parent().parent().find(".govuk-checkboxes").slideDown();
-            }
-            else{
-                $(this).removeClass('proj-filter-exp-collapse-sign-up').addClass('proj-filter-exp-collapse-sign-down');
-                //$(this).text('+');
-                $(this).parent().parent().find(".govuk-checkboxes").slideUp();
-            }
-        });
-        
-        $('.proj-filter-exp-collapse-text').click(function(){
-        
-            $(this).parent().find('.proj-filter-exp-collapse-sign').each(function(){
-                if($(this).hasClass('proj-filter-exp-collapse-sign-down')){
-                    $(this).removeClass('proj-filter-exp-collapse-sign-down').addClass('proj-filter-exp-collapse-sign-up');
-                    //$(this).text('-');
-                    $(this).parent().parent().find(".govuk-checkboxes").slideDown();
-                }
-                else{
-                    $(this).removeClass('proj-filter-exp-collapse-sign-up').addClass('proj-filter-exp-collapse-sign-down');
-                    //$(this).text('+');
-                    $(this).parent().parent().find(".govuk-checkboxes").slideUp();
-                }
-            });
-        });
-        }
         attachFilterExpColClickEvent();
     });
+</script>
+
+ <script>
+        function toggleFilters() {
+        var searchFilters = document.getElementById("searchFilters");
+        if (searchFilters.style.display === "block") {
+            searchFilters.style.display = "none";
+        } else {
+            searchFilters.style.display = "block";
+        }
+    }
+
+    var coll = document.getElementsByClassName("app-collapsible-title");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function (event) {
+            event.preventDefault();
+            this.classList.toggle("app-collapsible-title--active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "flex") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "flex";
+            }
+        });
+    }
 </script>

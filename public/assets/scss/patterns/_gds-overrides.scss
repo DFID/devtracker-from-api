@@ -1,0 +1,85 @@
+.govuk-checkboxes--small .govuk-checkboxes__label:before {
+    background-color: #fff;
+}
+
+.govuk-breadcrumbs {
+    margin-bottom: 30px;
+}
+
+.app-display-none {
+    display: none;
+}
+
+.rm-link,
+#fundingProjects a,
+#fundedProjects a {
+    font-family: "GDS Transport", arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: underline;
+    color: $govuk-link-colour;
+    display: inline-block;
+    margin-bottom: 20px;
+
+    &:focus {
+        color: #0b0c0c;
+        background-color: #ffdd00;
+        box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+        text-decoration: none;
+    }
+
+    &:link,
+    &:visited {
+        color: $govuk-link-colour;
+    }
+
+    &:hover {
+        color: #003078;
+    }
+
+    &:active,
+    &:focus {
+        color: #0b0c0c;
+    }
+}
+
+#fundingProjects a,
+#fundedProjects a {
+    display: block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.app-summary-list__key {
+    @include govuk-media-query($from: tablet) {
+        width: 60%;
+    }
+}
+
+#fundingProjects h4,
+#fundedProjects h4 {
+    margin-top: 30px !important;
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+    color: #0b0c0c;
+    font-family: "GDS Transport", arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 15px;
+}
+
+#fundingProjects ul,
+#fundedProjects ul {
+    padding-left: 0;
+    list-style-type: none;
+
+    li {
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1.3157894737;
+        margin-bottom: 5px;
+    }
+}
