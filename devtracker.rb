@@ -778,7 +778,7 @@ get '/location/country/?' do
 	total_coun_bud_loc = ''
 	country_sector_data = ''
 	getMaxBudget = ''
-	if (!canLoadFromCache('country_sector_data'))
+	if (!canLoadFromCache('getMaxBudgetCountryLocation'))
 		storeCacheData(generateCountryDatav5(), 'country_sector_data')
 		getMainData = getCacheData('country_sector_data')
 		map_data = getMainData['map_data']

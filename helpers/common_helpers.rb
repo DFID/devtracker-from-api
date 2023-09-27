@@ -1277,7 +1277,6 @@ end
     pd = RestClient.get newApiCall
     pd  = JSON.parse(pd)
     numOActivities = pd['response']['numFound'].to_i
-    #puts ('Number of activities: ' + numOActivities.to_s)
     pulledData = pd['response']['docs'] 
     if (numOActivities > count)
       pages = (numOActivities.to_f/count).ceil
@@ -1339,7 +1338,7 @@ end
             elsif c =='PS'
               projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
             else
-              projectDataHash[c]["country"] = element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+              projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end# element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
             end
             projectDataHash[c]["id"] = c
             if(element['activity_status_code'].to_i == 2)
