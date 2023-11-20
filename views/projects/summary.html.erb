@@ -116,7 +116,7 @@
         <script type="text/javascript">
             var mapType = "project";
             window.mainMarkers = <%= mapMarkers.to_json%>;
-            var ProjectTitle = "<%= project['title_narrative_text'].first %>";
+            var ProjectTitle = "<%= project['title_narrative_text'].first.strip %>";
             var countryCount = <%= countryOrRegion[:countriesCount]%>;
             var regionCount = <%= countryOrRegion[:regionsCount]%>;
         </script>

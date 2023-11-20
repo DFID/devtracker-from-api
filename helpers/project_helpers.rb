@@ -1078,7 +1078,7 @@ module ProjectHelpers
                     projectSectorGraph['sector_code'].each_with_index do |data, index|
                         if counter <=10
                             begin
-                                narrative = projectSectorGraph['sector_narrative'][index]
+                                narrative = projectSectorGraph['sector_narrative'][index].strip
                                 percentage = projectSectorGraph['sector_percentage'][index]
                             rescue
                                 narrative = 'N/A'
@@ -1100,7 +1100,7 @@ module ProjectHelpers
                     c3ReadyStackBarData[1] = '['
                     projectSectorGraph['sector_code'].each_with_index do |data, index|
                         begin
-                            narrative = begin projectSectorGraph['sector_narrative'][index] rescue data end
+                            narrative = begin projectSectorGraph['sector_narrative'][index].strip rescue data end
                             percentage = begin projectSectorGraph['sector_percentage'][index] rescue 100 end
                         rescue
                             narrative = 'N/A'
