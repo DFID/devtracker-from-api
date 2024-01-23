@@ -895,6 +895,10 @@ get '/search_p/?' do
 	}
 end
 
+get '/search/?' do
+	redirect '/search_p'
+end
+
 post '/search_p/?' do
 	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
