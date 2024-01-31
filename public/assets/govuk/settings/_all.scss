@@ -3,9 +3,8 @@
 
 @import "assets";
 
-@import "compatibility";
+@import "warnings";
 @import "global-styles";
-@import "ie8";
 
 @import "media-queries";
 
@@ -16,7 +15,6 @@
 @import "spacing";
 @import "measurements";
 
-@import "typography-font-families";
 @import "typography-font";
 @import "typography-responsive";
 

@@ -53,9 +53,9 @@ const closeModal = function () {
 };
 
 // close the modal when the close button is clicked
-closeModalBtn.addEventListener("click", closeModal);
-cancelModalBtn.addEventListener("click", closeModal);
-applyFiltersBtn.addEventListener("click", closeModal);
+//closeModalBtn.addEventListener("click", closeModal);
+//cancelModalBtn.addEventListener("click", closeModal);
+//applyFiltersBtn.addEventListener("click", closeModal);
 //overlay.addEventListener("click", closeModal);
 
 // close modal when the Esc key is pressed
@@ -69,8 +69,8 @@ document.addEventListener("keydown", function (e) {
 const openModal = function () {
     document.body.style.overflow = "hidden"
     modal.classList.remove("app-modal--hidden");
-    overlay.classList.remove("app-modal--hidden");
+    //overlay.classList.remove("app-modal--hidden");
 };
 
 // open modal event
-openModalBtn.addEventListener("click", openModal);
+//openModalBtn.addEventListener("click", openModal);

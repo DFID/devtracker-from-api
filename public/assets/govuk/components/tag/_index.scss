@@ -1,81 +1,92 @@
 @include govuk-exports("govuk/component/tag") {
+  $govuk-tag-max-width: if(map-has-key($govuk-breakpoints, "mobile"), map-get($govuk-breakpoints, "mobile") / 2, 160px);
+
   .govuk-tag {
+    @include govuk-font($size: 19);
 
     display: inline-block;
 
-    // When a user customises their colours often the background is removed,
-    // by adding a outline we ensure that the tag component still keeps it's meaning.
-    // https://accessibility.blog.gov.uk/2017/03/27/how-users-change-colours-on-websites/
-    outline: 2px solid transparent;
-    outline-offset: -2px;
+    // set a max-width along with overflow-wrap: break-word below for instances
+    // where a tag has a single long word and could overflow its boundaries.
+    // The max-width is necessary as break-word requires a bounding box to base
+    // where to break off of.
+    max-width: $govuk-tag-max-width;
 
-    color: govuk-colour("white");
-    background-color: govuk-colour("blue");
-    letter-spacing: 1px;
+    // These negative margins make sure that the tag component doesn’t increase the
+    // size of its container. Otherwise, for example, a table row containing a tag
+    // will be taller than one containing plain text.
+    //
+    // The negative margin added to the top and bottom matches the extra padding added.
+    margin-top: -2px;
+    margin-bottom: -3px;
 
+    padding-top: 2px;
+    padding-right: 8px;
+    padding-bottom: 3px;
+    padding-left: 8px;
+    color: govuk-shade(govuk-colour("blue"), 60%);
+    background-color: govuk-tint(govuk-colour("blue"), 70%);
     text-decoration: none;
-    text-transform: uppercase;
+    overflow-wrap: break-word;
 
-    @if $govuk-use-legacy-font {
-      // Since New Transport sits slightly higher than other common fonts.
-      // We use intentionally uneven padding to make it balanced, this can be
-      // removed using the version of the font that has a more common vertical spacing.
-      @include govuk-font($size: 16, $weight: bold, $line-height: 1.25);
-      padding-top: 4px;
-      padding-right: 8px;
-      padding-bottom: 1px;
-      padding-left: 8px;
-    } @else {
-      @include govuk-font($size: 16, $weight: bold, $line-height: 1);
-      padding-top: 5px;
-      padding-right: 8px;
-      padding-bottom: 4px;
-      padding-left: 8px;
+    // When forced colour mode is active, for example to provide high contrast,
+    // the background colour of the tag is the same as the rest of the page. To ensure
+    // that the tag is perceived as separate from any surround text, it is made bold.
+    //
+    // Transparent outlines are no longer added, as they make the Tag look indistinguishable
+    // from a button – but the tag is not interactive in the same way.
+    @media screen and (forced-colors: active) {
+      font-weight: bold;
     }
   }
 
   .govuk-tag--grey {
-    color: govuk-shade(govuk-colour("dark-grey", $legacy: "grey-1"), 30);
-    background: govuk-tint(govuk-colour("dark-grey", $legacy: "grey-1"), 90);
+    color: govuk-shade(govuk-colour("dark-grey"), 50%);
+    background-color: govuk-tint(govuk-colour("dark-grey"), 85%);
   }
 
   .govuk-tag--purple {
-    color: govuk-shade(govuk-colour("purple"), 20);
-    background: govuk-tint(govuk-colour("purple"), 80);
+    color: govuk-shade(govuk-colour("bright-purple"), 50%);
+    background-color: govuk-tint(govuk-colour("bright-purple"), 85%);
   }
 
   .govuk-tag--turquoise {
-    color: govuk-shade(govuk-colour("turquoise"), 60);
-    background: govuk-tint(govuk-colour("turquoise"), 70);
+    color: govuk-shade(govuk-colour("turquoise"), 60%);
+    background-color: govuk-tint(govuk-colour("turquoise"), 80%);
   }
 
   .govuk-tag--blue {
-    color: govuk-shade(govuk-colour("blue"), 30);
-    background: govuk-tint(govuk-colour("blue"), 80);
+    color: govuk-shade(govuk-colour("blue"), 60%);
+    background-color: govuk-tint(govuk-colour("blue"), 70%);
+  }
+
+  .govuk-tag--light-blue {
+    color: govuk-shade(govuk-colour("blue"), 60%);
+    background-color: govuk-tint(govuk-colour("blue"), 90%);
   }
 
   .govuk-tag--yellow {
-    color: govuk-shade(govuk-colour("yellow"), 65);
-    background: govuk-tint(govuk-colour("yellow"), 75);
+    color: govuk-shade(govuk-colour("yellow"), 65%);
+    background-color: govuk-tint(govuk-colour("yellow"), 75%);
   }
 
   .govuk-tag--orange {
-    color: govuk-shade(govuk-colour("orange"), 55);
-    background: govuk-tint(govuk-colour("orange"), 70);
+    color: govuk-shade(govuk-colour("orange"), 55%);
+    background-color: govuk-tint(govuk-colour("orange"), 70%);
   }
 
   .govuk-tag--red {
-    color: govuk-shade(govuk-colour("red"), 30);
-    background: govuk-tint(govuk-colour("red"), 80);
+    color: govuk-shade(govuk-colour("red"), 80%);
+    background-color: govuk-tint(govuk-colour("red"), 75%);
   }
 
   .govuk-tag--pink {
-    color: govuk-shade(govuk-colour("pink"), 40);
-    background: govuk-tint(govuk-colour("pink"), 80);
+    color: govuk-shade(govuk-colour("pink"), 50%);
+    background-color: govuk-tint(govuk-colour("pink"), 85%);
   }
 
   .govuk-tag--green {
-    color: govuk-shade(govuk-colour("green"), 20);
-    background: govuk-tint(govuk-colour("green"), 80);
+    color: govuk-shade(govuk-colour("green"), 20%);
+    background-color: govuk-tint(govuk-colour("green"), 80%);
   }
 }

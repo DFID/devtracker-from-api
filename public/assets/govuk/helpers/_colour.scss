@@ -1,6 +1,6 @@
-@import "../settings/compatibility";
 @import "../settings/colours-palette";
 @import "../settings/colours-organisations";
+@import "../settings/warnings";
 
 ////
 /// @group helpers/colour
@@ -8,35 +8,29 @@
 
 /// Get colour
 ///
-/// @param {String} $colour - Name of colour from the colour palette
+/// @param {String | Colour} $colour - Name of colour from the colour palette
 ///   (`$govuk-colours`)
-/// @param {String} $legacy - Either the name of colour from the legacy palette
-///   or a colour literal, to return instead when in 'legacy mode' - matching
-///   the palette from GOV.UK Template, Elements or Frontend Toolkit
+/// @param {String | Colour | Boolean} $legacy [false] - Deprecated.
+///   The `$legacy` parameter is deprecated and is non-operational, as the
+///   legacy colour palette has been removed. The parameter will be removed in
+///   the next major version.
 /// @return {Colour} Representation of named colour
-///
-/// @example scss - Using legacy colours from the palette
-///  .foo {
-///    background-colour: govuk-colour("mid-grey", $legacy: "grey-2");
-///  }
-///
-/// @example scss - Using legacy colour literals
-///  .foo {
-///    background-colour: govuk-colour("green", $legacy: #BADA55);
-///  }
 ///
 /// @throw if `$colour` is not a colour from the colour palette
 /// @access public
 
 @function govuk-colour($colour, $legacy: false) {
-  @if $govuk-use-legacy-palette and $legacy {
-    @if type-of($legacy) == "color" {
-      @return $legacy;
-    }
-    $colour: $legacy;
+  // Output a warning if $legacy is set to anything.
+  @if $legacy and _should-warn("legacy-colour-param") {
+    @warn _warning-text("legacy-colour-param", "The `$legacy` parameter of " +
+    "`govuk-colour` is deprecated and is non-operational. It will be " +
+    "removed in the next major version.");
   }
 
-  $colour: quote($colour);
+  @if type-of($colour) == "color" {
+    // stylelint-disable-next-line scss/function-quote-no-quoted-strings-inside
+    $colour: quote("#{$colour}");
+  }
 
   @if not map-has-key($govuk-colours, $colour) {
     @error "Unknown colour `#{$colour}`";
@@ -75,7 +69,7 @@
 /// Make a colour darker by mixing it with black
 ///
 /// @param {Colour} $colour - colour to shade
-/// @param {Number} $percentage - percentage of `$colour` in returned colour
+/// @param {Number} $percentage - percentage of black to mix with $colour
 /// @return {Colour}
 /// @access public
 
@@ -86,7 +80,7 @@
 /// Make a colour lighter by mixing it with white
 ///
 /// @param {Colour} $colour - colour to tint
-/// @param {Number} $percentage - percentage of `$colour` in returned colour
+/// @param {Number} $percentage - percentage of white to mix with $colour
 /// @return {Colour}
 /// @access public
 

@@ -3,20 +3,14 @@
   // Falls back to a float: left layout on non-flex browsers
   .govuk-pagination {
     @include govuk-responsive-margin(6, "bottom");
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-direction: column;
-        flex-direction: column;
-    -ms-flex-align: center;
-        align-items: center;
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
 
     @include govuk-media-query($from: tablet) {
-      -ms-flex-direction: row;
-          flex-direction: row;
-      -ms-flex-align: start;
-          align-items: flex-start;
+      flex-direction: row;
+      align-items: flex-start;
     }
   }
 
@@ -38,7 +32,7 @@
     float: left; // Float is ignored if flex is active for prev/next links
 
     &:hover {
-      background-color: govuk-colour("light-grey", $legacy: "grey-4");
+      background-color: govuk-colour("light-grey");
     }
   }
 
@@ -63,10 +57,8 @@
     // Use flex to get around a whitespace issue between the arrow svg and the link text
     // without having to rely on whitespace control from backend tooling
     .govuk-pagination__link {
-      display: -ms-flexbox;
       display: flex;
-      -ms-flex-align: center;
-          align-items: center;
+      align-items: center;
     }
   }
 
@@ -114,13 +106,16 @@
     display: block;
     min-width: govuk-spacing(3);
 
-    &:after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+    // Increase the touch area for the link to the parent element.
+    @media screen {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
     }
 
     // Add link hover decoration to prev/next text if no label present on prev/next only mode
@@ -153,7 +148,7 @@
   }
 
   .govuk-pagination__link-label {
-    @include govuk-font($size: 19, $weight: "regular");
+    @include govuk-typography-weight-regular;
     @include govuk-link-decoration;
     display: inline-block;
     padding-left: govuk-spacing(6);
@@ -215,7 +210,7 @@
     // as block level whilst programmatically being inline
     // We do this to get around an NVDA quirk where adjacent block level
     // elements are always read out separately
-    .govuk-pagination__link-title:after {
+    .govuk-pagination__link-title::after {
       content: "";
       display: block;
     }

@@ -1,5 +1,4 @@
 @include govuk-exports("govuk/core/links") {
-
   %govuk-link {
     @include govuk-link-common;
     @include govuk-link-style-default;
@@ -31,5 +30,11 @@
 
   .govuk-link--no-visited-state {
     @include govuk-link-style-no-visited-state;
+  }
+
+  // Links that only contain images
+
+  .govuk-link-image {
+    @include govuk-link-image;
   }
 }

@@ -94,3 +94,169 @@
 .app-full-border {
     border: 1px solid govuk-colour("mid-grey");
 }
+
+.app-top-priorities {
+    display: flex;
+    gap: 30px;
+
+    &__content {
+        flex: 1;
+        padding: govuk-spacing(4);
+        margin-bottom: govuk-spacing(4);
+        background-color: #f8f8f8;
+    }
+
+}
+
+.app-things-we-do {
+    display: block;
+
+    &__chart {
+        margin: auto auto 20px auto;
+        width: 70%;
+    }
+}
+
+.app-top-country {
+    display: flex;
+    margin-bottom: 25px;
+
+    &__flag {
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+    }
+
+    &__name {
+        color: $govuk-secondary-text-colour;
+        flex: 1;
+    }
+
+    &__budget {
+        flex: 1;
+        text-align: right;
+    }
+
+}
+
+
+.chart-text {
+    font-family: "GDS Transport",
+        arial,
+        sans-serif;
+    fill: #000;
+}
+
+.chart-number {
+    font-size: 0.3em;
+    line-height: 1;
+    text-anchor: middle;
+    font-weight: bold;
+}
+
+.chart-label {
+    font-size: 0.2em;
+    text-transform: uppercase;
+    text-anchor: middle;
+}
+
+.item0 {
+    stroke: #ff0000;
+    background: #ff0000;
+}
+
+.item1 {
+    stroke: #f499be;
+    background: #f499be;
+}
+
+.item2 {
+    stroke: #d4351c;
+    background: #d4351c;
+}
+
+.item3 {
+    stroke: #00703c;
+    background: #00703c;
+}
+
+.item4 {
+    stroke: #1d70b8;
+    background: #1d70b8;
+}
+
+.item5 {
+    stroke: #003078;
+    background: #003078;
+}
+
+.item6 {
+    stroke: #f47738;
+    background: #f47738;
+}
+
+.item7 {
+    stroke: #505a5f;
+    background: #505a5f;
+}
+
+.item8 {
+    stroke: #85994b;
+    background: #85994b;
+}
+
+.item9 {
+    stroke: #b58840;
+    background: #b58840;
+}
+
+.app-figure-key {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    &__list {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+    }
+
+    span {
+        display: block;
+        width: 16px;
+        min-width: 16px;
+        height: 16px;
+    }
+
+    li {
+        position: relative;
+        display: flex;
+        font-size: 14px;
+        gap: 7px;
+        color: $govuk-secondary-text-colour;
+        margin-bottom: 5px;
+
+        &:hover {
+            cursor: pointer;
+
+            .app-figure-key--tooltip {
+                visibility: visible;
+            }
+        }
+    }
+
+    &--tooltip {
+        visibility: hidden;
+        width: 150px !important;
+        background-color: rgba(0, 0, 0, 0.95);
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        position: absolute;
+        right: 10px;
+        top: -10px;
+        z-index: 1;
+    }
+
+
+}

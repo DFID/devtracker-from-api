@@ -30,14 +30,12 @@
 @mixin govuk-link-decoration {
   text-decoration: underline;
 
-  @if $govuk-new-link-styles {
-    @if $govuk-link-underline-thickness {
-      text-decoration-thickness: $govuk-link-underline-thickness;
-    }
+  @if $govuk-link-underline-thickness {
+    text-decoration-thickness: $govuk-link-underline-thickness;
+  }
 
-    @if $govuk-link-underline-offset {
-      text-underline-offset: $govuk-link-underline-offset;
-    }
+  @if $govuk-link-underline-offset {
+    text-underline-offset: $govuk-link-underline-offset;
   }
 }
 
@@ -50,14 +48,12 @@
 /// @access public
 
 @mixin govuk-link-hover-decoration {
-  @if $govuk-new-link-styles and $govuk-link-hover-underline-thickness {
+  @if $govuk-link-hover-underline-thickness {
     text-decoration-thickness: $govuk-link-hover-underline-thickness;
     // Disable ink skipping on underlines on hover. Browsers haven't
     // standardised on this part of the spec yet, so set both properties
-    -webkit-text-decoration-skip-ink: none;
-            text-decoration-skip-ink: none; // Chromium, Firefox
-    -webkit-text-decoration-skip: none;
-            text-decoration-skip: none; // Safari
+    text-decoration-skip-ink: none; // Chromium, Firefox
+    text-decoration-skip: none; // Safari
   }
 }
 
@@ -98,17 +94,6 @@
   &:focus {
     color: $govuk-focus-text-colour;
   }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector
-  // designed to make unvisited link  s a slightly darker blue when focussed, so
-  // we need to override the text colour for that combination of selectors so
-  // so that unvisited links styled as buttons do not end up with dark blue
-  // text when focussed.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      color: $govuk-focus-text-colour;
-    }
-  }
 }
 
 /// Error link styles
@@ -145,17 +130,6 @@
   // contrast is still acceptable
   &:focus {
     color: $govuk-focus-text-colour;
-  }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector
-  // designed to make unvisited link  s a slightly darker blue when focussed, so
-  // we need to override the text colour for that combination of selectors so
-  // so that unvisited links styled as buttons do not end up with dark blue
-  // text when focussed.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      color: $govuk-focus-text-colour;
-    }
   }
 }
 
@@ -194,17 +168,6 @@
   &:focus {
     color: $govuk-focus-text-colour;
   }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector
-  // designed to make unvisited link  s a slightly darker blue when focussed, so
-  // we need to override the text colour for that combination of selectors so
-  // so that unvisited links styled as buttons do not end up with dark blue
-  // text when focussed.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      color: $govuk-focus-text-colour;
-    }
-  }
 }
 
 /// Muted link styles
@@ -239,15 +202,6 @@
   &:focus {
     color: $govuk-focus-text-colour;
   }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector designed
-  // to make unvisited links a slightly darker blue when focussed, so we need to
-  // override the text colour for that combination of selectors.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      @include govuk-text-colour;
-    }
-  }
 }
 
 /// Text link styles
@@ -276,22 +230,13 @@
   // https://bugs.webkit.org/show_bug.cgi?id=224483
   &:hover {
     @if type-of($govuk-text-colour) == color {
-      color: rgba($govuk-text-colour, .99);
+      color: rgba($govuk-text-colour, 0.99);
     }
   }
 
   &:active,
   &:focus {
     @include govuk-text-colour;
-  }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector designed
-  // to make unvisited links a slightly darker blue when focussed, so we need to
-  // override the text colour for that combination of selectors.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      @include govuk-text-colour;
-    }
   }
 }
 
@@ -321,20 +266,11 @@
   // https://bugs.webkit.org/show_bug.cgi?id=224483
   &:hover,
   &:active {
-    color: rgba(govuk-colour("white"), .99);
+    color: rgba(govuk-colour("white"), 0.99);
   }
 
   &:focus {
     color: $govuk-focus-text-colour;
-  }
-
-  // alphagov/govuk_template includes a specific a:link:focus selector designed
-  // to make unvisited links a slightly darker blue when focussed, so we need to
-  // override the text colour for that combination of selectors.
-  @include govuk-compatibility(govuk_template) {
-    &:link:focus {
-      color: $govuk-focus-text-colour;
-    }
   }
 }
 
@@ -385,8 +321,7 @@
 /// Remove underline from links
 ///
 /// Remove underlines from links unless the link is active or a user hovers
-/// their cursor over it. This has no effect in Internet Explorer 8 (IE8),
-/// because IE8 does not support `:not`.
+/// their cursor over it.
 ///
 /// @example scss
 ///   .govuk-component__link {
@@ -414,8 +349,9 @@
   @include govuk-media-query($media-type: print) {
     &[href^="/"],
     &[href^="http://"],
-    &[href^="https://"] {
-      &:after {
+    &[href^="https://"]
+    {
+      &::after {
         content: " (" attr(href) ")";
         font-size: 90%;
 
@@ -425,5 +361,27 @@
         word-wrap: break-word;
       }
     }
+  }
+}
+
+/// Image link styles
+///
+/// Prepares and provides the focus state for links that only contain images
+/// with no accompanying text.
+///
+/// @access public
+
+@mixin govuk-link-image {
+  // Needed to draw the focus around the entire image
+  display: inline-block;
+
+  // Remove extra space at the bottom of the image that's added by line-height
+  line-height: 0;
+
+  // Don't render an underline
+  text-decoration: none;
+
+  &:focus {
+    @include govuk-focused-box;
   }
 }

@@ -4,11 +4,8 @@
 {%- if params.classes %}
   {% set classNames = classNames + " " + params.classes %}
 {% endif %}
-{% if params.disabled %}
-  {% set classNames = classNames + " govuk-button--disabled" %}
-{% endif -%}
 
-{# Determine type of element to use, if not explicitly set #}
+{#- Determine type of element to use, if not explicitly set #}
 {%- if params.element %}
   {% set element = params.element | lower %}
 {% else %}
@@ -33,11 +30,11 @@ treat it as an interactive element - without this it will be
 
 {#- Define common attributes that we can use across all element types #}
 
-{%- set commonAttributes %} class="{{ classNames }}" data-module="govuk-button"{% for attribute, value in params.attributes %} {{attribute}}="{{value}}"{% endfor %}{% endset %}
+{%- set commonAttributes %} class="{{ classNames }}" data-module="govuk-button" {%- for attribute, value in params.attributes %} {{ attribute }}="{{ value }}"{% endfor %}{% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
 
 {#- Define common attributes we can use for both button and input types #}
 
-{%- set buttonAttributes %}{% if params.name %} name="{{ params.name }}"{% endif %}{% if params.disabled %} disabled="disabled" aria-disabled="true"{% endif %}{% if params.preventDoubleClick %} data-prevent-double-click="true"{% endif %}{% endset %}
+{%- set buttonAttributes %}{% if params.name %} name="{{ params.name }}"{% endif %}{% if params.disabled %} disabled aria-disabled="true"{% endif %}{% if params.preventDoubleClick !== undefined %} data-prevent-double-click="{{ params.preventDoubleClick }}"{% endif %}{% endset %}
 
 {#- Actually create a button... or a link! #}
 
@@ -49,7 +46,7 @@ treat it as an interactive element - without this it will be
 </a>
 
 {%- elseif element == 'button' %}
-<button {%- if params.value %} value="{{ params.value }}"{% endif %}{%- if params.type %} type="{{ params.type }}"{% endif %} {{- buttonAttributes | safe }} {{- commonAttributes | safe }}>
+<button {%- if params.value %} value="{{ params.value }}"{% endif %} type="{{ params.type if params.type else 'submit' }}" {{- buttonAttributes | safe }} {{- commonAttributes | safe }}>
   {{ params.html | safe if params.html else params.text }}
 {# Indentation is intentional to output HTML nicely #}
 {{- iconHtml | safe | trim | indent(2, true) if iconHtml -}}
