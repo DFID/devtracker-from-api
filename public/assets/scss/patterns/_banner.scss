@@ -3,31 +3,42 @@
 }
 
 .app-banner {
-    padding-top: govuk-spacing(6);
-    padding-bottom: govuk-spacing(6);
-    background-color: govuk-colour("blue");
+    // padding-top: govuk-spacing(6);
+    // padding-bottom: govuk-spacing(6);
+    // background-color: govuk-colour("blue");
     color: #fff;
+    margin-top: govuk-spacing(4);
     margin-bottom: govuk-spacing(6);
+    min-height: 300px;
 
     &__content {
+        position: relative;
         display: flex;
         flex-direction: row;
+        background-image: url(/assets/images/homepage.jpg);
+        background-size: cover;
+        background-position: center center;
+        min-height: 400px;
 
         div:first-of-type {
-            margin-right: govuk-spacing(8);
+            margin: govuk-spacing(8) govuk-spacing(6);
         }
     }
 
     &__title {
+        max-width: 595px;
         color: #fff;
     }
 
-    &__text {
+    &__text,
+    &__caption {
         color: #fff;
     }
 
     &__image {
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
         max-width: 95px;
     }
 }
-

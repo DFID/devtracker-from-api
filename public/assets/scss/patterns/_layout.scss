@@ -14,6 +14,14 @@ body {
 
 .app-width-container {
     max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+
+    @include govuk-media-query($from: tablet) {
+        padding: 0 30px;
+    }
+
 
     &--centered {
         margin-left: auto;

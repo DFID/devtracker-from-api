@@ -1442,6 +1442,16 @@ get '/test-cache?' do
 	end
 end
 
+get '/press-releases/?' do
+  	settings.devtracker_page_title = "Press releases"
+	erb :'press-releases/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end
+
+get '/press-releases/01?' do
+  	settings.devtracker_page_title = "First UK maritime shipment of lifesaving aid for Gaza arrives in Egypt"
+	erb :'press-releases/01', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
+end
+
 #####################################################################
 #  RSS FEED
 #####################################################################
