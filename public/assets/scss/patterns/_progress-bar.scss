@@ -5,12 +5,21 @@
         margin-bottom: 5px;
     }
 
+    &__background {
+        margin-top: 5px;
+        background-color: #E4E6E8;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
     &__meter {
         position: relative;
         display: flex;
         align-items: center;
         height: 20px;
         background-color: lighten($govuk-link-colour, 20%);
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
         cursor: pointer;
 
         &--tooltip {

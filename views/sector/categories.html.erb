@@ -23,9 +23,11 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" data-order="<%=category['name']%>">
                             <a href="/sector/<%=category['parentCode']%>/categories/<%=category['code']%>" class="govuk-link"><%=category['name']%></a>
-                            <div class="app-progress-bar">
+                            <div class="app-progress-bar govuk-!-margin-top-2">
                                 <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*category['budget'].to_f/category_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>
-                                <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
+                                <div class="app-progress-bar__background">
+                                    <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
+                                </div>
                             </div>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=format_round_m category['budget'].to_f || 0.0 %>"><span class="sector-value">&pound;<%=format_round_m category['budget'].to_f || 0.0 %></span></td>

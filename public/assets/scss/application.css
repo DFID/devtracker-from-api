@@ -8156,12 +8156,20 @@ body {
 .app-progress-bar__title {
   margin-bottom: 5px;
 }
+.app-progress-bar__background {
+  margin-top: 5px;
+  background-color: #E4E6E8;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 .app-progress-bar__meter {
   position: relative;
   display: flex;
   align-items: center;
   height: 20px;
   background-color: #57a3e4;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   cursor: pointer;
 }
 .app-progress-bar__meter--tooltip {
@@ -9284,4 +9292,30 @@ table.dataTable thead .sorting_desc span::after {
   gap: 10px;
   padding: 5px 15px 15px;
   border-bottom: 1px solid #b1b4b6;
+}
+
+.app-sectors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.app-sectors--container {
+  width: 100%;
+}
+@media (min-width: 568px) {
+  .app-sectors--container {
+    width: calc(50% - 15px);
+  }
+}
+@media (min-width: 1200px) {
+  .app-sectors--container {
+    width: calc(25% - 25px);
+  }
+}
+
+.app-sector {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+  border: 1px solid #b1b4b6;
 }
