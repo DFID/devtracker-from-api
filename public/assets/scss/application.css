@@ -8108,6 +8108,37 @@ body {
   max-width: 95px;
 }
 
+.app-country-banner {
+  color: #fff;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  min-height: 300px;
+}
+.app-country-banner__content {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background-size: cover;
+  background-position: center center;
+  min-height: 400px;
+}
+.app-country-banner__content div:first-of-type {
+  margin: 25px 30px;
+}
+.app-country-banner__title {
+  max-width: 595px;
+  color: #fff;
+}
+.app-country-banner__text, .app-country-banner__caption {
+  color: #fff;
+}
+.app-country-banner__image {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: 70px;
+}
+
 .app-card {
   background-color: #f8f8f8;
   padding: 20px;
@@ -9300,6 +9331,8 @@ table.dataTable thead .sorting_desc span::after {
   gap: 30px;
 }
 .app-sectors--container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 @media (min-width: 568px) {
@@ -9318,4 +9351,13 @@ table.dataTable thead .sorting_desc span::after {
   flex-direction: column;
   padding: 20px 10px;
   border: 1px solid #b1b4b6;
+}
+.app-sector img {
+  width: 100%;
+}
+
+.app-country-name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }

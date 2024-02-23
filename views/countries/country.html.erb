@@ -13,6 +13,19 @@
     </ol>
 </div>
 
+<div class="app-country-banner govuk-!-width-full">
+    <div class="app-country-banner__content" style="background-image: url(/assets/images/countries/<%=country['code'].downcase%>.jpg);">
+        <div>
+            <span class="govuk-caption-xl app-country-banner__caption">Country</span>
+            <h1 class="govuk-heading-l app-country-banner__title"><%= country['name'] %></h1>
+        </div>
+        <img src="/assets/images/flags/<%=country['code'].downcase%>.svg" alt="<%=country['name']%>" class="app-country-banner__image">
+        <div>
+            
+        </div>
+    </div>
+</div>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l"><%= country['name'] %></h1>

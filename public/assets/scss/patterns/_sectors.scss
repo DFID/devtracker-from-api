@@ -4,6 +4,8 @@
     gap: 30px;
 
     &--container {
+        display: flex;
+        flex-direction: column;
         width: calc(100%);
 
         @media (min-width: 568px) {
@@ -21,4 +23,9 @@
     flex-direction: column;
     padding: 20px 10px;
     border: 1px solid $govuk-border-colour;
+
+    img {
+        width: 100%;
+    }
+
 }

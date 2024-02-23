@@ -42,3 +42,40 @@
         max-width: 95px;
     }
 }
+
+.app-country-banner {
+    color: #fff;
+    margin-top: govuk-spacing(5);
+    margin-bottom: govuk-spacing(5);
+    min-height: 300px;
+
+    &__content {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        background-size: cover;
+        background-position: center center;
+        min-height: 400px;
+
+        div:first-of-type {
+            margin: govuk-spacing(5) govuk-spacing(6);
+        }
+    }
+
+    &__title {
+        max-width: 595px;
+        color: #fff;
+    }
+
+    &__text,
+    &__caption {
+        color: #fff;
+    }
+
+    &__image {
+        position: absolute;
+        left: 30px;
+        bottom: 30px;
+        width: 70px;
+    }
+}
