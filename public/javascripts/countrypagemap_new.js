@@ -98,6 +98,10 @@ $(document).ready(function () {
       layers: [layer]
     });
     $.each(countryMapData, function (i, v) {
+      var calculatedOpacity = calculateOpacity(v.extra.budget, maxBudget);
+      if (v.extra.id == 'SO') {
+        calculatedOpacity = 0
+      }
       var tempMapBorder = {
         "type": "Feature",
         "properties": {
@@ -106,7 +110,7 @@ $(document).ready(function () {
             stroke: true,
             weight: 1,
             color: "white",
-            opacity: calculateOpacity(v.extra.budget, maxBudget),
+            opacity: calculatedOpacity,
             fillColor: calculateBrightness(v.extra.budget, maxBudget),
             fillOpacity: 0.8
           }
