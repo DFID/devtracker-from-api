@@ -87,7 +87,9 @@ $(document).ready(function () {
         "coordinates": window.coordinates
       }
     };
-    countryList.push(mapBorder);
+    if(window.countryCode != 'SO') {
+      countryList.push(mapBorder);
+    }
   }
   else if (mapType == 'location') {
     map = new L.Map('countryMap', {
