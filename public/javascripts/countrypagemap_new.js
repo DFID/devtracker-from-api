@@ -87,7 +87,9 @@ $(document).ready(function () {
         "coordinates": window.coordinates
       }
     };
-    countryList.push(mapBorder);
+    if(window.countryCode != 'SO') {
+      countryList.push(mapBorder);
+    }
   }
   else if (mapType == 'location') {
     map = new L.Map('countryMap', {
@@ -96,6 +98,13 @@ $(document).ready(function () {
       layers: [layer]
     });
     $.each(countryMapData, function (i, v) {
+      var calculatedOpacity = calculateOpacity(v.extra.budget, maxBudget);
+      var fOpacity = 0.8;
+      if (v.extra.id == 'SO') {
+        calculatedOpacity = 0;
+        fOpacity = 0;
+      }
+      
       var tempMapBorder = {
         "type": "Feature",
         "properties": {
@@ -104,9 +113,9 @@ $(document).ready(function () {
             stroke: true,
             weight: 1,
             color: "white",
-            opacity: calculateOpacity(v.extra.budget, maxBudget),
+            opacity: calculatedOpacity,
             fillColor: calculateBrightness(v.extra.budget, maxBudget),
-            fillOpacity: 0.8
+            fillOpacity: fOpacity
           }
         },
         "geometry": {
