@@ -99,9 +99,12 @@ $(document).ready(function () {
     });
     $.each(countryMapData, function (i, v) {
       var calculatedOpacity = calculateOpacity(v.extra.budget, maxBudget);
+      var fOpacity = 0.8;
       if (v.extra.id == 'SO') {
-        calculatedOpacity = 0
+        calculatedOpacity = 0;
+        fOpacity = 0;
       }
+      
       var tempMapBorder = {
         "type": "Feature",
         "properties": {
@@ -112,7 +115,7 @@ $(document).ready(function () {
             color: "white",
             opacity: calculatedOpacity,
             fillColor: calculateBrightness(v.extra.budget, maxBudget),
-            fillOpacity: 0.8
+            fillOpacity: fOpacity
           }
         },
         "geometry": {
