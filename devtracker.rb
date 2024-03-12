@@ -21,6 +21,7 @@ require "action_view"
 require 'csv'
 require "sinatra/cookies"
 require "cgi"
+require "em-http-request"
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -59,12 +60,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -85,14 +86,109 @@ set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
-
+$sum = 0
 set :devtracker_page_title, ''
 #####################################################################
 #  HOME PAGE
 #####################################################################
+
+get '/execute_python' do
+	# Define your Python code
+	python_code = <<~PYTHON
+	  print("Hello from Python!")
+	  # You can add more Python code here
+	PYTHON
+  
+	# Execute Python code using a system call
+	python_output = `python3 -c '#{python_code}'`
+  
+	# Return the output from Python
+	"Output from Python: #{python_output}"
+end
+
+get '/fetch_and_save_json' do
+	url = 'https://fcdo.iati.cloud/search/activity/?q=reporting_org_ref:GB-GOV-1%20AND%20hierarchy:1&fl=recipient_region_name,recipient_country_name,iati_identifier,last_updated_datetime,title_narrative_text,description_narrative_text,activity_status_code,activity_date_iso_date,activity_date_type,recipient_region_code,recipient_region_percentage,recipient_country_code,recipient_country_percentage,sector_code,sector_percentage,sector_narrative_text,activity_plus_child_aggregation_budget_value_gbp,conditions_condition_type,conditions_condition_narrative_text,conditions_attached,policy-marker.name,policy-marker.significance.name,other_identifier_ref,other_identifier_type,location_name_narrative_text,location_point_pos,location.point.srsName&rows=25000'  # Replace with your JSON API URL
+  
+	EventMachine.run do
+	  http = EventMachine::HttpRequest.new(url).aget
+  
+	  http.callback do
+		if http.response_header.status == 200
+		  json_response = http.response
+		#   File.open('data/cache/data.json', 'w') do |file|
+		# 	file.write(json_response)
+		#   end
+		  fullData = JSON.parse(json_response)
+		  bulkItemArray = []
+		  extractedInfo = fullData['response']['docs']
+		  extractedInfo.each do |ei|
+			itemHash = {}
+			itemHash['iati_identifier'] = ei['iati_identifier']
+			itemHash['title'] = ei.has_key?('title_narrative_text') ? ei['title_narrative_text'].first : ''
+			itemHash['description'] = ei.has_key?('description_narrative_text') ? ei['description_narrative_text'].first : ''
+			itemHash['activity_status_code'] = ei.has_key?('activity_status_code') ? ei['activity_status_code'].first : ''
+			activityDates = bestActivityDatev2(ei)
+			itemHash['startDate'] = activityDates['start_date']
+			itemHash['endDate'] = activityDates['end_date']
+			if ei.has_key? ('recipient_country_name')
+				tempCountryString = ''
+				ei['recipient_country_name'].each_with_index do |elem, index|
+					begin
+						tempCountryString = tempCountryString + elem + ': ' + ei['recipient_country_percentage'][index].to_s + '%; '
+					rescue
+						tempCountryString = tempCountryString + elem + ': 0%; '
+						puts ei['recipient_country_percentage']
+					end 
+				end
+				itemHash['country'] = tempCountryString
+			else
+				itemHash['country'] = ''
+			end
+			if ei.has_key? ('recipient_region_name')
+				tempRegionString = ''
+				ei['recipient_region_name'].each_with_index do |elem, index|
+					begin
+						tempRegionString = tempRegionString + elem + ': ' + ei['recipient_region_percentage'][index].to_s + '%; ' 
+					rescue
+						tempRegionString = tempRegionString + elem + ': 0%; '
+						puts ei['recipient_region_percentage']
+					end
+				end
+				itemHash['region'] = tempRegionString
+			else
+				itemHash['region'] = ''
+			end
+			if ei.has_key? ('activity_plus_child_aggregation_budget_value_gbp')
+				itemHash['budget'] = ei['activity_plus_child_aggregation_budget_value_gbp']
+			else
+				itemHash['budget'] = 0
+			end
+			bulkItemArray.append(itemHash)
+		  end
+		  CSV.open('data/cache/bulk-download.csv', 'w') do |csv|
+			csv << ['Programme Identifier', 'Title', 'Description', 'Programme Status', 'Country', 'Region', 'Budget']
+			bulkItemArray.each do |row|
+				csv << row.values
+			end
+		  end
+		  EventMachine.stop
+		  'JSON data fetched and saved successfully.'
+		else
+		  EventMachine.stop
+		  'Failed to fetch JSON data.'
+		end
+	  end
+  
+	  http.errback do
+		error = http.error
+		EventMachine.stop
+		"Error: #{error}"
+	  end
+	end
+end
 
 get '/' do  #homepage
 	#read static data from JSON files for the front page
@@ -1277,6 +1373,7 @@ get '/currency/?' do
 end
 
 
+
 #####################################################################
 #  CSV HANDLER
 #####################################################################
@@ -1329,6 +1426,17 @@ end
 #####################################################################
 #  TEST PAGES
 #####################################################################
+
+Thread.new do
+	while true
+		sleep 0.12
+		$sum += 1
+	end
+end
+
+get 'test02' do
+	"Testing background process: #{$sum}"
+end
 
 get '/test01' do  #homepage
 	#read static data from JSON files for the front page
