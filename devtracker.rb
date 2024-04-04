@@ -404,8 +404,32 @@ end
 #  PROJECTS PAGES
 #####################################################################
 
+get '/projects/*' do
+	wildCardData = params['splat'][0]
+	if request.url.end_with? ('/summary')
+		getProgID = wildCardData.gsub('/summary', '')
+		redirect '/programme/'+getProgID+'/summary'
+	elsif request.url.end_with? ('/documents')
+		getProgID = wildCardData.gsub('/documents', '')
+		redirect '/programme/'+getProgID+'/documents'
+	elsif request.url.end_with? ('/transactions')
+		getProgID = wildCardData.gsub('/transactions', '')
+		redirect '/programme/'+getProgID+'/transactions'
+	elsif request.url.end_with? ('/components')
+		getProgID = wildCardData.gsub('/components', '')
+		redirect '/programme/'+getProgID+'/projects'
+	elsif request.url.end_with? ('/partners')
+		getProgID = wildCardData.gsub('/partners', '')
+		redirect '/programme/'+getProgID+'/partners'
+	else
+		getProgID = wildCardData.gsub('/components', '')
+		redirect '/programme/'+getProgID+'/summary'
+	end
+	#redirect '/search_p'
+end
+
 # Project summary page
-get '/projects/*/summary' do
+get '/programme/*/summary' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
@@ -459,7 +483,7 @@ get '/projects/*/summary' do
 end
 
 # Project documents page
-get '/projects/*/documents/?' do
+get '/programme/*/documents/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
@@ -476,7 +500,7 @@ get '/projects/*/documents/?' do
 end
 
 #Project transactions page
-get '/projects/*/transactions/?' do
+get '/programme/*/transactions/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
@@ -492,7 +516,7 @@ get '/projects/*/transactions/?' do
 end
 
 #Project transactions page
-get '/projects/*/components/?' do
+get '/programme/*/projects/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
@@ -650,7 +674,7 @@ end
 ######################################################################
 ######################################################################
 #Project partners page
-get '/projects/*/partners/?' do
+get '/programme/*/partners/?' do
 	n = ERB::Util.url_encode (params['splat'][0]).to_s
 	check_if_project_exists(n)
 	# get the project data from the API
