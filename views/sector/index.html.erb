@@ -14,18 +14,43 @@
         </div>
         <h2 class="govuk-heading-m">Sector Breakdown</h2>
 
+        <div class="app-sectors-v2 govuk-!-margin-bottom-8">
+            <% (high_level_sector_list['sectorsData'] || []).each do |sector| %>
+                <div class="app-sectors-v2--container">
+                    <div class="app-sector-v2">
+                        <div class="app-sector-v2--icon">
+                            <a href="/sector/<%=sector['code']%>"><img src="/assets/images/sectors/<%=sector['code']%>.svg" alt="<%=sector['name']%>"></a>
+                        </div>
+                        <div class="govuk-!-margin-top-3 govuk-!-margin-left-2">
+                            <span class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"><a href="/sector/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a></span>
+                            <span class="govuk-heading-m">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %></span>
+                        </div>
+                    </div>
+                     <div class="app-progress-bar-v2">
+                            <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*sector['budget'].to_f/high_level_sector_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>
+                            <div class="app-progress-bar__background">
+                                <div class="app-progress-bar__meter sector-meter<%=sector['code']%>" style="opacity: 0.5; width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
+                            </div>
+                        </div>
+                </div>
+             <% end %>
+        </div>
 
-        <div class="app-sectors govuk-!-margin-bottom-5">
+
+        <div class="app-sectors govuk-!-margin-bottom-5" style="margin-top: 30px;">
             <% (high_level_sector_list['sectorsData'] || []).each do |sector| %>
                 <div class="app-sectors--container">
                     <div class="app-sector">
-                        <span class="govuk-body-s"><a href="/sector/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a></span>
-                        <a href="/sector/<%=sector['code']%>"><img src="/assets/images/sectors/<%=sector['code']%>.png" alt="<%=sector['name']%>"></a>
-                        <span class="govuk-heading-m govuk-!-margin-top-3">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %></span>
+                        <div class="app-sector--icon sector<%=sector['code']%>"">
+                            <a href="/sector/<%=sector['code']%>"><img src="/assets/images/sectors/<%=sector['code']%>.svg" alt="<%=sector['name']%>"></a>
+                        </div>
+                        <span class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"><a href="/sector/<%=sector['code']%>" class="govuk-link"><%=sector['name']%></a></span>
+                        
+                        <span class="govuk-heading-m">&pound;<%=format_round_m sector['budget'].to_f || 0.0 %></span>
                         <div class="app-progress-bar">
                             <span class="govuk-body-xs govuk-!-margin-bottom-0 app-progress-bar__label"><%budgetPercentage = 100*sector['budget'].to_f/high_level_sector_list['totalBudget'].to_f %><%=format_percentage budgetPercentage %></span>
                             <div class="app-progress-bar__background">
-                                <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
+                                <div class="app-progress-bar__meter sector-meter<%=sector['code']%>" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
                             </div>
                         </div>
                     </div>

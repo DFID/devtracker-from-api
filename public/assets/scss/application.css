@@ -9349,11 +9349,380 @@ table.dataTable thead .sorting_desc span::after {
 .app-sector {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid #b1b4b6;
+}
+.app-sector--icon {
   padding: 20px 10px;
+  text-align: center;
+}
+.app-sector--icon img {
+  height: 70px;
+}
+.app-sector .app-progress-bar {
+  margin-bottom: 20px;
+}
+
+.sector1 {
+  background-color: #f5212f30;
+  border: 1px solid #f5212f;
+}
+
+.sector2 {
+  background-color: #2690b030;
+  border: 1px solid #2690b0;
+}
+
+.sector3 {
+  background-color: #1d70b830;
+  border: 1px solid #1d70b8;
+}
+
+.sector4 {
+  background-color: #fc403230;
+  border: 1px solid #f5212f;
+}
+
+.sector5 {
+  background-color: #44567f30;
+  border: 1px solid #44567f;
+}
+
+.sector6 {
+  background-color: #61862530;
+  border: 1px solid #618625;
+}
+
+.sector7 {
+  background-color: #1ab19830;
+  border: 1px solid #1ab198;
+}
+
+.sector8 {
+  background-color: #ca3f9530;
+  border: 1px solid #ca3f95;
+}
+
+.sector9 {
+  background-color: #80224d30;
+  border: 1px solid #80224d;
+}
+
+.sector10 {
+  background-color: #00307830;
+  border: 1px solid #003078;
+}
+
+.sector11 {
+  background-color: #10403c30;
+  border: 1px solid #10403c;
+}
+
+.sector12 {
+  background-color: #58616030;
+  border: 1px solid #586160;
+}
+
+.sector14 {
+  background-color: #01a43730;
+  border: 1px solid #01a437;
+}
+
+.sector15 {
+  background-color: #2f420a30;
+  border: 1px solid #2f420a;
+}
+
+.sector16 {
+  background-color: #d4351c30;
+  border: 1px solid #d4351c;
+}
+
+.sector18 {
+  background-color: #b5884030;
+  border: 1px solid #b58840;
+}
+
+.sector19 {
+  background-color: #4c2c9230;
+  border: 1px solid #4c2c92;
+}
+
+.sector22 {
+  background-color: #dbc02130;
+  border: 1px solid #dbc021;
+}
+
+.sector-meter1 {
+  background-color: #f5212f;
+}
+
+.sector-meter2 {
+  background-color: #2690b0;
+}
+
+.sector-meter3 {
+  background-color: #1d70b8;
+}
+
+.sector-meter4 {
+  background-color: #fc4032;
+}
+
+.sector-meter5 {
+  background-color: #44567f;
+}
+
+.sector-meter6 {
+  background-color: #618625;
+}
+
+.sector-meter7 {
+  background-color: #1ab198;
+}
+
+.sector-meter8 {
+  background-color: #ca3f95;
+}
+
+.sector-meter9 {
+  background-color: #80224d;
+}
+
+.sector-meter10 {
+  background-color: #003078;
+}
+
+.sector-meter11 {
+  background-color: #10403c;
+}
+
+.sector-meter12 {
+  background-color: #586160;
+}
+
+.sector-meter14 {
+  background-color: #01a437;
+}
+
+.sector-meter15 {
+  background-color: #2f420a;
+}
+
+.sector-meter16 {
+  background-color: #d4351c;
+}
+
+.sector-meter18 {
+  background-color: #b58840;
+}
+
+.sector-meter19 {
+  background-color: #4c2c92;
+}
+
+.sector-meter22 {
+  background-color: #dbc021;
+}
+
+.app-sectors-v2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.app-sectors-v2--container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   border: 1px solid #b1b4b6;
 }
-.app-sector img {
-  width: 100%;
+@media (min-width: 568px) {
+  .app-sectors-v2--container {
+    width: calc(50% - 15px);
+  }
+}
+@media (min-width: 1200px) {
+  .app-sectors-v2--container {
+    width: calc(33.33% - 33px);
+  }
+}
+
+.app-sector-v2 {
+  display: flex;
+  flex-direction: row;
+}
+.app-sector-v2--icon {
+  padding: 20px 10px;
+  text-align: center;
+}
+.app-sector-v2--icon img {
+  height: 50px;
+  opacity: 0.5 !important;
+}
+
+.app-progress-bar-v2 {
+  margin: 0 10px 20px;
+}
+
+.sector1 {
+  background-color: #f5212f30;
+  border: 1px solid #f5212f;
+}
+
+.sector2 {
+  background-color: #2690b030;
+  border: 1px solid #2690b0;
+}
+
+.sector3 {
+  background-color: #1d70b830;
+  border: 1px solid #1d70b8;
+}
+
+.sector4 {
+  background-color: #fc403230;
+  border: 1px solid #f5212f;
+}
+
+.sector5 {
+  background-color: #44567f30;
+  border: 1px solid #44567f;
+}
+
+.sector6 {
+  background-color: #61862530;
+  border: 1px solid #618625;
+}
+
+.sector7 {
+  background-color: #1ab19830;
+  border: 1px solid #1ab198;
+}
+
+.sector8 {
+  background-color: #ca3f9530;
+  border: 1px solid #ca3f95;
+}
+
+.sector9 {
+  background-color: #80224d30;
+  border: 1px solid #80224d;
+}
+
+.sector10 {
+  background-color: #00307830;
+  border: 1px solid #003078;
+}
+
+.sector11 {
+  background-color: #10403c30;
+  border: 1px solid #10403c;
+}
+
+.sector12 {
+  background-color: #58616030;
+  border: 1px solid #586160;
+}
+
+.sector14 {
+  background-color: #01a43730;
+  border: 1px solid #01a437;
+}
+
+.sector15 {
+  background-color: #2f420a30;
+  border: 1px solid #2f420a;
+}
+
+.sector16 {
+  background-color: #d4351c30;
+  border: 1px solid #d4351c;
+}
+
+.sector18 {
+  background-color: #b5884030;
+  border: 1px solid #b58840;
+}
+
+.sector19 {
+  background-color: #4c2c9230;
+  border: 1px solid #4c2c92;
+}
+
+.sector22 {
+  background-color: #dbc02130;
+  border: 1px solid #dbc021;
+}
+
+.sector-meter1 {
+  background-color: #f5212f;
+}
+
+.sector-meter2 {
+  background-color: #2690b0;
+}
+
+.sector-meter3 {
+  background-color: #1d70b8;
+}
+
+.sector-meter4 {
+  background-color: #fc4032;
+}
+
+.sector-meter5 {
+  background-color: #44567f;
+}
+
+.sector-meter6 {
+  background-color: #618625;
+}
+
+.sector-meter7 {
+  background-color: #1ab198;
+}
+
+.sector-meter8 {
+  background-color: #ca3f95;
+}
+
+.sector-meter9 {
+  background-color: #80224d;
+}
+
+.sector-meter10 {
+  background-color: #003078;
+}
+
+.sector-meter11 {
+  background-color: #10403c;
+}
+
+.sector-meter12 {
+  background-color: #586160;
+}
+
+.sector-meter14 {
+  background-color: #01a437;
+}
+
+.sector-meter15 {
+  background-color: #2f420a;
+}
+
+.sector-meter16 {
+  background-color: #d4351c;
+}
+
+.sector-meter18 {
+  background-color: #b58840;
+}
+
+.sector-meter19 {
+  background-color: #4c2c92;
+}
+
+.sector-meter22 {
+  background-color: #dbc021;
 }
 
 .app-country-name {

@@ -22,7 +22,7 @@ $sector-22-color: #dbc021;
 $sector: sector;
 $color: color;
 
-.app-sectors {
+.app-sectors-v2 {
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
@@ -31,35 +31,36 @@ $color: color;
         display: flex;
         flex-direction: column;
         width: calc(100%);
+        border: 1px solid $govuk-border-colour;
 
         @media (min-width: 568px) {
             width: calc(50% - 15px);
         }
 
         @media (min-width: 1200px) {
-            width: calc(25% - 25px);
+            width: calc(33.33% - 33px);
         }
     }
 }
 
-.app-sector {
+.app-sector-v2 {
     display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid $govuk-border-colour;
+    flex-direction: row;
+
 
     &--icon {
         padding: 20px 10px;
         text-align: center;
 
         img {
-            height: 70px;
+            height: 50px;
+            opacity: 0.5 !important;
         }
     }
+}
 
-    .app-progress-bar {
-        margin-bottom: 20px;
-    }
-
+.app-progress-bar-v2 {
+    margin: 0 10px 20px;
 }
 
 .sector1 {
