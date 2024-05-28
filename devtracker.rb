@@ -59,12 +59,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -1400,6 +1400,30 @@ get '/test01' do  #homepage
  		:locals => {
  			oipa_api_url: settings.oipa_api_url,
 			 activities: activities
+ 		}
+end
+
+get '/check-index-status' do 
+	apiRouteForDataSetsH1 = 'https://fcdo.iati.cloud/search/activity/?q=iati_identifier:(GB-1-*%20OR%20GB-GOV-1-*)%20AND%20hierarchy:1&rows=0&fl=iati_identifier&facet=on&facet.field=dataset_name'
+	settings.devtracker_page_title = 'Test data'
+	liveData = Oj.load(RestClient.get apiRouteForDataSetsH1)
+	data = liveData['facet_counts']['facet_fields']['dataset_name']
+	dataSetHash = []
+	for i in 1..20 do
+		tempData = {}
+		tempData['setName'] = 'FCDO-SET-'+i.to_s
+		if data.include?('fcdo-set-'+i.to_s)
+			tempData['isParsed'] = 'Yes'
+		else
+			tempData['isParsed'] = 'No'
+		end
+		dataSetHash.push(tempData)
+	end
+	erb :'indexing-status/index',
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			oipa_api_url: settings.oipa_api_url,
+			 dataSetHash: dataSetHash
  		}
 end
 
