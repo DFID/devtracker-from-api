@@ -522,7 +522,8 @@ module ProjectHelpers
                         if t['transaction-type']['code'].to_i == transactionType.to_i
                             tempTransaction = {}
                             receiverOrgType = ''
-                            currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
+                            #currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
+                            currency = t.has_key?('value.currency') ? t['value.currency'] : 'GBP'
                             if t.has_key?('receiver-org')
                                 receiverOrgRef = t['receiver-org']['ref']
                                 if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
