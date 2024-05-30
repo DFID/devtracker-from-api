@@ -1403,6 +1403,30 @@ get '/test01' do  #homepage
  		}
 end
 
+get '/check-index-status' do 
+	apiRouteForDataSetsH1 = 'https://fcdo.iati.cloud/search/activity/?q=iati_identifier:(GB-1-*%20OR%20GB-GOV-1-*)%20AND%20hierarchy:1&rows=0&fl=iati_identifier&facet=on&facet.field=dataset_name'
+	settings.devtracker_page_title = 'Test data'
+	liveData = Oj.load(RestClient.get apiRouteForDataSetsH1)
+	data = liveData['facet_counts']['facet_fields']['dataset_name']
+	dataSetHash = []
+	for i in 1..20 do
+		tempData = {}
+		tempData['setName'] = 'FCDO-SET-'+i.to_s
+		if data.include?('fcdo-set-'+i.to_s)
+			tempData['isParsed'] = 'Yes'
+		else
+			tempData['isParsed'] = 'No'
+		end
+		dataSetHash.push(tempData)
+	end
+	erb :'indexing-status/index',
+ 		:layout => :'layouts/landing', 
+ 		:locals => {
+ 			oipa_api_url: settings.oipa_api_url,
+			 dataSetHash: dataSetHash
+ 		}
+end
+
 #####################################################################
 #  STATIC PAGES
 #####################################################################
