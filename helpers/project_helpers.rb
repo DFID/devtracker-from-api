@@ -525,14 +525,13 @@ module ProjectHelpers
                             #currency = activity.has_key?('default-currency') ? activity['default-currency'] : 'GBP'
                             currency = t.has_key?('value.currency') ? t['value.currency'] : 'GBP'
                             if t.has_key?('receiver-org')
-                                receiverOrgRef = t['receiver-org']['ref']
-                                if !activity['participating_org_ref'].find_index(receiverOrgRef.to_s).nil?
+                                if t['receiver-org'].has_key?('type')
                                     begin
-                                        x = orgTypes.select{|s| s['code'].to_i == activity['participating_org_type'][activity['participating_org_ref'].find_index(receiverOrgRef.to_s)].to_i}.first
+                                        x = orgTypes.select{|s| s['code'].to_i == t['receiver-org']['type'].to_i}.first
                                         receiverOrgType = x['name']
                                     rescue
                                         receiverOrgType = 'N/A'
-                                    end    
+                                    end
                                 else
                                     receiverOrgType = 'N/A'
                                 end
