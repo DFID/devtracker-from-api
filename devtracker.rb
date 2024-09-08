@@ -59,12 +59,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -879,7 +879,8 @@ get '/search_p/?' do
 	if (!params['query'])
 		query= ''
 		filters = []
-		response = 
+		response = {}
+		response['response'] = 
 		{
 			'numFound' => -1,
 			'docs' => []
@@ -893,8 +894,10 @@ get '/search_p/?' do
 		activityStatuses = 'AND activity_status_code:(2)'
 		filters = prepareFilters(query.to_s, 'F')
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-		if(response['numFound'].to_i > 0)
-			response = addTotalBudgetWithCurrency(response)
+		puts response
+		if(response['response']['numFound'].to_i > 0)
+			response['response'] = addTotalBudgetWithCurrency(response['response'])
+			response = addHighlightingToFTSTerms(response)
 		end
 		settings.devtracker_page_title = 'Search Results For : ' + query
 		didYouMeanQuery = sanitize_input(params['query'],"a")
@@ -907,7 +910,7 @@ get '/search_p/?' do
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
-		response: response,
+		response: response['response'],
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
@@ -934,8 +937,9 @@ post '/search_p/?' do
 	end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
+	if(response['response']['numFound'].to_i > 0)
+		response['response'] = addTotalBudgetWithCurrency(response['response'])
+		response = addHighlightingToFTSTerms(response)
 	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	didYouMeanQuery = sanitize_input(params['query'],"a")
@@ -948,7 +952,7 @@ post '/search_p/?' do
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
-		response: response,
+		response: response['response'],
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
@@ -970,8 +974,16 @@ post '/solr-response' do
 	searchType = sanitize_input(params['data']['queryType'],"newId")
 	startPage = sanitize_input(params['data']['page'],"newId")
 	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
+	if searchType == 'F'
+		if(response['response']['numFound'].to_i > 0)
+			response['response'] = addTotalBudgetWithCurrency(response['response'])
+			response = addHighlightingToFTSTerms(response)
+			response = response['response']
+		end
+	else
+		if(response['numFound'].to_i > 0)
+			response = addTotalBudgetWithCurrency(response)
+		end
 	end
 	json :output => response
 end

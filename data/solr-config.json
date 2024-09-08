@@ -1,6 +1,6 @@
 {
     "APILink": "https://fcdo.iati.cloud/",
-    "DefaultFieldsToReturn": "iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative_first, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*, default_currency, activity_date_start_common_f, activity_date_end_common_f, activity_date_start_common, activity_date_end_common",
+    "DefaultFieldsToReturn": "id, iati_identifier, reporting_org_ref, reporting_org_narrative, title_narrative_first, title_narrative, description_narrative, activity_date_iso_date, activity_date_start_actual, activity_date_end_planned, activity_status_code, humanitarian, tag_code, tag, child_aggregation_*, activity_plus_child_aggregation*, activity_aggregation_*, default_currency, activity_date_start_common_f, activity_date_end_common_f, activity_date_start_common, activity_date_end_common",
     "DefaultFieldsToSearch": 
     [
         "title_narrative",
@@ -111,7 +111,7 @@
     {
         "F":
         {
-            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND ",
+            "url": "/search/activity/?hl=on&hl.requireFieldMatch=true&hl.fl=title_narrative,title_narrative_first,description_narrative,iati_identifier,transaction_description_narrative,reporting_org_ref,recipient_country_name,document_link_title_narrative_text,transaction,reporting_org_narrative,participating_org_narrative&q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND ",
             "fieldDependency": "",
             "comments": "This search category is related to the free text search of DevTracker"
         },
@@ -163,5 +163,19 @@
         "projects":
         [
         ]
+    },
+    "HumanReadableTerms": 
+    {
+        "title_narrative": "Title",
+        "description_narrative": "Description",
+        "title_narrative_first": "Title",
+        "iati_identifier": "Programme Id",
+        "transaction_description_narrative": "Transaction Description",
+        "reporting_org_ref": "Reporting Organisation Id",
+        "recipient_country_name": "Recipient Country Name",
+        "document_link_title_narrative_text": "Document Title",
+        "transaction": "Transaction",
+        "reporting_org_narrative": "Reporting Organisation Title",
+        "participating_org_narrative": "Participating Organisation Title"
     }
 }

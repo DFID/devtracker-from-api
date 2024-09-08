@@ -110,7 +110,6 @@ module SolrHelper
             reportingOrgs  = response['facet_counts']['facet_fields'][filter]
             reportingOrgs.each_with_index do |value, index|
                 if index.even?
-                    puts value
                     if(mappedOGDs.has_key?(value))
                         begin
                             finalData.push(populateKeyVal(mappedOGDs[value]['name'], value))
@@ -230,8 +229,9 @@ module SolrHelper
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
             # Get response based on the API responses
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
-            response['response']
+            response
         elsif(queryType == 'R')
             queryCategory = solrConfig['QueryCategories'][queryType]
             preparedFilters = filters
@@ -248,7 +248,6 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
-            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'S')
@@ -359,6 +358,25 @@ module SolrHelper
                 r['totalBudgetWithCurrency'] = Money.new(r['activity_plus_child_aggregation_budget_value_gbp'].to_f*100,'GBP').round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
             else
                 r['totalBudgetWithCurrency'] = Money.new(r['activity_aggregation_budget_value_gbp'].to_f*100,'GBP').round.format(:no_cents_if_whole => true,:sign_before_symbol => false)
+            end
+        end
+        response
+    end
+
+    def addHighlightingToFTSTerms(response)
+        solrConfig = Oj.load(File.read('data/solr-config.json'))
+        hrt = solrConfig['HumanReadableTerms']
+        highlightedTexts = response['highlighting']
+        response['response']['docs'].each do |r|
+            puts r['id']
+            if highlightedTexts.has_key?(r['id'].to_s)
+                if !highlightedTexts[r['id']].empty?
+                    firstElement = highlightedTexts[r['id'].to_s].first
+                    key = firstElement[0]
+                    val = firstElement[1]
+                    r['highlightedKey'] = hrt[key]
+                    r['highlightedValue'] = val
+                end
             end
         end
         response
