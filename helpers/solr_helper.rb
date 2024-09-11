@@ -368,12 +368,20 @@ module SolrHelper
         hrt = solrConfig['HumanReadableTerms']
         highlightedTexts = response['highlighting']
         response['response']['docs'].each do |r|
-            puts r['id']
             if highlightedTexts.has_key?(r['id'].to_s)
                 if !highlightedTexts[r['id']].empty?
                     firstElement = highlightedTexts[r['id'].to_s].first
+                    matchedText = firstElement[1].first.to_s
+                    startingTextIndex = matchedText.index('<em>')
+                    if startingTextIndex > 15
+                        matchedText = matchedText[(startingTextIndex-15),matchedText.length]
+                    end
+                    endingTextIndex = matchedText.index('</em>') #length is 7. found at spot 2+5.
+                    if matchedText.length > endingTextIndex + 5 + 12
+                        matchedText = matchedText[0..(endingTextIndex + 5 + 12)]
+                    end
                     key = firstElement[0]
-                    val = firstElement[1]
+                    val = '... ' + matchedText + ' ....'
                     r['highlightedKey'] = hrt[key]
                     r['highlightedValue'] = val
                 end

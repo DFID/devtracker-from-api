@@ -894,7 +894,6 @@ get '/search_p/?' do
 		activityStatuses = 'AND activity_status_code:(2)'
 		filters = prepareFilters(query.to_s, 'F')
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-		puts response
 		if(response['response']['numFound'].to_i > 0)
 			response['response'] = addTotalBudgetWithCurrency(response['response'])
 			response = addHighlightingToFTSTerms(response)

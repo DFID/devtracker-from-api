@@ -229,7 +229,7 @@
                         <%if item.has_key?('highlightedKey')%>
                             <span class="text-highlighting" style="color: grey">
                                 <%begin%>
-                                    <p>Found a match in field: <%=item['highlightedKey']%></p>
+                                    <p>Found a match in field: <%=item['highlightedKey']%> <span><%=item['highlightedValue']%></span></p>
                                 <%rescue%>
                                 <%end%>
                             </span>
