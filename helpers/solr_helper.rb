@@ -371,10 +371,26 @@ module SolrHelper
             if highlightedTexts.has_key?(r['id'].to_s)
                 if !highlightedTexts[r['id']].empty?
                     firstElement = highlightedTexts[r['id'].to_s].first
+                    firstElement[1] = firstElement[1].reject{|k| k.to_s == ''}
                     matchedText = firstElement[1].first.to_s
-                    startingTextIndex = matchedText.index('<em>')
-                    if startingTextIndex > 15
-                        matchedText = matchedText[(startingTextIndex-15),matchedText.length]
+                    begin
+                        startingTextIndex = matchedText.index('<em>')
+                    rescue
+                        startingTextIndex = -1
+                    end
+                    begin
+                        if startingTextIndex > 15
+                            matchedText = matchedText[(startingTextIndex-15),matchedText.length]
+                        end
+                    rescue
+                        puts 'stuck!'
+                        puts matchedText
+                        puts '-=-=-=-=-=-='
+                        puts firstElement
+                        puts 'xx---xx--xx---'
+                        puts matchedText.index('<em>')
+                        puts startingTextIndex
+                        puts '------'
                     end
                     endingTextIndex = matchedText.index('</em>') #length is 7. found at spot 2+5.
                     if matchedText.length > endingTextIndex + 5 + 12
