@@ -78,5 +78,15 @@
 	{
 		"identifiers":"GB-GOV-15",
 		"name": "Department for International Trade"
+	},
+	"DSIT":
+	{
+		"identifiers":"GB-GOV-26",
+		"name": "Department of Science, Innovation and Technology"
+	},
+	"DESNZ":
+	{
+		"identifiers":"GB-GOV-25",
+		"name": "Department for Energy, Security and Net Zero"
 	}
 }

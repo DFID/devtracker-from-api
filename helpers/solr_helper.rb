@@ -266,6 +266,7 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         end
@@ -373,29 +374,7 @@ module SolrHelper
                     firstElement = highlightedTexts[r['id'].to_s].first
                     firstElement[1] = firstElement[1].reject{|k| k.to_s == ''}
                     matchedText = firstElement[1].first.to_s
-                    begin
-                        startingTextIndex = matchedText.index('<em>')
-                    rescue
-                        startingTextIndex = -1
-                    end
-                    begin
-                        if startingTextIndex > 15
-                            matchedText = matchedText[(startingTextIndex-15),matchedText.length]
-                        end
-                    rescue
-                        puts 'stuck!'
-                        puts matchedText
-                        puts '-=-=-=-=-=-='
-                        puts firstElement
-                        puts 'xx---xx--xx---'
-                        puts matchedText.index('<em>')
-                        puts startingTextIndex
-                        puts '------'
-                    end
-                    endingTextIndex = matchedText.index('</em>') #length is 7. found at spot 2+5.
-                    if matchedText.length > endingTextIndex + 5 + 12
-                        matchedText = matchedText[0..(endingTextIndex + 5 + 12)]
-                    end
+                    matchedText = process_string(matchedText)
                     key = firstElement[0]
                     val = '... ' + matchedText + ' ....'
                     r['highlightedKey'] = hrt[key]
@@ -404,5 +383,36 @@ module SolrHelper
             end
         end
         response
+    end
+
+    def process_string(input)
+        # Find the index of the <em> tag
+        em_start = input.index("<em>")
+        em_end = input.index("</em>") + "</em>".length
+      
+        # Handle if <em> tags are not found
+        return "" if em_start.nil? || em_end.nil?
+      
+        # Split the string into words
+        words = input.split
+      
+        # 1. Get the first string with one or two words before "<em>"
+        # Find the index of the word containing "<em>"
+        em_word_index = words.index { |word| word.include?("<em>") }
+      
+        # Take one or two words before the "<em>"
+        first_string = words[[0, em_word_index - 2].max..em_word_index - 1].join(" ")
+      
+        # 2. Extract the substring inside <em> tags
+        em_string = input[em_start...em_end]
+      
+        # 3. Get two or three words after "</em>"
+        after_em_index = words.index { |word| word.include?("</em>") } + 1
+        last_string = words[after_em_index, 3].join(" ")
+      
+        # Combine all three parts together
+        final_string = [first_string, em_string, last_string].join(" ")
+      
+        return final_string
     end
 end

@@ -58,5 +58,13 @@
 	"gb-gov-15":
 	{
 		"name": "Department for International Trade"
+	},
+	"gb-gov-26":
+	{
+		"name": "Department of Science, Innovation and Technology"
+	},
+	"gb-gov-25":
+	{
+		"name": "Department for Energy, Security and Net Zero"
 	}
 }
