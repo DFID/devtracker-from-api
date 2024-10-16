@@ -4,10 +4,21 @@
         {
             "name":"Foreign, Commonwealth and Development Office",
             "year":"2023",
-            "value": 2954,
-            "percentage": 19.30,
+            "value": 9491,
+            "percentage": 61.90,
             "shortName": "FCDO",
             "note": "This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately."
+        }
+    ],
+    "HO":
+    [
+        {
+            "name":"Home Office",
+            "year":"2023",
+            "value": 2954,
+            "percentage": 19.30,
+            "shortName": "Home Office",
+            "note": ""
         }
     ],
     "DH":
@@ -112,7 +123,7 @@
     "DCMS":
     [
         {
-            "name":"Department for Digital, Culture, Media and Sports",
+            "name":"Department for Culture, Media and Sport",
             "year":"2023",
             "value": 10,
             "percentage": 0.1,
@@ -157,21 +168,10 @@
     [
         {
             "name":"Department for Business, Energy and Industrial Strategy",
-            "year":"2021",
-            "value": 929,
-            "percentage": 8.1,
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
             "shortName": "BEIS",
-            "note": ""
-        }
-    ],
-    "HO":
-    [
-        {
-            "name":"Home Office",
-            "year":"2021",
-            "value": 915,
-            "percentage": 8.0,
-            "shortName": "Home Office",
             "note": ""
         }
     ],
@@ -179,9 +179,9 @@
     [
         {
             "name":"Cabinet Office",
-            "year":"2021",
-            "value": 108,
-            "percentage": 0.9,
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
             "shortName": "CO",
             "note": ""
         }
@@ -190,9 +190,9 @@
     [
         {
             "name":"Cross-Government Prosperity Fund",
-            "year":"2021",
-            "value": 53,
-            "percentage": 0.5,
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
             "shortName": "CGPF",
             "note": ""
         }
@@ -201,8 +201,8 @@
     [
         {
             "name":"Department of International Trade",
-            "year":"2021",
-            "value": 0.4,
+            "year":"2023",
+            "value": 0,
             "percentage": 0.0,
             "shortName": "DIT",
             "note": ""
