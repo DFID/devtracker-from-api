@@ -3,43 +3,21 @@
     [
         {
             "name":"Foreign, Commonwealth and Development Office",
-            "year":"2021",
-            "value": 8308,
-            "percentage": 72.3,
+            "year":"2023",
+            "value": 9491,
+            "percentage": 61.90,
             "shortName": "FCDO",
             "note": "This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately."
-        }
-    ],
-    "BEIS":
-    [
-        {
-            "name":"Department for Business, Energy and Industrial Strategy",
-            "year":"2021",
-            "value": 929,
-            "percentage": 8.1,
-            "shortName": "BEIS",
-            "note": ""
         }
     ],
     "HO":
     [
         {
             "name":"Home Office",
-            "year":"2021",
-            "value": 915,
-            "percentage": 8.0,
+            "year":"2023",
+            "value": 2954,
+            "percentage": 19.30,
             "shortName": "Home Office",
-            "note": ""
-        }
-    ],
-    "CSSF":
-    [
-        {
-            "name":"Conflict, Stability and Security Fund",
-            "year":"2021",
-            "value": 430,
-            "percentage": 3.7,
-            "shortName": "CSSF",
             "note": ""
         }
     ],
@@ -47,54 +25,43 @@
     [
         {
             "name":"Department of Health and Social Care",
-            "year":"2021",
-            "value": 223,
-            "percentage": 1.9,
+            "year":"2023",
+            "value": 535,
+            "percentage": 3.50,
             "shortName": "DoH",
             "note": ""
         }
     ],
-    "CO":
+    "MHCLG":
     [
         {
-            "name":"Cabinet Office",
-            "year":"2021",
-            "value": 108,
-            "percentage": 0.9,
-            "shortName": "CO",
+            "name":"Ministry of Housing, Communities and Local Government",
+            "year":"2023",
+            "value": 466,
+            "percentage": 3.00,
+            "shortName": "MHCLG",
             "note": ""
         }
     ],
-    "DEFRA":
+    "DESNZ":
     [
         {
-            "name":"Department for Environment Food and Rural Affairs",
-            "year":"2021",
-            "value": 76,
-            "percentage": 0.7,
-            "shortName": "DEFRA",
+            "name":"Department for Energy Security and Net Zero",
+            "year":"2023",
+            "value": 440,
+            "percentage": 2.90,
+            "shortName": "DESNZ",
             "note": ""
         }
     ],
-    "PF":
+    "CSSF":
     [
         {
-            "name":"Cross-Government Prosperity Fund",
-            "year":"2021",
-            "value": 53,
-            "percentage": 0.5,
-            "shortName": "CGPF",
-            "note": ""
-        }
-    ],
-    "DFE":
-    [
-        {
-            "name":"Department for Education",
-            "year":"2021",
-            "value": 18,
-            "percentage": 0.2,
-            "shortName": "DoE",
+            "name":"UK Integrated Security Fund",
+            "year":"2023",
+            "value": 326,
+            "percentage": 2.10,
+            "shortName": "CSSF",
             "note": ""
         }
     ],
@@ -102,32 +69,43 @@
     [
         {
             "name":"Department for Work and Pensions",
-            "year":"2021",
-            "value": 9,
-            "percentage": 0.1,
+            "year":"2023",
+            "value": 257,
+            "percentage": 1.70,
             "shortName": "DWP",
             "note": ""
         }
     ],
-    "DCMS":
+    "DFE":
     [
         {
-            "name":"Department for Culture, Media and Sports",
-            "year":"2021",
-            "value": 7,
-            "percentage": 0.1,
-            "shortName": "DCMS",
+            "name":"Department for Education",
+            "year":"2023",
+            "value": 169,
+            "percentage": 1.10,
+            "shortName": "DoE",
             "note": ""
         }
     ],
-    "MOD":
+    "DSIT":
     [
         {
-            "name":"Ministry of Defence",
-            "year":"2021",
-            "value": 5,
-            "percentage": 0.0,
-            "shortName": "MOD",
+            "name":"Department for Science, Innovation and Technology",
+            "year":"2023",
+            "value": 167,
+            "percentage": 1.10,
+            "shortName": "DSIT",
+            "note": ""
+        }
+    ],
+    "DEFRA":
+    [
+        {
+            "name":"Department for Environment Food and Rural Affairs",
+            "year":"2023",
+            "value": 165,
+            "percentage": 1.10,
+            "shortName": "DEFRA",
             "note": ""
         }
     ],
@@ -135,21 +113,21 @@
     [
         {
             "name":"HM Revenue and Customs",
-            "year":"2021",
-            "value": 3,
-            "percentage": 0.0,
+            "year":"2023",
+            "value": 34,
+            "percentage": 0.20,
             "shortName": "HMRC",
             "note": ""
         }
     ],
-    "HMT":
+    "DCMS":
     [
         {
-            "name":"HM Treasury",
-            "year":"2021",
-            "value": 2,
-            "percentage": 0.0,
-            "shortName": "HMT",
+            "name":"Department for Culture, Media and Sport",
+            "year":"2023",
+            "value": 10,
+            "percentage": 0.1,
+            "shortName": "DCMS",
             "note": ""
         }
     ],
@@ -157,10 +135,65 @@
     [
         {
             "name":"Office for National Statistics",
-            "year":"2021",
-            "value": 2,
+            "year":"2023",
+            "value": 4,
             "percentage": 0.0,
             "shortName": "ONS",
+            "note": ""
+        }
+    ],
+    "MOD":
+    [
+        {
+            "name":"Ministry of Defence",
+            "year":"2023",
+            "value": 4,
+            "percentage": 0.0,
+            "shortName": "MOD",
+            "note": ""
+        }
+    ],
+    "HMT":
+    [
+        {
+            "name":"HM Treasury",
+            "year":"2023",
+            "value": 4,
+            "percentage": 0.0,
+            "shortName": "HMT",
+            "note": ""
+        }
+    ],
+    "BEIS":
+    [
+        {
+            "name":"Department for Business, Energy and Industrial Strategy",
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
+            "shortName": "BEIS",
+            "note": ""
+        }
+    ],
+    "CO":
+    [
+        {
+            "name":"Cabinet Office",
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
+            "shortName": "CO",
+            "note": ""
+        }
+    ],
+    "PF":
+    [
+        {
+            "name":"Cross-Government Prosperity Fund",
+            "year":"2023",
+            "value": 0,
+            "percentage": 0,
+            "shortName": "CGPF",
             "note": ""
         }
     ],
@@ -168,8 +201,8 @@
     [
         {
             "name":"Department of International Trade",
-            "year":"2021",
-            "value": 0.4,
+            "year":"2023",
+            "value": 0,
             "percentage": 0.0,
             "shortName": "DIT",
             "note": ""

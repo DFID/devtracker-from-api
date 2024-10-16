@@ -165,10 +165,10 @@ layout: cw_landing
     <div class="govuk-grid-column-full">
         <div class="app-card app-top10-departments">
             <h4 class="govuk-heading-m">Top 10 departments</h4>
-            <p class="govuk-body-s app-card__intro">UK ODA spend by government department </p>
+            <p class="govuk-body-s app-card__intro">UK ODA spend by government department (<a style="font-size: 12px" target="_BLANK" href="https://www.gov.uk/government/collections/statistics-on-international-development#-statistics-on-international-development:-aid-spend-2023">Source, Statistics on International Development 2023</a>) </p>
             <% odas.each do |oda| %>
                 <div class="app-top10-department">
-                    <%if oda[0]=='PF' || oda[0]=='CSSF' %>
+                    <%if oda[0]=='PF' || oda[0]=='CSSF' || oda[0]=='MHCLG' || oda[0]=='HMRC' %>
                         <span class="govuk-body-s app-top10-department__name">
                             <%= oda[1][0]["name"] %>
                         </span>

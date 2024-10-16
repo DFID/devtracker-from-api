@@ -110,7 +110,6 @@ module SolrHelper
             reportingOrgs  = response['facet_counts']['facet_fields'][filter]
             reportingOrgs.each_with_index do |value, index|
                 if index.even?
-                    puts value
                     if(mappedOGDs.has_key?(value))
                         begin
                             finalData.push(populateKeyVal(mappedOGDs[value]['name'], value))
@@ -230,8 +229,9 @@ module SolrHelper
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
             # Get response based on the API responses
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
-            response['response']
+            response
         elsif(queryType == 'R')
             queryCategory = solrConfig['QueryCategories'][queryType]
             preparedFilters = filters
@@ -248,7 +248,6 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
-            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         elsif(queryType == 'S')
@@ -267,6 +266,7 @@ module SolrHelper
             if(sortType != '')
                 mainQueryString = mainQueryString + '&sort=' + sortType
             end
+            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response['response']
         end
@@ -362,5 +362,57 @@ module SolrHelper
             end
         end
         response
+    end
+
+    def addHighlightingToFTSTerms(response)
+        solrConfig = Oj.load(File.read('data/solr-config.json'))
+        hrt = solrConfig['HumanReadableTerms']
+        highlightedTexts = response['highlighting']
+        response['response']['docs'].each do |r|
+            if highlightedTexts.has_key?(r['id'].to_s)
+                if !highlightedTexts[r['id']].empty?
+                    firstElement = highlightedTexts[r['id'].to_s].first
+                    firstElement[1] = firstElement[1].reject{|k| k.to_s == ''}
+                    matchedText = firstElement[1].first.to_s
+                    matchedText = process_string(matchedText)
+                    key = firstElement[0]
+                    val = '... ' + matchedText + ' ....'
+                    r['highlightedKey'] = hrt[key]
+                    r['highlightedValue'] = val
+                end
+            end
+        end
+        response
+    end
+
+    def process_string(input)
+        # Find the index of the <em> tag
+        em_start = input.index("<em>")
+        em_end = input.index("</em>") + "</em>".length
+      
+        # Handle if <em> tags are not found
+        return "" if em_start.nil? || em_end.nil?
+      
+        # Split the string into words
+        words = input.split
+      
+        # 1. Get the first string with one or two words before "<em>"
+        # Find the index of the word containing "<em>"
+        em_word_index = words.index { |word| word.include?("<em>") }
+      
+        # Take one or two words before the "<em>"
+        first_string = words[[0, em_word_index - 2].max..em_word_index - 1].join(" ")
+      
+        # 2. Extract the substring inside <em> tags
+        em_string = input[em_start...em_end]
+      
+        # 3. Get two or three words after "</em>"
+        after_em_index = words.index { |word| word.include?("</em>") } + 1
+        last_string = words[after_em_index, 3].join(" ")
+      
+        # Combine all three parts together
+        final_string = [first_string, em_string, last_string].join(" ")
+      
+        return final_string
     end
 end

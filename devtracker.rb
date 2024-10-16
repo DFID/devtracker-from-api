@@ -80,7 +80,7 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+set :goverment_department_ids, 'GB-GOV-25,GB-GOV-26,GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
 #set :goverment_department_ids, 'GB-GOV-1,GB-1'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
@@ -879,7 +879,8 @@ get '/search_p/?' do
 	if (!params['query'])
 		query= ''
 		filters = []
-		response = 
+		response = {}
+		response['response'] = 
 		{
 			'numFound' => -1,
 			'docs' => []
@@ -893,8 +894,9 @@ get '/search_p/?' do
 		activityStatuses = 'AND activity_status_code:(2)'
 		filters = prepareFilters(query.to_s, 'F')
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-		if(response['numFound'].to_i > 0)
-			response = addTotalBudgetWithCurrency(response)
+		if(response['response']['numFound'].to_i > 0)
+			response['response'] = addTotalBudgetWithCurrency(response['response'])
+			response = addHighlightingToFTSTerms(response)
 		end
 		settings.devtracker_page_title = 'Search Results For : ' + query
 		didYouMeanQuery = sanitize_input(params['query'],"a")
@@ -907,7 +909,7 @@ get '/search_p/?' do
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
-		response: response,
+		response: response['response'],
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
@@ -934,8 +936,9 @@ post '/search_p/?' do
 	end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
+	if(response['response']['numFound'].to_i > 0)
+		response['response'] = addTotalBudgetWithCurrency(response['response'])
+		response = addHighlightingToFTSTerms(response)
 	end
   	settings.devtracker_page_title = 'Search Results For : ' + query
 	didYouMeanQuery = sanitize_input(params['query'],"a")
@@ -948,7 +951,7 @@ post '/search_p/?' do
 		oipa_api_url: settings.oipa_api_url,
 		query: query,
 		filters: filters,
-		response: response,
+		response: response['response'],
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
@@ -970,8 +973,16 @@ post '/solr-response' do
 	searchType = sanitize_input(params['data']['queryType'],"newId")
 	startPage = sanitize_input(params['data']['page'],"newId")
 	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
-	if(response['numFound'].to_i > 0)
-		response = addTotalBudgetWithCurrency(response)
+	if searchType == 'F'
+		if(response['response']['numFound'].to_i > 0)
+			response['response'] = addTotalBudgetWithCurrency(response['response'])
+			response = addHighlightingToFTSTerms(response)
+			response = response['response']
+		end
+	else
+		if(response['numFound'].to_i > 0)
+			response = addTotalBudgetWithCurrency(response)
+		end
 	end
 	json :output => response
 end
