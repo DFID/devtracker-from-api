@@ -627,7 +627,7 @@ module ProjectHelpers
                 finalPage = p * count
                 tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
-                transactionsJSON.push(tempData)
+                transactionsJSON.concat(tempData)
             end
         end
         if numOTransactions > 0
