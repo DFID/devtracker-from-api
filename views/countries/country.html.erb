@@ -31,15 +31,15 @@
             <div class="govuk-inset-text">Given the current security situation in Ukraine, FCDO has temporarily removed Ukraine-related HMG ODA Programme information from Devtracker. This is a temporary measure to ensure the safety of partners.</div>
         <%end%>
 
-        <h2 class="govuk-heading-m">Summary</h2>
-
+        <%# <h2 class="govuk-heading-m">Summary</h2> %>
+        <div class="govuk-inset-text govuk-!-margin-bottom-8">Further Reading: <a href="https://www.gov.uk/government/collections/country-and-regional-development-partnership-summaries" target="_BLANK">Country and regional development partnership summaries</a></div>
         <% if country['description'].length > 0%>
-                <div class="app-country-description"><%= markdown_to_html(country['description'])%></div>
-                <div class="govuk-inset-text govuk-!-margin-bottom-8">Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.</div>
+                <div class="app-country-description"><%#= markdown_to_html(country['description'])%></div>
+                <%# <div class="govuk-inset-text govuk-!-margin-bottom-8">Note: Many country summaries were written prior to the creation of the Foreign, Commonwealth and Development Office, and are being incrementally refreshed.</div> %>
         <%else%>
-            <p class="govuk-body">
+            <%# <p class="govuk-body">
                 Description Not Available.
-            </p>
+            </p> %>
         <%end%>             
 
         <div id="countryMap" class="countryMap"></div>
