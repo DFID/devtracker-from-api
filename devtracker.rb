@@ -934,6 +934,17 @@ post '/search_p/?' do
 	else
 		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
 	end
+	if(!query.start_with?("\""))
+		tempQ = '"' + query + '"'
+		isInIdentifier = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=iati_identifier:#{tempQ}&fl=iati_identifier&rows=1")
+        isInTitle = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=title_narrative_text:#{tempQ}&fl=iati_identifier&rows=1")
+		checkInID = Oj.load(isInIdentifier)
+		checkInTitle = Oj.load(isInTitle)
+		if(checkInID['response']['numFound'].to_i == 1 || checkInTitle['response']['numFound'].to_i == 1)
+			query = tempQ
+		else
+		end
+	end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 	if(response['response']['numFound'].to_i > 0)
