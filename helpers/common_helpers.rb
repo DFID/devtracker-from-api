@@ -1,4 +1,5 @@
 require "active_support/all"
+require 'fileutils'
 
 include ActionView::Helpers::NumberHelper
 
@@ -1265,8 +1266,26 @@ end
     output
   end
 
-  ###############################
-  def generateCountryDatav5()
+  ##############################
+  def generateCountryDatav6()
+    csv_filename = 'data/cache/budget_data.csv'
+    new_file = !File.exist?(csv_filename)
+    FileUtils.touch(csv_filename) if new_file
+    # unless File.exist?(csv_filename)
+    #   # Create the file if it doesn't exist
+    #   FileUtils.touch(csv_filename)
+    #   puts "Created new file: #{csv_filename}"
+    # else
+    #   puts "File already exists: #{csv_filename}"
+    # end
+    # File.open(csv_filename, 'a') do |file|
+    #   if new_file
+    #     headers = "Data_Point,Value,Timestamp\n"
+    #     file.write(headers)
+    #     puts "Added headers to #{csv_filename}"
+    #   end
+    #   file.write('abc,xyz,kjds')
+    # end
     count = 20
     newApiCall = settings.oipa_api_url + "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
     ##pagination stuff
@@ -1300,11 +1319,133 @@ end
     fcdoCountryProjectTracker = {}
     countryDataHash = {}
     ##
+    File.open(csv_filename, 'a') do |file|
+      if new_file
+        headers = "reporting_org,iati_identifier,recipient_country,recipient_percentage,countryCount,TotalbudgetAmount,start_date,end_date\n"
+        file.write(headers)
+        puts "Added headers to #{csv_filename}"
+      end
+      pulledData.each do |element|
+        ######New 2.0 version starts here#####
+        tempTotalBudget = 0
+        ## Process total budget value first
+        if(element['reporting_org_ref'].to_s == 'GB-GOV-1')
+          if element.has_key?('related_budget_value')
+            element['related_budget_value'].each_with_index do |data, index|
+              if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+                tempTotalBudget = tempTotalBudget + data.to_f
+                file.write("#{element['reporting_org_ref']},#{element['iati_identifier']},-,-,#{element['recipient_country_code'].size},#{data.to_f},#{element['related_budget_period_start_iso_date'][index]},#{element['related_budget_period_end_iso_date'][index]}\n")
+              end
+            end
+          end
+        else
+          if element.has_key?('budget_value')
+            element['budget_value'].each_with_index do |data, index|
+              if(element['budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
+                tempTotalBudget = tempTotalBudget + data.to_f
+                file.write("#{element['reporting_org_ref']},#{element['iati_identifier']},-,-,#{element['recipient_country_code'].size},#{data.to_f},#{element['budget_period_start_iso_date'][index]},#{element['budget_period_end_iso_date'][index]}\n")
+              end
+            end
+          end
+        end
+        ## Process project budget and count now
+        if element.has_key?('recipient_country_code')
+          element['recipient_country_code'].each_with_index do |c, i|
+            countryPercentage = element.has_key?('recipient_country_percentage') ? element['recipient_country_percentage'][i].to_f : 100
+            countryBudget = tempTotalBudget*countryPercentage/100
+            if(projectDataHash.has_key?(c))
+              if(element['activity_status_code'].to_i == 2)
+                projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+              end
+              projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
+            else
+              projectDataHash[c] = {}
+              if c =='FK'
+                projectDataHash[c]["country"] = 'Falkland Islands'
+              elsif c =='PS'
+                projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+              else
+                projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end# element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
+              end
+              projectDataHash[c]["id"] = c
+              if(element['activity_status_code'].to_i == 2)
+                projectDataHash[c]["projects"] = 1
+              else
+                projectDataHash[c]["projects"] = 0
+              end
+              projectDataHash[c]["budget"] = countryBudget.round(2)
+              projectDataHash[c]["flag"] = '/images/flags/' + c.downcase + '.png'
+            end
+          end
+        end
+        ######New 2.0 version ends here#######
+      end
+    end
+    finalOutput = Array.new
+    finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
+    finalOutput.push(projectDataHash)
+    output = {}
+    output['map_data'] = finalOutput
+    output
+  end
+  ###############################
+  def generateCountryDatav5()
+    # csv_filename = 'data/cache/budget_data.csv'
+    # new_file = !File.exist?(csv_filename)
+    # FileUtils.touch(csv_filename) if new_file
+    # # unless File.exist?(csv_filename)
+    # #   # Create the file if it doesn't exist
+    # #   FileUtils.touch(csv_filename)
+    # #   puts "Created new file: #{csv_filename}"
+    # # else
+    # #   puts "File already exists: #{csv_filename}"
+    # # end
+    # File.open(csv_filename, 'a') do |file|
+    #   if new_file
+    #     headers = "Data_Point,Value,Timestamp\n"
+    #     file.write(headers)
+    #     puts "Added headers to #{csv_filename}"
+    #   end
+    #   file.write('abc,xyz,kjds')
+    # end
+    count = 20
+    newApiCall = settings.oipa_api_url + "activity?q=hierarchy:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date&start=0&rows=#{count}"
+    ##pagination stuff
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=hierarchy:2 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,budget_value,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref,related_budget_value,related_budget_period_start_quarter,related_budget_period_end_quarter,related_budget_period_start_iso_date,related_budget_period_end_iso_date,&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            pulledData.push(item)
+          end
+      end
+    end
+    puts ('Activity count: ' + pulledData.count.to_s)
+    sectorHierarchy = JSON.parse(File.read('data/sectorHierarchies.json'))
+    projectDataHash = {}
+    currentFinYear = financial_year
+    firstDayOfFinYear = first_day_of_financial_year(DateTime.now)
+    lastDayOfFinYear = last_day_of_financial_year(DateTime.now)
+    ##
+    fcdoCountryProjectTracker = {}
+    countryDataHash = {}
+    ##
     pulledData.each do |element|
       ######New 2.0 version starts here#####
       tempTotalBudget = 0
       ## Process total budget value first
-      if(element['reporting_org_ref'].to_s == 'GB-GOV-1')
+      if(element['reporting_org_ref'].to_s != 'GB-GOV-1')
         if element.has_key?('related_budget_value')
           element['related_budget_value'].each_with_index do |data, index|
             if(element['related_budget_period_start_iso_date'][index].to_datetime >= firstDayOfFinYear && element['related_budget_period_end_iso_date'][index].to_datetime <= lastDayOfFinYear)
