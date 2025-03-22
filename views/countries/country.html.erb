@@ -105,13 +105,14 @@
                 </p>
 
                 <div class="govuk-!-margin-top-4">
-                    <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(0)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
+                    <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(2)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
                     <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
                     <span class="govuk-body-s app-chart-row__chart--intro govuk-!-margin-bottom-0">Current finacial year - <%= current_financial_year %></span>
                     <% if(country['code'] == 'UA2') %>
                         <span class="govuk-heading-l govuk-!--padding-top-1">£0</span>
                     <%else%>
-                        <span class="govuk-heading-l govuk-!-padding-top-1"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                        <%# <span class="govuk-heading-l govuk-!-padding-top-1"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%#=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(2))%><%#</span> %>
+                        <span class="govuk-heading-l govuk-!-padding-top-1">£<%= number_to_human(tempOnlyValue.to_f.round(2), :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })%></span>
                     <%end%>
                 </div>                
 
