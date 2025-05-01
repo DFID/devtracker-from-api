@@ -27,7 +27,7 @@ module ProjectHelpers
             isGovOrgPresent = false
             orgData = response['response']['docs'].first['participating_org_ref']
             orgData.each do |item|
-                if item[0, 6] == "GB-GOV" || item[0, 4] == "GB-1"
+                if item[0, 6] == "GB-GOV" || item[0, 4] == "GB-1" || item[0, 15] == 'GB-COH-RC000346' || item[0, 15] == 'GB-COH-03877777'
                     isGovOrgPresent = true
                     break
                 end
@@ -42,6 +42,7 @@ module ProjectHelpers
     end
 
     def get_h1_project_detailsv2(projectId)
+        projectId = escape_url_component(projectId)
         oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}&fl=*")
         project = JSON.parse(oipa)['response']['docs'].first
         project

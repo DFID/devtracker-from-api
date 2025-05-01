@@ -18,9 +18,9 @@ module RegionHelpers
     #budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})
     regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
     region = regionInfo.select {|region| region['code'] == regionCode}.first
-    totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
-    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:GB-GOV-* AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
+    totalProjectCount = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    totalActiveProjects = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND activity_status_code:2 AND hierarchy:1&fl=iati_identifier&start=0&rows=1")['response']['numFound']
+    allRelatedctivities = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=recipient_region_code:#{regionCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND activity_status_code:2 AND hierarchy:1&fl=related_budget_period_end_quarter,related_budget_period_start_quarter,recipient_region_code,recipient_region_percentage,activity_plus_child_aggregation_budget_value_gbp,related_budget_period_start_iso_date,related_budget_period_end_iso_date,related_budget_value&start=0&rows=1")['response']['docs']
     totalRegionBudget = 0
     currentFinYear = financial_year
     allRelatedctivities.each do |activity|
@@ -60,6 +60,102 @@ module RegionHelpers
       :regionBudget => totalRegionBudget.round(2),
       :regionBudgetCurrency => "GBP",
       :projectBudgetPercentToDfidBudget => 0
+    }
+  end
+
+  def get_region_detailsv3(regionCode)
+    call = settings.oipa_api_url + "activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_region_code:#{regionCode}&fl=iati_identifier&rows=0"
+    pd = RestClient.get call
+    pd  = JSON.parse(pd)
+    activeProgrammes = pd['response']['numFound'].to_i
+    programmeCount = 0
+    regionCurFinBudget = 0
+    count = 20
+    activityTracker = Set.new
+    newApiCall = settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=reporting_org_ref,recipient_region_code,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=0&rows=#{count}"
+    ##pagination stuff
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=recipient_region_code,reporting_org_ref,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            pulledData.push(item)
+          end
+      end
+    end
+    projectDataHash = {}
+    ##
+    fcdoCountryProjectTracker = {}
+    countryDataHash = {}
+    pulledData.each do |element|
+      ######New 2.0 version starts here#####
+      tempTotalBudget = 0
+      element['budget_value_gbp'].each_with_index do |data, index|
+        if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+          tempTotalBudget = tempTotalBudget + data.to_f
+        end
+      end
+      ## Process project budget and count now
+      # Get the parent identifier for this activity
+      # if element["hierarchy"].to_i != 1
+      #   parentProgrammeID = element['related_activity_ref'][find_string_index(element['related_activity_type'],"1")]
+      # else
+      #   parentProgrammeID = element['iati_identifier']
+      # end
+      # if activityTracker.include?(parentProgrammeID)
+      #   isNewProgramme = false
+      # else
+      #   isNewProgramme = true
+      #   activityTracker.add(parentProgrammeID)
+      # end
+      element['recipient_region_code'].each_with_index do |c, i|
+        if c.to_s == regionCode.to_s
+          c = c.to_s
+          if element.has_key?('recipient_region_percentage')
+            regionPercentage = element['recipient_region_percentage'][i].to_f
+          else
+            regionPercentage = 100
+          end
+          regionBudget = tempTotalBudget*regionPercentage/100
+          if(projectDataHash.has_key?(c))
+            # if(isNewProgramme)
+            #   projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+            # end
+            projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + regionBudget).round(2)
+          else
+            projectDataHash[c] = {}
+            projectDataHash[c]["id"] = c
+            projectDataHash[c]["projects"] = activeProgrammes
+            projectDataHash[c]["budget"] = regionBudget.round(2)
+          end
+        end
+      end
+    end
+    regionCurFinBudget = projectDataHash[regionCode]["budget"]
+    programmeCount = activeProgrammes
+    #############################
+    regionInfo = JSON.parse(File.read('data/dfidRegions.json'))
+    region = regionInfo.select {|region| region['code'] == regionCode}.first
+    returnObject = {
+      :code => region['code'],
+      :name => region['name'],
+      :description => region['descriptions'],
+      :type => region['type'],
+      :url => region['url'],
+      :totalActiveProjects => programmeCount,
+      :regionBudget => regionCurFinBudget.round(2),
+      :regionBudgetCurrency => "GBP",
     }
   end
 

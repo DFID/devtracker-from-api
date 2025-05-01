@@ -199,6 +199,7 @@ module CountryHelpers
   end
 
   def get_country_or_regionv2(projectId)
+    projectId = escape_url_component(projectId)
     countryOrRegionAPI = RestClient.get  api_simple_log(settings.oipa_api_url + "/activity/?q=iati_identifier:#{projectId}&fl=iati_identifier,recipient_country_name,recipient_country_code,recipient_region_code,recipient_region_name,recipient_country_percentage,recipient_region_percentage")
     countryOrRegionData = JSON.parse(countryOrRegionAPI)['response']['docs'].first
     countries = []
@@ -335,9 +336,33 @@ module CountryHelpers
     data
   end
 
+  def projectCounter(countryCode)
+    activityTracker = Set.new
+    newApiCall = settings.oipa_api_url + "activity?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:"+countryCode+"&fl=iati_identifier,budget_period_start_iso_date,budget_period_end_iso_date,hierarchy,related_activity_type,related_activity_ref&start=0&rows=7000"
+    puts newApiCall
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    pulledData = pd['response']['docs']
+    pulledData.each do |element|
+      if element["hierarchy"].to_i != 1
+        parentProgrammeID = element['related_activity_ref'][find_string_index(element['related_activity_type'],"1")]
+      else
+        parentProgrammeID = element['iati_identifier']
+      end
+      if activityTracker.include?(parentProgrammeID)
+        isNewProgramme = false
+      else
+        isNewProgramme = true
+        activityTracker.add(parentProgrammeID)
+      end
+    end
+    puts "activity count: #{activityTracker.size()}"
+    activityTracker.size()
+  end
+
   def budgetBarGraphDataDv3(countryCode)
     #Process budgets
-    apiData = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=budget_value_gbp:* AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
+    apiData = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:GB-GOV-* AND recipient_country_code:#{countryCode} AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=related_budget_period_end_iso_date,recipient_country_percentage,recipient_country_code,related_budget_period_start_iso_date,related_budget_value,related_budget_period_start_quarter,reporting_org_narrative,reporting_org_ref,budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=10000")
     apiData = JSON.parse(apiData)['response']['docs']
     fyTracker = []
     repOrgs = {}
@@ -373,13 +398,13 @@ module CountryHelpers
               fyTracker.push(fy)
             end
           end
-          tempT = {}
-            tempT['rep-org'] = element['reporting_org_ref']
-            tempT['startDate'] = element['budget_period_start_iso_date'][index]
-            tempT['endDate'] = element['budget_period_end_iso_date'][index]
-            tempT['countryPercentage'] = countryPercentage
-            tempT['cBudget'] = data.to_f*countryPercentage/100
-            tracker.append(tempT)
+          # tempT = {}
+          # tempT['rep-org'] = element['reporting_org_ref']
+          # tempT['startDate'] = element['budget_period_start_iso_date'][index]
+          # tempT['endDate'] = element['budget_period_end_iso_date'][index]
+          # tempT['countryPercentage'] = countryPercentage
+          # tempT['cBudget'] = data.to_f*countryPercentage/100
+          # tracker.append(tempT)
         end
       end
       # if(element['reporting_org_ref'].to_s == 'GB-GOV-1' || element['reporting_org_ref'].to_s == 'GB-1')
@@ -639,7 +664,7 @@ end
   end
   
   def total_country_budget_locationv2
-    newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:*&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
+    newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:* AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*)&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
     pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
     totalBudget = 0
@@ -656,19 +681,6 @@ end
     end
     totalAmount = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
     totalAmount
-    ########
-    #oipa 3.1
-    # totalCountryBudgetLocation = RestClient.get  api_simple_log(settings.oipa_api_url + "budgets/aggregations/?reporting_organisation_identifier=#{settings.goverment_department_ids}&group_by=recipient_country&aggregations=value&budget_period_start=#{firstDayOfFinYear}&budget_period_end=#{lastDayOfFinYear}&format=json&order_by=-value")
-    # totalCountryBudgetLocation = JSON.parse(totalCountryBudgetLocation)
-    # totalAmount = 0.0
-    # totalCountryBudgetLocation['results'].each do |countryBudgets|
-    #   #oipa 2.2
-    #   #totalAmount = totalAmount + countryBudgets['budget'].to_f
-    #   #oipa 3.1
-    #   totalAmount = totalAmount + countryBudgets['value'].to_f
-    # end
-    # totalAmount = (format_million_stg totalAmount.to_f).to_s.gsub("&pound;","")
-    # totalAmount
   end
 
   def total_country_budget_location
