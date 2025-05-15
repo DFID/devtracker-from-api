@@ -168,6 +168,7 @@ module RegionHelpers
         newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:* AND -recipient_region_code:998&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
       else
         newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        puts newApiCall
       end
       pulledData = RestClient.get newApiCall
       pulledData  = JSON.parse(pulledData)['response']['docs']
@@ -192,7 +193,10 @@ module RegionHelpers
           end
         end
       end
-             
+      if regionType == 'global'
+        globaldata = allRegionsChartData.filter{|item| item['code'].to_s == '998'}
+        allRegionsChartData = globaldata
+      end
       # Find the total budget for all of the Regions
       totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
 

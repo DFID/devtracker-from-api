@@ -664,16 +664,23 @@ end
   end
   
   def total_country_budget_locationv2
-    newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:* AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*)&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name&rows=50000"
+    newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_country_code:* AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*)&fl=recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,recipient_region_percentage&rows=50000"
     pulledData = RestClient.get newApiCall
     pulledData  = JSON.parse(pulledData)['response']['docs']
     totalBudget = 0
     pulledData.each do |element|
+      totalRegionPercentage = 0
+      if element.has_key?('recipient_region_percentage')
+        element['recipient_region_percentage'].each do |p|
+          totalRegionPercentage = totalRegionPercentage + p
+        end
+      end
+      totalCountryPercentage = 100 - totalRegionPercentage
       if (element.has_key?('recipient_country_code'))
         tempTotalBudget = 0
         element['budget_period_start_iso_date'].each_with_index do |data, index|
             if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
-                tempTotalBudget = tempTotalBudget + element['budget_value_gbp'][index].to_f
+                tempTotalBudget = tempTotalBudget + (element['budget_value_gbp'][index].to_f*(totalCountryPercentage/100))
             end
         end
         totalBudget = totalBudget + tempTotalBudget

@@ -116,11 +116,11 @@ layout: cw_landing
     </div>
 </div>-->
 
-<h2 class="govuk-heading-l">UK Government priorities</h2>
+<%# <h2 class="govuk-heading-l">UK Government priorities</h2> %>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
         <div class="app-card">
-            <h4 class="govuk-heading-m">Top 10 things we do</h4>
+            <h4 class="govuk-heading-m">What we do</h4>
             <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">
                 The sectors that Programmes have allocated their budget to, consistent with the Development Assistance Committee's classifications.
             </p>
@@ -143,7 +143,7 @@ layout: cw_landing
     </div>
     <div class="govuk-grid-column-one-half">
         <div class="app-card">
-            <h4 class="govuk-heading-m">Top 10 places we work</h4>
+            <h4 class="govuk-heading-m">Where we work</h4>
             <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">The countries where most money has been identified as being spent.</p>
             <%if !top_5_countries.nil? %>
                 <div class="app-progress-bar">
@@ -165,7 +165,7 @@ layout: cw_landing
     <div class="govuk-grid-column-full">
         <div class="app-card app-top10-departments">
             <h4 class="govuk-heading-m">Top 10 departments</h4>
-            <p class="govuk-body-s app-card__intro">UK ODA spend by government department (<a style="font-size: 12px" target="_BLANK" href="https://www.gov.uk/government/collections/statistics-on-international-development#-statistics-on-international-development:-aid-spend-2023">Source, Statistics on International Development 2023</a>) </p>
+            <p class="govuk-body-s app-card__intro">UK ODA spend by government department (<a style="font-size: 12px" target="_BLANK" href="https://www.gov.uk/government/collections/statistics-on-international-development#statistics-on-international-development:-uk-oda-spend-2024">Source, Statistics on International Development 2024</a>) </p>
             <% odas.each do |oda| %>
                 <div class="app-top10-department">
                     <%if oda[0]=='PF' || oda[0]=='CSSF' || oda[0]=='MHCLG' || oda[0]=='HMRC' %>
