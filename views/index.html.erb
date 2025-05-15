@@ -121,9 +121,6 @@ layout: cw_landing
     <div class="govuk-grid-column-one-half">
         <div class="app-card">
             <h4 class="govuk-heading-m">What we do</h4>
-            <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">
-                The sectors that Programmes have allocated their budget to, consistent with the Development Assistance Committee's classifications.
-            </p>
             <%if !what_we_do.nil? %>
                 <div class="app-progress-bar">
                     <% what_we_do.each do |item|%>
@@ -144,7 +141,6 @@ layout: cw_landing
     <div class="govuk-grid-column-one-half">
         <div class="app-card">
             <h4 class="govuk-heading-m">Where we work</h4>
-            <p class="govuk-body-s app-card__intro app-card__intro--fixed-height">The countries where most money has been identified as being spent.</p>
             <%if !top_5_countries.nil? %>
                 <div class="app-progress-bar">
                     <% top_5_countries.each do |item|%>
