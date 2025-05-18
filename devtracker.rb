@@ -364,7 +364,7 @@ get '/regions/:region_code/?' do |n|
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
-			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value_gbp,budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=10000')),
+			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=iati_identifier:GB-GOV-10-DHSC_WHO_core AND recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=iati_identifier,budget_value_gbp,budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=10000')),
  			mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
@@ -1002,7 +1002,7 @@ post '/solr-response' do
 end
 
 get '/regions/?' do
-	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
+	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380 OR 1031 OR 619 OR 1027 OR 789 OR 889 OR 689 OR 489 OR 1029 OR 1030)'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)

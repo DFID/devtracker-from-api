@@ -496,8 +496,7 @@ module CountryHelpers
   def get_country_region_yearwise_budget_graph_datav2(apiLink)
     yearWiseBudgets = Oj.load(apiLink)['response']['docs']
     budgetYearData = financial_year_wise_budgetsv2(yearWiseBudgets,"C")
-
-end
+  end
 
   def get_reporting_orgWise_yearly_country_budgets(apiLink)
     allBudgets = Oj.load(apiLink)

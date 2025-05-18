@@ -136,16 +136,19 @@ end
 def get_actual_budget_per_fyv2(yearWiseBudgets)
   hash = {}
   yearWiseBudgets.each do |project|
-    if project.has_key?('budget_period_start_iso_date')
-      project['budget_period_start_iso_date'].each_with_index do |data, index|
-        t = Time.parse(data)
-        fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-        if hash.has_key?(fy)
-          hash[fy] = hash[fy] + project['budget_value_gbp'][index]
-        else
-          hash[fy] = project['budget_value_gbp'][index]
+    begin
+      if project.has_key?('budget_period_start_iso_date')
+        project['budget_period_start_iso_date'].each_with_index do |data, index|
+          t = Time.parse(data)
+          fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+          if hash.has_key?(fy)
+            hash[fy] = hash[fy] + project['budget_value_gbp'][index]
+          else
+            hash[fy] = project['budget_value_gbp'][index]
+          end
         end
       end
+    rescue
     end
   end
   finalData = []
