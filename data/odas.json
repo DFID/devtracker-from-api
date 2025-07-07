@@ -54,14 +54,14 @@
             "note": ""
         }
     ],
-    "CSSF":
+    "UKISF":
     [
         {
             "name":"UK Integrated Security Fund",
             "year":"2023",
             "value": 326,
             "percentage": 2.10,
-            "shortName": "CSSF",
+            "shortName": "UKISF",
             "note": ""
         }
     ],
