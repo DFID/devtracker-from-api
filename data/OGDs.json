@@ -41,7 +41,7 @@
 	},
 	"HMRC":
 	{
-		"identifiers":"x",
+		"identifiers":"GB-GOV-11",
 		"name": "HM Revenue and Customs"
 	},
 	"MOD":
@@ -88,5 +88,15 @@
 	{
 		"identifiers":"GB-GOV-25",
 		"name": "Department for Energy, Security and Net Zero"
+	},
+	"UKISF":
+	{
+		"identifiers":"GB-GOV-53",
+		"name": "UK Integrated Security Fund"
+	},
+	"MHCLG":
+	{
+		"identifiers":"GB-GOV-27",
+		"name": "Ministry for Housing Communities and Local Government"
 	}
 }

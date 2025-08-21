@@ -164,7 +164,7 @@ layout: cw_landing
             <p class="govuk-body-s app-card__intro">UK ODA spend by government department (<a style="font-size: 12px" target="_BLANK" href="https://www.gov.uk/government/collections/statistics-on-international-development#statistics-on-international-development:-uk-oda-spend-2024">Source, Statistics on International Development 2024</a>) </p>
             <% odas.each do |oda| %>
                 <div class="app-top10-department">
-                    <%if oda[0]=='PF' || oda[0]=='CSSF' || oda[0]=='MHCLG' || oda[0]=='HMRC' %>
+                    <%if oda[0]=='PF' || oda[0]=='CSSF' %>
                         <span class="govuk-body-s app-top10-department__name">
                             <%= oda[1][0]["name"] %>
                         </span>
