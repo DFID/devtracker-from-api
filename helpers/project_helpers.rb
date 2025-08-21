@@ -32,6 +32,12 @@ module ProjectHelpers
                     break
                 end
             end
+            elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+            if elist.length > 0
+                if elist.include?(projectId.to_s)
+                    isGovOrgPresent = false
+                end
+            end
             if !isGovOrgPresent
                 halt 404, "Activity not found"
             end

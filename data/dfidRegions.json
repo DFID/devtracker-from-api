@@ -68,5 +68,75 @@
     "description":"",
     "type":"Global",
     "url":"https://iati.fcdo.gov.uk/iati_files/Region/DFID-Developing-countries-unspecified-998-1.xml"   
+  },
+  {
+    "code":"1031",
+    "name":"Caribbean",
+    "description":"",
+    "type":"Regional",
+    "url":""   
+  },
+  {
+    "code":"619",
+    "name":"Central Asia",
+    "description":"",
+    "type":"Regional",
+    "url":""   
+  },
+  {
+    "code":"1027",
+    "name":"Eastern Africa",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"789",
+    "name":"Far East Asia",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"889",
+    "name":"Oceania",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"689",
+    "name":"South & Central Asia",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"489",
+    "name":"South America",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"1029",
+    "name":"Southern Africa",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"1030",
+    "name":"Western Africa",
+    "description":"",
+    "type":"Regional",
+    "url":""
+  },
+  {
+    "code":"498",
+    "name":"America",
+    "description":"",
+    "type":"Regional",
+    "url":""
   }
 ]  

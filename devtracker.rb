@@ -61,12 +61,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
- set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+#set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 #set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -82,8 +82,8 @@ Money.default_currency = "GBP"
 
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
-set :goverment_department_ids, 'GB-GOV-25,GB-GOV-26,GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
-#set :goverment_department_ids, 'GB-GOV-1,GB-1'
+set :goverment_department_ids, 'GB-GOV-11,GB-GOV-14,GB-GOV-27,GB-GOV-53,GB-GOV-25,GB-GOV-26,GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
+#set :goverment_department_ids, 'GB-GOV-26,GB-GOV-1,GB-GOV-13,GB-GOV-10'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -130,12 +130,14 @@ get '/' do  #homepage
 		## calculate the budget amount against that perentage and add it to
 		## the high level related sector code
 		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		
 		pulledData = RestClient.get newApiCall
 		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
 		what_we_do = getCacheData('what_we_do')
 	else
 		what_we_do = getCacheData('what_we_do')
 	end
+	
 	whatWeDoTotal = what_we_do.first['budget']
 	top5countries = top5countries.select{|i| i.has_key?('budget')}
 	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
@@ -897,6 +899,19 @@ get '/search_p/?' do
 		activityStatuses = 'AND activity_status_code:(2)'
 		filters = prepareFilters(query.to_s, 'F')
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+		##Clean any unnecessary activity
+		## TODO
+		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		if elist.length > 0
+			tempResponseList = response['response']['docs']
+			tempResponseList.each do |data|
+				if elist.include?(data['iati_identifier'])
+					tempResponseList.delete(data)
+				end
+			end
+			response['response']['docs'] = tempResponseList
+		end
+		##
 		if(response['response']['numFound'].to_i > 0)
 			response['response'] = addTotalBudgetWithCurrency(response['response'])
 			response = addHighlightingToFTSTerms(response)
@@ -951,6 +966,19 @@ post '/search_p/?' do
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 	if(response['response']['numFound'].to_i > 0)
+		##Clean any unnecessary activity
+		## TODO
+		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		if elist.length > 0
+			tempResponseList = response['response']['docs']
+			tempResponseList.each do |data|
+				if elist.include?(data['iati_identifier'])
+					tempResponseList.delete(data)
+				end
+			end
+			response['response']['docs'] = tempResponseList
+		end
+		##
 		response['response'] = addTotalBudgetWithCurrency(response['response'])
 		response = addHighlightingToFTSTerms(response)
 	end

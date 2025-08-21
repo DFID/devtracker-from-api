@@ -64,6 +64,11 @@ module RegionHelpers
   end
 
   def get_region_detailsv3(regionCode)
+    if regionCode != '998'
+      exclude998 = ' AND -recipient_region_code:998'
+    else
+      exclude998 = ''
+    end
     call = settings.oipa_api_url + "activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_region_code:#{regionCode}&fl=iati_identifier&rows=0"
     pd = RestClient.get call
     pd  = JSON.parse(pd)
@@ -72,7 +77,9 @@ module RegionHelpers
     regionCurFinBudget = 0
     count = 20
     activityTracker = Set.new
-    newApiCall = settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=reporting_org_ref,recipient_region_code,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=0&rows=#{count}"
+    newApiCall = settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})#{exclude998}&fl=reporting_org_ref,recipient_region_code,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=0&rows=#{count}"
+    puts newApiCall
+    puts 'xxxx'
     ##pagination stuff
     page = 1
     page = page.to_i - 1
@@ -87,7 +94,7 @@ module RegionHelpers
       for p in 2..pages do
           p = p - 1
           finalPage = p * count
-          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})&fl=recipient_region_code,reporting_org_ref,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=#{finalPage}&rows=#{count}")
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=recipient_region_code:#{regionCode} AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")})#{exclude998}&fl=recipient_region_code,reporting_org_ref,recipient_region_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,hierarchy,related_activity_type,related_activity_ref&start=#{finalPage}&rows=#{count}")
           tempData = tempData['response']['docs']
           tempData.each do |item|
             pulledData.push(item)
@@ -100,38 +107,28 @@ module RegionHelpers
     countryDataHash = {}
     pulledData.each do |element|
       ######New 2.0 version starts here#####
+      totalCountryPercentage = 0
+      if element.has_key?('recipient_country_percentage')
+        element['recipient_country_percentage'].each do |p|
+          totalCountryPercentage = totalCountryPercentage + p
+        end
+      end
       tempTotalBudget = 0
       element['budget_value_gbp'].each_with_index do |data, index|
         if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
           tempTotalBudget = tempTotalBudget + data.to_f
         end
       end
-      ## Process project budget and count now
-      # Get the parent identifier for this activity
-      # if element["hierarchy"].to_i != 1
-      #   parentProgrammeID = element['related_activity_ref'][find_string_index(element['related_activity_type'],"1")]
-      # else
-      #   parentProgrammeID = element['iati_identifier']
-      # end
-      # if activityTracker.include?(parentProgrammeID)
-      #   isNewProgramme = false
-      # else
-      #   isNewProgramme = true
-      #   activityTracker.add(parentProgrammeID)
-      # end
       element['recipient_region_code'].each_with_index do |c, i|
         if c.to_s == regionCode.to_s
           c = c.to_s
           if element.has_key?('recipient_region_percentage')
             regionPercentage = element['recipient_region_percentage'][i].to_f
           else
-            regionPercentage = 100
+            regionPercentage = 100-totalCountryPercentage
           end
           regionBudget = tempTotalBudget*regionPercentage/100
           if(projectDataHash.has_key?(c))
-            # if(isNewProgramme)
-            #   projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
-            # end
             projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + regionBudget).round(2)
           else
             projectDataHash[c] = {}
@@ -142,6 +139,7 @@ module RegionHelpers
         end
       end
     end
+    puts projectDataHash
     regionCurFinBudget = projectDataHash[regionCode]["budget"]
     programmeCount = activeProgrammes
     #############################
@@ -163,9 +161,75 @@ module RegionHelpers
         regionsList = JSON.parse(File.read('data/dfidRegions.json')).select{|r| r["type"]==regionType}.sort_by{ |k| k["name"]}    
     end
 
-    def dfid_regional_projects_datav2(regionType)
+  def dfid_regional_projects_datav2(regionType)
+      if regionType == 'all'
+        newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:* AND -recipient_region_code:998&fl=recipient_country_percentage,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        puts newApiCall
+      else
+        newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_country_percentage,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        puts newApiCall
+      end
+      pulledData = RestClient.get newApiCall
+      pulledData  = JSON.parse(pulledData)['response']['docs']
+      allRegionsChartData = []
+      pulledData.each do |element|
+        if (element.has_key?('recipient_region_code'))
+          totalCountryPercentage = 0
+          if element.has_key?('recipient_country_percentage')
+            element['recipient_country_percentage'].each do |p|
+              totalCountryPercentage = totalCountryPercentage + p
+            end
+          end
+          tempTotalBudget = 0
+          element['budget_value_gbp'].each_with_index do |data, index|
+            if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+              tempTotalBudget = tempTotalBudget + data.to_f
+            end
+          end
+          element['recipient_region_code'].each_with_index do |c, i|
+            if element.has_key?('recipient_region_percentage')
+              regionPercentage = element['recipient_region_percentage'][i].to_f
+            else
+              regionPercentage = 100-totalCountryPercentage
+            end
+            if !allRegionsChartData.find_index{|k,_| k['code'].to_i == c.to_i}.nil?
+              allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == c.to_i}]['budget'] = allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == c.to_i}]['budget'] + (tempTotalBudget*regionPercentage/100).round(2)
+            else
+              tempRegionData = {}
+              tempRegionData['region'] = element['recipient_region_name'][i].to_s.gsub(", regional","")
+              tempRegionData['code'] = c.to_i
+              tempRegionData['budget'] = (tempTotalBudget*regionPercentage/100).round(2)
+              tempRegionData['projects'] = 1
+              allRegionsChartData.push(tempRegionData)
+            end
+          end
+        end
+      end
+      if regionType == 'global'
+        globaldata = allRegionsChartData.filter{|item| item['code'].to_s == '998'}
+        allRegionsChartData = globaldata
+      end
+      # Find the total budget for all of the Regions
+      totalBudget = Float(allRegionsChartData.map { |s| s["budget"].to_f }.inject(:+))
+
+      # Format the Budget for use on the region chart
+      totalBudgetFormatted = (format_million_stg totalBudget.to_f).to_s.gsub("&pound;","")
+
+      # Format the output of the chart data
+      allRegionsChartDataFormatted = allRegionsChartData.to_s.gsub("=>",":")
+
+      returnObject = {
+          :regionsDataJSON => allRegionsChartData,
+          :regionsData => allRegionsChartDataFormatted,            
+          :totalBudget => totalBudget,  
+          :totalBudgetFormatted => totalBudgetFormatted                              
+      }
+    end
+
+    def dfid_regional_projects_datav2_backup(regionType)
       if regionType == 'all'
         newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:* AND -recipient_region_code:998&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
+        puts newApiCall
       else
         newApiCall = settings.oipa_api_url + "activity?q=budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND recipient_region_code:(998)&fl=recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_region_name,sector_code,sector_percentage,hierarchy,related_activity_type,related_activity_ref&rows=50000"
         puts newApiCall
@@ -174,7 +238,13 @@ module RegionHelpers
       pulledData  = JSON.parse(pulledData)['response']['docs']
       allRegionsChartData = []
       pulledData.each do |element|
-        if (element.has_key?('recipient_region_code'))
+        if (ele ment.has_key?('recipient_region_code'))
+          totalCountryPercentage = 0
+          if element.has_key?('recipient_country_percentage')
+            element['recipient_country_percentage'].each do |p|
+              totalCountryPercentage = totalCountryPercentage + p
+            end
+          end
           tempTotalBudget = 0
           element['budget_period_start_iso_date'].each_with_index do |data, index|
             if(data.to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
@@ -182,12 +252,22 @@ module RegionHelpers
             end
           end
           if !allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}.nil?
-            allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] = allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] + tempTotalBudget
+            if element.has_key?('recipient_region_percentage')
+              regionPercentage = element['recipient_region_percentage'][i].to_f
+            else
+              regionPercentage = 100-totalCountryPercentage
+            end
+            allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] = allRegionsChartData[allRegionsChartData.find_index{|k,_| k['code'].to_i == element['recipient_region_code'].first.to_i}]['budget'] + (tempTotalBudget*regionPercentage/100).round(2)
           else
             tempRegionData = {}
             tempRegionData['region'] = element['recipient_region_name'].first.to_s.gsub(", regional","")
             tempRegionData['code'] = element['recipient_region_code'].first.to_i
-            tempRegionData['budget'] = tempTotalBudget
+            begin
+              tempRegionData['budget'] = (tempTotalBudget*regionPercentage/100).round(2)
+            rescue
+              puts regionPercentage
+              puts tempTotalBudget
+            end
             tempRegionData['projects'] = 1
             allRegionsChartData.push(tempRegionData)
           end

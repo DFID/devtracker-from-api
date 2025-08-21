@@ -1422,7 +1422,6 @@ end
     page = page.to_i - 1
     finalPage = page * count
     ######
-    puts newApiCall
     pd = RestClient.get newApiCall
     pd  = JSON.parse(pd)
     numOActivities = pd['response']['numFound'].to_i
@@ -1446,6 +1445,12 @@ end
     ##
     pulledData.each do |element|
       ######New 2.0 version starts here#####
+      totalRegionPercentage = 0
+      if element.has_key?('recipient_region_percentage')
+        element['recipient_region_percentage'].each do |p|
+          totalRegionPercentage = totalRegionPercentage + p
+        end
+      end
       tempTotalBudget = 0
       element['budget_value_gbp'].each_with_index do |data, index|
         if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
@@ -1480,7 +1485,7 @@ end
         if element.has_key?('recipient_country_percentage')
           countryPercentage = element['recipient_country_percentage'][i].to_f
         else
-          countryPercentage = 100
+          countryPercentage = ((100-totalRegionPercentage)/element['recipient_country_code'].length).round(2)
         end
         countryBudget = tempTotalBudget*countryPercentage/100
         totalB = totalB + countryBudget
@@ -1518,8 +1523,6 @@ end
     finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
     finalOutput.push(projectDataHash)
     output = {}
-    puts 'Total budget: ' + totalB.to_s
-    puts 'Total budget no country filter: ' + totalB_s.to_s
     output['map_data'] = finalOutput
     output
   end
