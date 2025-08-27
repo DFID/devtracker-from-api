@@ -28,7 +28,7 @@
                                 <div class="app-progress-bar__meter" style="width:calc(<%=format_percentage (budgetPercentage)%> + 25px);"></div>
                             </div>
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=format_round_m category['budget'].to_f || 0.0 %>"><span class="sector-value">&pound;<%=format_round_m category['budget'].to_f || 0.0 %></span></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" data-sort-value="<%=category['budget'].to_i || 0.0 %>"><span class="sector-value">&pound;<%=format_round_m category['budget'].to_f || 0.0 %></span></td>
                     </tr>
                 <% end %>
             </tbody>
@@ -38,12 +38,18 @@
 </div>
 
 <script src="/javascripts/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/javascripts/any-number.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $('.datatable').DataTable({
         "info": false,
         "paging": false,
-        "searching": false        
+        "searching": false,
+        "columns": [
+            null,
+            { type: 'any-number' }
+         ],
+         "order": [[1, 'desc']]  
         });
     });
 </script>
