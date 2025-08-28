@@ -54,6 +54,7 @@ $(document).ready(function () {
   });
   // Create a blank array that will hold the country list for drawing border polygons
   var countryList = [];
+  var tcl = [];
   // Set the zoom level based on the type of map
   if (mapType == 'country') {
     if (countryBounds[window.countryCode][2] != null) {
@@ -100,29 +101,50 @@ $(document).ready(function () {
     $.each(countryMapData, function (i, v) {
       var calculatedOpacity = calculateOpacity(v.extra.budget, maxBudget);
       var fOpacity = 0.8;
-      // if (v.extra.id == 'SO') {
-      //   calculatedOpacity = 0;
-      //   fOpacity = 0;
-      // }
-      var tempMapBorder = {
-        "type": "Feature",
-        "properties": {
-          "popupContent": getPopupHTML(v.extra),
-          "style": {
-            stroke: true,
-            weight: 1,
-            color: "white",
-            opacity: calculatedOpacity,
-            fillColor: calculateBrightness(v.extra.budget, maxBudget),
-            fillOpacity: fOpacity
+      if (v.extra.id == 'SO' || v.extra.id == '-99SOM') {
+        calculatedOpacity = 0;
+        fOpacity = 0;
+        var tempMapBorder = {
+          "type": "Feature",
+          "properties": {
+            "popupContent": getPopupHTML(v.extra),
+            "style": {
+              stroke: true,
+              weight: 0,
+              color: "white",
+              opacity: calculatedOpacity,
+              fillColor: calculateBrightness(v.extra.budget, maxBudget),
+              fillOpacity: fOpacity
+            }
+          },
+          "geometry": {
+            "type": v.geometry.type,
+            "coordinates": v.geometry.coordinates
           }
-        },
-        "geometry": {
-          "type": v.geometry.type,
-          "coordinates": v.geometry.coordinates
-        }
-      };
-      countryList.push(tempMapBorder);
+        };
+        tcl.push(tempMapBorder);
+      }
+      else {
+        var tempMapBorder = {
+          "type": "Feature",
+          "properties": {
+            "popupContent": getPopupHTML(v.extra),
+            "style": {
+              stroke: true,
+              weight: 1,
+              color: "white",
+              opacity: calculatedOpacity,
+              fillColor: calculateBrightness(v.extra.budget, maxBudget),
+              fillOpacity: fOpacity
+            }
+          },
+          "geometry": {
+            "type": v.geometry.type,
+            "coordinates": v.geometry.coordinates
+          }
+        };
+        countryList.push(tempMapBorder);
+      }
     });
     var info = L.control();
 
@@ -234,10 +256,29 @@ $(document).ready(function () {
       return L.circleMarker(latlng, {
         radius: 6,
         fillColor: "red",
-        color: "black",
+        color: "white",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.3
+      });
+    }
+  }).addTo(map);
+
+  L.geoJSON(tcl, {
+    style: function (feature) {
+      return feature.properties && feature.properties.style;
+    },
+
+    onEachFeature: onEachFeature,
+
+    pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, {
+        radius: 6,
+        fillColor: "red",
+        color: "green",
+        weight: 0,
+        opacity: 0,
+        fillOpacity: 0
       });
     }
   }).addTo(map);
