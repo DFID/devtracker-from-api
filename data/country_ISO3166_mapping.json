@@ -202,6 +202,7 @@
 	"SV":"SLV",
 	"SM":"SMR",
 	"SO":"SOM",
+	"-99SOM": "-99SOM",
 	"PM":"SPM",
 	"RS":"SRB",
 	"SS":"SSD",

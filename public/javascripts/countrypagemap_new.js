@@ -87,9 +87,9 @@ $(document).ready(function () {
         "coordinates": window.coordinates
       }
     };
-    if(window.countryCode != 'SO') {
-      countryList.push(mapBorder);
-    }
+    // if(window.countryCode != 'SO') {
+    //   countryList.push(mapBorder);
+    // }
   }
   else if (mapType == 'location') {
     map = new L.Map('countryMap', {
@@ -104,7 +104,6 @@ $(document).ready(function () {
       //   calculatedOpacity = 0;
       //   fOpacity = 0;
       // }
-      
       var tempMapBorder = {
         "type": "Feature",
         "properties": {

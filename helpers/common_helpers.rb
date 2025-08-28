@@ -1394,23 +1394,22 @@ end
   
   def generateCountryDatav7()
     ###
-    filename = "data/cache/dumped-data.csv"
-    new_file = !File.exist?(filename)
-    FileUtils.touch(filename) if new_file
-    puts new_file ? "Created new file: #{filename}" : "File already exists: #{filename}"
-    File.open(filename, 'a') do |file|
-      # Write headers if it's a new file
-      if new_file
-        headers = "countryCode,percentileBudget,totalBudget,iati_identifier\n"
-        file.write(headers)
-      end
+    # filename = "data/cache/dumped-data.csv"
+    # new_file = !File.exist?(filename)
+    # FileUtils.touch(filename) if new_file
+    # File.open(filename, 'a') do |file|
+    #   # Write headers if it's a new file
+    #   if new_file
+    #     headers = "countryCode,percentileBudget,totalBudget,iati_identifier\n"
+    #     file.write(headers)
+    #   end
   
-      # 3.times do
-      #   # Generate a random line (you can customize this)
-      #   random_line = "#{rand(1..100)},#{rand(1..50)},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
-      #   file.write(random_line)
-      # end
-    end
+    #   # 3.times do
+    #   #   # Generate a random line (you can customize this)
+    #   #   random_line = "#{rand(1..100)},#{rand(1..50)},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
+    #   #   file.write(random_line)
+    #   # end
+    # end
     ####
     totalB = 0
     totalB_s = 0
@@ -1489,10 +1488,10 @@ end
         end
         countryBudget = tempTotalBudget*countryPercentage/100
         totalB = totalB + countryBudget
-        File.open(filename, 'a') do |file|
-          row = "#{c},#{countryBudget},#{tempTotalBudget},#{element['iati_identifier']}\n"
-          file.write(row)
-        end
+        # File.open(filename, 'a') do |file|
+        #   row = "#{c},#{countryBudget},#{tempTotalBudget},#{element['iati_identifier']}\n"
+        #   file.write(row)
+        # end
         #budgetTracker = budgetTracker - countryBudget
         if(projectDataHash.has_key?(c))
           # if(isNewProgramme)
@@ -1518,6 +1517,14 @@ end
           projectDataHash[c]["flag"] = '/images/flags/' + c.downcase + '.png'
         end
       end
+    end
+    if(projectDataHash.has_key?('SO'))
+      projectDataHash['-99SOM'] = {}
+      projectDataHash['-99SOM']["id"] = 'SO'
+      projectDataHash['-99SOM']["country"] = projectDataHash['SO']["country"]
+      projectDataHash['-99SOM']["projects"] = projectDataHash['SO']["projects"]
+      projectDataHash['-99SOM']["budget"] = projectDataHash['SO']["budget"]
+      projectDataHash['-99SOM']["flag"] = projectDataHash['SO']["flag"]
     end
     finalOutput = Array.new
     finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
