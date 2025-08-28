@@ -63,7 +63,7 @@ include SolrHelper
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/search/'
