@@ -12,11 +12,9 @@
  * Plain text is ignored; columns with no recognizable numerical content 
  * is pushed to the bottom of the table, both ascending and descending.
  *
- *  @demo http://jsfiddle.net/vkkL5tv7/
- * 
  *  @name Any number
  *  @summary Sort column with mixed numerical content by number
- *  @author [david konrad](davidkonrad at gmail com)
+ *  @author David Konrad
  *
  *  @example
  *    $('#example').dataTable( {
