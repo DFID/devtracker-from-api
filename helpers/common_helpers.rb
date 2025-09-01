@@ -1520,7 +1520,7 @@ end
     end
     if(projectDataHash.has_key?('SO'))
       projectDataHash['-99SOM'] = {}
-      projectDataHash['-99SOM']["id"] = '-99SOM'
+      projectDataHash['-99SOM']["id"] = 'SO'
       projectDataHash['-99SOM']["country"] = projectDataHash['SO']["country"]
       projectDataHash['-99SOM']["projects"] = projectDataHash['SO']["projects"]
       projectDataHash['-99SOM']["budget"] = projectDataHash['SO']["budget"]
