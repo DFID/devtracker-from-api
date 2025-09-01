@@ -117,12 +117,12 @@
         },
         "C":
         {
-            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND ",
+            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND ",
             "fieldDependency": "recipient_country_code"
         },
         "R":
         {
-            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND ",
+            "url": "/search/activity/?q=hierarchy:1 AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND ",
             "fieldDependency": "recipient_region_code"
         },
         "O":

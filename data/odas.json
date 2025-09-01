@@ -3,9 +3,9 @@
     [
         {
             "name":"Foreign, Commonwealth and Development Office",
-            "year":"2023",
-            "value": 9491,
-            "percentage": 61.90,
+            "year":"2024",
+            "value": 9465,
+            "percentage": 67.30,
             "shortName": "FCDO",
             "note": "This figure is calculated by summing the those for the recently combined Department for International Development (DFID) and Foreign and Commonwealth Office (FCO) to reflect the new department. The source data describes these institutions separately."
         }
@@ -14,9 +14,9 @@
     [
         {
             "name":"Home Office",
-            "year":"2023",
-            "value": 2954,
-            "percentage": 19.30,
+            "year":"2024",
+            "value": 2384,
+            "percentage": 17.00,
             "shortName": "Home Office",
             "note": ""
         }
@@ -25,21 +25,10 @@
     [
         {
             "name":"Department of Health and Social Care",
-            "year":"2023",
-            "value": 535,
-            "percentage": 3.50,
+            "year":"2024",
+            "value": 433,
+            "percentage": 3.10,
             "shortName": "DoH",
-            "note": ""
-        }
-    ],
-    "MHCLG":
-    [
-        {
-            "name":"Ministry of Housing, Communities and Local Government",
-            "year":"2023",
-            "value": 466,
-            "percentage": 3.00,
-            "shortName": "MHCLG",
             "note": ""
         }
     ],
@@ -47,8 +36,8 @@
     [
         {
             "name":"Department for Energy Security and Net Zero",
-            "year":"2023",
-            "value": 440,
+            "year":"2024",
+            "value": 408,
             "percentage": 2.90,
             "shortName": "DESNZ",
             "note": ""
@@ -58,32 +47,10 @@
     [
         {
             "name":"UK Integrated Security Fund",
-            "year":"2023",
-            "value": 326,
-            "percentage": 2.10,
+            "year":"2024",
+            "value": 369,
+            "percentage": 2.60,
             "shortName": "UKISF",
-            "note": ""
-        }
-    ],
-    "DWP":
-    [
-        {
-            "name":"Department for Work and Pensions",
-            "year":"2023",
-            "value": 257,
-            "percentage": 1.70,
-            "shortName": "DWP",
-            "note": ""
-        }
-    ],
-    "DFE":
-    [
-        {
-            "name":"Department for Education",
-            "year":"2023",
-            "value": 169,
-            "percentage": 1.10,
-            "shortName": "DoE",
             "note": ""
         }
     ],
@@ -91,9 +58,9 @@
     [
         {
             "name":"Department for Science, Innovation and Technology",
-            "year":"2023",
-            "value": 167,
-            "percentage": 1.10,
+            "year":"2024",
+            "value": 215,
+            "percentage": 1.50,
             "shortName": "DSIT",
             "note": ""
         }
@@ -102,10 +69,43 @@
     [
         {
             "name":"Department for Environment Food and Rural Affairs",
-            "year":"2023",
-            "value": 165,
-            "percentage": 1.10,
+            "year":"2024",
+            "value": 186,
+            "percentage": 1.30,
             "shortName": "DEFRA",
+            "note": ""
+        }
+    ],
+    "MHCLG":
+    [
+        {
+            "name":"Ministry of Housing, Communities and Local Government",
+            "year":"2024",
+            "value": 98,
+            "percentage": 0.7,
+            "shortName": "MHCLG",
+            "note": ""
+        }
+    ],
+    "DWP":
+    [
+        {
+            "name":"Department for Work and Pensions",
+            "year":"2024",
+            "value": 93,
+            "percentage": 0.7,
+            "shortName": "DWP",
+            "note": ""
+        }
+    ],
+    "DFE":
+    [
+        {
+            "name":"Department for Education",
+            "year":"2024",
+            "value": 91,
+            "percentage": 0.6,
+            "shortName": "DoE",
             "note": ""
         }
     ],
@@ -113,9 +113,9 @@
     [
         {
             "name":"HM Revenue and Customs",
-            "year":"2023",
-            "value": 34,
-            "percentage": 0.20,
+            "year":"2024",
+            "value": 13,
+            "percentage": 0.10,
             "shortName": "HMRC",
             "note": ""
         }
@@ -124,8 +124,8 @@
     [
         {
             "name":"Department for Culture, Media and Sport",
-            "year":"2023",
-            "value": 10,
+            "year":"2024",
+            "value": 11,
             "percentage": 0.1,
             "shortName": "DCMS",
             "note": ""
@@ -135,21 +135,10 @@
     [
         {
             "name":"Office for National Statistics",
-            "year":"2023",
+            "year":"2024",
             "value": 4,
             "percentage": 0.0,
             "shortName": "ONS",
-            "note": ""
-        }
-    ],
-    "MOD":
-    [
-        {
-            "name":"Ministry of Defence",
-            "year":"2023",
-            "value": 4,
-            "percentage": 0.0,
-            "shortName": "MOD",
             "note": ""
         }
     ],
@@ -157,10 +146,21 @@
     [
         {
             "name":"HM Treasury",
-            "year":"2023",
+            "year":"2024",
             "value": 4,
             "percentage": 0.0,
             "shortName": "HMT",
+            "note": ""
+        }
+    ],
+    "MOD":
+    [
+        {
+            "name":"Ministry of Defence",
+            "year":"2024",
+            "value": 3,
+            "percentage": 0.0,
+            "shortName": "MOD",
             "note": ""
         }
     ],

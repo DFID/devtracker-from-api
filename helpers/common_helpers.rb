@@ -136,16 +136,19 @@ end
 def get_actual_budget_per_fyv2(yearWiseBudgets)
   hash = {}
   yearWiseBudgets.each do |project|
-    if project.has_key?('budget_period_start_iso_date')
-      project['budget_period_start_iso_date'].each_with_index do |data, index|
-        t = Time.parse(data)
-        fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
-        if hash.has_key?(fy)
-          hash[fy] = hash[fy] + project['budget_value'][index]
-        else
-          hash[fy] = project['budget_value'][index]
+    begin
+      if project.has_key?('budget_period_start_iso_date')
+        project['budget_period_start_iso_date'].each_with_index do |data, index|
+          t = Time.parse(data)
+          fy = if project['budget.period-start.quarter'][index].to_i == 1 then t.year - 1 else t.year end
+          if hash.has_key?(fy)
+            hash[fy] = hash[fy] + project['budget_value_gbp'][index]
+          else
+            hash[fy] = project['budget_value_gbp'][index]
+          end
         end
       end
+    rescue
     end
   end
   finalData = []
@@ -311,9 +314,9 @@ end
 
   def convert_numbers_to_human_readable_format(num)
     begin
-      number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+      number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
     rescue
-      number_to_human(num, :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+      number_to_human(num, :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
     end
   end
 
@@ -1265,6 +1268,273 @@ end
     output
   end
 
+  def find_string_index(string_array, target_string)
+    index = string_array.index(target_string)
+    if index
+      return index
+    else
+      return -1
+    end
+  end
+  ###############################
+  def generateCountryDatav6()
+    count = 20
+    activityTracker = Set.new
+    newApiCall = settings.oipa_api_url + "activity?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,hierarchy,related_activity_type,related_activity_ref&start=0&rows=#{count}"
+    ##pagination stuff
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    puts newApiCall
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=reporting_org_ref,recipient_country_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,hierarchy,related_activity_type,related_activity_ref&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            pulledData.push(item)
+          end
+      end
+    end 
+    projectDataHash = {}
+    ##
+    fcdoCountryProjectTracker = {}
+    countryDataHash = {}
+    ##
+    pulledData.each do |element|
+      ######New 2.0 version starts here#####
+      tempTotalBudget = 0
+      element['budget_value_gbp'].each_with_index do |data, index|
+        if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+          tempTotalBudget = tempTotalBudget + data.to_f
+        end
+      end
+      ## Process project budget and count now
+      # Get the parent identifier for this activity
+      if element["hierarchy"].to_i != 1
+        parentProgrammeID = element['related_activity_ref'][find_string_index(element['related_activity_type'],"1")]
+      else
+        parentProgrammeID = element['iati_identifier']
+      end
+      if activityTracker.include?(parentProgrammeID)
+        isNewProgramme = false
+      else
+        isNewProgramme = true
+        activityTracker.add(parentProgrammeID)
+      end
+      element['recipient_country_code'].each_with_index do |c, i|
+        if element.has_key?('recipient_country_percentage')
+          countryPercentage = element['recipient_country_percentage'][i].to_f
+        else
+          countryPercentage = 100
+        end
+        countryBudget = tempTotalBudget*countryPercentage/100
+        #budgetTracker = budgetTracker - countryBudget
+        if(projectDataHash.has_key?(c))
+          if(isNewProgramme)
+            projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+          end
+          projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
+        else
+          projectDataHash[c] = {}
+          if c =='FK'
+            projectDataHash[c]["country"] = 'Falkland Islands'
+          elsif c =='PS'
+            projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+          else
+            projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end
+          end
+          projectDataHash[c]["id"] = c
+          projectDataHash[c]["projects"] = 1
+          projectDataHash[c]["budget"] = countryBudget.round(2)
+          projectDataHash[c]["flag"] = '/images/flags/' + c.downcase + '.png'
+        end
+      end
+    end
+    finalOutput = Array.new
+    finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
+    finalOutput.push(projectDataHash)
+    output = {}
+    output['map_data'] = finalOutput
+    output
+  end
+  ###############################
+  def escape_url_component(component_string)
+    URI.encode_www_form_component(component_string)
+  end
+
+  def hasSpecialCharacter(input_string)
+    # 1. Remove leading and trailing spaces
+    # The strip method returns a new string with leading and trailing whitespace removed.
+    trimmed_string = input_string.strip
+  
+    # 2. Define the pattern of special characters to look for within the trimmed string.
+    # This regex matches:
+    #   ' '  (a space)
+    #   '/'  (a forward slash)
+    #   '&'  (an ampersand)
+    #   '\\' (a backslash - needs to be escaped in the regex pattern itself)
+    special_chars_regex = /[ \/&\\<?>]/
+  
+    # 3. Check if the trimmed string contains any character matching the regex pattern.
+    # match? returns true if the pattern is found anywhere in the string, false otherwise.
+    if trimmed_string.match?(special_chars_regex)
+      return true
+    else
+      return false
+    end
+  end
+  
+  def generateCountryDatav7()
+    ###
+    # filename = "data/cache/dumped-data.csv"
+    # new_file = !File.exist?(filename)
+    # FileUtils.touch(filename) if new_file
+    # File.open(filename, 'a') do |file|
+    #   # Write headers if it's a new file
+    #   if new_file
+    #     headers = "countryCode,percentileBudget,totalBudget,iati_identifier\n"
+    #     file.write(headers)
+    #   end
+  
+    #   # 3.times do
+    #   #   # Generate a random line (you can customize this)
+    #   #   random_line = "#{rand(1..100)},#{rand(1..50)},#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
+    #   #   file.write(random_line)
+    #   # end
+    # end
+    ####
+    totalB = 0
+    totalB_s = 0
+    count = 20
+    activityTracker = Set.new
+    newApiCall = settings.oipa_api_url + "activity?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=recipient_region_percentage,reporting_org_ref,recipient_country_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,hierarchy,related_activity_type,related_activity_ref&start=0&rows=#{count}"
+    ##pagination stuff
+    page = 1
+    page = page.to_i - 1
+    finalPage = page * count
+    ######
+    pd = RestClient.get newApiCall
+    pd  = JSON.parse(pd)
+    numOActivities = pd['response']['numFound'].to_i
+    pulledData = pd['response']['docs'] 
+    if (numOActivities > count)
+      pages = (numOActivities.to_f/count).ceil
+      for p in 2..pages do
+          p = p - 1
+          finalPage = p * count
+          tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity?q=budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z] AND budget_value_gbp:* AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:*&fl=recipient_region_percentage,reporting_org_ref,recipient_country_percentage,activity_status_code,iati_identifier,budget.period-start.quarter,budget.period-end.quarter,recipient_country_code,budget_period_start_iso_date,budget_period_end_iso_date,budget_value_gbp,recipient_country_name,hierarchy,related_activity_type,related_activity_ref&start=#{finalPage}&rows=#{count}")
+          tempData = tempData['response']['docs']
+          tempData.each do |item|
+            pulledData.push(item)
+          end
+      end
+    end 
+    projectDataHash = {}
+    ##
+    fcdoCountryProjectTracker = {}
+    countryDataHash = {}
+    ##
+    pulledData.each do |element|
+      ######New 2.0 version starts here#####
+      totalRegionPercentage = 0
+      if element.has_key?('recipient_region_percentage')
+        element['recipient_region_percentage'].each do |p|
+          totalRegionPercentage = totalRegionPercentage + p
+        end
+      end
+      tempTotalBudget = 0
+      element['budget_value_gbp'].each_with_index do |data, index|
+        if(element['budget_period_start_iso_date'][index].to_datetime >= settings.current_first_day_of_financial_year && element['budget_period_end_iso_date'][index].to_datetime <= settings.current_last_day_of_financial_year)
+          tempTotalBudget = tempTotalBudget + data.to_f
+          #totalB_s = totalB_s + data.to_f
+        end
+      end
+      # if element.has_key?('recipient_region_percentage')
+      #   puts element['recipient_region_percentage']
+      #   region_percentage = 0
+      #   element['recipient_region_percentage'].each do |p|
+      #     region_percentage = region_percentage + p
+      #   end
+      #   tCountryPercentage = 100 - region_percentage
+      #   tempTotalBudget = tempTotalBudget*(tCountryPercentage/100)
+      #   totalB_s = totalB_s + tempTotalBudget
+      # end
+      ## Process project budget and count now
+      # Get the parent identifier for this activity
+      # if element["hierarchy"].to_i != 1
+      #   parentProgrammeID = element['related_activity_ref'][find_string_index(element['related_activity_type'],"1")]
+      # else
+      #   parentProgrammeID = element['iati_identifier']
+      # end
+      # if activityTracker.include?(parentProgrammeID)
+      #   isNewProgramme = false
+      # else
+      #   isNewProgramme = true
+      #   activityTracker.add(parentProgrammeID)
+      # end
+      element['recipient_country_code'].each_with_index do |c, i|
+        if element.has_key?('recipient_country_percentage')
+          countryPercentage = element['recipient_country_percentage'][i].to_f
+        else
+          countryPercentage = ((100-totalRegionPercentage)/element['recipient_country_code'].length).round(2)
+        end
+        countryBudget = tempTotalBudget*countryPercentage/100
+        totalB = totalB + countryBudget
+        # File.open(filename, 'a') do |file|
+        #   row = "#{c},#{countryBudget},#{tempTotalBudget},#{element['iati_identifier']}\n"
+        #   file.write(row)
+        # end
+        #budgetTracker = budgetTracker - countryBudget
+        if(projectDataHash.has_key?(c))
+          # if(isNewProgramme)
+          #   projectDataHash[c]["projects"] = projectDataHash[c]["projects"] + 1
+          # end
+          projectDataHash[c]["budget"] = (projectDataHash[c]["budget"] + countryBudget).round(2)
+        else
+          projectDataHash[c] = {}
+          if c =='FK'
+            projectDataHash[c]["country"] = 'Falkland Islands'
+          elsif c =='PS'
+            projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+          else
+            projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end
+          end
+          projectDataHash[c]["id"] = c
+          call = settings.oipa_api_url + "activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:(GB-GOV-* OR GB-COH-*) AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND recipient_country_code:#{c}&fl=iati_identifier&rows=0"
+          pd = RestClient.get call
+          pd  = JSON.parse(pd)
+          numOProgs = pd['response']['numFound'].to_i
+          projectDataHash[c]["projects"] = numOProgs
+          projectDataHash[c]["budget"] = countryBudget.round(2)
+          projectDataHash[c]["flag"] = '/images/flags/' + c.downcase + '.png'
+        end
+      end
+    end
+    if(projectDataHash.has_key?('SO'))
+      projectDataHash['-99SOM'] = {}
+      projectDataHash['-99SOM']["id"] = 'SO'
+      projectDataHash['-99SOM']["country"] = projectDataHash['SO']["country"]
+      projectDataHash['-99SOM']["projects"] = projectDataHash['SO']["projects"]
+      projectDataHash['-99SOM']["budget"] = projectDataHash['SO']["budget"]
+      projectDataHash['-99SOM']["flag"] = projectDataHash['SO']["flag"]
+    end
+    finalOutput = Array.new
+    finalOutput.push(projectDataHash.to_s.gsub("[", "").gsub("]", "").gsub("=>",":").gsub("}}, {","},"))
+    finalOutput.push(projectDataHash)
+    output = {}
+    output['map_data'] = finalOutput
+    output
+  end
+  ###############################
+  
   ###############################
   def generateCountryDatav5()
     count = 20

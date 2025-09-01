@@ -150,7 +150,7 @@ title: Development Tracker
               <% end %>
             </tbody>
         </table>
-        <p class="govuk-body">Source: <a target="blank" class="govuk-link" href="https://www.gov.uk/government/collections/statistics-on-international-development#-statistics-on-international-development:-aid-spend-2023">Statistics on International Development 2023</a></span>
+        <p class="govuk-body">Source: <a target="blank" class="govuk-link" href="https://www.gov.uk/government/collections/statistics-on-international-development#statistics-on-international-development:-uk-oda-spend-2024">Statistics on International Development 2024</a></span>
     </div>
 </div>
 
@@ -163,7 +163,8 @@ title: Development Tracker
     $('.datatable').DataTable({
         "info": false,
         "paging": false,
-        "searching": false        
+        "searching": false,
+        "order": [[1, 'desc']]   
     });    
   });
 </script>

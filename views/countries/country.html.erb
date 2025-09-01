@@ -105,13 +105,12 @@
                 </p>
 
                 <div class="govuk-!-margin-top-4">
-                    <% tempTotalBudget = Money.new(country['countryBudget'].to_f.round(0)*100, country['countryBudgetCurrency']).format(:no_cents_if_whole => true,:sign_before_symbol => false) %>
-                    <%tempOnlyValue = tempTotalBudget.gsub(/[^\d]/, '')%>
                     <span class="govuk-body-s app-chart-row__chart--intro govuk-!-margin-bottom-0">Current finacial year - <%= current_financial_year %></span>
                     <% if(country['code'] == 'UA2') %>
                         <span class="govuk-heading-l govuk-!--padding-top-1">£0</span>
                     <%else%>
-                        <span class="govuk-heading-l govuk-!-padding-top-1"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(0))%></span>
+                        <%# <span class="govuk-heading-l govuk-!-padding-top-1"><%= tempTotalBudget.gsub(/[0-9,]*/,"") %><%#=convert_numbers_to_human_readable_format(tempOnlyValue.to_f.round(2))%><%#</span> %>
+                        <span class="govuk-heading-l govuk-!-padding-top-1">£<%= number_to_human(country['countryBudget'].to_f.round(2), :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })%></span>
                     <%end%>
                 </div>                
 
@@ -133,7 +132,7 @@
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
         <%end%>
 
-        <%if country['code'] != 'UA2'%>
+        <%if country['code'] == 'UA2'%>
             <h2 class="govuk-heading-m">Implementing Partners</h2>
             <div id="waiting-impl-orgs" class="twelve columns"><p style="text-align: center; padding: 15px;"><strong class="govuk-tag govuk-tag--yellow">Loading Implementing organisations list.. Please wait..</strong></p></div>
             <table class="govuk-table">
@@ -159,26 +158,21 @@
     $(document).ready(function() {
         var colors = ['#28a197', '#f47738', '#1d70b8', '#4c2c92', '#f499be', '#85994b'];
         //Prepare the ajax calls
-        $('#waiting-impl-orgs').slideDown('slow');
-        var call1 = $.get('/country-implementing-org-list/<%= country['code'] %>/<%= activityCount%>')
-        .done(function(response){
-            if(Object.keys(response.output).length > 0){
-                tempString = '';
-                $.each(response.output, function(i, data){
-                    tempString = tempString + '<tr class="govuk-table__row"><td scope="row" class="govuk-table__cell">' 
-                    + data.orgName
-                    + '</td><td class="govuk-table__cell govuk-table__cell--numeric">' + data.count + '</td></tr>';
-                });
-                $('#implementing_org_table_body').html(tempString);
-                $('#implementing_org_container').slideDown('slow');
-                $('#waiting-impl-orgs').slideUp('slow');
-            }
-            //console.log(response.output.length);
-            // if(response)
-            // if(response.projectType == 'country'){
-            //     $('#countryOrRegion').html('<a class="govuk-breadcrumbs__link" href="'+response.output.breadcrumbUrl+'/">'+response.output.breadcrumbUrl+'</a>');
-            // }
-        });
+        // $('#waiting-impl-orgs').slideDown('slow');
+        // var call1 = $.get('/country-implementing-org-list/<%= country['code'] %>/<%= activityCount%>')
+        // .done(function(response){
+        //     if(Object.keys(response.output).length > 0){
+        //         tempString = '';
+        //         $.each(response.output, function(i, data){
+        //             tempString = tempString + '<tr class="govuk-table__row"><td scope="row" class="govuk-table__cell">' 
+        //             + data.orgName
+        //             + '</td><td class="govuk-table__cell govuk-table__cell--numeric">' + data.count + '</td></tr>';
+        //         });
+        //         $('#implementing_org_table_body').html(tempString);
+        //         $('#implementing_org_container').slideDown('slow');
+        //         $('#waiting-impl-orgs').slideUp('slow');
+        //     }
+        // });
 
         var sectorGraphDataVar = $.get('/country-sector-graph-data/<%= country['code'] %>')
         .done(function(response){

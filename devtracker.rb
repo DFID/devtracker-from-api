@@ -21,6 +21,8 @@ require "action_view"
 require 'csv'
 require "sinatra/cookies"
 require "cgi"
+require 'set'
+require 'uri'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -61,7 +63,7 @@ include SolrHelper
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
 # set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-#set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
 set :oipa_api_url, 'http://127.0.0.1:6081/search/'
@@ -81,7 +83,7 @@ Money.default_currency = "GBP"
 set :current_first_day_of_financial_year, first_day_of_financial_year(DateTime.now)
 set :current_last_day_of_financial_year, last_day_of_financial_year(DateTime.now)
 set :goverment_department_ids, 'GB-GOV-11,GB-GOV-14,GB-GOV-27,GB-GOV-53,GB-GOV-25,GB-GOV-26,GB-GOV-15,GB-GOV-9,GB-GOV-6,GB-GOV-2,GB-GOV-1,GB-1,GB-GOV-3,GB-GOV-13,GB-GOV-7,GB-6,GB-10,GB-GOV-10,GB-9,GB-GOV-8,GB-GOV-5,GB-GOV-12,GB-COH-RC000346,GB-COH-03877777,GB-GOV-24'
-#set :goverment_department_ids, 'GB-GOV-1,GB-1'
+#set :goverment_department_ids, 'GB-GOV-26,GB-GOV-1,GB-GOV-13,GB-GOV-10'
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
@@ -128,12 +130,14 @@ get '/' do  #homepage
 		## calculate the budget amount against that perentage and add it to
 		## the high level related sector code
 		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+		
 		pulledData = RestClient.get newApiCall
 		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
 		what_we_do = getCacheData('what_we_do')
 	else
 		what_we_do = getCacheData('what_we_do')
 	end
+	
 	whatWeDoTotal = what_we_do.first['budget']
 	top5countries = top5countries.select{|i| i.has_key?('budget')}
 	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
@@ -216,8 +220,9 @@ get '/countries/:country_code/?' do |n|
 	end
 	countryYearWiseBudgets = ''
 	countrySectorGraphData = ''
-	newtempActivityCount = 'activity?q=activity_status_code:2 AND hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') AND recipient_country_code:('+n+')&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1'
-	tempActivityCount = Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + newtempActivityCount))['response']['numFound']
+	newtempActivityCount = "activity?q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND reporting_org_ref:("+settings.goverment_department_ids.gsub(","," OR ")+") AND recipient_country_code:("+n+") AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=sector_code,sector_percentage,sector_narrative,sector,recipient_country_code,recipient_country_name,recipient_country_percentage,recipient_country,recipient_region_code,recipient_region_name,recipient_region_percentage,recipient_region&rows=1"
+	# puts settings.oipa_api_url + newtempActivityCount
+	tempActivityCount = projectCounter(n)#Oj.load(RestClient.get  api_simple_log(settings.oipa_api_url + newtempActivityCount))['response']['numFound']
 	if n == 'UA2'
 		tempActivityCount = 0
 	end
@@ -354,14 +359,14 @@ end
 # Region summary page
 get '/regions/:region_code/?' do |n|
 	n = sanitize_input(n,"p")
-    region = get_region_detailsv2(n)
+    region = get_region_detailsv3(n)
   	settings.devtracker_page_title = 'Region '+region[:name]+' Summary Page'
 	erb :'regions/region', 
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
-			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter')),
+			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=iati_identifier:GB-GOV-10-DHSC_WHO_core AND recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=iati_identifier,budget_value_gbp,budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=10000')),
  			mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
@@ -371,7 +376,7 @@ get '/regions/:region_code/projects/?' do |n|
 	n = sanitize_input(n, "p")
 	query = '('+n+')'
 	filters = prepareFilters(query.to_s, 'R')
-	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
+	response = solrResponse(query, "AND activity_status_code:(2)", 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)
 		response = addTotalBudgetWithCurrency(response)
 	end
@@ -803,7 +808,7 @@ get '/location/country/?' do
 	country_sector_data = ''
 	getMaxBudget = ''
 	if (!canLoadFromCache('country_sector_data'))
-		storeCacheData(generateCountryDatav5(), 'country_sector_data')
+		storeCacheData(generateCountryDatav7(), 'country_sector_data')
 		getMainData = getCacheData('country_sector_data')
 		map_data = getMainData['map_data']
 		storeCacheData(map_data[1].sort_by{|k,val| val['budget']}.reverse!.first[1]['budget'], 'getMaxBudgetCountryLocation')
@@ -894,6 +899,19 @@ get '/search_p/?' do
 		activityStatuses = 'AND activity_status_code:(2)'
 		filters = prepareFilters(query.to_s, 'F')
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+		##Clean any unnecessary activity
+		## TODO
+		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		if elist.length > 0
+			tempResponseList = response['response']['docs']
+			tempResponseList.each do |data|
+				if elist.include?(data['iati_identifier'])
+					tempResponseList.delete(data)
+				end
+			end
+			response['response']['docs'] = tempResponseList
+		end
+		##
 		if(response['response']['numFound'].to_i > 0)
 			response['response'] = addTotalBudgetWithCurrency(response['response'])
 			response = addHighlightingToFTSTerms(response)
@@ -948,6 +966,19 @@ post '/search_p/?' do
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 	if(response['response']['numFound'].to_i > 0)
+		##Clean any unnecessary activity
+		## TODO
+		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		if elist.length > 0
+			tempResponseList = response['response']['docs']
+			tempResponseList.each do |data|
+				if elist.include?(data['iati_identifier'])
+					tempResponseList.delete(data)
+				end
+			end
+			response['response']['docs'] = tempResponseList
+		end
+		##
 		response['response'] = addTotalBudgetWithCurrency(response['response'])
 		response = addHighlightingToFTSTerms(response)
 	end
@@ -999,7 +1030,7 @@ post '/solr-response' do
 end
 
 get '/regions/?' do
-	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380)'
+	query = '(298 OR 798 OR 89 OR 589 OR 389 OR 189 OR 679 OR 289 OR 380 OR 1031 OR 619 OR 1027 OR 789 OR 889 OR 689 OR 489 OR 1029 OR 1030)'
 	filters = prepareFilters(query.to_s, 'R')
 	response = solrResponse(query, 'AND activity_status_code:(2)', 'R', 0, '', '')
 	if(response['numFound'].to_i > 0)

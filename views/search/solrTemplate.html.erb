@@ -218,7 +218,14 @@
              <div id="response-container">
                 <%response['docs'].each do |item|%>                 
                     <div class="app-search-result">
-                        <h3 class="govuk-heading-s app-search-result-title"><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary" class="govuk-link--no-visited-state"><%=item['title_narrative_first']%></a></h3>
+                        <%if hasSpecialCharacter(item['iati_identifier'])%>
+                            <h3 class="govuk-heading-s app-search-result-title"><span href="#" class="govuk-link--no-visited-state"><%=item['title_narrative_first']%></span></h3>
+                            <div class="govuk-inset-text" style="font-size: 1em; margin-bottom: 5px; margin-top: 5px">
+                              This activity page is not viewable due to a malformed IATI Identifier.
+                            </div>
+                        <%else%>
+                            <h3 class="govuk-heading-s app-search-result-title"><a href="/projects/<%=ERB::Util.url_encode(item['iati_identifier']).to_s%>/summary" class="govuk-link--no-visited-state"><%=item['title_narrative_first']%></a></h3>
+                        <%end%>
                         <p class="govuk-body-s app-search-result-department">
                             <%if item['reporting_org_narrative'].first.to_s == 'UK - Department for International Development (DFID)' %>
                                 UK - Foreign, Commonwealth and Development Office
@@ -589,6 +596,32 @@
         }
         initiatePagination(<%= response['numFound']%>, true);
         // Post filter changes to the server end and update page with response
+        function hasSpecialCharacter(inputString) {
+            // 1. Remove leading and trailing spaces
+            // The trim() method returns a new string with leading and trailing whitespace removed.
+            const trimmedString = inputString.trim();
+
+            // 2. Define the pattern of special characters to look for within the trimmed string.
+            // This regex matches:
+            //   ' '  (a space)
+            //   '/'  (a forward slash)
+            //   '&'  (an ampersand)
+            //   '\\' (a backslash - needs to be escaped in the regex pattern itself)
+            // Note: In JavaScript regex literals, a single backslash needs to be escaped
+            // with another backslash to represent a literal backslash character.
+            const specialCharsRegex = /[ /&\\]/;
+
+            // 3. Check if the trimmed string contains any character matching the regex pattern.
+            // The test() method of a RegExp object executes a search for a match
+            // between a regular expression and a specified string. Returns true or false.
+            if (specialCharsRegex.test(trimmedString)) {
+                console.log(`String '${inputString}' (trimmed: '${trimmedString}') contains special characters.`);
+                return true;
+            } else {
+                console.log(`String '${inputString}' (trimmed: '${trimmedString}') does NOT contain special characters.`);
+                return false;
+            }
+        }
         function getFilteredResponse(page, isResetPagination, pageNumber){
             var data = {};
             data['query'] = '<%= query%>';
@@ -652,11 +685,22 @@
                     else{
                         var reporting_org = 'UK - Foreign, Commonwealth and Development Office';
                     }
+                    var activityPageURL = '/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary'
+                    var hasSpecialCharText = ''
+                    var activityLinkURL = ''
+                    if (hasSpecialCharacter(result.iati_identifier.toString())){
+                        activityPageURL = '#'
+                        hasSpecialCharText = '<div class="govuk-inset-text" style="font-size: 1em; margin-bottom: 5px; margin-top: 5px">This activity page is not viewable due to a malformed IATI Identifier.</div>'
+                        activityLinkURL = '<span href="'+activityPageURL+'" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</span>'
+                    }
+                    else {
+                        activityLinkURL = '<a href="'+activityPageURL+'" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</a>'
+                    }
                     if(typeof result.description_narrative === 'undefined'){
-                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</a></h3><p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><span class="text-highlighting" style="color: grey"><p>Found a match in field: '+highlightedKey+' - <span>'+highlightedVal+'</span></p></span><p class="govuk-body-s description">' + 'No description available' + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
+                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title">'+activityLinkURL+'</h3>'+hasSpecialCharText+'<p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><span class="text-highlighting" style="color: grey"><p>Found a match in field: '+highlightedKey+' - <span>'+highlightedVal+'</span></p></span><p class="govuk-body-s description">' + 'No description available' + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
                     }
                     else{
-                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title"><a href="/projects/'+encodeURIComponent(result.iati_identifier).toString()+'/summary" class="govuk-link--no-visited-state">' + result.title_narrative_first + '</a></h3><p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><span class="text-highlighting" style="color: grey"><p>Found a match in field: '+highlightedKey+' - <span>'+highlightedVal+'</span></p></span><p class="govuk-body-s description">' + result.description_narrative[0] + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
+                        prepareContainer = prepareContainer + '<div class="app-search-result"><h3 class="govuk-heading-s app-search-result-title">'+activityLinkURL+'</h3>'+hasSpecialCharText+'<p class="govuk-body-s app-search-result-department">' + reporting_org + '</p><span class="text-highlighting" style="color: grey"><p>Found a match in field: '+highlightedKey+' - <span>'+highlightedVal+'</span></p></span><p class="govuk-body-s description">' + result.description_narrative[0] + '</p><div class="app-search-result-info"><div><span class="govuk-body-s app-search-result-info__title">Programme Id</span><span class="govuk-body-s app-search-result-info__value">' + result.iati_identifier + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Start date</span><span class="govuk-body-s app-search-result-info__value"> ' + startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Activity status</span><span class="govuk-body-s app-search-result-info__value">' + activityStatus[parseInt(result.activity_status_code) - 1].name + '</span></div><div><span class="govuk-body-s app-search-result-info__title">Total budget</span><span class="govuk-body-s app-search-result-info__value">'+result.totalBudgetWithCurrency+'</span></div></div></div>';
                     }
                 })
                 $('#response-container').html(prepareContainer);

@@ -11,7 +11,8 @@
 		</div>
 	</div>
 	<% dfid_regional_projects_data['regionsDataJSON'].sort_by{ |k| k["region"]}.each do |region|%>
-		<div class="govuk-grid-column-one-third">
+		<%if region['budget'] > 0%>
+			<div class="govuk-grid-column-one-third">
 				<div class="app-region-stat">
 					<div class="app-region-stat__data">
 						<span class="govuk-caption-m app-region-stat__data--caption"><%=region['region']%></span>                    
@@ -19,6 +20,7 @@
 					</div>
 					<div class="app-region-stat__source govuk-caption-m govuk-!-font-size-17"><a href="/regions/<%=region['code']%>" class="govuk-link">Region programmes</a></div>
 				</div>
-		</div>
+			</div>
+		<%end%>
   	<%end%>
 </div>
