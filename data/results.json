@@ -43,7 +43,7 @@
   {"country":"Turkey","code":"TR","results_indicators":"Number of children supported to gain a decent education.","totals":"55,000.00","Thousands":55},
   {"country":"Jordan","code":"JO","results_indicators":"Number of children supported to gain a decent education.","totals":"204,000.00","Thousands":204},
   {"country":"Lebanon","code":"LB","results_indicators":"Number of children supported to gain a decent education.","totals":"216,000.00","Thousands":216},
-  {"country":"Occupied Palestinian Territories","code":"PS","results_indicators":"Number of children supported to gain a decent education.","totals":"70,000.00","Thousands":70},
+  {"country":"Palestine","code":"PS","results_indicators":"Number of children supported to gain a decent education.","totals":"70,000.00","Thousands":70},
   {"country":"Syria","code":"SY","results_indicators":"Number of children supported to gain a decent education.","totals":"408,000.00","Thousands":408},
   {"country":"DRC","code":"CD","results_indicators":"Number of women and girls using modern methods of family planning through DFID support.","totals":"152,000.00","Thousands":152},
   {"country":"Ethiopia","code":"ET","results_indicators":"Number of women and girls using modern methods of family planning through DFID support.","totals":"2,380,000.00","Thousands":2380},
@@ -86,7 +86,7 @@
   {"country":"Iraq","code":"IQ","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"395,000.00","Thousands":395},
   {"country":"Jordan","code":"JO","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"198,000.00","Thousands":198},
   {"country":"Lebanon","code":"LB","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"614,000.00","Thousands":614},
-  {"country":"Occupied Palestinian Territories","code":"PS","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"98,000.00","Thousands":98},
+  {"country":"Palestine","code":"PS","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"98,000.00","Thousands":98},
   {"country":"Syria","code":"SY","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"800,000.00","Thousands":800},
   {"country":"Yemen","code":"YE","results_indicators":"Number of people reached with humanitarian assistance (food aid, cash and voucher transfers) through DFID support.","totals":"6,900,000.00","Thousands":6900},
   {"country":"DRC","code":"CD","results_indicators":"Number of children under 5, women (of childbearing age) and adolescent girls reached by DFID through nutrition-related interventions.","totals":"2,468,000.00","Thousands":2468},
@@ -132,7 +132,7 @@
   {"country":"Pakistan","code":"PK","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"2,247,000.00","Thousands":2247},
   {"country":"Jordan","code":"JO","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"219,000.00","Thousands":219},
   {"country":"Lebanon","code":"LB","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"539,000.00","Thousands":539},
-  {"country":"Occupied Palestinian Territories","code":"PS","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"60,000.00","Thousands":60},
+  {"country":"Palestine","code":"PS","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"60,000.00","Thousands":60},
   {"country":"Syria","code":"SY","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"4,946,000.00","Thousands":4946},
   {"country":"Yemen","code":"YE","results_indicators":"Number of people with sustainable access to clean water and/or sanitation through DFID support.","totals":"712,000.00","Thousands":712}
 ]
