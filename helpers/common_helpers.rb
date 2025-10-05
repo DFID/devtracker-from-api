@@ -1347,7 +1347,7 @@ end
           if c =='FK'
             projectDataHash[c]["country"] = 'Falkland Islands'
           elsif c =='PS'
-            projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+            projectDataHash[c]["country"] = 'Palestine'
           else
             projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end
           end
@@ -1503,7 +1503,7 @@ end
           if c =='FK'
             projectDataHash[c]["country"] = 'Falkland Islands'
           elsif c =='PS'
-            projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+            projectDataHash[c]["country"] = 'Palestine'
           else
             projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end
           end
@@ -1606,7 +1606,7 @@ end
             if c =='FK'
               projectDataHash[c]["country"] = 'Falkland Islands'
             elsif c =='PS'
-              projectDataHash[c]["country"] = 'Occupied Palestinian Territories (OPT)'
+              projectDataHash[c]["country"] = 'Palestine'
             else
               projectDataHash[c]["country"] = begin get_country_code_name(c)['name'] rescue 'N/A' end# element.has_key?('recipient_country_name') ? element["recipient_country_name"][i] : 'N/A'
             end
