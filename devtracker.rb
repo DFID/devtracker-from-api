@@ -61,12 +61,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo2.iati.cloud/api/v2/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -948,9 +948,9 @@ post '/search_p/?' do
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
-		activityStatuses = 'AND activity_status_code:(2)'
+		activityStatuses = '&fq=activity_status_code:(2)'
 	else
-		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
+		activityStatuses = '&fq=activity_status_code:(2 OR 3 OR 4 OR 5)'
 	end
 	if(!query.start_with?("\""))
 		tempQ = '"' + query + '"'
@@ -1004,6 +1004,68 @@ post '/search_p/?' do
 		isIncludeClosedProjects: isIncludeClosedProjects
 	}
 end
+
+# post '/search_p/?' do
+# 	#query = params['query']
+# 	query = sanitize_input(params['query'],"newId")
+# 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
+# 	if(isIncludeClosedProjects.to_i != 1)
+# 		activityStatuses = 'AND activity_status_code:(2)'
+# 	else
+# 		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
+# 	end
+# 	if(!query.start_with?("\""))
+# 		tempQ = '"' + query + '"'
+# 		isInIdentifier = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=iati_identifier:#{tempQ}&fl=iati_identifier&rows=1")
+#         isInTitle = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=title_narrative_text:#{tempQ}&fl=iati_identifier&rows=1")
+# 		checkInID = Oj.load(isInIdentifier)
+# 		checkInTitle = Oj.load(isInTitle)
+# 		if(checkInID['response']['numFound'].to_i == 1 || checkInTitle['response']['numFound'].to_i == 1)
+# 			query = tempQ
+# 		else
+# 		end
+# 	end
+# 	filters = prepareFilters(query.to_s, 'F')
+# 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+# 	if(response['response']['numFound'].to_i > 0)
+# 		##Clean any unnecessary activity
+# 		## TODO
+# 		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+# 		if elist.length > 0
+# 			tempResponseList = response['response']['docs']
+# 			tempResponseList.each do |data|
+# 				if elist.include?(data['iati_identifier'])
+# 					tempResponseList.delete(data)
+# 				end
+# 			end
+# 			response['response']['docs'] = tempResponseList
+# 		end
+# 		##
+# 		response['response'] = addTotalBudgetWithCurrency(response['response'])
+# 		response = addHighlightingToFTSTerms(response)
+# 	end
+#   	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	didYouMeanQuery = sanitize_input(params['query'],"a")
+# 	#didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
+# 	#erb :'search/solrSearch',
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response['response'],
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'F',
+# 		breadcrumbURL: '',
+# 		breadcrumbText: '',
+# 		fcdoCountryBudgets: nil,#didYouMeanData['dfidCountryBudgets'],
+#  		fcdoRegionBudgets: nil,#didYouMeanData['dfidRegionBudgets'],
+# 		isIncludeClosedProjects: isIncludeClosedProjects
+# 	}
+# end
 
 post '/solr-response' do
 	query = sanitize_input(params['data']['query'],"newId")
