@@ -901,16 +901,16 @@ get '/search_p/?' do
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 		##Clean any unnecessary activity
 		## TODO
-		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
-		if elist.length > 0
-			tempResponseList = response['response']['docs']
-			tempResponseList.each do |data|
-				if elist.include?(data['iati_identifier'])
-					tempResponseList.delete(data)
-				end
-			end
-			response['response']['docs'] = tempResponseList
-		end
+		# elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		# if elist.length > 0
+		# 	tempResponseList = response['response']['docs']
+		# 	tempResponseList.each do |data|
+		# 		if elist.include?(data['iati_identifier'])
+		# 			tempResponseList.delete(data)
+		# 		end
+		# 	end
+		# 	response['response']['docs'] = tempResponseList
+		# end
 		##
 		if(response['response']['numFound'].to_i > 0)
 			response['response'] = addTotalBudgetWithCurrency(response['response'])
@@ -1069,12 +1069,16 @@ end
 
 post '/solr-response' do
 	query = sanitize_input(params['data']['query'],"newId")
+	searchType = sanitize_input(params['data']['queryType'],"newId")
 	if params['data']['filters'].strip.length > 1
-		filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+		if searchType == 'F'
+			filters = '&fq=' + sanitize_input(params['data']['filters'],"newId").gsub(/\band\b/, " &fq= ")
+		else
+			filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+		end
 	else
 		filters = ''
 	end
-	searchType = sanitize_input(params['data']['queryType'],"newId")
 	startPage = sanitize_input(params['data']['page'],"newId")
 	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
 	if searchType == 'F'
