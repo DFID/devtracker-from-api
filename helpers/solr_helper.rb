@@ -230,7 +230,8 @@ module SolrHelper
             preparedFilters = filters # For now, it's empty
             mainQueryString = mainQueryString + preparedFilters
             if(sortType != '')
-                mainQueryString = mainQueryString + '&sort=' + sortType
+                queryCategory['url'] = queryCategory['url'].sub('score desc', sortType+', score desc')
+                #mainQueryString = mainQueryString.sub('score desc', sortType+', score desc') # + '&sort=' + sortType
             end
             #mainQueryString = mainQueryString + '&defType=edismax&qf=' + solrConfig['DefaultFieldsToSearch'].join(' ') + '&mm=20&q=' + query
             # Get response based on the API responses
