@@ -102,12 +102,14 @@ get '/' do  #homepage
 	top5countries = ''
 	Benchmark.bm(7) do |x|
 		x.report("Loading Time: ") {
-			if (!canLoadFromCache('top5Countries'))
-				storeCacheData(get_top_5_countriesv2(), 'top5Countries')
-				top5countries = getCacheData('top5Countries')
-			else
-				top5countries = getCacheData('top5Countries')
-			end
+			# if (!canLoadFromCache('top5Countries'))
+			# 	storeCacheData(get_top_5_countriesv2(), 'top5Countries')
+			# 	top5countries = getCacheData('top5Countries')
+			# else
+			# 	top5countries = getCacheData('top5Countries')
+			# end
+			#storeCacheData(get_top_5_countriesv2(), 'top5Countries')
+			top5countries = get_top_5_countriesv2() #getCacheData('top5Countries')
 		   #oipa v3.1
 		}
    end
@@ -118,25 +120,28 @@ get '/' do  #homepage
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
 	what_we_do = ''
-	if (!canLoadFromCache('what_we_do'))
-		## logic
-		## get budget data, then check if they fall within date range
-		## do a summation of the budget amount within date range
-		## pick dac5 sector code and then get the underlying high level sector code
-		## if the sector is present, add the new budget info to this sector
-		## Else create a new ref to the high level sector code and add
-		## budget value starting from 0
-		## pick budget percentage for each dac5 sector code2
-		## calculate the budget amount against that perentage and add it to
-		## the high level related sector code
-		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+	pulledData = RestClient.get newApiCall
+	what_we_do = high_level_sector_listv2(pulledData, 'top_five_sectors')
+	# if (!canLoadFromCache('what_we_do'))
+	# 	## logic
+	# 	## get budget data, then check if they fall within date range
+	# 	## do a summation of the budget amount within date range
+	# 	## pick dac5 sector code and then get the underlying high level sector code
+	# 	## if the sector is present, add the new budget info to this sector
+	# 	## Else create a new ref to the high level sector code and add
+	# 	## budget value starting from 0
+	# 	## pick budget percentage for each dac5 sector code2
+	# 	## calculate the budget amount against that perentage and add it to
+	# 	## the high level related sector code
+	# 	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		
-		pulledData = RestClient.get newApiCall
-		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
-		what_we_do = getCacheData('what_we_do')
-	else
-		what_we_do = getCacheData('what_we_do')
-	end
+	# 	pulledData = RestClient.get newApiCall
+	# 	storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
+	# 	what_we_do = getCacheData('what_we_do')
+	# else
+	# 	what_we_do = getCacheData('what_we_do')
+	# end
 	
 	whatWeDoTotal = what_we_do.first['budget']
 	top5countries = top5countries.select{|i| i.has_key?('budget')}
@@ -901,16 +906,16 @@ get '/search_p/?' do
 		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 		##Clean any unnecessary activity
 		## TODO
-		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
-		if elist.length > 0
-			tempResponseList = response['response']['docs']
-			tempResponseList.each do |data|
-				if elist.include?(data['iati_identifier'])
-					tempResponseList.delete(data)
-				end
-			end
-			response['response']['docs'] = tempResponseList
-		end
+		# elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+		# if elist.length > 0
+		# 	tempResponseList = response['response']['docs']
+		# 	tempResponseList.each do |data|
+		# 		if elist.include?(data['iati_identifier'])
+		# 			tempResponseList.delete(data)
+		# 		end
+		# 	end
+		# 	response['response']['docs'] = tempResponseList
+		# end
 		##
 		if(response['response']['numFound'].to_i > 0)
 			response['response'] = addTotalBudgetWithCurrency(response['response'])
@@ -948,21 +953,21 @@ post '/search_p/?' do
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
-		activityStatuses = 'AND activity_status_code:(2)'
+		activityStatuses = '&fq=activity_status_code:(2)'
 	else
-		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
+		activityStatuses = '&fq=activity_status_code:(2 OR 3 OR 4 OR 5)'
 	end
-	if(!query.start_with?("\""))
-		tempQ = '"' + query + '"'
-		isInIdentifier = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=iati_identifier:#{tempQ}&fl=iati_identifier&rows=1")
-        isInTitle = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=title_narrative_text:#{tempQ}&fl=iati_identifier&rows=1")
-		checkInID = Oj.load(isInIdentifier)
-		checkInTitle = Oj.load(isInTitle)
-		if(checkInID['response']['numFound'].to_i == 1 || checkInTitle['response']['numFound'].to_i == 1)
-			query = tempQ
-		else
-		end
-	end
+	# if(!query.start_with?("\""))
+	# 	tempQ = '"' + query + '"'
+	# 	isInIdentifier = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=iati_identifier:#{tempQ}&fl=iati_identifier&rows=1")
+    #     isInTitle = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=title_narrative_text:#{tempQ}&fl=iati_identifier&rows=1")
+	# 	checkInID = Oj.load(isInIdentifier)
+	# 	checkInTitle = Oj.load(isInTitle)
+	# 	if(checkInID['response']['numFound'].to_i == 1 || checkInTitle['response']['numFound'].to_i == 1)
+	# 		query = tempQ
+	# 	else
+	# 	end
+	# end
 	filters = prepareFilters(query.to_s, 'F')
 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
 	if(response['response']['numFound'].to_i > 0)
@@ -1005,14 +1010,80 @@ post '/search_p/?' do
 	}
 end
 
+# post '/search_p/?' do
+# 	#query = params['query']
+# 	query = sanitize_input(params['query'],"newId")
+# 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
+# 	if(isIncludeClosedProjects.to_i != 1)
+# 		activityStatuses = 'AND activity_status_code:(2)'
+# 	else
+# 		activityStatuses = 'AND activity_status_code:(2 OR 3 OR 4 OR 5)'
+# 	end
+# 	if(!query.start_with?("\""))
+# 		tempQ = '"' + query + '"'
+# 		isInIdentifier = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=iati_identifier:#{tempQ}&fl=iati_identifier&rows=1")
+#         isInTitle = RestClient.get  api_simple_log(settings.oipa_api_url + "activity?q=title_narrative_text:#{tempQ}&fl=iati_identifier&rows=1")
+# 		checkInID = Oj.load(isInIdentifier)
+# 		checkInTitle = Oj.load(isInTitle)
+# 		if(checkInID['response']['numFound'].to_i == 1 || checkInTitle['response']['numFound'].to_i == 1)
+# 			query = tempQ
+# 		else
+# 		end
+# 	end
+# 	filters = prepareFilters(query.to_s, 'F')
+# 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+# 	if(response['response']['numFound'].to_i > 0)
+# 		##Clean any unnecessary activity
+# 		## TODO
+# 		elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+# 		if elist.length > 0
+# 			tempResponseList = response['response']['docs']
+# 			tempResponseList.each do |data|
+# 				if elist.include?(data['iati_identifier'])
+# 					tempResponseList.delete(data)
+# 				end
+# 			end
+# 			response['response']['docs'] = tempResponseList
+# 		end
+# 		##
+# 		response['response'] = addTotalBudgetWithCurrency(response['response'])
+# 		response = addHighlightingToFTSTerms(response)
+# 	end
+#   	settings.devtracker_page_title = 'Search Results For : ' + query
+# 	didYouMeanQuery = sanitize_input(params['query'],"a")
+# 	#didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
+# 	#erb :'search/solrSearch',
+# 	erb :'search/solrTemplate',
+# 	:layout => :'layouts/layout',
+# 	:locals => 
+# 	{
+# 		oipa_api_url: settings.oipa_api_url,
+# 		query: query,
+# 		filters: filters,
+# 		response: response['response'],
+# 		solrConfig: Oj.load(File.read('data/solr-config.json')),
+# 		activityStatus: Oj.load(File.read('data/activity_status.json')),
+# 		searchType: 'F',
+# 		breadcrumbURL: '',
+# 		breadcrumbText: '',
+# 		fcdoCountryBudgets: nil,#didYouMeanData['dfidCountryBudgets'],
+#  		fcdoRegionBudgets: nil,#didYouMeanData['dfidRegionBudgets'],
+# 		isIncludeClosedProjects: isIncludeClosedProjects
+# 	}
+# end
+
 post '/solr-response' do
 	query = sanitize_input(params['data']['query'],"newId")
+	searchType = sanitize_input(params['data']['queryType'],"newId")
 	if params['data']['filters'].strip.length > 1
-		filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+		if searchType == 'F'
+			filters = '&fq=' + sanitize_input(params['data']['filters'],"newId").gsub(/\band\b/, " &fq= ")
+		else
+			filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+		end
 	else
 		filters = ''
 	end
-	searchType = sanitize_input(params['data']['queryType'],"newId")
 	startPage = sanitize_input(params['data']['page'],"newId")
 	response = solrResponse(query, filters, searchType, startPage, sanitize_input(params['data']['dateRange'],"newId"), sanitize_input(params['data']['sortType'],"newId"))
 	if searchType == 'F'

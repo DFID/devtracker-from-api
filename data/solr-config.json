@@ -13,7 +13,8 @@
         "document_link_title_narrative_text",
         "transaction",
         "reporting_org_narrative",
-        "participating_org_narrative"
+        "participating_org_narrative",
+        "related_activity_context"
     ],
     "SortingOptions":
     [
@@ -107,11 +108,86 @@
             "isFieldTypeString": "1"
         }
     ],
+    "Filters_f": 
+    [
+        {
+            "title": "Activity Status",
+            "field": "activity_status_code",
+            "url": "search/activity/?facet=on&facet.field=activity_status_code&facet.limit=-1&facet.mincount=1&q.op=AND&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*) ",
+            "mappingFile": "data/mappingSolrFilters/activity_status.json",
+            "defaultValue": "2",
+            "isFieldTypeString": "0" 
+        },
+        {
+            "title": "Government Department(s)",
+            "field": "reporting_org_ref",
+            "url": "search/activity/?facet=on&facet.field=reporting_org_ref&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*) ",
+            "mappingFile": "data/custom-codes/ogds.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Tags",
+            "field": "tag_code",
+            "url": "search/activity/?facet=on&facet.field=tag_code&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*) ",
+            "mappingFile": "data/custom-codes/policy-priorities.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Sectors",
+            "field": "sector_code",
+            "url": "search/activity/?facet=on&facet.field=sector_code&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*) ",
+            "mappingFile": "sectorHierarchies.json",
+            "defaultValue": "",
+            "isFieldTypeString": "0"
+        },
+        {
+            "title": "Participating Orgs",
+            "field": "participating_org_ref",
+            "url": "search/activity/?facet=on&facet.field=participating_org_ref&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*)&fq=participating_org_role:4 ",
+            "mappingFile": "iati_publishers_list.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Activity Dates",
+            "field": "activity_date_iso_date",
+            "url": "search/activity/?facet=on&facet.field=activity_date_iso_date&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*)",
+            "mappingFile": "",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Benefiting Countries",
+            "field": "recipient_country_code",
+            "url": "search/activity/?facet=on&facet.field=recipient_country_code&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*)",
+            "mappingFile": "data/country-codes/country_codes.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Benefiting Regions",
+            "field": "recipient_region_code",
+            "url": "search/activity/?facet=on&facet.field=recipient_region_code&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*)",
+            "mappingFile": "data/regionCodes.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        },
+        {
+            "title": "Document Categories",
+            "field": "document_link_category_code",
+            "url": "search/activity/?facet=on&facet.field=document_link_category_code&facet.limit=-1&facet.mincount=1&fq=hierarchy:1&fq=participating_org_ref:(GB-GOV-* OR GB-COH-*)",
+            "mappingFile": "data/custom-codes/DocumentCategory.json",
+            "defaultValue": "",
+            "isFieldTypeString": "1"
+        }
+    ],
     "QueryCategories":
     {
         "F":
         {
-            "url": "/search/activity/?hl=on&hl.requireFieldMatch=true&hl.fl=title_narrative,title_narrative_first,description_narrative,iati_identifier,transaction_description_narrative,reporting_org_ref,recipient_country_name,document_link_title_narrative_text,transaction,reporting_org_narrative,participating_org_narrative&q=hierarchy:1 AND participating_org_ref:GB-GOV-* AND ",
+            "url": "/search/activity/?q.op=AND&sort=if(termfreq(reporting_org_ref,'GB-GOV-1'),1,if(termfreq(reporting_org_ref,'GB-GOV-2'),2,99)) asc, score desc&hl=on&hl.requireFieldMatch=true&hl.fl=title_narrative,title_narrative_first,description_narrative,iati_identifier,transaction_description_narrative,reporting_org_ref,recipient_country_name,document_link_title_narrative_text,transaction,reporting_org_narrative,participating_org_narrative&fq=hierarchy:1&fq=participating_org_ref:GB-GOV-*",
             "fieldDependency": "",
             "comments": "This search category is related to the free text search of DevTracker"
         },

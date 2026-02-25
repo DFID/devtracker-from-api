@@ -198,7 +198,11 @@ module SolrHelper
     def prepareFilters(query, queryType)
         solrConfig = Oj.load(File.read('data/solr-config.json'))
         apiLink = solrConfig['APILink']
-        filters = solrConfig['Filters']
+        if queryType == 'F'
+            filters = solrConfig['Filters_f']
+        else
+            filters = solrConfig['Filters']
+        end
         mainQueryString = prepareQuery(query, queryType)
         finalFilterList = {}
         filters.each do |filter|
@@ -226,9 +230,14 @@ module SolrHelper
             preparedFilters = filters # For now, it's empty
             mainQueryString = mainQueryString + preparedFilters
             if(sortType != '')
-                mainQueryString = mainQueryString + '&sort=' + sortType
+                queryCategory['url'] = queryCategory['url'].sub('score desc', sortType+', score desc')
+                #mainQueryString = mainQueryString.sub('score desc', sortType+', score desc') # + '&sort=' + sortType
             end
+            #mainQueryString = mainQueryString + '&defType=edismax&qf=' + solrConfig['DefaultFieldsToSearch'].join(' ') + '&mm=20&q=' + query
             # Get response based on the API responses
+            # Embed the following
+            # https://fcdo2.iati.cloud//api/v2/activity/?q.op=AND&sort=if(termfreq(reporting_org_ref,%27GB-GOV-1%27),1,if(termfreq(reporting_org_ref,%27GB-GOV-2%27),2,99))%20asc,%20score%20desc&fq=hierarchy:1&fq=participating_org_ref:GB-GOV-*&fq=activity_status_code:(2)&defType=edismax&qf=title_narrative%20title_narrative_first%20description_narrative%20iati_identifier%20transaction_description_narrative%20reporting_org_ref%20recipient_country_name%20document_link_title_narrative_text%20transaction%20reporting_org_narrative%20participating_org_narrative%20related_activity_context&mm=20&q=programme%20sudan&rows=20&fl=iati_identifier,title,description*&start=0
+            #puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response
         elsif(queryType == 'R')
@@ -278,16 +287,19 @@ module SolrHelper
             mainQueryString = ' ('
             if(queryType == 'F')
                 queryCategory = solrConfig['QueryCategories'][queryType]
-                if(queryCategory['fieldDependency'] == '')
-                    solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
-                        if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
-                            mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ''
-                        else
-                            mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ' OR '
-                        end
-                    end
-                    mainQueryString = mainQueryString + ')'
-                end
+                # if(queryCategory['fieldDependency'] == '')
+                #     solrConfig['DefaultFieldsToSearch'].each_with_index do |fieldToBeSearched, index|
+                #         if (solrConfig['DefaultFieldsToSearch'].length - 1 == index)
+                #             mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ''
+                #         else
+                #             mainQueryString = mainQueryString + fieldToBeSearched + ':' + query.to_s + ' OR '
+                #         end
+                #     end
+                #     mainQueryString = mainQueryString + ')'
+                # end
+                mainQueryString = ''
+                mainQueryString = mainQueryString + '&defType=edismax&qf=' + solrConfig['DefaultFieldsToSearch'].join(' ') + '&mm=20&q=' + query
+                #mainQueryString = ''
             elsif(queryType == 'R')
                 queryCategory = solrConfig['QueryCategories'][queryType]
                 if(queryCategory['fieldDependency'] != '')
@@ -336,6 +348,7 @@ module SolrHelper
                 end
             end
         end
+        puts mainQueryString
         mainQueryString
     end
 
