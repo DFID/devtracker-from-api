@@ -61,12 +61,12 @@ include SolrHelper
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
- set :oipa_api_url, 'https://fcdo2.iati.cloud/api/v2/'
+# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
 # set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -87,8 +87,8 @@ set :goverment_department_ids, 'GB-GOV-11,GB-GOV-14,GB-GOV-27,GB-GOV-53,GB-GOV-2
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -102,12 +102,14 @@ get '/' do  #homepage
 	top5countries = ''
 	Benchmark.bm(7) do |x|
 		x.report("Loading Time: ") {
-			if (!canLoadFromCache('top5Countries'))
-				storeCacheData(get_top_5_countriesv2(), 'top5Countries')
-				top5countries = getCacheData('top5Countries')
-			else
-				top5countries = getCacheData('top5Countries')
-			end
+			# if (!canLoadFromCache('top5Countries'))
+			# 	storeCacheData(get_top_5_countriesv2(), 'top5Countries')
+			# 	top5countries = getCacheData('top5Countries')
+			# else
+			# 	top5countries = getCacheData('top5Countries')
+			# end
+			#storeCacheData(get_top_5_countriesv2(), 'top5Countries')
+			top5countries = get_top_5_countriesv2() #getCacheData('top5Countries')
 		   #oipa v3.1
 		}
    end
@@ -118,25 +120,28 @@ get '/' do  #homepage
   	# Example of setting up a cookie from server end
   	# response.set_cookie('my_cookie', 'value_of_cookie')
 	what_we_do = ''
-	if (!canLoadFromCache('what_we_do'))
-		## logic
-		## get budget data, then check if they fall within date range
-		## do a summation of the budget amount within date range
-		## pick dac5 sector code and then get the underlying high level sector code
-		## if the sector is present, add the new budget info to this sector
-		## Else create a new ref to the high level sector code and add
-		## budget value starting from 0
-		## pick budget percentage for each dac5 sector code2
-		## calculate the budget amount against that perentage and add it to
-		## the high level related sector code
-		newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
+	pulledData = RestClient.get newApiCall
+	what_we_do = high_level_sector_listv2(pulledData, 'top_five_sectors')
+	# if (!canLoadFromCache('what_we_do'))
+	# 	## logic
+	# 	## get budget data, then check if they fall within date range
+	# 	## do a summation of the budget amount within date range
+	# 	## pick dac5 sector code and then get the underlying high level sector code
+	# 	## if the sector is present, add the new budget info to this sector
+	# 	## Else create a new ref to the high level sector code and add
+	# 	## budget value starting from 0
+	# 	## pick budget percentage for each dac5 sector code2
+	# 	## calculate the budget amount against that perentage and add it to
+	# 	## the high level related sector code
+	# 	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		
-		pulledData = RestClient.get newApiCall
-		storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
-		what_we_do = getCacheData('what_we_do')
-	else
-		what_we_do = getCacheData('what_we_do')
-	end
+	# 	pulledData = RestClient.get newApiCall
+	# 	storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
+	# 	what_we_do = getCacheData('what_we_do')
+	# else
+	# 	what_we_do = getCacheData('what_we_do')
+	# end
 	
 	whatWeDoTotal = what_we_do.first['budget']
 	top5countries = top5countries.select{|i| i.has_key?('budget')}
