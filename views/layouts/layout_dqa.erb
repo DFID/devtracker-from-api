@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      FCDO - Data Completeness Dashboard - Development Tracker - GOV.UK
+    </title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1d70b8" />
+    <link href="/dqa/assets/application.css" rel="stylesheet" type="text/css" />
+    <link rel="apple-touch-icon" href="/images/ios/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="/images/ios/apple-touch-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="/images/ios/apple-touch-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="/images/ios/apple-touch-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="/images/ios/apple-touch-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="/images/ios/apple-touch-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="/images/ios/apple-touch-icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="/images/ios/apple-touch-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/ios/apple-touch-icon-180x180.png"
+    />
+  </head>
+  <body class="govuk-template__body">
+    <script>
+      document.body.className +=
+        " js-enabled" +
+        ("noModule" in HTMLScriptElement.prototype
+          ? " govuk-frontend-supported"
+          : "");
+    </script>
+    <a
+      href="#main-content"
+      class="govuk-skip-link"
+      data-module="govuk-skip-link"
+      >Skip to main content</a
+    >
+    <!-- //////////////////////////////////////////// MODAL - START //////////////////////////////////////////// -->
+    <div id="dashboard_helptext_V1" class="modals" style="display: none">
+      <div class="modal_wrapper">
+        <div class="modal_content">
+          <!-- HEADER - START -->
+          <div class="header">
+            <span id="closeBtn_V1" class="govuk-heading-s close_button"
+              >close <span class="close">&times;</span></span
+            >
+            <h1 class="govuk-heading-m">
+              Validation Rules & Methodology - Programme Data
+            </h1>
+          </div>
+          <!-- HEADER - END -->
+
+          <!-- CONTENT - START -->
+          <div class="content">
+            <!-- SECTION 1 - START -->
+            <h2 class="govuk-heading-m">Activity Scope</h2>
+            <h3 class="govuk-heading-s">Included Activities</h3>
+            <p>
+              The assessment covers
+              <strong>all Programmes (H1 activities)</strong> at implementation
+              stage and <strong>all Projects (H2 activities)</strong> where
+              appropriate — that is, where the relevant data element exists.
+              Activities closed within the <strong>last 18 months</strong> are
+              also included (month-level accuracy; day precision is not
+              required).
+            </p>
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Status Code</th>
+                  <th scope="col" class="govuk-table__header">Label</th>
+                  <th scope="col" class="govuk-table__header">Included</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    <strong class="govuk-tag">1</strong>
+                  </th>
+                  <td class="govuk-table__cell">Pipeline / Identification</td>
+                  <td class="govuk-table__cell">Yes (very few instances)</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    <strong class="govuk-tag">2</strong>
+                  </th>
+                  <td class="govuk-table__cell">Implementation</td>
+                  <td class="govuk-table__cell">Yes</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    <strong class="govuk-tag">4</strong>
+                  </th>
+                  <td class="govuk-table__cell">Closed</td>
+                  <td class="govuk-table__cell">
+                    Yes — within last 18 months only
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    <strong class="govuk-tag">3 / 5 / 6</strong>
+                  </th>
+                  <td class="govuk-table__cell">
+                    Finalisation / Cancelled / Suspended
+                  </td>
+                  <td class="govuk-table__cell">No</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 1 - END -->
+
+            <!-- SECTION 2 - START -->
+            <h2 class="govuk-heading-m govuk-!-margin-top-8">
+              Total Budget Calculation
+            </h2>
+            <h3 class="govuk-heading-s">Financial Year (April–March)</h3>
+            <p>
+              The <strong>Total Budget</strong> is the sum of all
+              <strong class="blue">budget</strong> elements across
+              <strong>H2 activities (projects)</strong> whose
+              <strong class="blue">period-start</strong> and
+              <strong class="blue">period-end</strong> fall within the current
+              Financial Year (1 April – 31 March). Budgets are included
+              regardless of the programme's activity status, because the budget
+              period may differ from the 18-month activity scope window.
+            </p>
+            <!-- SECTION 2 - END -->
+
+            <!-- SECTION 3 - START -->
+            <hr
+              class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
+            />
+            <h2 class="govuk-heading-m govuk-!-margin-top-0">
+              Attribute Validation Rules
+            </h2>
+            <p>
+              Applies to both H1 (programmes) and H2 (projects) unless noted.
+              Each attribute contributes a
+              <strong>percentage score</strong> (0–100) which feeds into the RAG
+              ratings.
+            </p>
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Title</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: title.narrative (first element)</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Field missing or empty
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">Title is missing</td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Length &lt 60 characters
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Title is too short (N characters, minimum 60 required)
+                  </td>
+                  <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Contains unexpanded acronyms
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Title contains potential acronyms that should be expanded:
+                    ...
+                  </td>
+                  <td class="govuk-table__cell align_right">
+                    (1 − Σ len(acronym) ÷ len(title)) × 100
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    All checks pass
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <span class="govuk-caption-m govuk-!-margin-bottom-8"
+              >ⓘ Acronym detection regex:
+              (?&lt!\w)(?:[A-Z]{2,}|[A-Za-z](?:\.[A-Za-z])+\.?)(?!\w). Words in
+              data/non_acronyms.json are excluded.</span
+            >
+            <!-- SECTION 3 - END -->
+
+            <!-- SECTION 4 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Description</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: description.narrative (first element), compared against
+              title.narrative</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Field missing or empty
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">Description is missing</td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Description equals title (case-insensitive)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Description is a repeat of the title
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    len(description) ≤ len(title)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Description must be longer than title
+                  </td>
+                  <td class="govuk-table__cell align_right">
+                    len(description) ÷ len(title) × 100
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    All checks pass
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 4 - END -->
+
+            <!-- SECTION 5 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Start Date</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: activity-date.start-actual (first element)</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Field missing or empty
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">Start date is missing</td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Matches a known default/system date
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Start date is a default system date: YYYY-MM-DD
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Cannot be parsed
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Invalid start date format: ...
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    All checks pass
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <span class="govuk-caption-m govuk-!-margin-bottom-8"
+              >ⓘ Default dates (e.g. 1900-01-01, 1970-01-01) are stored in
+              data/default_dates.json and editable via the config API.</span
+            >
+            <!-- SECTION 5 - END -->
+
+            <!-- SECTION 6 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">End Date</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: activity-date.end-planned (preferred) or
+              activity-date.end-actual</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Both end date fields missing
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">End date is missing</td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Cannot be parsed
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Invalid end date format: ...
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    End date ≤ start date (when start date present)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    End date must be after start date
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    All checks pass
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 6 - END -->
+
+            <!-- SECTION 7 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Sector</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: sector.code / sector.percentage (activity-level);
+              transaction.sector.code (fallback)</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    No activity-level AND no transaction-level sectors
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">No sectors defined</td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    No activity-level sectors, transaction-level present
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    No activity-level sectors defined, only transaction-level
+                    sectors
+                  </td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Any sector code is not exactly 5 digits
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    All sectors must use 5-digit DAC CRS codes
+                  </td>
+                  <td class="govuk-table__cell align_right">
+                    (valid ÷ total) × 100
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Sector percentages present and do not sum to 100% (±0.02)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Sector percentages must sum to 100% (got N%)
+                  </td>
+                  <td class="govuk-table__cell align_right">actual sum</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    All checks pass
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <span class="govuk-caption-m govuk-!-margin-bottom-8"
+              >ⓘ Sector percentage tolerance is configurable (sector_tolerance,
+              default ±0.02). Percentages are optional — if absent, only code
+              validity is checked.</span
+            >
+            <!-- SECTION 7 - END -->
+
+            <!-- SECTION 8 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Location</h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: recipient-country and recipient-region codes/percentages;
+              transaction-level codes as fallback</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path A — transaction-level country/region codes present
+                    (takes priority)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    No activity-level locations defined, only transaction-level
+                    locations
+                  </td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path B — no codes at all (no percentages, no transaction
+                    codes)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    No location (country or region) specified
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path B — exactly one country/region code (100% implied)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path B — multiple codes, no percentages
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Multiple locations specified without percentages
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path C — activity-level percentages present, do not sum to
+                    100%
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Location percentages must sum to 100% (got N%)
+                  </td>
+                  <td class="govuk-table__cell align_right">actual sum</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Path C — percentages sum to 100% (±0.02)
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">—--</td>
+                  <td class="govuk-table__cell align_right">actual sum</td>
+                </tr>
+              </tbody>
+            </table>
+            <span class="govuk-caption-m govuk-!-margin-bottom-8"
+              >ⓘ Location percentage tolerance is configurable
+              (location_tolerance, default ±0.02). Evaluated via three mutually
+              exclusive paths checked in order.</span
+            >
+            <!-- SECTION 8 - END -->
+
+            <!-- SECTION 9 - START -->
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+              Participating Organisations
+            </h3>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2"
+              >Source: participating-org.ref</span
+            >
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                  <th scope="col" class="govuk-table__header align_right">
+                    Percentage
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Field missing or all values empty
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    No participating organisations defined
+                  </td>
+                  <td class="govuk-table__cell align_right">0%</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    At least one organisation present
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">—--</td>
+                  <td class="govuk-table__cell align_right">100%</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 9 - END -->
+          </div>
+          <!-- CONTENT - END -->
+        </div>
+      </div>
+    </div>
+    <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
+
+    <!-- //////////////////////////////////////////// MODAL - START //////////////////////////////////////////// -->
+    <div id="dashboard_helptext_V2" class="modals" style="display: none">
+      <div class="modal_wrapper">
+        <div class="modal_content">
+          <!-- HEADER - START -->
+          <div class="header">
+            <span id="closeBtn_V2" class="govuk-heading-s close_button"
+              >close <span class="close">&times;</span></span
+            >
+            <h1 class="govuk-heading-m">
+              Validation Rules & Methodology - Document Publication
+            </h1>
+          </div>
+          <!-- HEADER - END -->
+
+          <!-- CONTENT - START -->
+          <div class="content">
+            <!-- SECTION 1 - START -->
+            <h2 class="govuk-heading-m">Document Validation Rules</h2>
+            <p>
+              Document checks apply to
+              <strong>H1 activities (programmes) only</strong>. Each check scans
+              <strong class="blue">document-link.title.narrative</strong> for a
+              matching pattern (case-insensitive regex). An activity on the
+              exemption list is not applicable for all document checks.
+            </p>
+            <h3
+              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
+            >
+              Business Case
+            </h3>
+            <p><strong class="blue">/Business Case.*Published/i</strong></p>
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity is on the exemption list
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">No start date</th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">No start date available</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Started before 2011-01-01
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity started before 2011-01-01
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Started within the last 3 months
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity started less than 3 months ago
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document not published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Business Case document not published
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 1 - END -->
+
+            <!-- SECTION 2 - START -->
+            <h3
+              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+            >
+              Logical Framework
+            </h3>
+            <p><strong class="blue">/Logical Framework.*Published/i</strong></p>
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity is on the exemption list
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">No start date</th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">No start date available</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Started within the last 3 months
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity started less than 3 months ago
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document not published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Logical Framework document not published
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 2 - END -->
+
+            <!-- SECTION 3 - START -->
+            <h3
+              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+            >
+              Annual Review
+            </h3>
+            <p><strong class="blue">/Annual Review.*Published/i</strong></p>
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity is on the exemption list
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">No start date</th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">No start date available</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Started within the last 19 months
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity started less than 19 months ago
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Document not published
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Annual Review document not published
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- SECTION 3 - END -->
+          </div>
+          <!-- CONTENT - END -->
+        </div>
+      </div>
+    </div>
+    <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
+
+    <!-- //////////////////////////////////////////// HEADER - START //////////////////////////////////////////// -->
+    <header class="govuk-template__header old_nav">
+      <!-- ====================== GDS BANNER - START ====================== -->
+      <div class="govuk-header govuk-header--full-width-border">
+        <div
+          class="govuk-header__container app-width-container app-header-container"
+        >
+          <div class="search_wrapper">
+            <div class="govuk-header__logo app-header-logo">
+              <a href="/" class="govuk-header__homepage-link">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  focusable="false"
+                  role="img"
+                  viewBox="0 0 324 60"
+                  height="30"
+                  width="162"
+                  fill="currentcolor"
+                  class="govuk-header__logotype"
+                  aria-label="GOV.UK"
+                >
+                  <title>GOV.UK</title>
+                  <g>
+                    <circle cx="20" cy="17.6" r="3.7"></circle>
+                    <circle cx="10.2" cy="23.5" r="3.7"></circle>
+                    <circle cx="3.7" cy="33.2" r="3.7"></circle>
+                    <circle cx="31.7" cy="30.6" r="3.7"></circle>
+                    <circle cx="43.3" cy="17.6" r="3.7"></circle>
+                    <circle cx="53.2" cy="23.5" r="3.7"></circle>
+                    <circle cx="59.7" cy="33.2" r="3.7"></circle>
+                    <circle cx="31.7" cy="30.6" r="3.7"></circle>
+                    <path
+                      d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"
+                    ></path>
+                  </g>
+                  <circle
+                    class="govuk-logo-dot"
+                    cx="227"
+                    cy="36"
+                    r="7.3"
+                  ></circle>
+                  <path
+                    d="M94.7,36.1c0,1.9.2,3.6.7,5.4.5,1.7,1.2,3.2,2.1,4.5.9,1.3,2.2,2.4,3.6,3.2,1.5.8,3.2,1.2,5.3,1.2s3.6-.3,4.9-.9c1.3-.6,2.3-1.4,3.1-2.3.8-.9,1.3-2,1.6-3,.3-1.1.5-2.1.5-3v-.4h-11v-6.6h19.5v24h-7.7v-5.4c-.5.8-1.2,1.6-2,2.3-.8.7-1.7,1.3-2.7,1.8-1,.5-2.1.9-3.3,1.2-1.2.3-2.5.4-3.8.4-3.2,0-6-.6-8.4-1.7-2.5-1.1-4.5-2.7-6.2-4.7-1.7-2-3-4.4-3.8-7.1-.9-2.7-1.3-5.6-1.3-8.7s.5-6,1.5-8.7,2.4-5.1,4.2-7.1c1.8-2,4-3.6,6.5-4.7s5.4-1.7,8.6-1.7,4,.2,5.9.7c1.8.5,3.5,1.1,5.1,2,1.5.9,2.9,1.9,4,3.2,1.2,1.2,2.1,2.6,2.8,4.1l-7.7,4.3c-.5-.9-1-1.8-1.6-2.6-.6-.8-1.3-1.5-2.2-2.1-.8-.6-1.7-1-2.8-1.4-1-.3-2.2-.5-3.5-.5-2,0-3.8.4-5.3,1.2s-2.7,1.9-3.6,3.2c-.9,1.3-1.7,2.8-2.1,4.6s-.7,3.5-.7,5.3v.3h0ZM152.9,13.7c3.2,0,6.1.6,8.7,1.7,2.6,1.2,4.7,2.7,6.5,4.7,1.8,2,3.1,4.4,4.1,7.1s1.4,5.6,1.4,8.7-.5,6-1.4,8.7c-.9,2.7-2.3,5.1-4.1,7.1s-4,3.6-6.5,4.7c-2.6,1.1-5.5,1.7-8.7,1.7s-6.1-.6-8.7-1.7c-2.6-1.1-4.7-2.7-6.5-4.7-1.8-2-3.1-4.4-4.1-7.1-.9-2.7-1.4-5.6-1.4-8.7s.5-6,1.4-8.7,2.3-5.1,4.1-7.1c1.8-2,4-3.6,6.5-4.7s5.4-1.7,8.7-1.7h0ZM152.9,50.4c1.9,0,3.6-.4,5-1.1,1.4-.7,2.7-1.7,3.6-3,1-1.3,1.7-2.8,2.2-4.5.5-1.7.8-3.6.8-5.7v-.2c0-2-.3-3.9-.8-5.7-.5-1.7-1.3-3.3-2.2-4.5-1-1.3-2.2-2.3-3.6-3-1.4-.7-3.1-1.1-5-1.1s-3.6.4-5,1.1c-1.5.7-2.7,1.7-3.6,3s-1.7,2.8-2.2,4.5c-.5,1.7-.8,3.6-.8,5.7v.2c0,2.1.3,4,.8,5.7.5,1.7,1.2,3.2,2.2,4.5,1,1.3,2.2,2.3,3.6,3,1.5.7,3.1,1.1,5,1.1ZM189.1,58l-12.3-44h9.8l8.4,32.9h.3l8.2-32.9h9.7l-12.3,44M262.9,50.4c1.3,0,2.5-.2,3.6-.6,1.1-.4,2-.9,2.8-1.7.8-.8,1.4-1.7,1.9-2.9.5-1.2.7-2.5.7-4.1V14h8.6v28.5c0,2.4-.4,4.6-1.3,6.6-.9,2-2.1,3.6-3.7,5-1.6,1.4-3.4,2.4-5.6,3.2-2.2.7-4.5,1.1-7.1,1.1s-4.9-.4-7.1-1.1c-2.2-.7-4-1.8-5.6-3.2s-2.8-3-3.7-5c-.9-2-1.3-4.1-1.3-6.6V14h8.7v27.2c0,1.6.2,2.9.7,4.1.5,1.2,1.1,2.1,1.9,2.9.8.8,1.7,1.3,2.8,1.7s2.3.6,3.6.6h0ZM288.5,14h8.7v19.1l15.5-19.1h10.8l-15.1,17.6,16.1,26.4h-10.2l-11.5-19.7-5.6,6.3v13.5h-8.7"
+                  ></path>
+                </svg>
+                <span class="govuk-header__product-name"
+                  >Development Tracker</span
+                >
+              </a>
+            </div>
+            <div
+              class="app-site-search"
+              data-module="app-search"
+              data-search-index="/search-index-df86cccd9850b8c9abec21efdc0862c3.json"
+              data-app-search-init=""
+            >
+              <label class="govuk-visually-hidden" for="app-site-search__input"
+                >Search Development Tracker</label
+              >
+              <a class="app-site-search__link govuk-link" href="/sitemap/"
+                >Sitemap</a
+              >
+              <div class="app-site-search__wrapper">
+                <div
+                  class="app-site-search__status"
+                  style="
+                    border: 0px;
+                    clip: rect(0px, 0px, 0px, 0px);
+                    height: 1px;
+                    margin-bottom: -1px;
+                    margin-right: -1px;
+                    overflow: hidden;
+                    padding: 0px;
+                    position: absolute;
+                    white-space: nowrap;
+                    width: 1px;
+                  "
+                >
+                  <div
+                    id="app-site-search__input__status--A"
+                    role="status"
+                    aria-atomic="true"
+                    aria-live="polite"
+                  ></div>
+                  <div
+                    id="app-site-search__input__status--B"
+                    role="status"
+                    aria-atomic="true"
+                    aria-live="polite"
+                  ></div>
+                </div>
+                <input
+                  aria-describedby="app-site-search__input__assistiveHint"
+                  aria-expanded="false"
+                  aria-controls="app-site-search__input__listbox"
+                  aria-autocomplete="both"
+                  autocomplete="off"
+                  class="app-site-search__input app-site-search__input--default"
+                  id="app-site-search__input"
+                  name="input-autocomplete"
+                  placeholder="Search Development Tracker "
+                  type="text"
+                  role="combobox"
+                />
+                <span
+                  id="app-site-search__input__assistiveHint"
+                  style="display: none"
+                  >When autocomplete results are available use up and down
+                  arrows to review and enter to select. Touch device users,
+                  explore by touch or with swipe gestures.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ====================== GDS BANNER - END ====================== -->
+
+      <!-- ====================== NAVIGATION - START ====================== -->
+      <div
+        class="govuk-service-navigation govuk-service-navigation--inverse app-service-navigation"
+        data-module="govuk-service-navigation"
+        data-govuk-service-navigation-init=""
+      >
+        <div class="govuk-width-container">
+          <div class="govuk-service-navigation__container">
+            <nav
+              aria-label="Menu"
+              class="govuk-service-navigation__wrapper app-service-navigation__wrapper"
+            >
+              <button
+                type="button"
+                class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
+                aria-controls="navigation"
+                hidden=""
+                aria-hidden="true"
+              >
+                Menu
+              </button>
+
+              <ul class="govuk-service-navigation__list" id="navigation">
+                <!-- NAV ITEM - 1 - START -->
+                <li class="govuk-service-navigation__item">
+                  <a
+                    class="govuk-service-navigation__link additionial_info"
+                    href="/"
+                    data-module="app-mobile-navigation-section"
+                    data-app-mobile-navigation-section-init=""
+                  >
+                    Home
+                    <template>
+                      <ul
+                        class="app-mobile-navigation-section__list app-mobile-navigation-section__subnav"
+                        hidden=""
+                      >
+                        <li class="app-mobile-navigation-section__item">
+                          <a
+                            class="govuk-service-navigation__link"
+                            href="/get-started/"
+                            >Get started overview</a
+                          >
+                        </li>
+                        <li>
+                          <h3 class="app-mobile-navigation-section__theme">
+                            Setup guides
+                          </h3>
+                          <ul class="app-mobile-navigation-section__list">
+                            <li class="app-mobile-navigation-section__item">
+                              <a
+                                class="govuk-service-navigation__link"
+                                href="/get-started/prototyping/"
+                                >Prototyping</a
+                              >
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </template>
+                  </a>
+                </li>
+                <!-- NAV ITEM - 1 - END -->
+
+                <!-- NAV ITEM - 2 - START -->
+                <li class="govuk-service-navigation__item">
+                  <a
+                    class="govuk-service-navigation__link additionial_info"
+                    href="#"
+                    data-module="app-mobile-navigation-section"
+                    data-app-mobile-navigation-section-init=""
+                    >Aid by Sector</a
+                  >
+                </li>
+                <!-- NAV ITEM - 2 - END -->
+
+                <!-- NAV ITEM - 3 - START -->
+                <li class="govuk-service-navigation__item">
+                  <a
+                    class="govuk-service-navigation__link additionial_info"
+                    href="location_page_Ethiopia"
+                    data-module="app-mobile-navigation-section"
+                    data-app-mobile-navigation-section-init=""
+                    id="location_nav_item"
+                    >Aid by Location</a
+                  >
+                </li>
+                <!-- NAV ITEM - 3 - END -->
+
+                <!-- NAV ITEM - 4 - START -->
+                <li class="govuk-service-navigation__item">
+                  <a
+                    class="govuk-service-navigation__link additionial_info"
+                    href="#"
+                    data-module="app-mobile-navigation-section"
+                    data-app-mobile-navigation-section-init=""
+                    >Aid by Department</a
+                  >
+                </li>
+                <!-- NAV ITEM - 4 - END -->
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
+    <%= yield %>
+    <footer class="govuk-template__footer">
+      <div class="govuk-footer">
+        <div class="govuk-width-container">
+          <svg
+            focusable="false"
+            role="presentation"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 64 60"
+            height="30"
+            width="32"
+            fill="currentcolor"
+            class="govuk-footer__crown"
+          >
+            <g>
+              <circle cx="20" cy="17.6" r="3.7" />
+              <circle cx="10.2" cy="23.5" r="3.7" />
+              <circle cx="3.7" cy="33.2" r="3.7" />
+              <circle cx="31.7" cy="30.6" r="3.7" />
+              <circle cx="43.3" cy="17.6" r="3.7" />
+              <circle cx="53.2" cy="23.5" r="3.7" />
+              <circle cx="59.7" cy="33.2" r="3.7" />
+              <circle cx="31.7" cy="30.6" r="3.7" />
+              <path
+                d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"
+              />
+            </g>
+          </svg>
+
+          <div class="govuk-footer__meta">
+            <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+              <h2 class="govuk-visually-hidden">Footer links</h2>
+
+              <ul class="govuk-footer__inline-list">
+                <li class="govuk-footer__inline-list-item">
+                  <a
+                    class="govuk-footer__link"
+                    href="/manage-prototype/clear-data"
+                  >
+                    Clear data
+                  </a>
+                </li>
+              </ul>
+
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="govuk-footer__licence-logo"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 483.2 195.7"
+                height="17"
+                width="41"
+              >
+                <path
+                  fill="currentColor"
+                  d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+                />
+              </svg>
+              <span class="govuk-footer__licence-description">
+                All content is available under the
+                <a
+                  class="govuk-footer__link"
+                  href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+                  rel="license"
+                  >Open Government Licence v3.0</a
+                >, except where otherwise stated
+              </span>
+            </div>
+            <div class="govuk-footer__meta-item">
+              <a
+                class="govuk-footer__link govuk-footer__copyright-logo"
+                href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+              >
+                © Crown copyright
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="dqa/assets/javascripts/kit.js"></script>
+
+    <script src="dqa/assets/javascripts/auto-store-data.js"></script>
+
+    <script
+      type="module"
+      src="dqa/assets/javascripts/govuk-frontend.min.js"
+    ></script>
+
+    <script type="module" src="dqa/assets/javascripts/init.js"></script>
+
+    <script type="module" src="dqa/assets/javascripts/application.js"></script>
+  </body>
+</html>

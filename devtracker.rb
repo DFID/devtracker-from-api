@@ -43,6 +43,7 @@ require_relative 'helpers/input_sanitizer.rb'
 require_relative 'helpers/region_helpers.rb'
 require_relative 'helpers/recaptcha_helper.rb'
 require_relative 'helpers/solr_helper.rb'
+require_relative 'helpers/dqa_helpers.rb'
 
 #Helper Modules
 include CountryHelpers
@@ -57,16 +58,17 @@ include InputSanitizer
 include RegionHelpers
 include RecaptchaHelper
 include SolrHelper
+include DqaHelpers
 
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+ set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -87,8 +89,8 @@ set :goverment_department_ids, 'GB-GOV-11,GB-GOV-14,GB-GOV-27,GB-GOV-53,GB-GOV-2
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, false
-set :show_exceptions, false
+set :raise_errors, true
+set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -1566,6 +1568,46 @@ get '/department' do
   		end
   	end
 	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
+end
+
+post '/dqa-req-demo?' do
+	org_string = 'GB-GOV-1' #params['org_id']
+	country_region_string = ''#params['data']['c_r_string']
+	sector_string =  ''#params['data']['sector_string']
+	json :output => dqaResponse(org_string, country_region_string, sector_string)
+end
+
+get '/dqa' do
+  	settings.devtracker_page_title = 'Data Quality Assurance Page'
+	orgList = Oj.load(File.read('data/OGDs.json'))
+	orgList = orgList.values
+	country_region_list = [
+		{
+			title: "Bangladesh",
+			code: "BD"
+		}
+	]
+	sector_list = [
+		{
+			title: "Developed Countries Unspecified",
+			code: "99810"
+		}
+	]
+	erb :'dqa/dqa', 
+	:layout => :'layouts/layout_dqa', 
+	:locals => {
+		oipa_api_url: settings.oipa_api_url, 
+		orgList: orgList, 
+		country_region_list: country_region_list,
+		sector_list: sector_list
+	}
+end
+
+post '/dqa-request?' do
+	org_string = params['org_id']
+	country_region_string = params['c_r_string']
+	sector_string =  params['sector_string']
+	json :output => dqaResponse(org_string, country_region_string, sector_string)
 end
 
 get '/about/?' do

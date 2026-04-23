@@ -1,0 +1,597 @@
+// SECTOR AND LOCATION
+#location_full_hero, #location_sub_full_hero {
+     background-color: govuk-functional-colour("brand");
+     padding: 1.5em 15px;
+     &.full_width {
+          section {
+               display: inline-block;
+               width: 100%;
+               .section {
+                    display: inline-block;
+                    float: left;
+                    @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                         width: 100%;
+                         margin-bottom: 1em;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                         width: 100%;
+                         margin-bottom: 1em;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                         width: 50%;
+                         margin-bottom: 1em;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                         width: 50%;
+                         margin-bottom: 1em;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                         width: 33.3%;
+                         margin-bottom: 0em;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(1023px)}) {
+                         width: 33.3%;
+                         margin-bottom: 0em;
+                    }
+               }
+          }
+          ul.govuk-tabs__list {
+               border-bottom: none;
+               margin-bottom: 0;
+               li {
+                    background: none;
+                    &:before {
+                         color: white;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                         padding-left: 2em;
+                         margin-left: 0;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                         padding-left: 2em;
+                         margin-left: 0;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                         padding-left: 19px;
+                         margin-left: 0;
+                    }
+                    &.govuk-tabs__list-item--selected {
+                         border: none;
+                         background-color: darken(#236098, 5%);
+                    }
+                    a {
+                         color: white;
+                         font-size: 1.2rem;
+                         @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                              padding: 0.65em 0 0.85em 0;
+                              margin: 0;
+                         }
+                         @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                              padding: 0.65em 0 0.85em 0;
+                              margin: 0;
+                         }
+                         @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                              padding: 0;
+                              margin: 0;
+                         }
+                    }
+               }
+          }
+          .big_numbers {
+               .number {
+                    // margin-top: 0.05em;
+                    @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                         font-size: 3rem;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                         font-size: 3rem;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                         font-size: 4rem;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                         font-size: 4rem;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                         font-size: 3.75rem;
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(1023px)}) {
+                         font-size: 5rem;
+                    }
+               }
+          }
+     }
+     nav.govuk-breadcrumbs {
+          padding-bottom: 0.5em;
+          margin-bottom: 0.5em;
+          // border-bottom: 1px dashed rgba(255,255,255, 0.6);
+          ol {
+               li {
+                    &:before {
+                         border-color: rgba(255,255,255, 0.4);
+                    }
+                    a {
+                         color: white;
+                    }
+               }
+          }
+     }
+     button {
+          &.govuk-button--inverse {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    float: left;
+                    margin-top: 0.75em;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    float: left;
+                    margin-top: 0.75em;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    float: left;
+                    margin-top: 0.75em;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    float: left;
+                    margin-top: 0.75em;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    float: right;
+                    margin-top: 0;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    float: right;
+                    margin-top: 0;
+               }
+          }
+     }
+     h1, p, .govuk-heading-xl {
+          color: white;
+     }
+     p {
+          // font-size: 1.5rem;
+          line-height: 1.25;
+     }
+     .govuk-caption-xl, .govuk-caption-l {
+          color: white;
+          opacity: 0.8;
+     }
+     .big_numbers {
+          .number {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    font-size: 3.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    font-size: 3.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    font-size: 3.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    font-size: 2.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    font-size: 3.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1023px)}) {
+                    font-size: 4.5rem;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    font-size: 5.35rem;
+               }
+               font-weight: bold;
+               position: relative;
+               display: inline-block;
+               width: auto;
+               .currency {
+                    position: absolute;
+                    top: -0.75em;
+                    right: 0;
+               }
+          }
+          h2.govuk-body-l {
+               color: rgba(255,255,255, 0.8);
+               font-size: 1.6rem;
+          }
+     }
+}
+
+#location_full_hero {
+     &.full_width {
+          @media (min-width: #{govuk-breakpoint-value(0px)}) {
+               padding: 0.5em 15px 0 15px;
+          }
+          @media (min-width: #{govuk-breakpoint-value(480px)}) {
+               padding: 0.5em 15px 0 15px;
+          }
+          @media (min-width: #{govuk-breakpoint-value(641px)}) {
+               padding: 0.5em 15px 0 15px;
+          }
+          @media (min-width: #{govuk-breakpoint-value(769px)}) {
+               padding: 0.5em 15px 0 15px;
+          }
+          @media (min-width: #{govuk-breakpoint-value(1023px)}) {
+               padding: 0em 15px 0 15px;
+          }
+          @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+               padding: 0em 15px 0 15px;
+          }
+     }
+     .flag_container {
+          display: inline-block;
+          width: 1.25em;
+          height: 0.75em;
+          margin: 0 0.15em -0.025em 0;
+          box-shadow: inset 0 0 0px 3px rgba(255,255,255, 1);
+          &.Ethiopia {
+               background: url("../images/flags/Ethiopia.png") no-repeat 50% 50%;
+               background-size: cover;
+          }
+     }
+}
+
+#location_sub_full_hero {
+     padding: 2em 0 2em 0;
+     background-color: darken(#1a65a6, 2.5%);
+     box-shadow: inset 0px 15px 10px 0px rgba(0,0,0,0.1);
+     border-bottom: 2px solid white;
+     @media (min-width: #{govuk-breakpoint-value(0px)}) {
+          padding: 1em 15px 1em 15px;
+     }
+     @media (min-width: #{govuk-breakpoint-value(480px)}) {
+          padding: 1em 15px 1em 15px;
+     }
+     @media (min-width: #{govuk-breakpoint-value(640px)}) {
+          padding: 1em 15px 1em 15px;
+     }
+     @media (min-width: #{govuk-breakpoint-value(641px)}) {
+          padding: 1em 15px 0em 15px;
+     }
+     @media (min-width: #{govuk-breakpoint-value(769px)}) {
+          padding: 2em 15px 2em 15px;
+     }
+}
+
+@keyframes pulse_map {
+     0%, 100% { animation-timing-function: ease-in; }
+     50% { transform: scale(1.1); }
+}
+
+.interactive_ethiopia_map {
+     display: inline-block;
+     width: 100%;
+     @media (min-width: #{govuk-breakpoint-value(0px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 50% 50%;
+          background-size: cover;
+          height: 100vh;
+     }
+     @media (min-width: #{govuk-breakpoint-value(480px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 50% 50%;
+          background-size: cover;
+          height: 100vh;
+     }
+     @media (min-width: #{govuk-breakpoint-value(640px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 0% 50%;
+          background-size: cover;
+          height: 85vh;
+     }
+     @media (min-width: #{govuk-breakpoint-value(641px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 20% 50%;
+          background-size: cover;
+          height: 85vh;
+     }
+     @media (min-width: #{govuk-breakpoint-value(769px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 0% 50%;
+          background-size: cover;
+          height: 85vh;
+     }
+     @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+          background: url("../images/map_graphic_Ethiopia.png") no-repeat 0% 50%;
+          background-size: cover;
+          height: 85vh;
+     }
+     box-shadow: inset 0px 15px 10px 0px rgba(0,0,0,0.1);
+     position: relative;
+     // padding: 3em 0;
+     .govuk-width-container {
+          padding-top: 3em;
+          padding-bottom: 3em;
+     }
+     .map_location {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 3em;
+          height: 3em;
+          border-radius: 50%;
+          background: url("../images/map_point.svg") no-repeat 50% 50%;
+          background-size: cover;
+          text-decoration: none;
+          .number {
+               margin: 0;
+               color: white;
+          }
+          &:hover, &:active, &:focus {
+               animation: pulse_map 2s infinite;
+          }
+          &.one {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    left: 10%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    left: 10%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    left: 65%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    left: 65%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    left: 60%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    left: 40%;
+               }
+               top: 45%;
+          }
+          &.two {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    left: 38%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    left: 38%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    left: 68%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    left: 68%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    left: 68%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    left: 48%;
+               }
+               top: 38%;
+          }
+          &.three {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    left: 50%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    left: 50%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    left: 67%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    left: 67%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    left: 67%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    left: 47%;
+               }
+               top: 52%;
+          }
+          &.four {
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    left: 60%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    left: 60%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    left: 73%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    left: 73%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    left: 73%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    left: 53%;
+               }
+               top: 54%;
+          }
+     }
+     .project_details_wrapper {
+          position: relative;
+          .project_details {
+               position: absolute;
+               background-color: white;
+               border-radius: 10px;
+               box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.2);
+               padding: 1.25em 1.5em 1.5em 1.5em;
+               left: 15px;
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    right: 15px;
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    right: 15px;
+               }
+               @media (min-width: #{govuk-breakpoint-value(640px)}) {
+                    right: -20%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    right: -20%;
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    right: 0;
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    right: 35%;
+               }
+               .project {
+                    @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                         margin-bottom: 1em;
+                         &:last-of-type {
+                              margin-bottom: 0;
+                         }
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                         margin-bottom: 1em;
+                         &:last-of-type {
+                              margin-bottom: 0;
+                         }
+                    }
+                    @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                         margin-bottom: 1em;
+                         &:last-of-type {
+                              margin-bottom: 0;
+                         }
+                    }
+                    &:last-of-type {
+                         p {
+                              margin: 0;
+                         }
+                    }
+                    .number {
+                         display: flex;
+                         align-items: center;
+                         justify-content: center;
+                         width: 1.25em;
+                         height: 1.25em;
+                         border-radius: 50%;
+                         float: left;
+                         margin: 0 0.25em 0 0;
+                         background-color: govuk-functional-colour("brand");
+                         &.govuk-heading-s {
+                              color: white;
+                              text-decoration: none;
+                              font-size: 1.2rem;
+                         }
+                    }
+                    p.govuk-body-s {
+                         color: govuk-functional-colour("secondary-text");
+                         @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                              display: none;
+                         }
+                         @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                              display: none;
+                         }
+                         @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                              display: block;
+                         }
+                    }
+               }
+          }
+     }
+     .map_disclaimer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: black;
+          padding: 0.5em;
+          border-top: 2px solid white;
+          .govuk-width-container {
+               padding-top: 0;
+               padding-bottom: 0;
+          }
+          p {
+               color: white;
+               margin: 0;
+          }
+     }
+}
+
+.location_tile_container {
+     display: flex;
+     flex-direction: row;
+     margin-bottom: 2em;
+     flex-wrap: wrap;
+     &.three {
+          .location_hero {
+               margin: 0 0 2em 0;
+          }
+     }
+     .location_hero {
+          border-radius: 10px;
+          box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.2);
+          padding: 1.5em;
+          display: flex;
+          transition: transform 0.3s ease;
+          position: relative;
+          &:hover, &:active, &:focus {
+               cursor: pointer;
+               transform: translateY(-15px);
+               box-shadow: 0px 0px 15px 0px rgba(26,101,166,0.2);
+          }
+          p {
+               margin-bottom: 4.5em;
+          }
+          .budget {
+               position: absolute;
+               bottom: 1em;
+               left: 1.5em;
+               p.govuk-heading-xl {
+                    font-size: 3.5rem;
+                    color: govuk-functional-colour("brand");
+               }
+          }
+          &.one_third {
+               display: inline-block;
+               position: relative;
+               padding: 1em 1.5em;
+               // min-height: 7em;
+               // &.one {
+               //      width: 26.75%;
+               // }
+               @media (min-width: #{govuk-breakpoint-value(0px)}) {
+                    width: 100%;
+                    &:nth-of-type(3n), &:nth-of-type(6n) {
+                         margin-right: 0;
+                    }
+                    // &:nth-of-type(even) {
+                    //      margin-right: 0;
+                    // }
+               }
+               @media (min-width: #{govuk-breakpoint-value(480px)}) {
+                    width: 100%;
+                    &:nth-of-type(3n), &:nth-of-type(6n) {
+                         margin-right: 0;
+                    }
+                    // &:nth-of-type(even) {
+                    //      margin-right: 0;
+                    // }
+               }
+               @media (min-width: #{govuk-breakpoint-value(641px)}) {
+                    width: 100%;
+                    &:nth-of-type(3n), &:nth-of-type(6n) {
+                         margin-right: 0;
+                    }
+                    // &:nth-of-type(even) {
+                    //      margin-right: 0;
+                    // }
+               }
+               @media (min-width: #{govuk-breakpoint-value(769px)}) {
+                    width: 41.95%;
+                    margin-right: 3.5%;
+                    &:nth-of-type(3n), &:nth-of-type(6n) {
+                         margin-right: 3.5%;
+                    }
+                    // &:nth-of-type(even) {
+                    //      margin-right: 0;
+                    // }
+               }
+               @media (min-width: #{govuk-breakpoint-value(1024px)}) {
+                    width: 26.25%;
+                    margin-right: 3.5%;
+                    &:nth-of-type(3n), &:nth-of-type(6n) {
+                         margin-right: 0;
+                    }
+                    // &:nth-of-type(even) {
+                    //      margin-right: 3.5%;
+                    // }
+               }
+               &:last-of-type {
+                    margin-right: 0;
+               }
+          }
+     }
+}
