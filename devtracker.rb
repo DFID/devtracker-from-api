@@ -63,12 +63,12 @@ include DqaHelpers
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
-# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+ set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
-# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+ set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -125,26 +125,7 @@ get '/' do  #homepage
 	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 	pulledData = RestClient.get newApiCall
 	what_we_do = high_level_sector_listv2(pulledData, 'top_five_sectors')
-	# if (!canLoadFromCache('what_we_do'))
-	# 	## logic
-	# 	## get budget data, then check if they fall within date range
-	# 	## do a summation of the budget amount within date range
-	# 	## pick dac5 sector code and then get the underlying high level sector code
-	# 	## if the sector is present, add the new budget info to this sector
-	# 	## Else create a new ref to the high level sector code and add
-	# 	## budget value starting from 0
-	# 	## pick budget percentage for each dac5 sector code2
-	# 	## calculate the budget amount against that perentage and add it to
-	# 	## the high level related sector code
-	# 	newApiCall = settings.oipa_api_url + "activity?q=participating_org_ref:GB-GOV-* AND reporting_org_ref:(#{settings.goverment_department_ids.gsub(","," OR ")}) AND budget_period_start_iso_date:[#{settings.current_first_day_of_financial_year}T00:00:00Z TO *] AND budget_period_end_iso_date:[* TO #{settings.current_last_day_of_financial_year}T00:00:00Z]&fl=iati_identifier,budget_value,recipient_country_code,recipient_region_code,budget_period_start_iso_date,budget_period_end_iso_date,sector_code,sector_percentage,&rows=50000"
 		
-	# 	pulledData = RestClient.get newApiCall
-	# 	storeCacheData(high_level_sector_listv2(pulledData, 'top_five_sectors'), 'what_we_do')
-	# 	what_we_do = getCacheData('what_we_do')
-	# else
-	# 	what_we_do = getCacheData('what_we_do')
-	# end
-	
 	whatWeDoTotal = what_we_do.first['budget']
 	top5countries = top5countries.select{|i| i.has_key?('budget')}
 	top5countries = top5countries.sort_by{|val| -val['budget'].to_f}
@@ -1570,13 +1551,6 @@ get '/department' do
 	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
 end
 
-post '/dqa-req-demo?' do
-	org_string = 'GB-GOV-1' #params['org_id']
-	country_region_string = ''#params['data']['c_r_string']
-	sector_string =  ''#params['data']['sector_string']
-	json :output => dqaResponse(org_string, country_region_string, sector_string)
-end
-
 get '/dqa' do
   	settings.devtracker_page_title = 'Data Quality Assurance Page'
 	orgList = Oj.load(File.read('data/OGDs.json'))
@@ -1587,13 +1561,13 @@ get '/dqa' do
 			code: "BD"
 		}
 	]
-	sector_list = [
-		{
-			title: "Developed Countries Unspecified",
-			code: "99810"
-		}
-	]
-	erb :'dqa/dqa', 
+	sector_list = Oj.load(File.read('data/sectors-v2.json'))
+	sector_list = sector_list.map do |item|
+		[item["High Level Code (L1)"], item["High Level Sector Description"]]
+	end
+	sector_list = sector_list.uniq
+	sector_list = sector_list.sort_by { |_key, value| value }
+	erb :'dqa/dqa',
 	:layout => :'layouts/layout_dqa', 
 	:locals => {
 		oipa_api_url: settings.oipa_api_url, 

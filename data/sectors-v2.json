@@ -1,0 +1,2370 @@
+[
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":111,
+    "Code (L3)":11110,
+    "Name":"Education policy and administrative management",
+    "Category Name":"Education, Level Unspecified"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":111,
+    "Code (L3)":11120,
+    "Name":"Education facilities and training",
+    "Category Name":"Education, Level Unspecified"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":111,
+    "Code (L3)":11130,
+    "Name":"Teacher training",
+    "Category Name":"Education, Level Unspecified"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":111,
+    "Code (L3)":11182,
+    "Name":"Educational research",
+    "Category Name":"Education, Level Unspecified"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11220,
+    "Name":"Primary education",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11230,
+    "Name":"Basic life skills for adults",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11231,
+    "Name":"Basic life skills for youth",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11232,
+    "Name":"Primary education equivalent for adults",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11240,
+    "Name":"Early childhood education",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11250,
+    "Name":"School feeding",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":112,
+    "Code (L3)":11260,
+    "Name":"Lower secondary education",
+    "Category Name":"Basic Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":113,
+    "Code (L3)":11320,
+    "Name":"Upper Secondary Education (modified and includes data from 11322)",
+    "Category Name":"Secondary Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":113,
+    "Code (L3)":11330,
+    "Name":"Vocational training",
+    "Category Name":"Secondary Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":114,
+    "Code (L3)":11420,
+    "Name":"Higher education",
+    "Category Name":"Post-Secondary Education"
+  },
+  {
+    "High Level Code (L1)":1,
+    "High Level Sector Description":"Education",
+    "Category (L2)":114,
+    "Code (L3)":11430,
+    "Name":"Advanced technical and managerial training",
+    "Category Name":"Post-Secondary Education"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":121,
+    "Code (L3)":12110,
+    "Name":"Health policy and administrative management",
+    "Category Name":"Health, General"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":121,
+    "Code (L3)":12196,
+    "Name":"Health statistics and data",
+    "Category Name":"Health, General"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":121,
+    "Code (L3)":12181,
+    "Name":"Medical education\/training",
+    "Category Name":"Health, General"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":121,
+    "Code (L3)":12182,
+    "Name":"Medical research",
+    "Category Name":"Health, General"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":121,
+    "Code (L3)":12191,
+    "Name":"Medical services",
+    "Category Name":"Health, General"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12220,
+    "Name":"Basic health care",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12230,
+    "Name":"Basic health infrastructure",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12240,
+    "Name":"Basic nutrition",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12250,
+    "Name":"Infectious disease control",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12261,
+    "Name":"Health education",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12262,
+    "Name":"Malaria control",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12263,
+    "Name":"Tuberculosis control",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12264,
+    "Name":"COVID-19 control",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":122,
+    "Code (L3)":12281,
+    "Name":"Health personnel development",
+    "Category Name":"Basic Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12310,
+    "Name":"NCDs control, general",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12320,
+    "Name":"Tobacco use control",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12330,
+    "Name":"Control of harmful use of alcohol and drugs",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12340,
+    "Name":"Promotion of mental health and well-being",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12350,
+    "Name":"Other prevention and treatment of NCDs",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":123,
+    "Code (L3)":12382,
+    "Name":"Research for prevention and control of NCDs",
+    "Category Name":"Non-communicable diseases (NCDs)"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13010,
+    "Name":"Population policy and administrative management",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13096,
+    "Name":"Population statistics and data",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13020,
+    "Name":"Reproductive health care",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13030,
+    "Name":"Family planning",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13040,
+    "Name":"STD control including HIV\/AIDS",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":2,
+    "High Level Sector Description":"Health",
+    "Category (L2)":130,
+    "Code (L3)":13081,
+    "Name":"Personnel development for population and reproductive health",
+    "Category Name":"Population Policies\/Programmes & Reproductive Health"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14010,
+    "Name":"Water sector policy and administrative management",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14015,
+    "Name":"Water resources conservation (including data collection)",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14020,
+    "Name":"Water supply and sanitation - large systems",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14021,
+    "Name":"Water supply - large systems",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14022,
+    "Name":"Sanitation - large systems",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14030,
+    "Name":"Basic drinking water supply and basic sanitation",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14031,
+    "Name":"Basic drinking water supply",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14032,
+    "Name":"Basic sanitation",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14040,
+    "Name":"River basins development",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14050,
+    "Name":"Waste management\/disposal",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":3,
+    "High Level Sector Description":"Water Supply & Sanitation",
+    "Category (L2)":140,
+    "Code (L3)":14081,
+    "Name":"Education and training in water supply and sanitation",
+    "Category Name":"Water Supply & Sanitation"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15110,
+    "Name":"Public sector policy and administrative management",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15121,
+    "Name":"Foreign affairs",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15122,
+    "Name":"Diplomatic missions",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15123,
+    "Name":"Administration of developing countries' foreign aid",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15124,
+    "Name":"General personnel services",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15126,
+    "Name":"Other general public services",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15127,
+    "Name":"National monitoring and evaluation",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15143,
+    "Name":"Meteorological services",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15144,
+    "Name":"National standards development",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15154,
+    "Name":"Executive office",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15196,
+    "Name":"Government and civil society statistics and data",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15111,
+    "Name":"Public finance management (PFM)",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15117,
+    "Name":"Budget planning",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15118,
+    "Name":"National audit",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15119,
+    "Name":"Debt and aid management",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15112,
+    "Name":"Decentralisation and support to subnational government",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15128,
+    "Name":"Local government finance",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15129,
+    "Name":"Other central transfers to institutions",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15185,
+    "Name":"Local government administration",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15113,
+    "Name":"Anti-corruption organisations and institutions",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15114,
+    "Name":"Domestic revenue mobilisation",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15116,
+    "Name":"Tax collection",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15155,
+    "Name":"Tax policy and administration support",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15156,
+    "Name":"Other non-tax revenue mobilisation",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15125,
+    "Name":"Public Procurement",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15130,
+    "Name":"Legal and judicial development",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15131,
+    "Name":"Justice, law and order policy, planning and administration",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15132,
+    "Name":"Police",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15133,
+    "Name":"Fire and rescue services",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15134,
+    "Name":"Judicial affairs",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15135,
+    "Name":"Ombudsman",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15136,
+    "Name":"Immigration",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15137,
+    "Name":"Prisons",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15142,
+    "Name":"Macroeconomic policy",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15150,
+    "Name":"Democratic participation and civil society",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15151,
+    "Name":"Elections",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15152,
+    "Name":"Legislatures and political parties",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15153,
+    "Name":"Media and free flow of information",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15160,
+    "Name":"Human rights",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15170,
+    "Name":"Women's rights organisations and movements, and government institutions",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15180,
+    "Name":"Ending violence against women and girls",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":151,
+    "Code (L3)":15190,
+    "Name":"Facilitation of orderly, safe, regular and responsible migration and mobility",
+    "Category Name":"Government & Civil Society-general"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15210,
+    "Name":"Security system management and reform",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15220,
+    "Name":"Civilian peace-building, conflict prevention and resolution",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15230,
+    "Name":"Participation in international peacekeeping operations",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15240,
+    "Name":"Reintegration and SALW control",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15250,
+    "Name":"Removal of land mines and explosive remnants of war",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":4,
+    "High Level Sector Description":"Government & Civil Society",
+    "Category (L2)":152,
+    "Code (L3)":15261,
+    "Name":"Child soldiers (prevention and demobilisation)",
+    "Category Name":"Conflict, Peace & Security"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16010,
+    "Name":"Social Protection",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16011,
+    "Name":"Social protection and welfare services policy, planning and administration",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16012,
+    "Name":"Social security (excl pensions)",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16013,
+    "Name":"General pensions",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16014,
+    "Name":"Civil service pensions",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16015,
+    "Name":"Social services (incl youth development and women+ children)",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16020,
+    "Name":"Employment creation",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16030,
+    "Name":"Housing policy and administrative management",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16040,
+    "Name":"Low-cost housing",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16050,
+    "Name":"Multisector aid for basic social services",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16061,
+    "Name":"Culture and cultural diversity",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16065,
+    "Name":"Recreation and sport",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16066,
+    "Name":"Culture",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16062,
+    "Name":"Statistical capacity building",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16063,
+    "Name":"Narcotics control",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16064,
+    "Name":"Social mitigation of HIV\/AIDS",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16070,
+    "Name":"Labour rights",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":5,
+    "High Level Sector Description":"Other Social Infrastructure & Services",
+    "Category (L2)":160,
+    "Code (L3)":16080,
+    "Name":"Social dialogue",
+    "Category Name":"Other Social Infrastructure & Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21010,
+    "Name":"Transport policy and administrative management",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21011,
+    "Name":"Transport policy, planning and administration",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21012,
+    "Name":"Public transport services",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21013,
+    "Name":"Transport regulation",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21020,
+    "Name":"Road transport",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21021,
+    "Name":"Feeder road construction",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21022,
+    "Name":"Feeder road maintenance",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21023,
+    "Name":"National road construction",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21024,
+    "Name":"National road maintenance",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21030,
+    "Name":"Rail transport",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21040,
+    "Name":"Water transport",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21050,
+    "Name":"Air transport",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21061,
+    "Name":"Storage",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":210,
+    "Code (L3)":21081,
+    "Name":"Education and training in transport and storage",
+    "Category Name":"Transport & Storage"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22010,
+    "Name":"Communications policy and administrative management",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22011,
+    "Name":"Communications policy, planning and administration",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22012,
+    "Name":"Postal services",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22013,
+    "Name":"Information services",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22020,
+    "Name":"Telecommunications",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22030,
+    "Name":"Radio, television, print and online media",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22040,
+    "Name":"Information and communication technology (ICT)",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":220,
+    "Code (L3)":22081,
+    "Name":"Education and training in ICT, telecommunications and media",
+    "Category Name":"Communications"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23110,
+    "Name":"Energy policy and administrative management",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23111,
+    "Name":"Energy sector policy, planning and administration",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23112,
+    "Name":"Energy regulation",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23181,
+    "Name":"Energy education\/training",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23182,
+    "Name":"Energy research",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":231,
+    "Code (L3)":23183,
+    "Name":"Energy conservation and demand-side efficiency",
+    "Category Name":"Energy Policy"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23210,
+    "Name":"Energy generation, renewable sources - multiple technologies",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23220,
+    "Name":"Hydro-electric power plants",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23230,
+    "Name":"Solar energy for centralised grids",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23231,
+    "Name":"Solar energy for isolated grids and standalone systems",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23232,
+    "Name":"Solar energy - thermal applications",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23240,
+    "Name":"Wind energy",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23250,
+    "Name":"Marine energy",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23260,
+    "Name":"Geothermal energy",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":232,
+    "Code (L3)":23270,
+    "Name":"Biofuel-fired power plants",
+    "Category Name":"Energy generation, renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23310,
+    "Name":"Energy generation, non-renewable sources, unspecified",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23320,
+    "Name":"Coal-fired electric power plants",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23330,
+    "Name":"Oil-fired electric power plants",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23340,
+    "Name":"Natural gas-fired electric power plants",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23350,
+    "Name":"Fossil fuel electric power plants with carbon capture and storage (CCS)",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":233,
+    "Code (L3)":23360,
+    "Name":"Non-renewable waste-fired electric power plants",
+    "Category Name":"Energy generation, non-renewable sources"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":234,
+    "Code (L3)":23410,
+    "Name":"Hybrid energy electric power plants",
+    "Category Name":"Hybrid energy plants"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":235,
+    "Code (L3)":23510,
+    "Name":"Nuclear energy electric power plants and nuclear safety",
+    "Category Name":"Nuclear energy plants"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23610,
+    "Name":"Heat plants",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23620,
+    "Name":"District heating and cooling",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23630,
+    "Name":"Electric power transmission and distribution (centralised grids)",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23631,
+    "Name":"Electric power transmission and distribution (isolated mini-grids)",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23640,
+    "Name":"Retail gas distribution",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23641,
+    "Name":"Retail distribution of liquid or solid fossil fuels",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":236,
+    "Code (L3)":23642,
+    "Name":"Electric mobility infrastructures",
+    "Category Name":"Energy distribution"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24010,
+    "Name":"Financial policy and administrative management",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24020,
+    "Name":"Monetary institutions",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24030,
+    "Name":"Formal sector financial intermediaries",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24040,
+    "Name":"Informal\/semi-formal financial intermediaries",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24050,
+    "Name":"Remittance facilitation, promotion and optimisation",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":240,
+    "Code (L3)":24081,
+    "Name":"Education\/training in banking and financial services",
+    "Category Name":"Banking & Financial Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":250,
+    "Code (L3)":25010,
+    "Name":"Business policy and administration",
+    "Category Name":"Business & Other Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":250,
+    "Code (L3)":25020,
+    "Name":"Privatisation",
+    "Category Name":"Business & Other Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":250,
+    "Code (L3)":25030,
+    "Name":"Business development services",
+    "Category Name":"Business & Other Services"
+  },
+  {
+    "High Level Code (L1)":6,
+    "High Level Sector Description":"Economic Infrastructure & Services",
+    "Category (L2)":250,
+    "Code (L3)":25040,
+    "Name":"Responsible business conduct",
+    "Category Name":"Business & Other Services"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31110,
+    "Name":"Agricultural policy and administrative management",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31120,
+    "Name":"Agricultural development",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31130,
+    "Name":"Agricultural land resources",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31140,
+    "Name":"Agricultural water resources",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31150,
+    "Name":"Agricultural inputs",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31161,
+    "Name":"Food crop production",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31162,
+    "Name":"Industrial crops\/export crops",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31163,
+    "Name":"Livestock",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31164,
+    "Name":"Agrarian reform",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31165,
+    "Name":"Agricultural alternative development",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31166,
+    "Name":"Agricultural extension",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31181,
+    "Name":"Agricultural education\/training",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31182,
+    "Name":"Agricultural research",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31191,
+    "Name":"Agricultural services",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31192,
+    "Name":"Plant and post-harvest protection and pest control",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31193,
+    "Name":"Agricultural financial services",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31194,
+    "Name":"Agricultural co-operatives",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":311,
+    "Code (L3)":31195,
+    "Name":"Livestock\/veterinary services",
+    "Category Name":"Agriculture"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31210,
+    "Name":"Forestry policy and administrative management",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31220,
+    "Name":"Forestry development",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31261,
+    "Name":"Fuelwood\/charcoal",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31281,
+    "Name":"Forestry education\/training",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31282,
+    "Name":"Forestry research",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":312,
+    "Code (L3)":31291,
+    "Name":"Forestry services",
+    "Category Name":"Forestry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":313,
+    "Code (L3)":31310,
+    "Name":"Fishing policy and administrative management",
+    "Category Name":"Fishing"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":313,
+    "Code (L3)":31320,
+    "Name":"Fishery development",
+    "Category Name":"Fishing"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":313,
+    "Code (L3)":31381,
+    "Name":"Fishery education\/training",
+    "Category Name":"Fishing"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":313,
+    "Code (L3)":31382,
+    "Name":"Fishery research",
+    "Category Name":"Fishing"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":313,
+    "Code (L3)":31391,
+    "Name":"Fishery services",
+    "Category Name":"Fishing"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32110,
+    "Name":"Industrial policy and administrative management",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32120,
+    "Name":"Industrial development",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32130,
+    "Name":"Small and medium-sized enterprises (SME) development",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32140,
+    "Name":"Cottage industries and handicraft",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32161,
+    "Name":"Agro-industries",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32162,
+    "Name":"Forest industries",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32163,
+    "Name":"Textiles, leather and substitutes",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32164,
+    "Name":"Chemicals",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32165,
+    "Name":"Fertilizer plants",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32166,
+    "Name":"Cement\/lime\/plaster",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32167,
+    "Name":"Energy manufacturing (fossil fuels)",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32168,
+    "Name":"Pharmaceutical production",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32169,
+    "Name":"Basic metal industries",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32170,
+    "Name":"Non-ferrous metal industries",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32171,
+    "Name":"Engineering",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32172,
+    "Name":"Transport equipment industry",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32173,
+    "Name":"Modern biofuels manufacturing",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32174,
+    "Name":"Clean cooking appliances manufacturing, market development and distribution",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":321,
+    "Code (L3)":32182,
+    "Name":"Technological research and development",
+    "Category Name":"Industry"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32210,
+    "Name":"Mineral\/mining policy and administrative management",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32220,
+    "Name":"Mineral prospection and exploration",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32261,
+    "Name":"Coal",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32262,
+    "Name":"Oil and gas (upstream)",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32263,
+    "Name":"Ferrous metals",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32264,
+    "Name":"Nonferrous metals",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32265,
+    "Name":"Precious metals\/materials",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32266,
+    "Name":"Industrial minerals",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32267,
+    "Name":"Fertilizer minerals",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":322,
+    "Code (L3)":32268,
+    "Name":"Offshore minerals",
+    "Category Name":"Mineral Resources & Mining"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":323,
+    "Code (L3)":32310,
+    "Name":"Construction policy and administrative management",
+    "Category Name":"Construction"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33110,
+    "Name":"Trade policy and administrative management",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33120,
+    "Name":"Trade facilitation",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33130,
+    "Name":"Regional trade agreements (RTAs)",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33140,
+    "Name":"Multilateral trade negotiations",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33150,
+    "Name":"Trade-related adjustment",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":331,
+    "Code (L3)":33181,
+    "Name":"Trade education\/training",
+    "Category Name":"Trade Policies & Regulations"
+  },
+  {
+    "High Level Code (L1)":7,
+    "High Level Sector Description":"Production Sectors",
+    "Category (L2)":332,
+    "Code (L3)":33210,
+    "Name":"Tourism policy and administrative management",
+    "Category Name":"Tourism"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41010,
+    "Name":"Environmental policy and administrative management",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41020,
+    "Name":"Biosphere protection",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41030,
+    "Name":"Biodiversity",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41040,
+    "Name":"Site preservation",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41081,
+    "Name":"Environmental education\/training",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":410,
+    "Code (L3)":41082,
+    "Name":"Environmental research",
+    "Category Name":"General Environment Protection"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43010,
+    "Name":"Multisector aid",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43030,
+    "Name":"Urban development and management",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43031,
+    "Name":"Urban land policy and management",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43032,
+    "Name":"Urban development",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43040,
+    "Name":"Rural development",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43041,
+    "Name":"Rural land policy and management",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43042,
+    "Name":"Rural development",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43050,
+    "Name":"Non-agricultural alternative development",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43060,
+    "Name":"Disaster Risk Reduction",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43071,
+    "Name":"Food security policy and administrative management",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43072,
+    "Name":"Household food security programmes",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43073,
+    "Name":"Food safety and quality",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43081,
+    "Name":"Multisector education\/training",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":8,
+    "High Level Sector Description":"Multisector\/ Cross-cutting",
+    "Category (L2)":430,
+    "Code (L3)":43082,
+    "Name":"Research\/scientific institutions",
+    "Category Name":"Other Multisector"
+  },
+  {
+    "High Level Code (L1)":9,
+    "High Level Sector Description":"Commodity and General Programme Assistance",
+    "Category (L2)":510,
+    "Code (L3)":51010,
+    "Name":"General budget support-related aid",
+    "Category Name":"General Budget Support"
+  },
+  {
+    "High Level Code (L1)":9,
+    "High Level Sector Description":"Commodity and General Programme Assistance",
+    "Category (L2)":520,
+    "Code (L3)":52010,
+    "Name":"Food assistance",
+    "Category Name":"Development Food Assistance"
+  },
+  {
+    "High Level Code (L1)":9,
+    "High Level Sector Description":"Commodity and General Programme Assistance",
+    "Category (L2)":530,
+    "Code (L3)":53030,
+    "Name":"Import support (capital goods)",
+    "Category Name":"Other Commodity Assistance"
+  },
+  {
+    "High Level Code (L1)":9,
+    "High Level Sector Description":"Commodity and General Programme Assistance",
+    "Category (L2)":530,
+    "Code (L3)":53040,
+    "Name":"Import support (commodities)",
+    "Category Name":"Other Commodity Assistance"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60010,
+    "Name":"Action relating to debt",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60020,
+    "Name":"Debt forgiveness",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60030,
+    "Name":"Relief of multilateral debt",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60040,
+    "Name":"Rescheduling and refinancing",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60061,
+    "Name":"Debt for development swap",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60062,
+    "Name":"Other debt swap",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":10,
+    "High Level Sector Description":"Action relating to debt",
+    "Category (L2)":600,
+    "Code (L3)":60063,
+    "Name":"Debt buy-back",
+    "Category Name":"Action Relating to Debt"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":720,
+    "Code (L3)":72010,
+    "Name":"Material relief assistance and services ",
+    "Category Name":"Emergency Response"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":720,
+    "Code (L3)":72011,
+    "Name":"Basic Health Care Services in Emergencies",
+    "Category Name":"Emergency Response"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":720,
+    "Code (L3)":72012,
+    "Name":"Education in emergencies",
+    "Category Name":"Emergency Response"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":720,
+    "Code (L3)":72040,
+    "Name":"Emergency food assistance",
+    "Category Name":"Emergency Response"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":720,
+    "Code (L3)":72050,
+    "Name":"Relief co-ordination and support services",
+    "Category Name":"Emergency Response"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":730,
+    "Code (L3)":73010,
+    "Name":"Immediate post-emergency reconstruction and rehabilitation",
+    "Category Name":"Reconstruction Relief & Rehabilitation"
+  },
+  {
+    "High Level Code (L1)":11,
+    "High Level Sector Description":"Humanitarian Aid",
+    "Category (L2)":740,
+    "Code (L3)":74020,
+    "Name":"Multi-hazard response preparedness",
+    "Category Name":"Disaster Prevention & Preparedness"
+  },
+  {
+    "High Level Code (L1)":12,
+    "High Level Sector Description":"Administrative Costs of Donors",
+    "Category (L2)":910,
+    "Code (L3)":91010,
+    "Name":"Administrative costs (non-sector allocable)",
+    "Category Name":"Administrative Costs of Donors"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93010,
+    "Name":"Refugees\/asylum seekers  in donor countries (non-sector allocable)",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93011,
+    "Name":"Refugees\/asylum seekers in donor countries - food and shelter ",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93012,
+    "Name":"Refugees\/asylum seekers in donor countries - training",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93013,
+    "Name":"Refugees\/asylum seekers in donor countries - health",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93014,
+    "Name":"Refugees\/asylum seekers in donor countries - other temporary sustenance",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93015,
+    "Name":"Refugees\/asylum seekers in donor countries - voluntary repatriation",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93016,
+    "Name":"Refugees\/asylum seekers in donor countries - transport",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93017,
+    "Name":"Refugees\/asylum seekers in donor countries - rescue at sea",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":13,
+    "High Level Sector Description":"Refugees in Donor Countries",
+    "Category (L2)":930,
+    "Code (L3)":93018,
+    "Name":"Refugees\/asylum seekers in donor countries - administrative costs",
+    "Category Name":"Refugees in Donor Countries"
+  },
+  {
+    "High Level Code (L1)":14,
+    "High Level Sector Description":"Unallocated \/ Unspecified",
+    "Category (L2)":998,
+    "Code (L3)":99810,
+    "Name":"Sectors not specified",
+    "Category Name":"Unallocated \/ Unspecified"
+  },
+  {
+    "High Level Code (L1)":14,
+    "High Level Sector Description":"Unallocated \/ Unspecified",
+    "Category (L2)":998,
+    "Code (L3)":99820,
+    "Name":"Promotion of development awareness (non-sector allocable)",
+    "Category Name":"Unallocated \/ Unspecified"
+  }
+]

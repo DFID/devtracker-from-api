@@ -28,6 +28,7 @@
                     <option value="<%= org['identifiers']%>"><%= org['name']%></option>
                <% end %>
             </select>
+            <input id="selected_org" type="hidden" value="GB-GOV-1" />
           </div>
           <div class="govuk-form-group">
             <label class="govuk-label" for="sort_Country">Country/Region</label>
@@ -36,15 +37,18 @@
                     <option value="<%= cr[:code]%>"><%= cr[:title]%></option>
                <% end %>
             </select>
+            <input id="selected_country_region" type="hidden" />
           </div>
 
           <div class="govuk-form-group">
             <label class="govuk-label" for="sort_Sector">Sector</label>
             <select class="govuk-select" id="sort_Sector" name="sort_Sector">
-              <% sector_list.each do |s| %>
-                    <option value="<%= s[:code]%>"><%= s[:title]%></option>
+              <option value="">All</option>
+              <% sector_list.each do |key, val| %>
+                    <option value="<%= key%>"><%= val%></option>
                <% end %>
             </select>
+            <input id="selected_sector" type="hidden" />
           </div>
         </div>
       </div>
@@ -133,17 +137,220 @@
         <div id="dashboard_V1_content">
           <!-- |||||||||||||||||||||||||||||||||| CIRCLES - START |||||||||||||||||||||||||||||||||| -->
           <!-- CIRCLE 1 - START -->
-          <div class="tab_trigger section_wrapper_1">
+          <div class="tab_trigger section_wrapper_1 tab_section_1">
             <div class="charts section_1">
               <div id="counter_overall_percentage">
               </div>
             </div>
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Overall</h3>
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
+              <a
+                href="#"
+                class="non_anchor_tag govuk-button govuk-button--secondary"
+                >Further information</a
+              >
+            </p>
+          </div>
+          <div id="tab_content_1" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
+                  <span class="title_content">Overall Attributes</span>
+                  <button id="openModal_V1" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_four">
+                      <div id="overall_bar_title_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_title_val" class="govuk-heading-l govuk-!-margin-bottom-0">84%</h3>
+                    <span class="govuk-caption-m">Title</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_nine">
+                      <div id="overall_bar_desc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_desc_val" class="govuk-heading-l govuk-!-margin-bottom-0">99%</h3>
+                    <span class="govuk-caption-m">Description</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_startDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_startDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Start Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_endDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_endDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">End Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_six">
+                      <div id="overall_bar_sector_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_sector_val" class="govuk-heading-l govuk-!-margin-bottom-0">96%</h3>
+                    <span class="govuk-caption-m">Sector</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_loc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_loc_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Location Data</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_partiOrg_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_partiOrg_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Participating Organisations</span
+                    >
+                  </div>
+                </div>
+                <!-- test -->
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_partners_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_partners_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Partner Links</span
+                    >
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart eigthy_six">
+                      <div id="overall_bar_bc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_bc_val" class="govuk-heading-l govuk-!-margin-bottom-0">86%</h3>
+                    <span class="govuk-caption-m">Business Case</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart seventy_five">
+                      <div id="overall_bar_lf_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_lf_val" class="govuk-heading-l govuk-!-margin-bottom-0">75%</h3>
+                    <span class="govuk-caption-m">Logical<br />Framework</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="overall_bar_ar_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_ar_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Annual review</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="overall_bar_pcr_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Project Completion Review</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- CIRCLE 1 - END -->
 
           <!-- CIRCLE 2 - START -->
-          <div class="tab_trigger section_wrapper_2">
+          <div class="tab_trigger section_wrapper_2 tab_section_2">
             <div class="charts section_2">
               <div id="counter_proj_data_percentage">
               </div>
@@ -151,13 +358,131 @@
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
               Project Data
             </h3>
-            <%# <p class="govuk-body-m govuk-!-margin-bottom-2">
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
                 class="non_anchor_tag govuk-button govuk-button--secondary"
                 >Further information</a
               >
-            </p> %>
+            </p>
+          </div>
+          <div id="tab_content_2" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
+                  <span class="title_content">Project Attributes</span>
+                  <button id="openModal_V1" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_four">
+                      <div id="proj_bar_title_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_title_val" class="govuk-heading-l govuk-!-margin-bottom-0">84%</h3>
+                    <span class="govuk-caption-m">Title</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_nine">
+                      <div id="proj_bar_desc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_desc_val" class="govuk-heading-l govuk-!-margin-bottom-0">99%</h3>
+                    <span class="govuk-caption-m">Description</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_startDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_startDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Start Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_endDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_endDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">End Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_six">
+                      <div id="proj_bar_sector_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_sector_val" class="govuk-heading-l govuk-!-margin-bottom-0">96%</h3>
+                    <span class="govuk-caption-m">Sector</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_loc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_loc_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Location Data</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_partiOrg_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_partiOrg_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Participating Organisations</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- CIRCLE 2 - END -->
 
@@ -372,6 +697,13 @@
                     <h3 id="bar_ar_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
                     <span class="govuk-caption-m">Annual review</span>
                   </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="bar_pcr_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Project Completion Review</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -512,11 +844,11 @@
               });
             }
             function generateCharts(selectedOrg, c_r_string, sector_string){
-              if(selectedOrg != ''){
+              //if(1==1){
                 $.ajax({
                   url: '/dqa-request',
                   type: 'POST',
-                  data: { org_id: selectedOrg, c_r_string: '', sector_string: '' },
+                  data: { org_id: selectedOrg, c_r_string: c_r_string, sector_string: sector_string },
                   dataType: 'json',
                   beforeSend: function(){
                     $('#main_content').hide();
@@ -543,9 +875,32 @@
                     setBarGraphData('bar_sector_val', 'bar_sector_percentage', response.output.ProgrammeRAGBreakdown.Sector);
                     setBarGraphData('bar_loc_val', 'bar_loc_percentage', response.output.ProgrammeRAGBreakdown.Location);
                     setBarGraphData('bar_partiOrg_val', 'bar_partiOrg_percentage', response.output.ProgrammeRAGBreakdown.ParticipatingOrg);
+                    //
+                    setBarGraphData('proj_bar_title_val', 'proj_bar_title_percentage', response.output.ProjectRAGBreakdown.Title);
+                    setBarGraphData('proj_bar_desc_val', 'proj_bar_desc_percentage', response.output.ProjectRAGBreakdown.Description);
+                    setBarGraphData('proj_bar_startDate_val', 'proj_bar_startDate_percentage', response.output.ProjectRAGBreakdown.StartDate);
+                    setBarGraphData('proj_bar_endDate_val', 'proj_bar_endDate_percentage', response.output.ProjectRAGBreakdown.EndDate);
+                    setBarGraphData('proj_bar_sector_val', 'proj_bar_sector_percentage', response.output.ProjectRAGBreakdown.Sector);
+                    setBarGraphData('proj_bar_loc_val', 'proj_bar_loc_percentage', response.output.ProjectRAGBreakdown.Location);
+                    setBarGraphData('proj_bar_partiOrg_val', 'proj_bar_partiOrg_percentage', response.output.ProjectRAGBreakdown.ParticipatingOrg);
+                    //
                     setBarGraphData('bar_bc_val', 'bar_bc_percentage', response.output.DocumentRAGBreakdown.BusinessCase);
                     setBarGraphData('bar_lf_val', 'bar_lf_percentage', response.output.DocumentRAGBreakdown.LogFrame);
                     setBarGraphData('bar_ar_val', 'bar_ar_percentage', response.output.DocumentRAGBreakdown.AnnualReview);
+                    setBarGraphData('bar_pcr_val', 'bar_pcr_percentage', response.output.DocumentRAGBreakdown.PCR);
+                    // Overall RAG breakdowns
+                    setBarGraphData('overall_bar_title_val', 'overall_bar_title_percentage', response.output.OverallRAGBreakdown.Title);
+                    setBarGraphData('overall_bar_desc_val', 'overall_bar_desc_percentage', response.output.OverallRAGBreakdown.Description);
+                    setBarGraphData('overall_bar_startDate_val', 'overall_bar_startDate_percentage', response.output.OverallRAGBreakdown.StartDate);
+                    setBarGraphData('overall_bar_endDate_val', 'overall_bar_endDate_percentage', response.output.OverallRAGBreakdown.EndDate);
+                    setBarGraphData('overall_bar_sector_val', 'overall_bar_sector_percentage', response.output.OverallRAGBreakdown.Sector);
+                    setBarGraphData('overall_bar_loc_val', 'overall_bar_loc_percentage', response.output.OverallRAGBreakdown.Location);
+                    setBarGraphData('overall_bar_partiOrg_val', 'overall_bar_partiOrg_percentage', response.output.OverallRAGBreakdown.ParticipatingOrg);
+                    setBarGraphData('overall_bar_bc_val', 'overall_bar_bc_percentage', response.output.OverallRAGBreakdown.BusinessCase);
+                    setBarGraphData('overall_bar_lf_val', 'overall_bar_lf_percentage', response.output.OverallRAGBreakdown.LogFrame);
+                    setBarGraphData('overall_bar_ar_val', 'overall_bar_ar_percentage', response.output.OverallRAGBreakdown.AnnualReview);
+                    setBarGraphData('overall_bar_pcr_val', 'overall_bar_pcr_percentage', response.output.OverallRAGBreakdown.PCR);
+                    setBarGraphData('overall_bar_partners_val', 'overall_bar_partners_percentage', response.output.OverallRAGBreakdown.PartnerLinks);
                   },
                   complete: function(){
                     $('#dashboard_loading').hide();
@@ -554,12 +909,25 @@
                     $('#dashboard_V1_content').show();
                   }
                 });
-              }
+              //}
             }
             generateCharts('GB-GOV-1', '', '');
             $('#sort_Organisation').on('change', function(){
-              generateCharts($(this).val(), '', '')
-            })
+              var data = $(this).val();
+              $('#selected_org').val(data);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+            });
+            $('#sort_Country').on('change', function(){
+              var data = $(this).val();
+              $('#selected_country_region').val(data);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+            });
+            $('#sort_Sector').on('change', function(){
+              var data = $(this).val();
+              console.log('ascasc');
+              $('#selected_sector').val(data);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+            });
           });
     </script>
   </main>

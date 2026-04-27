@@ -850,7 +850,7 @@
   transform: scale(1);
 }
 
-#tab_content_3, #tab_content_4 {
+#tab_content_3, #tab_content_4, #tab_content_2 {
   display: none;
 }
 
@@ -977,14 +977,17 @@
 #dashboard_V1_content .section_wrapper_4 {
   order: 4;
 }
-#dashboard_V1_content #tab_content_3, #dashboard_V1_content #tab_content_4 {
+#dashboard_V1_content #tab_content_3, #dashboard_V1_content #tab_content_4, #dashboard_V1_content #tab_content_2 {
   width: 100%;
 }
-#dashboard_V1_content #tab_content_3 {
+#dashboard_V1_content #tab_content_2 {
   order: 5;
 }
-#dashboard_V1_content #tab_content_4 {
+#dashboard_V1_content #tab_content_3 {
   order: 6;
+}
+#dashboard_V1_content #tab_content_4 {
+  order: 7;
 }
 #dashboard_V1_content .tab_title {
   display: inline-block;
