@@ -257,8 +257,8 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount,
- 			countryGeoJsonData: geoJsonData,
-			mapMarkers: mapMarkers,
+ 			#countryGeoJsonData: geoJsonData,
+			#mapMarkers: mapMarkers,
 			active_link: 'aidByLoc',
 			active_sub_link: 'countrySummary',
 			json_url_link: json_link
@@ -372,7 +372,7 @@ get '/regions/:region_code/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
 			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=iati_identifier:GB-GOV-10-DHSC_WHO_core AND recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=iati_identifier,budget_value_gbp,budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=10000')),
- 			mapMarkers: getRegionMapMarkersv2(region[:code]),
+ 			#mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
 
@@ -829,10 +829,10 @@ get '/location/country/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			:dfid_country_map_data => 	map_data[0],
+			#:dfid_country_map_data => 	map_data[0],
 			:dfid_country_stats_data => map_data[1],
 			:sectorData => country_sector_data,
-			:countryMapData => getCountryBoundsForLocation(map_data[1]),
+			#:countryMapData => getCountryBoundsForLocation(map_data[1]),
 			:maxBudget => getMaxBudget,
 			active_link: 'aidByLoc',
 			active_sub_link: 'country',
@@ -1595,7 +1595,7 @@ get '/cookies/?' do
 end
 
 get '/privacy-policy/?' do
-	settings.devtracker_page_title = 'Privacy Policy'
+	settings.devtracker_page_title = 'Privacy Notice'
   erb :'privacy-policy/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 

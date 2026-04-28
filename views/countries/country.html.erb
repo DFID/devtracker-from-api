@@ -42,11 +42,11 @@
             </p> %>
         <%end%>             
 
-        <div id="countryMap" class="countryMap"></div>
+        <%# <div id="countryMap" class="countryMap"></div> %>
         <input type="hidden" id="countryName" value="<%=country['name'] %>">
         <input type="hidden" id="countryCode" value="<%=country['code'] %>">
        
-        <%= erb :'partials/_map_disclaimer'%>
+        <%#= erb :'partials/_map_disclaimer'%>
 
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <!--<div class="govuk-grid-column-full">
@@ -302,9 +302,7 @@
     var mapType = "country";
     window.countryCode = "<%= country['code']%>";
     window.countryName = "<%= country['name']%>";
-    window.geometryType = "<%= countryGeoJsonData['type'] %>";
-    window.coordinates = <%= countryGeoJsonData['coordinates'].to_json %>
-    window.mainMarkers = <%= mapMarkers.to_json%>;
+    
 </script>
 <!-- New leaflet libraries -->
 <link rel="stylesheet" href="/javascripts/leaflet/leaflet_new.css"/>
