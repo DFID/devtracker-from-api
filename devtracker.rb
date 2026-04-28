@@ -486,7 +486,7 @@ get '/programme/*/summary' do
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
  			policyMarkers: get_policy_markersv2(project),
- 			mapMarkers: getProjectMapMarkersv2(project),
+ 			# mapMarkers: getProjectMapMarkersv2(project),
 			spendToDate: spendToDate,
 			programmeBudget: programmeBudget
  		}
