@@ -15,7 +15,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="filter_header">
-          <div class="govuk-form-group">
+          <div class="govuk-form-group" style="max-width: 450px">
             <label class="govuk-label" for="sort_Organisation"
               >Organisation</label
             >
@@ -30,17 +30,18 @@
             </select>
             <input id="selected_org" type="hidden" value="GB-GOV-1" />
           </div>
-          <div class="govuk-form-group">
+          <div class="govuk-form-group" style="max-width: 200px">
             <label class="govuk-label" for="sort_Country">Country/Region</label>
             <select class="govuk-select" id="sort_Country" name="sort_Country">
+              <option value="">All</option>
               <% country_region_list.each do |cr| %>
-                    <option value="<%= cr[:code]%>"><%= cr[:title]%></option>
+                    <option value="<%= cr['code']%>"><%= cr['name']%></option>
                <% end %>
             </select>
             <input id="selected_country_region" type="hidden" />
           </div>
 
-          <div class="govuk-form-group">
+          <div class="govuk-form-group" style="max-width: 200px">
             <label class="govuk-label" for="sort_Sector">Sector</label>
             <select class="govuk-select" id="sort_Sector" name="sort_Sector">
               <option value="">All</option>
@@ -59,7 +60,7 @@
 <div id="full_hero_V2" class="all_on_one_line fcdo">
   <div class="govuk-width-container">
     <!-- TEXT - START -->
-    <div id="main_content">
+    <div id="main_content" style="display: none">
       <!-- DASHBAORD HERO 1 - START -->
       <section>
         <div class="section first_of_type">
@@ -843,12 +844,12 @@
                 }
               });
             }
-            function generateCharts(selectedOrg, c_r_string, sector_string){
+            function generateCharts(selectedOrg, c_r_string, sector_string, is_org_changed){
               //if(1==1){
                 $.ajax({
                   url: '/dqa-request',
                   type: 'POST',
-                  data: { org_id: selectedOrg, c_r_string: c_r_string, sector_string: sector_string },
+                  data: { org_id: selectedOrg, c_r_string: c_r_string, sector_string: sector_string, is_org_changed: is_org_changed },
                   dataType: 'json',
                   beforeSend: function(){
                     $('#main_content').hide();
@@ -911,22 +912,42 @@
                 });
               //}
             }
-            generateCharts('GB-GOV-1', '', '');
+            generateCharts('GB-GOV-1', '', '', 1);
             $('#sort_Organisation').on('change', function(){
               var data = $(this).val();
               $('#selected_org').val(data);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+              $('#selected_country_region').val('');
+              $.ajax({
+                url: '/dqa-dropdown-list',
+                type: 'POST',
+                data: { org_id: data },
+                dataType: 'json',
+                success: function(response) {
+                  var $dropdown = $('#sort_Country');
+                  $dropdown.empty();
+                  $dropdown.append($('<option></option>').val('').html('All'));
+                  $.each(response.output, function(index, item) {
+                    console.log(item.name);
+                      $dropdown.append(
+                          $('<option></option>').val(item.code).html(item.name)
+                      );
+                  });
+                }
+              });
+              $('#selected_sector').val('');
+              $('#sort_Sector').prop('selectedIndex', 0);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 1)
             });
             $('#sort_Country').on('change', function(){
               var data = $(this).val();
               $('#selected_country_region').val(data);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
             });
             $('#sort_Sector').on('change', function(){
               var data = $(this).val();
               console.log('ascasc');
               $('#selected_sector').val(data);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val())
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
             });
           });
     </script>

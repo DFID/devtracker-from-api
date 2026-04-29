@@ -10,7 +10,6 @@ module DqaHelpers
         else
             countryList = country_region_string.split(",")
         end
-        puts sectorList[sector_string.to_s]
         payload_all = {
             "organisation": org_string,
             "segmentation": {
@@ -20,7 +19,7 @@ module DqaHelpers
             },
             "failed_activities": false
         }
-        puts payload_all
+        #puts payload_all
         response = RestClient.post(url, payload_all.to_json, { content_type: :json, accept: :json })
         # 4. Parse the JSON response into a Ruby variable (Hash)
         resp = JSON.parse(response.body)
@@ -87,5 +86,39 @@ module DqaHelpers
         finalData['DocumentRAGBreakdown']['AnnualReview'] = resp['total_percentages']['document_annual_review_percentage']
         finalData['DocumentRAGBreakdown']['PCR'] = resp['total_percentages']['document_project_completion_review_percentage']
         @data = finalData
+    end
+
+    def getCountryRegionDropDownList(org_id)
+        url = 'https://fcdo2.iati.cloud/dqa'
+        payload = {
+            "organisation": org_id,
+            "failed_activities": false
+        }
+        response = RestClient.post(url, payload.to_json, { content_type: :json, accept: :json })
+        # 4. Parse the JSON response into a Ruby variable (Hash)
+        resp = JSON.parse(response.body)
+        filtered_countries = resp['available_segmentations']['countries']
+        filtered_regions = resp['available_segmentations']['regions']
+        finalData = {}
+        countries = Oj.load(File.read('data/iati_standard/Country.json'))['data']
+        regions = Oj.load(File.read('data/iati_standard/Region.json'))['data']
+        filtered_country_list = countries.select do |item|
+            item['status'] == 'active' && filtered_countries.include?(item['code'])
+        end.map do |item|
+            {
+                "code" => item['code'],
+                "name" => item['name']
+            }
+        end
+        filtered_region_list = regions.select do |item|
+            item['status'] == 'active' && filtered_regions.include?(item['code'])
+        end.map do |item|
+            {
+                "code" => item['code'],
+                "name" => item['name']
+            }
+        end
+        country_region_list = filtered_country_list + filtered_region_list
+        @data = country_region_list
     end
 end

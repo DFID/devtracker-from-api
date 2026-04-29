@@ -63,12 +63,12 @@ include DqaHelpers
 # Developer Machine: set global settings
 #set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'#'https://fcdo.iati.cloud/search/'#'https://fcdo-direct-indexing.iati.cloud/search/'#'https://devtracker.fcdo.gov.uk/api/'
 # set :oipa_api_url, 'https://devtracker-entry.oipa.nl/api/'
- set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
+# set :oipa_api_url, 'https://fcdo.iati.cloud/search/'
 # set :oipa_api_url, 'https://fcdo-direct-indexing.iati.cloud/search/'
- set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
+# set :bind, '0.0.0.0' # Allows for vagrant pass-through whilst debugging
 
 # Server Machine: set global settings to use varnish cache
-#set :oipa_api_url, 'http://127.0.0.1:6081/search/'
+set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
@@ -1555,12 +1555,7 @@ get '/dqa' do
   	settings.devtracker_page_title = 'Data Quality Assurance Page'
 	orgList = Oj.load(File.read('data/OGDs.json'))
 	orgList = orgList.values
-	country_region_list = [
-		{
-			title: "Bangladesh",
-			code: "BD"
-		}
-	]
+	country_region_list = getCountryRegionDropDownList('GB-GOV-1')
 	sector_list = Oj.load(File.read('data/sectors-v2.json'))
 	sector_list = sector_list.map do |item|
 		[item["High Level Code (L1)"], item["High Level Sector Description"]]
@@ -1581,7 +1576,13 @@ post '/dqa-request?' do
 	org_string = params['org_id']
 	country_region_string = params['c_r_string']
 	sector_string =  params['sector_string']
+	is_org_changed = params['is_org_changed'].to_i
 	json :output => dqaResponse(org_string, country_region_string, sector_string)
+end
+
+post '/dqa-dropdown-list' do
+	org_string = params['org_id']
+	json :output => getCountryRegionDropDownList(org_string)
 end
 
 get '/about/?' do
