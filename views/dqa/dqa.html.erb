@@ -102,12 +102,14 @@
       </section>
       <!-- DASHBAORD HERO 1 - END -->
     </div>
-    <div
-      id="dashboard_loading"
-      class="hods-loading-spinner smaller auninda"
-      role="status"
-      style="display: block"
-    >
+    <div id="dashboard_no_data" class="hods-loading-spinner smaller" role="status" style="display: none">
+      <div class="flex_wrapper">
+        <div class="hods-loading-spinner__content">
+          <h1 class="govuk-heading-m">No Data Found!</h1>
+        </div>
+      </div>
+    </div>
+    <div id="dashboard_loading" class="hods-loading-spinner smaller" role="status" style="display: block">
       <div class="flex_wrapper">
         <div class="hods-loading-spinner__spinner"></div>
         <div class="hods-loading-spinner__content">
@@ -744,7 +746,8 @@
             }
             function setBarGraphData(titleTag,heightData,percentage){
               $(`#${titleTag}`).text(`${percentage}%`);
-              $(`#${heightData}`).css('height', `${percentage}%`)
+              $(`#${heightData}`).css('height', `${percentage}%`);
+              $(`#${heightData}`).css('background-color', getDonutThresholdColor('bar', percentage));
             }
             function getDonutThresholdColor(passFailType,PassPercentage){
               if(passFailType == 'pass') {
@@ -761,6 +764,22 @@
                 }
                 else {
                   return '#FFFFFF';
+                }
+              }
+              else if(passFailType == 'bar'){
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#cfe4dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#ffee80';
+                  }
+                  else {
+                    return '#f4d7d7';
+                  }
+                }
+                else {
+                  return '#f4d7d7';
                 }
               }
               else {
@@ -856,6 +875,7 @@
                     $('#dashboard_loading').show();
                     $('#dashboard_V1_content').hide();
                     $('#dashboard_loading_content').show();
+                    $('#dashboard_no_data').hide();
                   },
                   success: function(response) {
                     $('#dqa_active_prog_count').text(response.output.ActiveProgrammeCount)
@@ -903,11 +923,19 @@
                     setBarGraphData('overall_bar_pcr_val', 'overall_bar_pcr_percentage', response.output.OverallRAGBreakdown.PCR);
                     setBarGraphData('overall_bar_partners_val', 'overall_bar_partners_percentage', response.output.OverallRAGBreakdown.PartnerLinks);
                   },
-                  complete: function(){
-                    $('#dashboard_loading').hide();
-                    $('#dashboard_loading_content').hide();
-                    $('#main_content').show();
-                    $('#dashboard_V1_content').show();
+                  complete: function(jqXHR, textStatus){
+                    if(jqXHR.responseJSON.output.ActiveProgrammeCount == 0 && jqXHR.responseJSON.output.ActiveProjectCount == 0){
+                      $('#dashboard_no_data').show();
+                      $('#dashboard_loading').hide();
+                      $('#dashboard_loading_content').hide();
+                    }
+                    else {
+                      $('#dashboard_loading').hide();
+                      $('#dashboard_loading_content').hide();
+                      $('#main_content').show();
+                      $('#dashboard_V1_content').show();
+                      $('#dashboard_no_data').hide();
+                    }
                   }
                 });
               //}
@@ -927,7 +955,6 @@
                   $dropdown.empty();
                   $dropdown.append($('<option></option>').val('').html('All'));
                   $.each(response.output, function(index, item) {
-                    console.log(item.name);
                       $dropdown.append(
                           $('<option></option>').val(item.code).html(item.name)
                       );
@@ -945,7 +972,6 @@
             });
             $('#sort_Sector').on('change', function(){
               var data = $(this).val();
-              console.log('ascasc');
               $('#selected_sector').val(data);
               generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
             });
