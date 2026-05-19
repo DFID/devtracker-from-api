@@ -9417,7 +9417,7 @@ p + .govuk-heading-s,
 }
 @media (min-width: 770px) {
   .tab_trigger {
-    width: 25%;
+    width: 33%;
     margin-right: 0;
   }
 }

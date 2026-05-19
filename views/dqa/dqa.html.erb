@@ -24,8 +24,13 @@
               id="sort_Organisation"
               name="sort_Organisation"
             >
+               <option value="all">All</option>
                <% orgList.each do |org| %>
-                    <option value="<%= org['identifiers']%>"><%= org['name']%></option>
+                    <%if org['identifiers'] == 'GB-GOV-1' %>
+                      <option selected value="<%= org['identifiers']%>"><%= org['name']%></option>
+                    <%else%>
+                      <option value="<%= org['identifiers']%>"><%= org['name']%></option>
+                    <%end%>
                <% end %>
             </select>
             <input id="selected_org" type="hidden" value="GB-GOV-1" />
@@ -353,7 +358,7 @@
           <!-- CIRCLE 1 - END -->
 
           <!-- CIRCLE 2 - START -->
-          <div class="tab_trigger section_wrapper_2 tab_section_2">
+          <div style="display: none" class="tab_trigger section_wrapper_2 tab_section_2">
             <div class="charts section_2">
               <div id="counter_proj_data_percentage">
               </div>
@@ -369,7 +374,7 @@
               >
             </p>
           </div>
-          <div id="tab_content_2" class="tab_container">
+          <div style="display: none" id="tab_content_2" class="tab_container">
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-full">
                 <hr

@@ -10,14 +10,21 @@ module DqaHelpers
         else
             countryList = country_region_string.split(",")
         end
+        if org_string == 'all'
+            depts = settings.goverment_department_ids.split(",")
+        else
+            depts = org_string
+        end
         payload_all = {
-            "organisation": org_string,
+            "organisation": depts,
             "segmentation": {
                 "countries": countryList,
                 "regions": regionList,
                 "sectors": sectorList[sector_string.to_s]
             },
-            "failed_activities": false
+            "skip_cache": true,
+            "failed_activities": false,
+            "require_funding_and_accountable": true
         }
         #puts payload_all
         response = RestClient.post(url, payload_all.to_json, { content_type: :json, accept: :json })
@@ -25,11 +32,17 @@ module DqaHelpers
         resp = JSON.parse(response.body)
         ##
         finalData = {}
-        orgList = Oj.load(File.read('data/OGDs.json'))
-        selectedOrg = orgList.find {|key, val| val["identifiers"] == org_string}
-        finalData['OrganisationID'] = org_string
-        finalData['OrganisationTitle'] = selectedOrg[1]['name']
-        finalData['Org_ShortForm'] = selectedOrg[0].downcase
+        if org_string == 'all'
+            finalData['OrganisationID'] = org_string
+            finalData['OrganisationTitle'] = 'All Government Departments'
+            finalData['Org_ShortForm'] = 'fcdo'
+        else
+            orgList = Oj.load(File.read('data/OGDs.json'))
+            selectedOrg = orgList.find {|key, val| val["identifiers"] == org_string}
+            finalData['OrganisationID'] = org_string
+            finalData['OrganisationTitle'] = selectedOrg[1]['name']
+            finalData['Org_ShortForm'] = selectedOrg[0].downcase
+        end
         ## Calculate overall score
         percentageValues = resp['percentages'].values
         totalSum = percentageValues.sum
@@ -90,8 +103,13 @@ module DqaHelpers
 
     def getCountryRegionDropDownList(org_id)
         url = 'https://fcdo2.iati.cloud/dqa'
+        if org_id == 'all'
+            depts = settings.goverment_department_ids.split(",")
+        else
+            depts = org_id
+        end
         payload = {
-            "organisation": org_id,
+            "organisation": depts,
             "failed_activities": false
         }
         response = RestClient.post(url, payload.to_json, { content_type: :json, accept: :json })

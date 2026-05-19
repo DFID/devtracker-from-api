@@ -1022,19 +1022,21 @@
                     aria-live="polite"
                   ></div>
                 </div>
-                <input
-                  aria-describedby="app-site-search__input__assistiveHint"
-                  aria-expanded="false"
-                  aria-controls="app-site-search__input__listbox"
-                  aria-autocomplete="both"
-                  autocomplete="off"
-                  class="app-site-search__input app-site-search__input--default"
-                  id="app-site-search__input"
-                  name="input-autocomplete"
-                  placeholder="Search Development Tracker "
-                  type="text"
-                  role="combobox"
-                />
+                <form action="/search_p" method="POST" onsubmit="return validateSearch()">
+                  <input
+                    aria-describedby="app-site-search__input__assistiveHint"
+                    aria-expanded="false"
+                    aria-controls="app-site-search__input__listbox"
+                    aria-autocomplete="both"
+                    autocomplete="off"
+                    class="app-site-search__input app-site-search__input--default"
+                    id="app-site-search__input"
+                    name="query"
+                    placeholder="Search Development Tracker "
+                    type="text"
+                    role="combobox"
+                  />
+                </form>
                 <span
                   id="app-site-search__input__assistiveHint"
                   style="display: none"
@@ -1249,5 +1251,16 @@
     <script type="module" src="dqa/assets/javascripts/init.js"></script>
 
     <script type="module" src="dqa/assets/javascripts/application.js"></script>
+    <script>
+      function validateSearch() {
+          let searchQuery = document.forms["searchForm"]["query"].value;
+          let searchErrorMessage = document.getElementById("searchQueryError");
+          if (searchQuery == "") {
+              searchErrorMessage.style.display = "block";
+              document.forms["searchForm"]["query"].className = "govuk-input govuk-input--error";
+              return false;
+          }
+      }
+  </script>
   </body>
 </html>
