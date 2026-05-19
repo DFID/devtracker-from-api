@@ -22,7 +22,6 @@ module DqaHelpers
                 "regions": regionList,
                 "sectors": sectorList[sector_string.to_s]
             },
-            "skip_cache": true,
             "failed_activities": false,
             "require_funding_and_accountable": true
         }

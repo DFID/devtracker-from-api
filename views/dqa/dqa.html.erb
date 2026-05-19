@@ -167,12 +167,12 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
                   <span class="title_content">Overall Attributes</span>
-                  <button id="openModal_V1" class="govuk-button help_button">
+                  <%# <button id="openModal_V3" class="govuk-button help_button">
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
-                  </button>
+                  </button> %>
                 </h2>
               </div>
               <div class="govuk-grid-column-full">
@@ -382,7 +382,7 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
                   <span class="title_content">Project Attributes</span>
-                  <button id="openModal_V1" class="govuk-button help_button">
+                  <button id="openModal_V4" class="govuk-button help_button">
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
@@ -979,6 +979,18 @@
               var data = $(this).val();
               $('#selected_sector').val(data);
               generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
+            });
+            $('#openModal_V2').click(function(){
+              $('#dashboard_helptext_V2').show();
+            });
+            $('#closeBtn_V2').click(function(){
+              $('#dashboard_helptext_V2').hide();
+            });
+            $('#openModal_V1').click(function(){
+              $('#dashboard_helptext_V1').show();
+            });
+            $('#closeBtn_V1').click(function(){
+              $('#dashboard_helptext_V1').hide();
             });
           });
     </script>
