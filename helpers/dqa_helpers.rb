@@ -167,12 +167,13 @@ module DqaHelpers
                 "name" => item['name']
             }
         end
+        fixedRegionList = ['298','798','89','589','389','189','679','289','380','998']
         filtered_region_list = regions.select do |item|
-            item['status'] == 'active' && filtered_regions.include?(item['code'])
+            item['status'] == 'active' && filtered_regions.include?(item['code']) && fixedRegionList.include?(item['code'].to_s)
         end.map do |item|
             {
                 "code" => item['code'],
-                "name" => item['name']
+                "name" => item['name'].to_s.gsub(", regional","")
             }
         end
         country_region_list = filtered_country_list + filtered_region_list
