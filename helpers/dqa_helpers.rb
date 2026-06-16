@@ -23,7 +23,10 @@ module DqaHelpers
                 "sectors": sectorList[sector_string.to_s]
             },
             "failed_activities": false,
-            "require_funding_and_accountable": true
+            "require_funding_and_accountable": true,
+            "include_exemptions": true,
+            "skip_cache": true,
+            "use_budget_date_filter": true
         }
         #puts payload_all
         response = RestClient.post(url, payload_all.to_json, { content_type: :json, accept: :json })
@@ -97,6 +100,43 @@ module DqaHelpers
         finalData['DocumentRAGBreakdown']['LogFrame'] = resp['total_percentages']['document_logical_framework_percentage']
         finalData['DocumentRAGBreakdown']['AnnualReview'] = resp['total_percentages']['document_annual_review_percentage']
         finalData['DocumentRAGBreakdown']['PCR'] = resp['total_percentages']['document_project_completion_review_percentage']
+        if (finalData['ActiveProgrammeCount'].to_i == 0 && finalData['ActiveProjectCount'].to_i == 0)
+            finalData['OverallPassRate'] = 0
+            finalData['OverallRAGBreakdown']['Title'] = 0
+            finalData['OverallRAGBreakdown']['Description'] = 0
+            finalData['OverallRAGBreakdown']['StartDate'] = 0
+            finalData['OverallRAGBreakdown']['EndDate'] = 0
+            finalData['OverallRAGBreakdown']['Sector'] = 0
+            finalData['OverallRAGBreakdown']['Location'] = 0
+            finalData['OverallRAGBreakdown']['ParticipatingOrg'] = 0
+            finalData['OverallRAGBreakdown']['BusinessCase'] = 0
+            finalData['OverallRAGBreakdown']['LogFrame'] = 0
+            finalData['OverallRAGBreakdown']['AnnualReview'] = 0
+            finalData['OverallRAGBreakdown']['PCR'] = 0
+            finalData['OverallRAGBreakdown']['PartnerLinks'] = 0
+            finalData['ProjectRAGBreakdown']['Title'] = 0
+            finalData['ProjectRAGBreakdown']['Description'] = 0
+            finalData['ProjectRAGBreakdown']['StartDate'] = 0
+            finalData['ProjectRAGBreakdown']['EndDate'] = 0
+            finalData['ProjectRAGBreakdown']['Sector'] = 0
+            finalData['ProjectRAGBreakdown']['Location'] = 0
+            finalData['ProjectRAGBreakdown']['ParticipatingOrg'] = 0
+            finalData['ProgrammePassRate'] = 0
+            finalData['ProgrammeRAGBreakdown']['Title'] = 0
+            finalData['ProgrammeRAGBreakdown']['Description'] = 0
+            finalData['ProgrammeRAGBreakdown']['StartDate'] = 0
+            finalData['ProgrammeRAGBreakdown']['EndDate'] = 0
+            finalData['ProgrammeRAGBreakdown']['Sector'] = 0
+            finalData['ProgrammeRAGBreakdown']['Location'] = 0
+            finalData['ProgrammeRAGBreakdown']['ParticipatingOrg'] = 0
+            finalData['DocumentPassRate'] = 0
+            finalData['TotalBudget'] = '0.00'
+            finalData['DocumentPassRate'] = 0
+            finalData['DocumentRAGBreakdown']['BusinessCase'] = 0
+            finalData['DocumentRAGBreakdown']['LogFrame'] = 0
+            finalData['DocumentRAGBreakdown']['AnnualReview'] = 0
+            finalData['DocumentRAGBreakdown']['PCR'] = 0
+        end
         @data = finalData
     end
 

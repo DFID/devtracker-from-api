@@ -929,18 +929,23 @@
                     setBarGraphData('overall_bar_partners_val', 'overall_bar_partners_percentage', response.output.OverallRAGBreakdown.PartnerLinks);
                   },
                   complete: function(jqXHR, textStatus){
-                    if(jqXHR.responseJSON.output.ActiveProgrammeCount == 0 && jqXHR.responseJSON.output.ActiveProjectCount == 0){
-                      $('#dashboard_no_data').show();
-                      $('#dashboard_loading').hide();
-                      $('#dashboard_loading_content').hide();
-                    }
-                    else {
-                      $('#dashboard_loading').hide();
-                      $('#dashboard_loading_content').hide();
-                      $('#main_content').show();
-                      $('#dashboard_V1_content').show();
-                      $('#dashboard_no_data').hide();
-                    }
+                    // if(jqXHR.responseJSON.output.ActiveProgrammeCount == 0 && jqXHR.responseJSON.output.ActiveProjectCount == 0){
+                    //   $('#dashboard_no_data').show();
+                    //   $('#dashboard_loading').hide();
+                    //   $('#dashboard_loading_content').hide();
+                    // }
+                    // else {
+                    //   $('#dashboard_loading').hide();
+                    //   $('#dashboard_loading_content').hide();
+                    //   $('#main_content').show();
+                    //   $('#dashboard_V1_content').show();
+                    //   $('#dashboard_no_data').hide();
+                    // }
+                    $('#dashboard_loading').hide();
+                    $('#dashboard_loading_content').hide();
+                    $('#main_content').show();
+                    $('#dashboard_V1_content').show();
+                    $('#dashboard_no_data').hide();
                   }
                 });
               //}
