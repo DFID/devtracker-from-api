@@ -1554,6 +1554,7 @@ end
 get '/dqa' do
   	settings.devtracker_page_title = 'Data Quality Assurance Page'
 	orgList = Oj.load(File.read('data/OGDs.json'))
+	orgList = orgList.select{|key, details| key == 'FCDO'}
 	orgList = orgList.values
 	country_region_list = getCountryRegionDropDownList('GB-GOV-1')
 	sector_list = Oj.load(File.read('data/sectors-v2.json'))

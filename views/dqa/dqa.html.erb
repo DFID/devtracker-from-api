@@ -24,7 +24,7 @@
               id="sort_Organisation"
               name="sort_Organisation"
             >
-               <option value="all">All</option>
+               <%# <option value="all">All</option> %>
                <% orgList.each do |org| %>
                     <%if org['identifiers'] == 'GB-GOV-1' %>
                       <option selected value="<%= org['identifiers']%>"><%= org['name']%></option>
