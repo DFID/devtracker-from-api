@@ -15,7 +15,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="filter_header">
-          <div class="govuk-form-group" style="max-width: 450px">
+          <div class="govuk-form-group" style="max-width: 450px; display: none">
             <label class="govuk-label" for="sort_Organisation"
               >Organisation</label
             >
@@ -35,6 +35,13 @@
             </select>
             <input id="selected_org" type="hidden" value="GB-GOV-1" />
           </div>
+          <div class="govuk-form-group" style="max-width: 450px">
+            <label class="govuk-label" for="sort_Organisation"
+              >Organisation</label
+            >
+            <span style="color: white;font-size: 1.4em;margin-top: 13px;display: block;">Foreign, Commonwealth & Development Office</span>
+          </div>
+
           <div class="govuk-form-group" style="max-width: 200px">
             <label class="govuk-label" for="sort_Country">Country/Region</label>
             <select class="govuk-select" id="sort_Country" name="sort_Country">
@@ -174,6 +181,7 @@
                     >
                   </button> %>
                 </h2>
+                <p style="text-align: justify; margin-bottom: 3em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
               </div>
               <div class="govuk-grid-column-full">
                 <div class="bar_chart_vertical with_axis">
