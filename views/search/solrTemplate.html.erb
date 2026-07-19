@@ -57,6 +57,7 @@
         <%if searchType == 'F'%>
             <div class="app-card govuk-!-margin-top-5 govuk-!-margin-bottom-2">
                 <form id="searchForm" action="/search_p" class="app-search-form govuk-!-margin-top-1" method="post" onsubmit="return validateSearch()">
+                    <input type="hidden" name="authenticity_token" value="<%= env['rack.session'][:csrf] %>">
                     <div id="event-name-hint" class="govuk-hint">
                         Enter location, sector, organisation or keyword
                     </div>

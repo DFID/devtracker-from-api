@@ -23,6 +23,9 @@ require "sinatra/cookies"
 require "cgi"
 require 'set'
 require 'uri'
+require 'rack/utils'
+require 'rack/protection'
+require 'rack/cors'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -70,6 +73,8 @@ set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
+enable :sessions
+use Rack::Protection
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -92,6 +97,19 @@ set :show_exceptions, false
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
+
+use Rack::Cors do
+  allow do
+    # Replace with your actual domain. 
+    # Using '*' would allow all domains, which is what we want to avoid.
+    origins 'fcdo.gov.uk', 'localhost:4567', 'devtracker.org.uk'
+
+    resource '*', 
+      methods: [:get, :post, :put, :delete, :options],
+      headers: :any
+  end
+end
+
 #####################################################################
 #  HOME PAGE
 #####################################################################
@@ -949,7 +967,6 @@ get '/search/?' do
 end
 
 post '/search_p/?' do
-	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
@@ -1075,11 +1092,12 @@ end
 post '/solr-response' do
 	query = sanitize_input(params['data']['query'],"newId")
 	searchType = sanitize_input(params['data']['queryType'],"newId")
-	if params['data']['filters'].strip.length > 1
+	f = params['data']['filters'].gsub('&quot;','"')
+	if f.strip.length > 1
 		if searchType == 'F'
-			filters = '&fq=' + sanitize_input(params['data']['filters'],"newId").gsub(/\band\b/, " &fq= ")
+			filters = '&fq=' + sanitize_input(f,"newId").gsub(/\band\b/, " &fq= ")
 		else
-			filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+			filters = 'AND ' + sanitize_input(f,"newId")
 		end
 	else
 		filters = ''
