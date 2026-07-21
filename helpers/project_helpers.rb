@@ -508,14 +508,22 @@ module ProjectHelpers
         response
     end
 
+    def get_suitable_activity_list_for_transactions(projectId)
+        primary_activity_details = JSON.parse(RestClient.get(settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}&fl=hierarchy,related_activity_ref"))['response']['docs'].first
+        projectList = ''
+        if primary_activity_details.has_key?('related_activity_ref') && primary_activity_details['hierarchy'].to_i == 1
+            projectList = primary_activity_details['related_activity_ref'].join(" OR ")
+            projectList = "(" + projectId + " OR " + projectList + ")"
+        else
+            projectList = projectId
+        end
+        projectList
+    end
     def get_transaction_details_pagev2(projectId, transactionType, page, count)
+        projectList = get_suitable_activity_list_for_transactions(projectId)
         page = page.to_i - 1
         finalPage = page * count
-        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
-        if transactionType.to_i == 2
-            puts oipaTransactionURL
-            puts (page.to_i*count.to_i)
-        end
+        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=hierarchy,json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
@@ -572,15 +580,16 @@ module ProjectHelpers
     end
 
     def get_transaction_totalv2(projectId,transactionType)
+        projectList = get_suitable_activity_list_for_transactions(projectId)
         totalTransactionValue = 0
         count = 20
         page = 1
         page = page.to_i - 1
         finalPage = page * count
         #initialPull = oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
-        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
-        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         numOTransactions = initialPull['response']['numFound'].to_i
@@ -591,7 +600,7 @@ module ProjectHelpers
             for p in 2..pages do
                 p = p - 1
                 finalPage = p * count
-                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
+                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
                 tempData.each do |item|
                     transactionsJSON.push(item)
@@ -614,14 +623,15 @@ module ProjectHelpers
     end
 
     def spendToDatev2(projectId)
+        projectList = get_suitable_activity_list_for_transactions(projectId)
         spendToDate = 0
         count = 20
         page = 1
         page = page.to_i - 1
         finalPage = page * count
-        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
-        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         numOTransactions = initialPull['response']['numFound'].to_i
@@ -632,7 +642,7 @@ module ProjectHelpers
             for p in 2..pages do
                 p = p - 1
                 finalPage = p * count
-                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
+                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:(3 OR 4 OR 8) AND hierarchy:(1 OR 2)&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
                 transactionsJSON.concat(tempData)
             end
@@ -658,14 +668,15 @@ module ProjectHelpers
     end
 
     def get_transactionsv2(projectId,transactionType)
+        projectList = get_suitable_activity_list_for_transactions(projectId)
         count = 20
         page = 1
         page = page.to_i - 1
         finalPage = page * count
         #initialPull = oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
-        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        oipaTransactionURL = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         orgTypes = JSON.parse(File.read('data/custom-codes/OrganisationType.json'))['data']
-        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
+        looper = settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=0&rows=#{count}"
         # Get the initial transaction count based on above API call
         initialPull = JSON.parse(RestClient.get oipaTransactionURL)
         numOTransactions = initialPull['response']['numFound'].to_i
@@ -676,7 +687,7 @@ module ProjectHelpers
             for p in 2..pages do
                 p = p - 1
                 finalPage = p * count
-                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectId}* AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
+                tempData = JSON.parse(RestClient.get settings.oipa_api_url + "activity/?q=iati_identifier:#{projectList} AND transaction_type:#{transactionType}&fl=json.transaction,default-currency,iati-identifier,reporting_org_ref,reporting_org_narrative,participating_org_ref,participating_org_type,transaction_type,transaction_date_iso_date,transaction_value,transaction_description_narrative,transaction_provider_org_provider_activity_id,transaction_receiver_org_ref,transaction_receiver_org_narrative,transaction_value_currency,activity_aggregation_commitment_value,activity_aggregation_commitment_value_gbp,activity_aggregation_disbursement_value_gbp,activity_aggregation_expenditure_value_gbp&start=#{finalPage}&rows=#{count}")
                 tempData = tempData['response']['docs']
                 transactionsJSON.push(tempData)
             end
@@ -1272,8 +1283,9 @@ module ProjectHelpers
     end
 
     def project_budget_per_fyv2(projectId)
+        projectList = get_suitable_activity_list_for_transactions(projectId)
         #Process budgets
-        apiData = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati-identifier:#{projectId}*&fl=budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
+        apiData = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati-identifier:#{projectList}&fl=budget.period-start.quarter,transaction.transaction-date.quarter,transaction_type,transaction_date_iso_date,transaction_value,budget_value_gbp,budget_period_start_iso_date,budget_period_end_iso_date,budget_value&start=0&rows=100")
         apiData = JSON.parse(apiData)['response']['docs']
         budgetHash = {}
         expenditureHash = {} #4
