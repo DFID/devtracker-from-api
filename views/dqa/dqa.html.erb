@@ -39,10 +39,10 @@
             <label class="govuk-label" for="sort_Organisation"
               >Organisation</label
             >
-            <span style="color: white;font-size: 1.4em;margin-top: 13px;display: block;">Foreign, Commonwealth & Development Office</span>
+            <span style="color: white;font-size: 1.3em;margin-top: 13px;display: block; font-family: 'GDS Transport', arial, sans-serif;">Foreign, Commonwealth & Development Office</span>
           </div>
 
-          <div class="govuk-form-group" style="max-width: 200px">
+          <div class="govuk-form-group" style="max-width: 220px">
             <label class="govuk-label" for="sort_Country">Country/Region</label>
             <select class="govuk-select" id="sort_Country" name="sort_Country">
               <option value="">All</option>
@@ -53,7 +53,7 @@
             <input id="selected_country_region" type="hidden" />
           </div>
 
-          <div class="govuk-form-group" style="max-width: 200px">
+          <div class="govuk-form-group" style="max-width: 220px">
             <label class="govuk-label" for="sort_Sector">Sector</label>
             <select class="govuk-select" id="sort_Sector" name="sort_Sector">
               <option value="">All</option>
@@ -172,7 +172,7 @@
                 <hr
                   class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
                 />
-                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-margin-top-4 tab_title">
                   <span class="title_content">Overall Attributes</span>
                   <%# <button id="openModal_V3" class="govuk-button help_button">
                     How do we calculate completeness?
@@ -181,10 +181,10 @@
                     >
                   </button> %>
                 </h2>
-                <p style="text-align: justify; margin-bottom: 3em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
               </div>
               <div class="govuk-grid-column-full">
-                <div class="bar_chart_vertical with_axis">
+                <div class="bar_chart_vertical with_axis" style="margin-bottom: 4em">
                   <div class="chart_label govuk-caption-m">% Rating</div>
                   <div class="percentage one_hundred">
                     <p
@@ -857,10 +857,11 @@
                   titleNode.append('tspan')
                       .text(`${overallPercentage}%`)
                       .attr('x', 0)
-                      .attr('dy', '-0.2em')
+                      .attr('dy', '0.1em')
                       .style('font-size', '40px')
                       .style('font-weight', 'bold')
-                      .style('fill', '#000');
+                      .style('fill', '#000')
+                      .style('font-family', '"GDS Transport", arial, sans-serif');
 
                   // Add the bottom line (The Label)
                   titleNode.append('tspan')
@@ -869,7 +870,8 @@
                       .attr('dy', '1.5em')
                       .style('font-size', '16px')
                       .style('font-weight', 'normal')
-                      .style('fill', '#999');
+                      .style('fill', '#484949')
+                      .style('font-family', '"GDS Transport", arial, sans-serif');
                 },
                 legend: {
                   hide: true

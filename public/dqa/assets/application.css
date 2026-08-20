@@ -8650,7 +8650,7 @@ p + .govuk-heading-s,
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1em;
+  margin-bottom: 0em;
 }
 #dashboard_V1.GDS_pastels .charts:active, #dashboard_V1.GDS_pastels .charts:focus, #dashboard_V1.GDS_pastels .charts:hover, #dashboard_V1.GDS_pastels_V2 .charts:active, #dashboard_V1.GDS_pastels_V2 .charts:focus, #dashboard_V1.GDS_pastels_V2 .charts:hover, #dashboard_V2.GDS_pastels .charts:active, #dashboard_V2.GDS_pastels .charts:focus, #dashboard_V2.GDS_pastels .charts:hover, #dashboard_V2.GDS_pastels_V2 .charts:active, #dashboard_V2.GDS_pastels_V2 .charts:focus, #dashboard_V2.GDS_pastels_V2 .charts:hover, #dashboard_V3.GDS_pastels .charts:active, #dashboard_V3.GDS_pastels .charts:focus, #dashboard_V3.GDS_pastels .charts:hover, #dashboard_V3.GDS_pastels_V2 .charts:active, #dashboard_V3.GDS_pastels_V2 .charts:focus, #dashboard_V3.GDS_pastels_V2 .charts:hover, #dashboard_V4.GDS_pastels .charts:active, #dashboard_V4.GDS_pastels .charts:focus, #dashboard_V4.GDS_pastels .charts:hover, #dashboard_V4.GDS_pastels_V2 .charts:active, #dashboard_V4.GDS_pastels_V2 .charts:focus, #dashboard_V4.GDS_pastels_V2 .charts:hover {
   animation: pulse 2s infinite;
@@ -12678,4 +12678,42 @@ footer .govuk-footer {
 .section.first_of_type .tooltop .hint_text:before {
   right: inherit;
   left: 6px;
+}
+
+/* Bolds the entire tooltip text */
+.c3-tooltip {
+    font-weight: bold;
+    font-family: "GDS Transport", arial, sans-serif;
+    color: white;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5em;
+}
+
+/* Alternatively, if you only want to bold specific parts: */
+.c3-tooltip th {
+    font-weight: bold;
+    font-family: "GDS Transport", arial, sans-serif;
+    color: white;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5em;
+}
+
+.c3-tooltip td.name {
+    font-weight: bold;
+    font-family: "GDS Transport", arial, sans-serif;
+    color: white;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5em;
+}
+
+.c3-tooltip td.value {
+    font-weight: bold;
+    font-family: "GDS Transport", arial, sans-serif;
+    color: white;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5em;
 }
