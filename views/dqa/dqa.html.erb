@@ -43,9 +43,9 @@
           </div>
 
           <div class="govuk-form-group" style="max-width: 220px">
-            <label class="govuk-label" for="sort_Country">Country/Region</label>
+            <label class="govuk-label" for="sort_Country">Location</label>
             <select class="govuk-select" id="sort_Country" name="sort_Country">
-              <option value="">All</option>
+              <option value="">All (inc. regions)</option>
               <% country_region_list.each do |cr| %>
                     <option value="<%= cr['code']%>"><%= cr['name']%></option>
                <% end %>
@@ -320,7 +320,7 @@
                       0%
                     </p>
                   </div>
-                  <div class="bar_section first_of_type">
+                  <%# <div class="bar_section first_of_type">
                     <div class="bar_chart one_hundred">
                       <div id="overall_bar_partners_percentage" class="bar_colour"></div>
                     </div>
@@ -330,8 +330,8 @@
                     <span class="govuk-caption-m"
                       >Partner Links</span
                     >
-                  </div>
-                  <div class="bar_section">
+                  </div> %>
+                  <div class="bar_section first_of_type">
                     <div class="bar_chart eigthy_six">
                       <div id="overall_bar_bc_percentage" class="bar_colour"></div>
                     </div>

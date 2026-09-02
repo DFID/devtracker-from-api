@@ -12685,7 +12685,7 @@ footer .govuk-footer {
     font-weight: bold;
     font-family: "GDS Transport", arial, sans-serif;
     color: white;
-    border-radius: 5px;
+    border-radius: 3px;
     background: rgba(0, 0, 0, 0.7);
     padding: 0.5em;
 }
@@ -12705,7 +12705,7 @@ footer .govuk-footer {
     font-family: "GDS Transport", arial, sans-serif;
     color: white;
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.0);
     padding: 0.5em;
 }
 
@@ -12714,6 +12714,6 @@ footer .govuk-footer {
     font-family: "GDS Transport", arial, sans-serif;
     color: white;
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.0);
     padding: 0.5em;
 }
