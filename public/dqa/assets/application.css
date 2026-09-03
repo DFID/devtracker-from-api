@@ -12687,7 +12687,7 @@ footer .govuk-footer {
     color: white;
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em;
+    padding: 0.2em;
 }
 
 /* Alternatively, if you only want to bold specific parts: */
@@ -12697,7 +12697,7 @@ footer .govuk-footer {
     color: white;
     border-radius: 5px;
     background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em;
+    padding: 0.2em;
 }
 
 .c3-tooltip td.name {
@@ -12706,7 +12706,7 @@ footer .govuk-footer {
     color: white;
     border-radius: 5px;
     background: rgba(0, 0, 0, 0.0);
-    padding: 0.5em;
+    padding: 0.2em;
 }
 
 .c3-tooltip td.value {
@@ -12715,5 +12715,5 @@ footer .govuk-footer {
     color: white;
     border-radius: 5px;
     background: rgba(0, 0, 0, 0.0);
-    padding: 0.5em;
+    padding: 0.2em;
 }
