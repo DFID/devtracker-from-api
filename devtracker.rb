@@ -1552,7 +1552,7 @@ get '/department' do
 end
 
 get '/dqa' do
-  	settings.devtracker_page_title = 'Data Quality Assurance Page'
+  	settings.devtracker_page_title = 'Data Completeness Dashboard Page'
 	orgList = Oj.load(File.read('data/OGDs.json'))
 	orgList = orgList.select{|key, details| key == 'FCDO'}
 	orgList = orgList.values
