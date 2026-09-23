@@ -1,7 +1,7 @@
 module DqaHelpers
 
     def dqaResponse(org_string, country_region_string, sector_string)
-        url = 'https://fcdo2.iati.cloud/dqa'
+        url = 'https://fcdo.iati.cloud/dqa'
         regionList = []
         countryList = []
         sectorList = Oj.load(File.read('data/dqa-sector-map.json'))
@@ -141,7 +141,7 @@ module DqaHelpers
     end
 
     def getCountryRegionDropDownList(org_id)
-        url = 'https://fcdo2.iati.cloud/dqa'
+        url = 'https://fcdo.iati.cloud/dqa'
         if org_id == 'all'
             depts = settings.goverment_department_ids.split(",")
         else
