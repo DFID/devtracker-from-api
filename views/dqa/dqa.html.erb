@@ -2,11 +2,12 @@
   <div class="govuk-width-container">
     <!-- HEADER - START -->
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
+      <div class="govuk-grid-column-two-thirds">
         <!-- <span class="govuk-caption-l">FCDO Development Tracker</span> -->
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
           IATI Data Completeness Dashboard
         </h1>
+        <p class="govuk-caption-m govuk-!-margin-bottom-4"><a href="https://iatistandard.org/" target="_blank" rel="noopener noreferrer">International Aid Transparency Initiative (IATI) (opens in a new tab)</a> is a global initiative to improve the transparency of development and humanitarian resources and their results to address poverty and crises.</p>
       </div>
     </div>
     <!-- HEADER - END -->
@@ -16,9 +17,9 @@
       <div class="govuk-grid-column-full">
         <div class="filter_header">
           <div class="govuk-form-group" style="max-width: 450px; display: none">
-            <label class="govuk-label" for="sort_Organisation"
+            <%# <label class="govuk-label" for="sort_Organisation"
               >Organisation</label
-            >
+            > %>
             <select
               class="govuk-select"
               id="sort_Organisation"
@@ -35,12 +36,12 @@
             </select>
             <input id="selected_org" type="hidden" value="GB-GOV-1" />
           </div>
-          <div class="govuk-form-group" style="max-width: 450px">
+          <%# <div class="govuk-form-group" style="max-width: 450px">
             <label class="govuk-label" for="sort_Organisation"
               >Organisation</label
             >
             <span style="color: white;font-size: 1.3em;margin-top: 13px;display: block; font-family: 'GDS Transport', arial, sans-serif;">Foreign, Commonwealth & Development Office</span>
-          </div>
+          </div> %>
 
           <div class="govuk-form-group" style="max-width: 220px">
             <label class="govuk-label" for="sort_Country">Location</label>
@@ -158,6 +159,7 @@
               </div>
             </div>
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Overall</h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="overall_pass_percentage">90</span>% pass comprises of Programme Data, Document Publication and downstream partners correctly publishing IATI data.</p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -511,6 +513,7 @@
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
               Programme Data
             </h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="prog_pass_percentage">90</span>% of programme attibutes published to IATI.<br><br><br></p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -648,6 +651,7 @@
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
               Document Publication
             </h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="doc_pass_percentage">90</span>% of programme documents published to IATI.<br><br><br></p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -898,12 +902,15 @@
                     $('#dqa_total_budget').text('£' + response.output.TotalBudget);
                     cleanChart(overallDonut);
                     overallDonut = generateDonut('counter_overall_percentage', response.output.OverallPassRate);
+                    $('#overall_pass_percentage').html(response.output.OverallPassRate);
                     cleanChart(projectDonut);
                     projectDonut = generateDonut('counter_proj_data_percentage', response.output.ProjectPassRate)
                     cleanChart(programmeDonut);
                     programmeDonut = generateDonut('counter_prog_data_percentage', response.output.ProgrammePassRate);
+                    $('#prog_pass_percentage').html(response.output.ProgrammePassRate);
                     cleanChart(docPubDonut);
                     docPubDonut = generateDonut('counter_doc_pub_percentage', response.output.DocumentPassRate);
+                    $('#doc_pass_percentage').html(response.output.DocumentPassRate);
                     setBarGraphData('bar_title_val', 'bar_title_percentage', response.output.ProgrammeRAGBreakdown.Title);
                     setBarGraphData('bar_desc_val', 'bar_desc_percentage', response.output.ProgrammeRAGBreakdown.Description);
                     setBarGraphData('bar_startDate_val', 'bar_startDate_percentage', response.output.ProgrammeRAGBreakdown.StartDate);
