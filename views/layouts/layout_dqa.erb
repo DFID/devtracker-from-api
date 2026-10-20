@@ -920,6 +920,79 @@
               </tbody>
             </table>
             <!-- SECTION 3 - END -->
+            <!-- SECTION 4 - START -->
+            <h3
+              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+            >
+              Programme Completion Review
+            </h3>
+            <%# <p><strong class="blue">/Annual Review.*Published/i</strong></p> %>
+            <table class="govuk-table govuk-!-margin-bottom-2">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Condition</th>
+                  <th scope="col" class="govuk-table__header">Status</th>
+                  <th scope="col" class="govuk-table__header">Message</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity status code is not set to closed
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Actual activity end date is empty
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Actual activity end date <= 6 months ago
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Activity is exempt from document requirements
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity status code is set to closed, actual end date is more than 6 months old and PCR is published.
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
+                  </td>
+                  <td class="govuk-table__cell">---</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">
+                    Activity status code is set to closed, actual end date is more than 6 months old but PCR has not been published yet.
+                  </th>
+                  <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+                  </td>
+                  <td class="govuk-table__cell">
+                    Programme Completion Review document not published
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           </div>
           <!-- CONTENT - END -->
         </div>
