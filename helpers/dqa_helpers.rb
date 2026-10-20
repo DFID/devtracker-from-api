@@ -31,7 +31,7 @@ module DqaHelpers
             "require_funding_and_accountable": true,
             "include_exemptions": false,
             "skip_cache": true,
-            "use_budget_date_filter": true
+            "use_budget_date_filter": false
         }
         #puts payload_all
         response = RestClient.post(url, payload_all.to_json, { content_type: :json, accept: :json })
@@ -161,7 +161,7 @@ module DqaHelpers
             "require_funding_and_accountable": true,
             "include_exemptions": false,
             "skip_cache": true,
-            "use_budget_date_filter": true
+            "use_budget_date_filter": false
         }
         response = RestClient.post(url, payload.to_json, { content_type: :json, accept: :json })
         # 4. Parse the JSON response into a Ruby variable (Hash)
