@@ -238,7 +238,6 @@ module SolrHelper
             # Embed the following
             # https://fcdo2.iati.cloud//api/v2/activity/?q.op=AND&sort=if(termfreq(reporting_org_ref,%27GB-GOV-1%27),1,if(termfreq(reporting_org_ref,%27GB-GOV-2%27),2,99))%20asc,%20score%20desc&fq=hierarchy:1&fq=participating_org_ref:GB-GOV-*&fq=activity_status_code:(2)&defType=edismax&qf=title_narrative%20title_narrative_first%20description_narrative%20iati_identifier%20transaction_description_narrative%20reporting_org_ref%20recipient_country_name%20document_link_title_narrative_text%20transaction%20reporting_org_narrative%20participating_org_narrative%20related_activity_context&mm=20&q=programme%20sudan&rows=20&fl=iati_identifier,title,description*&start=0
             #puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
-            puts apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s
             response = Oj.load(RestClient.get api_simple_log(apiLink + queryCategory['url'] + mainQueryString +'&rows='+solrConfig['PageSize'].to_s+'&fl='+solrConfig['DefaultFieldsToReturn']+'&start='+startPage.to_s))
             response
         elsif(queryType == 'R')
@@ -349,7 +348,6 @@ module SolrHelper
                 end
             end
         end
-        puts mainQueryString
         mainQueryString
     end
 
