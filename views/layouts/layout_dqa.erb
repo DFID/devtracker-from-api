@@ -209,7 +209,7 @@
                   </td>
                   <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
                 </tr>
-                <tr class="govuk-table__row">
+                <%# <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">
                     Contains unexpanded acronyms
                   </th>
@@ -223,7 +223,7 @@
                   <td class="govuk-table__cell align_right">
                     (1 − Σ len(acronym) ÷ len(title)) × 100
                   </td>
-                </tr>
+                </tr> %>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">
                     All checks pass
@@ -703,17 +703,13 @@
             <h2 class="govuk-heading-m">Document Validation Rules</h2>
             <p>
               Document checks apply to
-              <strong>H1 activities (programmes) only</strong>. Each check scans
-              <strong class="blue">document-link.title.narrative</strong> for a
-              matching pattern (case-insensitive regex). An activity on the
-              exemption list is not applicable for all document checks.
-            </p>
+              <strong>H1 activities (programmes) only</strong>.</p>
             <h3
               class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
             >
               Business Case
             </h3>
-            <p><strong class="blue">/Business Case.*Published/i</strong></p>
+            <%# <p><strong class="blue">/Business Case.*Published/i</strong></p> %>
             <table class="govuk-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -793,7 +789,7 @@
             >
               Logical Framework
             </h3>
-            <p><strong class="blue">/Logical Framework.*Published/i</strong></p>
+            <%# <p><strong class="blue">/Logical Framework.*Published/i</strong></p> %>
             <table class="govuk-table govuk-!-margin-bottom-2">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -862,7 +858,7 @@
             >
               Annual Review
             </h3>
-            <p><strong class="blue">/Annual Review.*Published/i</strong></p>
+            <%# <p><strong class="blue">/Annual Review.*Published/i</strong></p> %>
             <table class="govuk-table govuk-!-margin-bottom-2">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -1023,19 +1019,8 @@
                   ></div>
                 </div>
                 <form action="/search_p" method="POST" onsubmit="return validateSearch()">
-                  <input
-                    aria-describedby="app-site-search__input__assistiveHint"
-                    aria-expanded="false"
-                    aria-controls="app-site-search__input__listbox"
-                    aria-autocomplete="both"
-                    autocomplete="off"
-                    class="app-site-search__input app-site-search__input--default"
-                    id="app-site-search__input"
-                    name="query"
-                    placeholder="Search Development Tracker "
-                    type="text"
-                    role="combobox"
-                  />
+                   <input aria-describedby="app-site-search__input__assistiveHint" aria-expanded="false" aria-controls="app-site-search__input__listbox" aria-autocomplete="both" autocomplete="off" class="app-site-search__input app-site-search__input--default" id="search_term" name="query" placeholder="Search Development Tracker " type="text" role="combobox">
+                   <button type="submit" class="govuk-button govuk-button--inverse search_button" data-module="govuk-button" id="" data-govuk-button-init="">Search</button>
                 </form>
                 <span
                   id="app-site-search__input__assistiveHint"
@@ -1159,7 +1144,7 @@
     </header>
     <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
     <%= yield %>
-    <footer class="govuk-template__footer">
+    <%# <footer class="govuk-template__footer">
       <div class="govuk-footer">
         <div class="govuk-width-container">
           <svg
@@ -1237,8 +1222,61 @@
           </div>
         </div>
       </div>
+    </footer> %>
+    <footer class="govuk-footer_dqa" role="contentinfo">
+      <div class="govuk-width-container app-width-container">
+          <div class="govuk-footer__meta">
+              <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+              <h2 class="govuk-visually-hidden">Footer links</h2>
+                  <ul class="govuk-footer__inline-list">
+                  <li class="govuk-footer__inline-list-item">
+                      <a class="govuk-footer__link" href="/about">
+                      About
+                      </a>
+                  </li>
+                  <li class="govuk-footer__inline-list-item">
+                      <a class="govuk-footer__link" href="/accessibility-statement">
+                      Accessibility Statement
+                      </a>
+                  </li>
+                  <li class="govuk-footer__inline-list-item">
+                      <a class="govuk-footer__link" href="/custom-codes">
+                      Custom Codes
+                      </a>
+                  </li>
+                  <li class="govuk-footer__inline-list-item">
+                      <a class="govuk-footer__link" href="/faq">
+                      Glossary
+                      </a>
+                  </li>
+                  <li class="govuk-footer__inline-list-item">
+                      <a target="_BLANK" class="govuk-footer__link" href="/privacy-policy">
+                      Privacy Policy
+                      </a>
+                  </li>
+                  <li class="govuk-footer__inline-list-item">
+                      <a target="_BLANK" class="govuk-footer__link" href="https://www.gov.uk/government/organisations/foreign-commonwealth-development-office">
+                      Contact Us
+                      </a>
+                  </li>
+                  </ul>
+                  <div class="govuk-footer__meta-custom">
+                      This site uses <a href="/cookies" class="govuk-footer__link">cookies</a>
+                  </div>
+                  <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
+                      <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"></path>
+                  </svg>
+                  <span class="govuk-footer__licence-description">
+                      All content is available under the
+                      <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+                  </span>
+              </div>
+              <div class="govuk-footer__meta-item">
+                  <a class="govuk-footer__link govuk-footer__copyright-logo_dqa" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+              </div>
+          </div>
+      </div>
     </footer>
-
     <script src="dqa/assets/javascripts/kit.js"></script>
 
     <script src="dqa/assets/javascripts/auto-store-data.js"></script>

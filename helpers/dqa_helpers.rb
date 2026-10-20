@@ -4,7 +4,12 @@ module DqaHelpers
         url = 'https://fcdo.iati.cloud/dqa'
         regionList = []
         countryList = []
-        sectorList = Oj.load(File.read('data/dqa-sector-map.json'))
+        if sector_string.size > 0
+            sectorList = Oj.load(File.read('data/dqa-sector-map.json'))
+            sectorList = sectorList[sector_string.to_s]
+        else
+            sectorList = []
+        end
         if country_region_string.match?(/\d/)
             regionList = country_region_string.split(",")
         else
@@ -20,11 +25,11 @@ module DqaHelpers
             "segmentation": {
                 "countries": countryList,
                 "regions": regionList,
-                "sectors": sectorList[sector_string.to_s]
+                "sectors": sectorList
             },
             "failed_activities": false,
             "require_funding_and_accountable": true,
-            "include_exemptions": true,
+            "include_exemptions": false,
             "skip_cache": true,
             "use_budget_date_filter": true
         }
@@ -32,6 +37,7 @@ module DqaHelpers
         response = RestClient.post(url, payload_all.to_json, { content_type: :json, accept: :json })
         # 4. Parse the JSON response into a Ruby variable (Hash)
         resp = JSON.parse(response.body)
+        #puts resp
         ##
         finalData = {}
         if org_string == 'all'
@@ -137,6 +143,8 @@ module DqaHelpers
             finalData['DocumentRAGBreakdown']['AnnualReview'] = 0
             finalData['DocumentRAGBreakdown']['PCR'] = 0
         end
+        finalData['ActiveProgrammeCount'] = add_comma_to_number(finalData['ActiveProgrammeCount'])
+        finalData['ActiveProjectCount'] = add_comma_to_number(finalData['ActiveProjectCount'])
         @data = finalData
     end
 
@@ -149,7 +157,11 @@ module DqaHelpers
         end
         payload = {
             "organisation": depts,
-            "failed_activities": false
+            "failed_activities": false,
+            "require_funding_and_accountable": true,
+            "include_exemptions": false,
+            "skip_cache": true,
+            "use_budget_date_filter": true
         }
         response = RestClient.post(url, payload.to_json, { content_type: :json, accept: :json })
         # 4. Parse the JSON response into a Ruby variable (Hash)

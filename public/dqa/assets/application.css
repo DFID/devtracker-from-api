@@ -8718,6 +8718,18 @@ p + .govuk-heading-s,
   background: url("../images/85_degrees_Pastel.png") no-repeat 50% 50%;
   background-size: contain;
 }
+#dashboard_V1.GDS_pastels .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_4 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_six .chart_graphic {
+  background: url("../images/96_degrees_Pastel.png") no-repeat 50% 50%;
+  background-size: contain;
+}
+#dashboard_V1.GDS_pastels .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_4 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_1 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_2 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_3 .chart_size.size_ninety_one .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_4 .chart_size.size_ninety_one .chart_graphic {
+  background: url("../images/91_degrees_Pastel.png") no-repeat 50% 50%;
+  background-size: contain;
+}
+#dashboard_V1.GDS_pastels .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V1.GDS_pastels_V2 .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V2.GDS_pastels_V2 .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V3.GDS_pastels_V2 .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels .charts.section_4 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_1 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_2 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_3 .chart_size.size_eighty_six .chart_graphic, #dashboard_V4.GDS_pastels_V2 .charts.section_4 .chart_size.size_eighty_six .chart_graphic {
+  background: url("../images/86_degrees_Pastel.png") no-repeat 50% 50%;
+  background-size: contain;
+}
 #dashboard_V1.GDS_pastels .bar_chart_vertical .bar_section, #dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section, #dashboard_V2.GDS_pastels .bar_chart_vertical .bar_section, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section, #dashboard_V3.GDS_pastels .bar_chart_vertical .bar_section, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section, #dashboard_V4.GDS_pastels .bar_chart_vertical .bar_section, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section {
   width: 14.28%;
   float: left;
@@ -8974,6 +8986,36 @@ p + .govuk-heading-s,
 }
 #dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour {
   background-color: #f4d7d7;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.one_hundred .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.one_hundred .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.one_hundred .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.one_hundred .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_nine .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_nine .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_nine .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_nine .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_six .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_six .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_six .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_six .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_four .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_four .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_four .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_four .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_three .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_three .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_three .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.ninety_three .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_six .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_six .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_six .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_six .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_four .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_four .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_four .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.eigthy_four .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_five .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_five .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_five .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_five .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_four .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_four .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_four .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.seventy_four .bar_colour.blue {
+  background-color: #8eb8dc;
+}
+#dashboard_V1.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour.blue, #dashboard_V2.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour.blue, #dashboard_V3.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour.blue, #dashboard_V4.GDS_pastels_V2 .bar_chart_vertical .bar_section .bar_chart.in-view.twenty_eight .bar_colour.blue {
+  background-color: #8eb8dc;
 }
 #dashboard_V1.GDS_pastels_V2 .tile_design, #dashboard_V2.GDS_pastels_V2 .tile_design, #dashboard_V3.GDS_pastels_V2 .tile_design, #dashboard_V4.GDS_pastels_V2 .tile_design {
   margin: 0 0 0 0;
@@ -9472,7 +9514,7 @@ p + .govuk-heading-s,
     bottom: 0%;
   }
 }
-button#openModal_V1, button#openModal_V2, button#openModal_V3 {
+button#openModal_V0, button#openModal_V1, button#openModal_V2, button#openModal_V3 {
   color: var(--govuk-brand-colour, #1d70b8);
   background: none;
   box-shadow: none;
@@ -9487,44 +9529,44 @@ button#openModal_V1, button#openModal_V2, button#openModal_V3 {
   width: auto;
   display: block;
 }
-button#openModal_V1.programme, button#openModal_V2.programme, button#openModal_V3.programme {
+button#openModal_V0.programme, button#openModal_V1.programme, button#openModal_V2.programme, button#openModal_V3.programme {
   margin-top: 0.25em !important;
 }
 @media (min-width: 0px) {
-  button#openModal_V1, button#openModal_V2, button#openModal_V3 {
+  button#openModal_V0, button#openModal_V1, button#openModal_V2, button#openModal_V3 {
     margin: 0.25em 0 1.5em 0;
     float: none;
     clear: none;
   }
 }
 @media (min-width: 480px) {
-  button#openModal_V1, button#openModal_V2, button#openModal_V3 {
+  button#openModal_V0, button#openModal_V1, button#openModal_V2, button#openModal_V3 {
     margin: 0.25em 0 1.5em 0;
     float: none;
     clear: none;
   }
 }
 @media (min-width: 769px) {
-  button#openModal_V1, button#openModal_V2, button#openModal_V3 {
+  button#openModal_V0, button#openModal_V1, button#openModal_V2, button#openModal_V3 {
     margin: 0.25em 0 1.5em 0;
     float: none;
     clear: none;
   }
 }
 @media (min-width: 1024px) {
-  button#openModal_V1, button#openModal_V2, button#openModal_V3 {
+  button#openModal_V0, button#openModal_V1, button#openModal_V2, button#openModal_V3 {
     margin: 0.65em 0 0 0;
     float: right;
     clear: none;
   }
 }
-button#openModal_V1:active, button#openModal_V1:hover, button#openModal_V1:focus, button#openModal_V2:active, button#openModal_V2:hover, button#openModal_V2:focus, button#openModal_V3:active, button#openModal_V3:hover, button#openModal_V3:focus {
+button#openModal_V0:active, button#openModal_V0:hover, button#openModal_V0:focus, button#openModal_V1:active, button#openModal_V1:hover, button#openModal_V1:focus, button#openModal_V2:active, button#openModal_V2:hover, button#openModal_V2:focus, button#openModal_V3:active, button#openModal_V3:hover, button#openModal_V3:focus {
   cursor: pointer;
 }
-button#openModal_V1:active .hint_text, button#openModal_V1:hover .hint_text, button#openModal_V1:focus .hint_text, button#openModal_V2:active .hint_text, button#openModal_V2:hover .hint_text, button#openModal_V2:focus .hint_text, button#openModal_V3:active .hint_text, button#openModal_V3:hover .hint_text, button#openModal_V3:focus .hint_text {
+button#openModal_V0:active .hint_text, button#openModal_V0:hover .hint_text, button#openModal_V0:focus .hint_text, button#openModal_V1:active .hint_text, button#openModal_V1:hover .hint_text, button#openModal_V1:focus .hint_text, button#openModal_V2:active .hint_text, button#openModal_V2:hover .hint_text, button#openModal_V2:focus .hint_text, button#openModal_V3:active .hint_text, button#openModal_V3:hover .hint_text, button#openModal_V3:focus .hint_text {
   display: inline-block;
 }
-button#openModal_V1 .hint_text, button#openModal_V2 .hint_text, button#openModal_V3 .hint_text {
+button#openModal_V0 .hint_text, button#openModal_V1 .hint_text, button#openModal_V2 .hint_text, button#openModal_V3 .hint_text {
   display: none;
   position: absolute;
   padding: 0.25em;
@@ -9538,7 +9580,7 @@ button#openModal_V1 .hint_text, button#openModal_V2 .hint_text, button#openModal
   right: 0;
   margin: 0 0 0 0;
 }
-button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, button#openModal_V3 .hint_text:before {
+button#openModal_V0 .hint_text:before, button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, button#openModal_V3 .hint_text:before {
   content: " ";
   display: inline-block;
   position: absolute;
@@ -9785,7 +9827,7 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   margin: 1.5em 0 0 0;
   text-align: center;
 }
-#full_hero button#openModal_V1, #full_hero_V2 button#openModal_V1 {
+#full_hero button#openModal_V0, #full_hero button#openModal_V1, #full_hero_V2 button#openModal_V0, #full_hero_V2 button#openModal_V1 {
   color: white;
   background: url("../images/icon_help_white.svg") no-repeat 100% 50%;
   background-size: contain;
@@ -9815,7 +9857,7 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
 #full_hero .gov_department_logo, #full_hero_V2 .gov_department_logo {
   display: inline-block;
   float: left;
-  width: 16em;
+  width: 14em;
   height: 6em;
   margin: 0.5em 0 0.5em 0;
 }
@@ -10129,7 +10171,7 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
 }
 @media (min-width: 1100px) {
   #full_hero_V2.all_on_one_line section .section .gov_department_logo {
-    width: 16em;
+    width: 14em;
     height: 6em;
     margin: 0.5em 0 0.5em 0;
   }
@@ -10178,7 +10220,7 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
 }
 @media (min-width: 1100px) {
   #full_hero_V2.all_on_one_line section .section .gov_department_logo.desnz {
-    width: 16em;
+    width: 14em;
     height: 6em;
     margin: 0 0 0.5em 0;
   }
@@ -10205,12 +10247,12 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
 }
 @media (min-width: 1023px) {
   #full_hero_V2.all_on_one_line section .section .big_numbers .number {
-    font-size: 4.5rem;
+    font-size: 4rem;
   }
 }
 @media (min-width: 1024px) {
   #full_hero_V2.all_on_one_line section .section .big_numbers .number {
-    font-size: 4rem;
+    font-size: 3.75rem;
   }
 }
 @media (min-width: 0px) {
@@ -10230,12 +10272,12 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
 }
 @media (min-width: 769px) {
   #full_hero_V2.all_on_one_line section .section .big_numbers h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 }
 @media (min-width: 1023px) {
   #full_hero_V2.all_on_one_line section .section .big_numbers h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 }
 #full_hero_V2.secondary {
@@ -11661,6 +11703,19 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
     font-size: 4rem;
   }
 }
+.tile_container .homepage_hero .text_container .budget button {
+  background: none;
+  color: var(--govuk-brand-colour, #1d70b8);
+  border: none;
+  text-align: left;
+  padding: 0;
+  font-size: 1.1875rem;
+  font-weight: normal;
+  text-decoration: underline;
+}
+.tile_container .homepage_hero .text_container .budget button:hover, .tile_container .homepage_hero .text_container .budget button:active, .tile_container .homepage_hero .text_container .budget button:focus {
+  cursor: pointer;
+}
 .tile_container .homepage_hero .department_logo {
   background-position: 0% 0%;
   background-size: contain;
@@ -11797,6 +11852,9 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   .tile_container .homepage_hero.one_third.fixed_height {
     min-height: 15em;
   }
+  .tile_container .homepage_hero.one_third.fixed_height_V2 {
+    min-height: 11em;
+  }
   .tile_container .homepage_hero.one_third:last-of-type {
     margin-bottom: 0;
   }
@@ -11812,6 +11870,9 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   .tile_container .homepage_hero.one_third.fixed_height {
     min-height: 15em;
   }
+  .tile_container .homepage_hero.one_third.fixed_height_V2 {
+    min-height: 11em;
+  }
   .tile_container .homepage_hero.one_third:last-of-type {
     margin-bottom: 0;
   }
@@ -11826,6 +11887,9 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   }
   .tile_container .homepage_hero.one_third.fixed_height {
     min-height: 15em;
+  }
+  .tile_container .homepage_hero.one_third.fixed_height_V2 {
+    min-height: 11em;
   }
   .tile_container .homepage_hero.one_third:last-of-type {
     margin-bottom: 0;
@@ -11843,6 +11907,9 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   .tile_container .homepage_hero.one_third.fixed_height {
     min-height: 18em;
   }
+  .tile_container .homepage_hero.one_third.fixed_height_V2 {
+    min-height: 11em;
+  }
   .tile_container .homepage_hero.one_third:last-of-type {
     margin-bottom: 0;
   }
@@ -11857,6 +11924,9 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   }
   .tile_container .homepage_hero.one_third.fixed_height {
     min-height: 18em;
+  }
+  .tile_container .homepage_hero.one_third.fixed_height_V2 {
+    min-height: 11em;
   }
   .tile_container .homepage_hero.one_third:last-of-type {
     margin-bottom: 0;
@@ -12066,6 +12136,21 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
   color: var(--govuk-brand-colour, #1d70b8);
   text-decoration: underline;
   text-align: left;
+}
+.pie_chart_wrapper button .number {
+  display: flex;
+  width: 1.25em;
+  height: 1.25em;
+  align-items: center;
+  justify-content: center;
+  background: var(--govuk-brand-colour, #1d70b8);
+  border-radius: 50%;
+  margin: 0 0.25em 0 0;
+  float: left;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 .text_wrapper {
@@ -12432,7 +12517,7 @@ button#openModal_V1 .hint_text:before, button#openModal_V2 .hint_text:before, bu
     width: 95%;
   }
 }
-.modals .modal_details .modal_header button#openModal_V1, .modals .modal_details .modal_header button#openModal_V2, .modals .modal_details .modal_header button#openModal_V3, .modal .modal_details .modal_header button#openModal_V1, .modal .modal_details .modal_header button#openModal_V2, .modal .modal_details .modal_header button#openModal_V3 {
+.modals .modal_details .modal_header button#openModal_V0, .modals .modal_details .modal_header button#openModal_V1, .modals .modal_details .modal_header button#openModal_V2, .modals .modal_details .modal_header button#openModal_V3, .modal .modal_details .modal_header button#openModal_V0, .modal .modal_details .modal_header button#openModal_V1, .modal .modal_details .modal_header button#openModal_V2, .modal .modal_details .modal_header button#openModal_V3 {
   float: inherit;
   text-decoration: none;
   margin: 0.1em 0 0 0;
@@ -19079,35 +19164,52 @@ section.department_content.version_2 .section .big_numbers .number {
   top: 0;
 }
 .data_holder .sector_chart_key span {
-  margin-right: 1em;
+  margin: 0;
+  float: left;
+  width: 50%;
 }
 .data_holder .sector_chart_key .colour_indicator {
   display: inline-block;
   width: 0.75em;
   border: 2px solid white;
   height: 0.75em;
-  margin: 0 0.15em -0.125em 0;
+  margin: 0.05em 0.15em -0.125em 0;
 }
 .data_holder .sector_chart_key .colour_indicator.one {
-  background-color: #84b150;
+  background-color: #1d70b8;
 }
 .data_holder .sector_chart_key .colour_indicator.two {
-  background-color: #4d348e;
+  background-color: #0f7a52;
 }
 .data_holder .sector_chart_key .colour_indicator.three {
-  background-color: #349f95;
+  background-color: #158187;
 }
 .data_holder .sector_chart_key .colour_indicator.four {
-  background-color: #f299bc;
+  background-color: #54319f;
 }
 .data_holder .sector_chart_key .colour_indicator.five {
-  background-color: #2871b4;
+  background-color: #ca357c;
 }
 .data_holder .sector_chart_key .colour_indicator.six {
-  background-color: #f17643;
+  background-color: #f47738;
 }
 .data_holder .sector_chart_key .colour_indicator.seven {
-  background-color: #ca3535;
+  background-color: #ffdd00;
+}
+.data_holder .sector_chart_key .colour_indicator.eight {
+  background-color: #99704a;
+}
+.data_holder .sector_chart_key .colour_indicator.nine {
+  background-color: #0b0c0c;
+}
+.data_holder .sector_chart_key .colour_indicator.ten {
+  background-color: #42d4f4;
+}
+.data_holder .sector_chart_key .colour_indicator.eleven {
+  background-color: #bfef45;
+}
+.data_holder .sector_chart_key .colour_indicator.twelve {
+  background-color: #808100;
 }
 .data_holder.sector_by_year .budget_bar.x_axis .bar_label, .data_holder.budget_by_year .budget_bar.x_axis .bar_label {
   margin: 0;
@@ -19481,6 +19583,66 @@ section.department_content.version_2 .section .big_numbers .number {
 }
 .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(1) {
   margin-left: 8%;
+}
+
+#smaller_version.homepage_hero.data_section .bar_section {
+  width: 2.25em;
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.eighty .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.seventy .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.sixty_five .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.sixty .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.fifty .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.twenty .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.eight .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_section .bar_chart.five .bar_colour {
+  background: linear-gradient(180deg, rgb(29, 112, 184) 30%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 31%, rgb(29, 112, 184) 31%, rgb(15, 122, 82) 31%, rgb(15, 122, 82) 50%, rgb(255, 255, 255) 50%, rgb(255, 255, 255) 51%, rgb(244, 119, 56) 51%);
+}
+#smaller_version.homepage_hero.data_section .bar_chart {
+  width: 1.25em;
+  margin-left: 0;
+  left: 0.5em;
+}
+#smaller_version.homepage_hero.data_section .data_holder {
+  bottom: 3.5em;
+}
+#smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label {
+  transform: rotate(90deg);
+  width: 2.575em;
+}
+#smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:after {
+  transform: rotate(-90deg);
+  top: 1.5em;
+}
+#smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:after {
+  display: none;
+}
+#smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(12), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(13), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(14), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(15), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(16), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(17), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(18), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(19), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(20), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(21), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(22), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(23), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(24), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(25), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(26), #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(27) {
+  position: relative;
+  display: inline-block;
+  left: inherit;
+  right: inherit;
+  float: left;
+  margin-left: 0;
+  text-align: center;
+}
+#smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(12)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(13)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(14)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(15)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(16)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(17)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(18)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(19)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(20)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(21)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(22)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(23)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(24)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(25)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(26)::before, #smaller_version.homepage_hero.data_section .data_holder.budget_by_year.ethiopia .budget_bar.x_axis .bar_label:nth-of-type(27)::before {
+  left: 0;
+  margin-left: 0;
 }
 
 .programmes .bar_section {
@@ -21273,40 +21435,42 @@ a.app-back-to-top__link svg {
   font-size: 1.1875rem;
 }
 
-/* Bolds the entire tooltip text */
-.c3-tooltip {
-    font-weight: bold;
-    font-family: "GDS Transport", arial, sans-serif;
-    color: white;
-    border-radius: 3px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 0.2em;
+/* This section is specially built for the footer section. Make sure to not overwrite this*/
+.govuk-footer_dqa {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 14px;
+    font-size: .875rem;
+    line-height: 1.1428571429;
+    padding-top: 25px;
+    padding-bottom: 15px;
+    border-top: 1px solid #b1b4b6;
+    color: #0b0c0c;
+    background: #f3f2f1;
 }
 
-/* Alternatively, if you only want to bold specific parts: */
-.c3-tooltip th {
-    font-weight: bold;
-    font-family: "GDS Transport", arial, sans-serif;
-    color: white;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 0.2em;
+.govuk-footer_dqa .govuk-footer__link:focus {
+    outline: 3px solid rgba(0,0,0,0);
+    color: #0b0c0c;
+    background-color: #fd0;
+    box-shadow: 0 -2px #fd0,0 4px #0b0c0c;
+    text-decoration: none
 }
 
-.c3-tooltip td.name {
-    font-weight: bold;
-    font-family: "GDS Transport", arial, sans-serif;
-    color: white;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.0);
-    padding: 0.2em;
+.govuk-footer_dqa .govuk-footer__link:link,.govuk-footer__link:visited {
+    color: #0b0c0c
 }
 
-.c3-tooltip td.value {
-    font-weight: bold;
-    font-family: "GDS Transport", arial, sans-serif;
-    color: white;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.0);
-    padding: 0.2em;
+.govuk-footer__copyright-logo_dqa {
+    display: inline-block;
+    min-width: 125px;
+    padding-top: 112px;
+    background-image: url("/assets/images/govuk-crest.png");
+    background-repeat: no-repeat;
+    background-position: 50% 0%;
+    background-size: 125px 102px;
+    text-align: center;
+    white-space: nowrap
 }

@@ -18,6 +18,10 @@ module CommonHelpers
     return apiLink
   end
 
+  def add_comma_to_number(num)
+    return num.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+  end
+
   def get_total_spend()
     count = 20
     apiCall = settings.oipa_api_url +  "activity/?q=reporting_org_ref:GB-GOV-* AND hierarchy:2&start=0&rows=#{count}&fl=transaction_type,transaction_value,activity_status_code"
@@ -314,9 +318,9 @@ end
 
   def convert_numbers_to_human_readable_format(num)
     begin
-      number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+      number_to_human(num.gsub(",",""), :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'bn' })
     rescue
-      number_to_human(num, :format => '%n%u', :precision => 4, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+      number_to_human(num, :format => '%n%u', :precision => 3, :units => { :thousand => 'K', :million => 'M', :billion => 'bn' })
     end
   end
 

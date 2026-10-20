@@ -1,13 +1,23 @@
 <div id="full_hero" class="full_width secondary">
   <div class="govuk-width-container">
+    <!-- Breadcrumb START -->
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+              <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+                  <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item" id=""><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                        <li class="govuk-breadcrumbs__list-item" id="">FCDO IATI Data Completeness Dashboard</li>
+                  </ol>
+              </nav>
+        </div>
+    </div>
     <!-- HEADER - START -->
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <!-- <span class="govuk-caption-l">FCDO Development Tracker</span> -->
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
-          IATI Data Completeness Dashboard
-        </h1>
-        <p class="govuk-caption-m govuk-!-margin-bottom-4"><a href="https://iatistandard.org/" target="_blank" rel="noopener noreferrer">International Aid Transparency Initiative (IATI) (opens in a new tab)</a> is a global initiative to improve the transparency of development and humanitarian resources and their results to address poverty and crises.</p>
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-2" style="font-size: 2.15em">FCDO IATI Data Completeness Dashboard</h1>
+        <p class="govuk-caption-m">This dashboard measures the completeness of FCDO data published to the International Aid Transparency Initiative (IATI).</p>
+        <p class="govuk-caption-m govuk-!-margin-bottom-4"><a href="https://iatistandard.org/" target="_blank" rel="noopener noreferrer">IATI (opens in a new tab)</a> is a global initiative to improve the transparency of development and humanitarian resources and their results to address poverty and crises.</p>
       </div>
     </div>
     <!-- HEADER - END -->
@@ -84,32 +94,32 @@
           </div>
           <!-- <button type="submit" class="govuk-button govuk-button--inverse right_align" data-module="govuk-button"><span class="icon_json"></span> Download data (.json)</button> -->
         </div>
-        <div class="section">
-          <div class="big_numbers">
-            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
-              ><span id="dqa_active_prog_count">693</span></span
-            >
-            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
-              Active Programmes
-            </h2>
-          </div>
-        </div>
-        <div class="section">
-          <div class="big_numbers">
-            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
-              ><span id="dqa_active_proj_count">5,089</span></span
-            >
-            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
-              Active Projects
-            </h2>
-          </div>
-        </div>
         <div class="section last_of_type">
           <div class="big_numbers">
             <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
               ><span id="dqa_total_budget"></span></span
             >
-            <h2 class="govuk-body-l govuk-!-margin-bottom-2">Total Budget</h2>
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">Current Budget</h2>
+          </div>
+        </div>
+        <div class="section">
+          <div class="big_numbers">
+            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
+              ><span id="dqa_active_prog_count">0</span></span
+            >
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
+              Programmes active or closed within the last 18 months
+            </h2>
+          </div>
+        </div>
+        <div class="section">
+          <div class="big_numbers">
+            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
+              ><span id="dqa_active_proj_count">0</span></span
+            >
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
+              Projects active or closed within the last 18 months
+            </h2>
           </div>
         </div>
       </section>
@@ -159,7 +169,7 @@
               </div>
             </div>
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Overall</h3>
-            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="overall_pass_percentage">90</span>% pass comprises of Programme Data, Document Publication and downstream partners correctly publishing IATI data.</p>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span style="display: none" id="overall_pass_percentage">90</span>This figure is the average of all measures which contribute to the Programme Data and Document Publication figures, plus an additional one: publication by downstream partners.</p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -359,7 +369,7 @@
                       <div id="overall_bar_pcr_percentage" class="bar_colour"></div>
                     </div>
                     <h3 id="overall_bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
-                    <span class="govuk-caption-m">Project Completion Review</span>
+                    <span class="govuk-caption-m">Programme Completion Review</span>
                   </div>
                 </div>
               </div>
@@ -390,7 +400,7 @@
                 <hr
                   class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
                 />
-                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
                   <span class="title_content">Project Attributes</span>
                   <button id="openModal_V4" class="govuk-button help_button">
                     How do we calculate completeness?
@@ -399,6 +409,7 @@
                     >
                   </button>
                 </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
               </div>
               <div class="govuk-grid-column-full">
                 <div class="bar_chart_vertical with_axis">
@@ -513,7 +524,7 @@
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
               Programme Data
             </h3>
-            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="prog_pass_percentage">90</span>% of programme attibutes published to IATI.<br><br><br></p>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="prog_pass_percentage">90</span>% of programme attibutes published to IATI.<br><br><br><br><br></p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -528,8 +539,8 @@
                 <hr
                   class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
                 />
-                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
-                  <span class="title_content">Programme Attributes</span>
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
+                  <span class="title_content">Programme Data</span>
                   <button id="openModal_V1" class="govuk-button help_button">
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
@@ -537,6 +548,7 @@
                     >
                   </button>
                 </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
               </div>
               <div class="govuk-grid-column-full">
                 <div class="bar_chart_vertical with_axis">
@@ -651,7 +663,7 @@
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
               Document Publication
             </h3>
-            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="doc_pass_percentage">90</span>% of programme documents published to IATI.<br><br><br></p>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="doc_pass_percentage">90</span>% of programme documents published to IATI.<br><br><br><br><br></p>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -667,7 +679,7 @@
                 <hr
                   class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
                 />
-                <h2 class="govuk-heading-l govuk-!-margin-bottom-8 tab_title">
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
                   <span class="title_content">Document Publication</span>
                   <button id="openModal_V2" class="govuk-button help_button">
                     How do we calculate completeness?
@@ -676,6 +688,7 @@
                     >
                   </button>
                 </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme document completeness score is the average of the scores for the four key documents for each programme, either active or closed within the last 18 months.</p>
               </div>
               <div class="govuk-grid-column-full">
                 <div class="bar_chart_vertical with_axis">
@@ -722,7 +735,7 @@
                       <div id="bar_pcr_percentage" class="bar_colour"></div>
                     </div>
                     <h3 id="bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
-                    <span class="govuk-caption-m">Project Completion Review</span>
+                    <span class="govuk-caption-m">Programme Completion Review</span>
                   </div>
                 </div>
               </div>
@@ -766,7 +779,56 @@
               $(`#${heightData}`).css('height', `${percentage}%`);
               $(`#${heightData}`).css('background-color', getDonutThresholdColor('bar', percentage));
             }
+
             function getDonutThresholdColor(passFailType,PassPercentage){
+              if(passFailType == 'pass') {
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#8eb8dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#8eb8dc';
+                  }
+                  else {
+                    return '#8eb8dc';
+                  }
+                }
+                else {
+                  return '#FFFFFF';
+                }
+              }
+              else if(passFailType == 'bar'){
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#8eb8dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#8eb8dc';
+                  }
+                  else {
+                    return '#8eb8dc';
+                  }
+                }
+                else {
+                  return '#8eb8dc';
+                }
+              }
+              else {
+                if(PassPercentage >= (100-PassPercentage)){
+                  return '#FFFFFF';
+                }
+                else {
+                  if((100-PassPercentage) > 95){
+                    return '#fff';
+                  }
+                  else {
+                    return '#fff';
+                  }
+                }
+              }
+            }
+
+            function getDonutThresholdColor_backup(passFailType,PassPercentage){
               if(passFailType == 'pass') {
                 if(PassPercentage >= (100-PassPercentage)){
                   if(PassPercentage > 95){
@@ -861,21 +923,21 @@
                   titleNode.append('tspan')
                       .text(`${overallPercentage}%`)
                       .attr('x', 0)
-                      .attr('dy', '0.1em')
+                      .attr('dy', '0.4em')
                       .style('font-size', '40px')
                       .style('font-weight', 'bold')
                       .style('fill', '#000')
                       .style('font-family', '"GDS Transport", arial, sans-serif');
 
                   // Add the bottom line (The Label)
-                  titleNode.append('tspan')
-                      .text('Pass')
-                      .attr('x', 0)
-                      .attr('dy', '1.5em')
-                      .style('font-size', '16px')
-                      .style('font-weight', 'normal')
-                      .style('fill', '#484949')
-                      .style('font-family', '"GDS Transport", arial, sans-serif');
+                  // titleNode.append('tspan')
+                  //     .text('Pass')
+                  //     .attr('x', 0)
+                  //     .attr('dy', '1.5em')
+                  //     .style('font-size', '16px')
+                  //     .style('font-weight', 'normal')
+                  //     .style('fill', '#484949')
+                  //     .style('font-family', '"GDS Transport", arial, sans-serif');
                 },
                 legend: {
                   hide: true
