@@ -186,12 +186,12 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-margin-top-4 tab_title">
                   <span class="title_content">Overall Attributes</span>
-                  <%# <button id="openModal_V3" class="govuk-button help_button">
+                  <button id="openModal_V3" class="govuk-button help_button">
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
-                  </button> %>
+                  </button>
                 </h2>
                 <p style="text-align: left; color: #484949; margin-bottom: 4em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
               </div>
@@ -876,6 +876,22 @@
               }
             }
             function generateDonut(divID, overallPercentage){
+              var altText = '';
+              switch(divID) {
+                case 'counter_overall_percentage':
+                  altText = 'Overall Data Completeness Score - ' + overallPercentage + '%';
+                  break;
+                // case 'counter_proj_data_percentage':
+                //   overallPercentage = Math.round(overallPercentage);
+                //   break;
+                case 'counter_prog_data_percentage':
+                  altText = 'Programme Data Completeness Score - ' + overallPercentage + '%';
+                  break;
+                case 'counter_doc_pub_percentage':
+                  altText = 'Document Publication Completeness Score - ' + overallPercentage + '%';
+                  overallPercentage = Math.round(overallPercentage);
+                  break;
+              }
               return c3.generate({
                 bindto: '#' + divID,
                 size: {
@@ -914,6 +930,9 @@
                     show: false
                   }
                 },
+                tooltip: {
+                  show: false
+                },
                 onrendered: function() {
                   // Find the title element
                   var titleNode = d3.select(`#${divID} .c3-chart-arcs-title`);
@@ -938,6 +957,9 @@
                   //     .style('font-weight', 'normal')
                   //     .style('fill', '#484949')
                   //     .style('font-family', '"GDS Transport", arial, sans-serif');
+                  d3.select(`#${divID} svg`)
+                    .attr('role', 'img')
+                    .attr('aria-label', altText);
                 },
                 legend: {
                   hide: true
@@ -1075,6 +1097,12 @@
             });
             $('#closeBtn_V1').click(function(){
               $('#dashboard_helptext_V1').hide();
+            });
+            $('#openModal_V3').click(function(){
+              $('#dashboard_helptext_V3').show();
+            });
+            $('#closeBtn_V3').click(function(){
+              $('#dashboard_helptext_V3').hide();
             });
           });
     </script>

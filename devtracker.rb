@@ -1551,7 +1551,7 @@ get '/department' do
 	erb :'department/department', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url, odas: odas, totalOdaValue: totalOdaValue}
 end
 
-get '/dqa' do
+get '/dcd' do
   	settings.devtracker_page_title = 'Data Completeness Dashboard Page'
 	orgList = Oj.load(File.read('data/OGDs.json'))
 	orgList = orgList.select{|key, details| key == 'FCDO'}
