@@ -270,7 +270,7 @@
                     Description must be longer than title
                   </td>
                   <td class="govuk-table__cell align_right">
-                    len(description) ÷ len(title) × 100
+                    len(description) ÷ len(title) × 100 < 100% TODO Add fail condition
                   </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -464,7 +464,7 @@
                     All sectors must use 5-digit DAC CRS codes
                   </td>
                   <td class="govuk-table__cell align_right">
-                    (valid ÷ total) × 100
+                    (valid ÷ total) × 100 < 100% TODO Add fail condition
                   </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -625,8 +625,8 @@
               </tbody>
             </table>
             <!-- SECTION 9 - END -->
-            <br><br>
-            <!-- Partner Links -->
+            <%#<br><br>
+             <!-- Partner Links -->
             <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
               Partner Links
             </h3>
@@ -660,7 +660,7 @@
                   <td class="govuk-table__cell">No partner organisations have linked their activity data to this activity</td>
                 </tr>
               </tbody>
-            </table>
+            </table> %>
           </div>
           <!-- CONTENT - END -->
         </div>
@@ -1120,7 +1120,7 @@
                     Description must be longer than title
                   </td>
                   <td class="govuk-table__cell align_right">
-                    len(description) ÷ len(title) × 100
+                    len(description) ÷ len(title) × 100 < 100% TODO Add fail condition
                   </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -1317,7 +1317,7 @@
                     All sectors must use 5-digit DAC CRS codes
                   </td>
                   <td class="govuk-table__cell align_right">
-                    (valid ÷ total) × 100
+                    (valid ÷ total) × 100 < 100% TODO Add fail condition
                   </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -1481,9 +1481,9 @@
             <!-- SECTION 9 - END -->
             <br><br>
             <!-- Partner Links -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+            <h2 class="govuk-heading-m">
               Partner Links
-            </h3>
+            </h2>
             <table class="govuk-table govuk-!-margin-bottom-2">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
