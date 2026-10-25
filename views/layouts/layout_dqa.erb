@@ -1839,6 +1839,7 @@
                 </div>
                 <form action="/search_p" method="POST" onsubmit="return validateSearch()">
                    <input aria-describedby="app-site-search__input__assistiveHint" aria-expanded="false" aria-controls="app-site-search__input__listbox" aria-autocomplete="both" autocomplete="off" class="app-site-search__input app-site-search__input--default" id="search_term" name="query" placeholder="Search Development Tracker " type="text" role="combobox">
+                   <label class="govuk-visually-hidden" for="search_term">Search Development Tracker</label>
                    <button type="submit" class="govuk-button govuk-button--inverse search_button" data-module="govuk-button" id="" data-govuk-button-init="">Search</button>
                 </form>
                 <span
@@ -1971,7 +1972,9 @@
       </div>
     </header>
     <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
-    <%= yield %>
+    <main>
+      <%= yield %>
+    </main>
     <footer class="govuk-footer_dqa" role="contentinfo">
       <div class="govuk-width-container app-width-container">
           <div class="govuk-footer__meta">
