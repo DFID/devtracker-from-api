@@ -22,6 +22,7 @@
     </div>
 </header>
 <form action="/search_p" method="post" id="headerSearchForm" onsubmit="return validateHeaderSearch()">
+    <input type="hidden" name="authenticity_token" value="<%= env['rack.session'][:csrf] %>">
     <div id="globalSearch" class="app-header__search app-element-hidden">
         <div class="govuk-width-container">
             <div class="govuk-form-group" id="headerSearchFormGroup">

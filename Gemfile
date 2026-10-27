@@ -21,6 +21,7 @@ gem 'rubygems-update'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'unicorn'
+gem 'rack-cors'
 
 group :development, :test do 
   gem "ruby-debug-ide"

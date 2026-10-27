@@ -39,6 +39,7 @@
     </header>
 
     <form action="/search_p" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="authenticity_token" value="<%= env['rack.session'][:csrf] %>">
         <div id="globalSearch" class="app-header__search app-element-hidden">
             <div class="govuk-width-container">
                 <div class="govuk-form-group">
@@ -175,7 +176,7 @@
 
                 <li class="govuk-footer__inline-list-item">
                     <a class="govuk-footer__link" href="/privacy-policy">
-                        Privacy Policy
+                        Privacy Notice
                     </a>
                 </li>
 

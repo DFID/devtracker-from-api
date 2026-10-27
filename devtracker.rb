@@ -23,6 +23,9 @@ require "sinatra/cookies"
 require "cgi"
 require 'set'
 require 'uri'
+require 'rack/utils'
+require 'rack/protection'
+require 'rack/cors'
 
 #helpers path
 require_relative 'helpers/formatters.rb'
@@ -72,6 +75,8 @@ set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
+enable :sessions
+use Rack::Protection
 
 #ensures that we can use the extension html.erb rather than just .erb
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -94,6 +99,19 @@ set :show_exceptions, true
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
+
+use Rack::Cors do
+  allow do
+    # Replace with your actual domain. 
+    # Using '*' would allow all domains, which is what we want to avoid.
+    origins 'fcdo.gov.uk', 'localhost:4567', 'devtracker.org.uk'
+
+    resource '*', 
+      methods: [:get, :post, :put, :delete, :options],
+      headers: :any
+  end
+end
+
 #####################################################################
 #  HOME PAGE
 #####################################################################
@@ -240,8 +258,8 @@ get '/countries/:country_code/?' do |n|
  			topSixResults: topSixResults,
  			oipa_api_url: settings.oipa_api_url,
  			activityCount: tempActivityCount,
- 			countryGeoJsonData: geoJsonData,
-			mapMarkers: mapMarkers,
+ 			#countryGeoJsonData: geoJsonData,
+			#mapMarkers: mapMarkers,
 			active_link: 'aidByLoc',
 			active_sub_link: 'countrySummary',
 			json_url_link: json_link
@@ -355,7 +373,7 @@ get '/regions/:region_code/?' do |n|
 			oipa_api_url: settings.oipa_api_url,
  			region: region,
 			regionYearWiseBudgets: get_country_region_yearwise_budget_graph_datav2(RestClient.get api_simple_log(settings.oipa_api_url + 'activity/?q=iati_identifier:GB-GOV-10-DHSC_WHO_core AND recipient_region_code:'+n+' AND reporting_org_ref:('+settings.goverment_department_ids.gsub(","," OR ")+') &fl=iati_identifier,budget_value_gbp,budget_value,default-currency,budget_period_start_iso_date,budget_period_end_iso_date,budget.period-start.quarter,budget.period-end.quarter&rows=10000')),
- 			mapMarkers: getRegionMapMarkersv2(region[:code]),
+ 			#mapMarkers: getRegionMapMarkersv2(region[:code]),
  		}
 end
 
@@ -469,7 +487,7 @@ get '/programme/*/summary' do
  			projectSectorGraphData: projectSectorGraphData,
  			participatingOrgList: participatingOrgList,
  			policyMarkers: get_policy_markersv2(project),
- 			mapMarkers: getProjectMapMarkersv2(project),
+ 			# mapMarkers: getProjectMapMarkersv2(project),
 			spendToDate: spendToDate,
 			programmeBudget: programmeBudget
  		}
@@ -812,10 +830,10 @@ get '/location/country/?' do
 		:layout => :'layouts/layout',
 		:locals => {
 			oipa_api_url: settings.oipa_api_url,
-			:dfid_country_map_data => 	map_data[0],
+			#:dfid_country_map_data => 	map_data[0],
 			:dfid_country_stats_data => map_data[1],
 			:sectorData => country_sector_data,
-			:countryMapData => getCountryBoundsForLocation(map_data[1]),
+			#:countryMapData => getCountryBoundsForLocation(map_data[1]),
 			:maxBudget => getMaxBudget,
 			active_link: 'aidByLoc',
 			active_sub_link: 'country',
@@ -932,7 +950,6 @@ get '/search/?' do
 end
 
 post '/search_p/?' do
-	#query = params['query']
 	query = sanitize_input(params['query'],"newId")
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
@@ -1058,11 +1075,12 @@ end
 post '/solr-response' do
 	query = sanitize_input(params['data']['query'],"newId")
 	searchType = sanitize_input(params['data']['queryType'],"newId")
-	if params['data']['filters'].strip.length > 1
+	f = params['data']['filters'].gsub('&quot;','"')
+	if f.strip.length > 1
 		if searchType == 'F'
-			filters = '&fq=' + sanitize_input(params['data']['filters'],"newId").gsub(/\band\b/, " &fq= ")
+			filters = '&fq=' + sanitize_input(f,"newId").gsub(/\band\b/, " &fq= ")
 		else
-			filters = 'AND ' + sanitize_input(params['data']['filters'],"newId")
+			filters = 'AND ' + sanitize_input(f,"newId")
 		end
 	else
 		filters = ''
@@ -1613,7 +1631,7 @@ get '/cookies/?' do
 end
 
 get '/privacy-policy/?' do
-	settings.devtracker_page_title = 'Privacy Policy'
+	settings.devtracker_page_title = 'Privacy Notice'
   erb :'privacy-policy/index', :layout => :'layouts/layout', :locals => {oipa_api_url: settings.oipa_api_url}
 end
 

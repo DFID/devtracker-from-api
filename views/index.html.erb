@@ -67,6 +67,7 @@ layout: cw_landing
                     Enter location, sector, organisation or keyword
                 </div>
                 <form id="searchForm" action="/search_p" class="app-search-form" method="POST"  onsubmit="return validateSearch()">
+                    <input type="hidden" name="authenticity_token" value="<%= env['rack.session'][:csrf] %>">
                     <p id="searchQueryError" class="govuk-error-message app-display-none">
                         <span class="govuk-visually-hidden">Error:</span> Please enter a search query
                     </p>
