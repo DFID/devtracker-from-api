@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as GOVUKFrontend from '../govuk/govuk-frontend.min.js'
+import * as GOVUKFrontend from '../javascripts/govuk-frontend.min.js'
 
 // Maintain window global for compatibility
 window.GOVUKFrontend = GOVUKFrontend

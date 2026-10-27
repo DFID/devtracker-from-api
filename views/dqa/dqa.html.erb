@@ -61,7 +61,6 @@
                     <option value="<%= cr['code']%>"><%= cr['name']%></option>
                <% end %>
             </select>
-            <input id="selected_country_region" type="hidden" />
           </div>
 
           <div class="govuk-form-group" style="max-width: 220px">
@@ -72,7 +71,6 @@
                     <option value="<%= key%>"><%= val%></option>
                <% end %>
             </select>
-            <input id="selected_sector" type="hidden" />
           </div>
         </div>
       </div>
@@ -144,7 +142,7 @@
   </div>
 </div>
 <div class="govuk-width-container">
-  <main class="govuk-main-wrapper" id="main-content">
+  <div class="govuk-main-wrapper" id="main-content">
     <div id="dashboard_V1" class="GDS_pastels_V2">
       <div class="govuk-width-container">
         <div
@@ -170,6 +168,7 @@
             </div>
             <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Overall</h3>
             <p class="govuk-caption-m govuk-!-margin-bottom-4"><span style="display: none" id="overall_pass_percentage">90</span>This figure is the average of all measures which contribute to the Programme Data and Document Publication figures, plus an additional one: publication by downstream partners.</p>
+            <br>
             <p class="govuk-body-m govuk-!-margin-bottom-2">
               <a
                 href="#"
@@ -1055,7 +1054,6 @@
             $('#sort_Organisation').on('change', function(){
               var data = $(this).val();
               $('#selected_org').val(data);
-              $('#selected_country_region').val('');
               $.ajax({
                 url: '/dqa-dropdown-list',
                 type: 'POST',
@@ -1072,19 +1070,14 @@
                   });
                 }
               });
-              $('#selected_sector').val('');
               $('#sort_Sector').prop('selectedIndex', 0);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 1)
+              generateCharts($('#selected_org').val(), $('#sort_Country').val(), $('#sort_Sector').val(), 1)
             });
             $('#sort_Country').on('change', function(){
-              var data = $(this).val();
-              $('#selected_country_region').val(data);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
+              generateCharts($('#selected_org').val(), $(this).val(), $('#sort_Sector').val(), 0)
             });
             $('#sort_Sector').on('change', function(){
-              var data = $(this).val();
-              $('#selected_sector').val(data);
-              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
+              generateCharts($('#selected_org').val(), $('#sort_Country').val(), $(this).val(), 0)
             });
             $('#openModal_V2').click(function(){
               $('#dashboard_helptext_V2').show();
@@ -1106,5 +1099,5 @@
             });
           });
     </script>
-  </main>
+  </div>
 </div>

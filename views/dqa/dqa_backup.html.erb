@@ -1,0 +1,1110 @@
+<div id="full_hero" class="full_width secondary">
+  <div class="govuk-width-container">
+    <!-- Breadcrumb START -->
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+              <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+                  <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item" id=""><a class="govuk-breadcrumbs__link" href="/">Home</a></li>
+                        <li class="govuk-breadcrumbs__list-item" id="">FCDO IATI Data Completeness Dashboard</li>
+                  </ol>
+              </nav>
+        </div>
+    </div>
+    <!-- HEADER - START -->
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <!-- <span class="govuk-caption-l">FCDO Development Tracker</span> -->
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-2" style="font-size: 2.15em">FCDO IATI Data Completeness Dashboard</h1>
+        <p class="govuk-caption-m">This dashboard measures the completeness of FCDO data published to the International Aid Transparency Initiative (IATI).</p>
+        <p class="govuk-caption-m govuk-!-margin-bottom-4"><a href="https://iatistandard.org/" target="_blank" rel="noopener noreferrer">IATI (opens in a new tab)</a> is a global initiative to improve the transparency of development and humanitarian resources and their results to address poverty and crises.</p>
+      </div>
+    </div>
+    <!-- HEADER - END -->
+
+    <!-- FILTER - START -->
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="filter_header">
+          <div class="govuk-form-group" style="max-width: 450px; display: none">
+            <%# <label class="govuk-label" for="sort_Organisation"
+              >Organisation</label
+            > %>
+            <select
+              class="govuk-select"
+              id="sort_Organisation"
+              name="sort_Organisation"
+            >
+               <%# <option value="all">All</option> %>
+               <% orgList.each do |org| %>
+                    <%if org['identifiers'] == 'GB-GOV-1' %>
+                      <option selected value="<%= org['identifiers']%>"><%= org['name']%></option>
+                    <%else%>
+                      <option value="<%= org['identifiers']%>"><%= org['name']%></option>
+                    <%end%>
+               <% end %>
+            </select>
+            <input id="selected_org" type="hidden" value="GB-GOV-1" />
+          </div>
+          <%# <div class="govuk-form-group" style="max-width: 450px">
+            <label class="govuk-label" for="sort_Organisation"
+              >Organisation</label
+            >
+            <span style="color: white;font-size: 1.3em;margin-top: 13px;display: block; font-family: 'GDS Transport', arial, sans-serif;">Foreign, Commonwealth & Development Office</span>
+          </div> %>
+
+          <div class="govuk-form-group" style="max-width: 220px">
+            <label class="govuk-label" for="sort_Country">Location</label>
+            <select class="govuk-select" id="sort_Country" name="sort_Country">
+              <option value="">All (inc. regions)</option>
+              <% country_region_list.each do |cr| %>
+                    <option value="<%= cr['code']%>"><%= cr['name']%></option>
+               <% end %>
+            </select>
+            <input id="selected_country_region" type="hidden" />
+          </div>
+
+          <div class="govuk-form-group" style="max-width: 220px">
+            <label class="govuk-label" for="sort_Sector">Sector</label>
+            <select class="govuk-select" id="sort_Sector" name="sort_Sector">
+              <option value="">All</option>
+              <% sector_list.each do |key, val| %>
+                    <option value="<%= key%>"><%= val%></option>
+               <% end %>
+            </select>
+            <input id="selected_sector" type="hidden" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FILTER - END -->
+  </div>
+</div>
+<div id="full_hero_V2" class="all_on_one_line fcdo">
+  <div class="govuk-width-container">
+    <!-- TEXT - START -->
+    <div id="main_content" style="display: none">
+      <!-- DASHBAORD HERO 1 - START -->
+      <section>
+        <div class="section first_of_type">
+          <div id="dqa_dept_logo" class="gov_department_logo fcdo">
+            <span id="dqa_dept_title_hidden" class="visually_Hidden"
+              >Foreign, Commonwealth & Development Office</span
+            >
+          </div>
+          <!-- <button type="submit" class="govuk-button govuk-button--inverse right_align" data-module="govuk-button"><span class="icon_json"></span> Download data (.json)</button> -->
+        </div>
+        <div class="section last_of_type">
+          <div class="big_numbers">
+            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
+              ><span id="dqa_total_budget"></span></span
+            >
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">Current Budget</h2>
+          </div>
+        </div>
+        <div class="section">
+          <div class="big_numbers">
+            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
+              ><span id="dqa_active_prog_count">0</span></span
+            >
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
+              Programmes active or closed within the last 18 months
+            </h2>
+          </div>
+        </div>
+        <div class="section">
+          <div class="big_numbers">
+            <span class="number govuk-heading-xl govuk-!-margin-bottom-0"
+              ><span id="dqa_active_proj_count">0</span></span
+            >
+            <h2 class="govuk-body-l govuk-!-margin-bottom-2">
+              Projects active or closed within the last 18 months
+            </h2>
+          </div>
+        </div>
+      </section>
+      <!-- DASHBAORD HERO 1 - END -->
+    </div>
+    <div id="dashboard_no_data" class="hods-loading-spinner smaller" role="status" style="display: none">
+      <div class="flex_wrapper">
+        <div class="hods-loading-spinner__content">
+          <h1 class="govuk-heading-m">No Data Found!</h1>
+        </div>
+      </div>
+    </div>
+    <div id="dashboard_loading" class="hods-loading-spinner smaller" role="status" style="display: block">
+      <div class="flex_wrapper">
+        <div class="hods-loading-spinner__spinner"></div>
+        <div class="hods-loading-spinner__content">
+          <h1 class="govuk-heading-m">Loading the data...</h1>
+        </div>
+      </div>
+    </div>
+    <!-- TEXT - END -->
+  </div>
+</div>
+<div class="govuk-width-container">
+  <div class="govuk-main-wrapper" id="main-content">
+    <div id="dashboard_V1" class="GDS_pastels_V2">
+      <div class="govuk-width-container">
+        <div
+          id="dashboard_loading_content"
+          class="hods-loading-spinner smaller"
+          role="status"
+          style="display: block">
+          <div class="flex_wrapper">
+            <div class="hods-loading-spinner__spinner"></div>
+            <div class="hods-loading-spinner__content">
+              <h1 class="govuk-heading-m">Loading the data...</h1>
+            </div>
+          </div>
+        </div>
+
+        <div id="dashboard_V1_content">
+          <!-- |||||||||||||||||||||||||||||||||| CIRCLES - START |||||||||||||||||||||||||||||||||| -->
+          <!-- CIRCLE 1 - START -->
+          <div class="tab_trigger section_wrapper_1 tab_section_1">
+            <div class="charts section_1">
+              <div id="counter_overall_percentage">
+              </div>
+            </div>
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-4">Overall</h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span style="display: none" id="overall_pass_percentage">90</span>This figure is the average of all measures which contribute to the Programme Data and Document Publication figures, plus an additional one: publication by downstream partners.</p>
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
+              <a
+                href="#"
+                class="non_anchor_tag govuk-button govuk-button--secondary"
+                >Further information</a
+              >
+            </p>
+          </div>
+          <div id="tab_content_1" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-margin-top-4 tab_title">
+                  <span class="title_content">Overall Attributes</span>
+                  <button id="openModal_V3" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis" style="margin-bottom: 4em">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_four">
+                      <div id="overall_bar_title_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_title_val" class="govuk-heading-l govuk-!-margin-bottom-0">84%</h3>
+                    <span class="govuk-caption-m">Title</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_nine">
+                      <div id="overall_bar_desc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_desc_val" class="govuk-heading-l govuk-!-margin-bottom-0">99%</h3>
+                    <span class="govuk-caption-m">Description</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_startDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_startDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Start Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_endDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_endDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">End Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_six">
+                      <div id="overall_bar_sector_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_sector_val" class="govuk-heading-l govuk-!-margin-bottom-0">96%</h3>
+                    <span class="govuk-caption-m">Sector</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_loc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_loc_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Location Data</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_partiOrg_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_partiOrg_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Participating Organisations</span
+                    >
+                  </div>
+                </div>
+                <!-- test -->
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart one_hundred">
+                      <div id="overall_bar_partners_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_partners_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Partner Links</span
+                    >
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart eigthy_six">
+                      <div id="overall_bar_bc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_bc_val" class="govuk-heading-l govuk-!-margin-bottom-0">86%</h3>
+                    <span class="govuk-caption-m">Business Case</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart seventy_five">
+                      <div id="overall_bar_lf_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_lf_val" class="govuk-heading-l govuk-!-margin-bottom-0">75%</h3>
+                    <span class="govuk-caption-m">Logical<br />Framework</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="overall_bar_ar_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_ar_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Annual review</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="overall_bar_pcr_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="overall_bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Programme Completion Review</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CIRCLE 1 - END -->
+
+          <!-- CIRCLE 2 - START -->
+          <div style="display: none" class="tab_trigger section_wrapper_2 tab_section_2">
+            <div class="charts section_2">
+              <div id="counter_proj_data_percentage">
+              </div>
+            </div>
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
+              Project Data
+            </h3>
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
+              <a
+                href="#"
+                class="non_anchor_tag govuk-button govuk-button--secondary"
+                >Further information</a
+              >
+            </p>
+          </div>
+          <div style="display: none" id="tab_content_2" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
+                  <span class="title_content">Project Attributes</span>
+                  <button id="openModal_V4" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_four">
+                      <div id="proj_bar_title_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_title_val" class="govuk-heading-l govuk-!-margin-bottom-0">84%</h3>
+                    <span class="govuk-caption-m">Title</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_nine">
+                      <div id="proj_bar_desc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_desc_val" class="govuk-heading-l govuk-!-margin-bottom-0">99%</h3>
+                    <span class="govuk-caption-m">Description</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_startDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_startDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Start Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_endDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_endDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">End Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_six">
+                      <div id="proj_bar_sector_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_sector_val" class="govuk-heading-l govuk-!-margin-bottom-0">96%</h3>
+                    <span class="govuk-caption-m">Sector</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_loc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_loc_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Location Data</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="proj_bar_partiOrg_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="proj_bar_partiOrg_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Participating Organisations</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CIRCLE 2 - END -->
+
+          <!-- CIRCLE 3 - START -->
+          <div class="tab_trigger section_wrapper_3 tab_section_3">
+            <div class="charts section_3">
+              <div id="counter_prog_data_percentage">
+              </div>
+            </div>
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
+              Programme Data
+            </h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="prog_pass_percentage">90</span>% of programme attibutes published to IATI.<br><br><br><br><br></p>
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
+              <a
+                href="#"
+                class="non_anchor_tag govuk-button govuk-button--secondary"
+                >Further information</a
+              >
+            </p>
+          </div>
+          <div id="tab_content_3" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
+                  <span class="title_content">Programme Data</span>
+                  <button id="openModal_V1" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      100%
+                    </p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      75%
+                    </p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      50%
+                    </p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      25%
+                    </p>
+                  </div>
+                  <div class="percentage zero">
+                    <p
+                      class="govuk-heading-s govuk-!-margin-top-1 govuk-!-margin-bottom-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_four">
+                      <div id="bar_title_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_title_val" class="govuk-heading-l govuk-!-margin-bottom-0">84%</h3>
+                    <span class="govuk-caption-m">Title</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_nine">
+                      <div id="bar_desc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_desc_val" class="govuk-heading-l govuk-!-margin-bottom-0">99%</h3>
+                    <span class="govuk-caption-m">Description</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="bar_startDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_startDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Start Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="bar_endDate_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_endDate_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">End Date</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_six">
+                      <div id="bar_sector_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_sector_val" class="govuk-heading-l govuk-!-margin-bottom-0">96%</h3>
+                    <span class="govuk-caption-m">Sector</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="bar_loc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_loc_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m">Location Data</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart one_hundred">
+                      <div id="bar_partiOrg_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_partiOrg_val" class="govuk-heading-l govuk-!-margin-bottom-0">
+                      100%
+                    </h3>
+                    <span class="govuk-caption-m"
+                      >Participating Organisations</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CIRCLE 3 - END -->
+
+          <!-- CIRCLE 4 - START -->
+          <div class="tab_trigger section_wrapper_4 tab_section_4">
+            <div class="charts section_4">
+              <div id="counter_doc_pub_percentage">
+              </div>
+            </div>
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-4">
+              Document Publication
+            </h3>
+            <p class="govuk-caption-m govuk-!-margin-bottom-4"><span id="doc_pass_percentage">90</span>% of programme documents published to IATI.<br><br><br><br><br></p>
+            <p class="govuk-body-m govuk-!-margin-bottom-2">
+              <a
+                href="#"
+                class="non_anchor_tag govuk-button govuk-button--secondary"
+                >Further information</a
+              >
+            </p>
+          </div>
+
+          <div id="tab_content_4" class="tab_container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                <hr
+                  class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"
+                />
+                <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
+                  <span class="title_content">Document Publication</span>
+                  <button id="openModal_V2" class="govuk-button help_button">
+                    How do we calculate completeness?
+                    <span class="hint_text govuk-heading-s"
+                      >View validation rules &amp; methodology</span
+                    >
+                  </button>
+                </h2>
+                <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme document completeness score is the average of the scores for the four key documents for each programme, either active or closed within the last 18 months.</p>
+              </div>
+              <div class="govuk-grid-column-full">
+                <div class="bar_chart_vertical with_axis">
+                  <div class="chart_label govuk-caption-m">% Rating</div>
+                  <div class="percentage one_hundred">
+                    <p class="govuk-heading-s">100%</p>
+                  </div>
+                  <div class="percentage seventy_five">
+                    <p class="govuk-heading-s">75%</p>
+                  </div>
+                  <div class="percentage fifty">
+                    <p class="govuk-heading-s">50%</p>
+                  </div>
+                  <div class="percentage twenty_five">
+                    <p class="govuk-heading-s">25%</p>
+                  </div>
+                  <div class="percentage zero">
+                    <p class="govuk-heading-s">0%</p>
+                  </div>
+
+                  <div class="bar_section first_of_type">
+                    <div class="bar_chart eigthy_six">
+                      <div id="bar_bc_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_bc_val" class="govuk-heading-l govuk-!-margin-bottom-0">86%</h3>
+                    <span class="govuk-caption-m">Business Case</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart seventy_five">
+                      <div id="bar_lf_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_lf_val" class="govuk-heading-l govuk-!-margin-bottom-0">75%</h3>
+                    <span class="govuk-caption-m">Logical<br />Framework</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="bar_ar_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_ar_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Annual review</span>
+                  </div>
+                  <div class="bar_section">
+                    <div class="bar_chart ninety_four">
+                      <div id="bar_pcr_percentage" class="bar_colour"></div>
+                    </div>
+                    <h3 id="bar_pcr_val" class="govuk-heading-l govuk-!-margin-bottom-0">94%</h3>
+                    <span class="govuk-caption-m">Programme Completion Review</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CIRCLE 4 - END -->
+          <!-- |||||||||||||||||||||||||||||||||| CIRCLES - END |||||||||||||||||||||||||||||||||| -->
+        </div>
+      </div>
+    </div>
+
+    <%# <script
+      type="text/javascript"
+      src="dqa/assets/javascripts/dashboard_show_hide.js"
+    ></script> %>
+    <%# <script
+      type="text/javascript"
+      src="dqa/assets/javascripts/loading_numbers.js"
+    ></script> %>
+    <script
+      type="text/javascript"
+      src="dqa/assets/javascripts/autocomplete.js"
+    ></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/d3.v3.js" type="text/javascript"></script>
+    <script src="/javascripts/c3.min-12912fb6.js" type="text/javascript"></script>
+    <script>
+          $(document).ready(function(){
+            // Initiate the necessary chart variables
+            var overallDonut = null;
+            var projectDonut = null;
+            var programmeDonut = null;
+            var docPubDonut = null;
+            function cleanChart(chart){
+              if(chart){
+                chart.destroy();
+              }
+            }
+            function setBarGraphData(titleTag,heightData,percentage){
+              $(`#${titleTag}`).text(`${percentage}%`);
+              $(`#${heightData}`).css('height', `${percentage}%`);
+              $(`#${heightData}`).css('background-color', getDonutThresholdColor('bar', percentage));
+            }
+
+            function getDonutThresholdColor(passFailType,PassPercentage){
+              if(passFailType == 'pass') {
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#8eb8dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#8eb8dc';
+                  }
+                  else {
+                    return '#8eb8dc';
+                  }
+                }
+                else {
+                  return '#FFFFFF';
+                }
+              }
+              else if(passFailType == 'bar'){
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#8eb8dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#8eb8dc';
+                  }
+                  else {
+                    return '#8eb8dc';
+                  }
+                }
+                else {
+                  return '#8eb8dc';
+                }
+              }
+              else {
+                if(PassPercentage >= (100-PassPercentage)){
+                  return '#FFFFFF';
+                }
+                else {
+                  if((100-PassPercentage) > 95){
+                    return '#fff';
+                  }
+                  else {
+                    return '#fff';
+                  }
+                }
+              }
+            }
+
+            function getDonutThresholdColor_backup(passFailType,PassPercentage){
+              if(passFailType == 'pass') {
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#cfe4dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#ffee80';
+                  }
+                  else {
+                    return '#f4d7d7';
+                  }
+                }
+                else {
+                  return '#FFFFFF';
+                }
+              }
+              else if(passFailType == 'bar'){
+                if(PassPercentage >= (100-PassPercentage)){
+                  if(PassPercentage > 95){
+                    return '#cfe4dc';
+                  }
+                  else if(PassPercentage >= 90){
+                    return '#ffee80';
+                  }
+                  else {
+                    return '#f4d7d7';
+                  }
+                }
+                else {
+                  return '#f4d7d7';
+                }
+              }
+              else {
+                if(PassPercentage >= (100-PassPercentage)){
+                  return '#FFFFFF';
+                }
+                else {
+                  if((100-PassPercentage) > 95){
+                    return '#f4d7d7';
+                  }
+                  else {
+                    return '#f4d7d7';
+                  }
+                }
+              }
+            }
+            function generateDonut(divID, overallPercentage){
+              var altText = '';
+              switch(divID) {
+                case 'counter_overall_percentage':
+                  altText = 'Overall Data Completeness Score - ' + overallPercentage + '%';
+                  break;
+                // case 'counter_proj_data_percentage':
+                //   overallPercentage = Math.round(overallPercentage);
+                //   break;
+                case 'counter_prog_data_percentage':
+                  altText = 'Programme Data Completeness Score - ' + overallPercentage + '%';
+                  break;
+                case 'counter_doc_pub_percentage':
+                  altText = 'Document Publication Completeness Score - ' + overallPercentage + '%';
+                  overallPercentage = Math.round(overallPercentage);
+                  break;
+              }
+              return c3.generate({
+                bindto: '#' + divID,
+                size: {
+                  height: 240,
+                  width: 240
+                },
+                data: {
+                    columns: [
+                      ['Passed', overallPercentage],
+                      ['Failed', (100-overallPercentage)]
+                    ],
+                    type : 'donut',
+                    width: 35,
+                    label: {
+                      show: false
+                    },
+                    axis: {
+                      // The image shows the data starting at 12 o'clock
+                      // We set the total range and let the internal logic create the gap
+                      y: {
+                          max: 100,
+                          min: 0,
+                          show: false
+                      }
+                    },
+                    colors: {
+                      // 3. Set the custom mint green color
+                      'Passed': getDonutThresholdColor('pass',overallPercentage),//'#cfe4dc',
+                      'Failed': getDonutThresholdColor('',overallPercentage)
+                    },
+                    labels: false
+                },
+                donut: {
+                  title: overallPercentage+"% Pass",
+                  label: {
+                    show: false
+                  }
+                },
+                tooltip: {
+                  show: false
+                },
+                onrendered: function() {
+                  // Find the title element
+                  var titleNode = d3.select(`#${divID} .c3-chart-arcs-title`);
+                  titleNode.html(""); // Clear it
+                  
+                  // Add the top line (The Percentage)
+                  titleNode.append('tspan')
+                      .text(`${overallPercentage}%`)
+                      .attr('x', 0)
+                      .attr('dy', '0.4em')
+                      .style('font-size', '40px')
+                      .style('font-weight', 'bold')
+                      .style('fill', '#000')
+                      .style('font-family', '"GDS Transport", arial, sans-serif');
+
+                  // Add the bottom line (The Label)
+                  // titleNode.append('tspan')
+                  //     .text('Pass')
+                  //     .attr('x', 0)
+                  //     .attr('dy', '1.5em')
+                  //     .style('font-size', '16px')
+                  //     .style('font-weight', 'normal')
+                  //     .style('fill', '#484949')
+                  //     .style('font-family', '"GDS Transport", arial, sans-serif');
+                  d3.select(`#${divID} svg`)
+                    .attr('role', 'img')
+                    .attr('aria-label', altText);
+                },
+                legend: {
+                  hide: true
+                }
+              });
+            }
+            function generateCharts(selectedOrg, c_r_string, sector_string, is_org_changed){
+              //if(1==1){
+                $.ajax({
+                  url: '/dqa-request',
+                  type: 'POST',
+                  data: { org_id: selectedOrg, c_r_string: c_r_string, sector_string: sector_string, is_org_changed: is_org_changed },
+                  dataType: 'json',
+                  beforeSend: function(){
+                    $('#main_content').hide();
+                    $('#dashboard_loading').show();
+                    $('#dashboard_V1_content').hide();
+                    $('#dashboard_loading_content').show();
+                    $('#dashboard_no_data').hide();
+                  },
+                  success: function(response) {
+                    $('#dqa_active_prog_count').text(response.output.ActiveProgrammeCount)
+                    $('#dqa_active_proj_count').text(response.output.ActiveProjectCount);
+                    $('#dqa_total_budget').text('£' + response.output.TotalBudget);
+                    cleanChart(overallDonut);
+                    overallDonut = generateDonut('counter_overall_percentage', response.output.OverallPassRate);
+                    $('#overall_pass_percentage').html(response.output.OverallPassRate);
+                    cleanChart(projectDonut);
+                    projectDonut = generateDonut('counter_proj_data_percentage', response.output.ProjectPassRate)
+                    cleanChart(programmeDonut);
+                    programmeDonut = generateDonut('counter_prog_data_percentage', response.output.ProgrammePassRate);
+                    $('#prog_pass_percentage').html(response.output.ProgrammePassRate);
+                    cleanChart(docPubDonut);
+                    docPubDonut = generateDonut('counter_doc_pub_percentage', response.output.DocumentPassRate);
+                    $('#doc_pass_percentage').html(response.output.DocumentPassRate);
+                    setBarGraphData('bar_title_val', 'bar_title_percentage', response.output.ProgrammeRAGBreakdown.Title);
+                    setBarGraphData('bar_desc_val', 'bar_desc_percentage', response.output.ProgrammeRAGBreakdown.Description);
+                    setBarGraphData('bar_startDate_val', 'bar_startDate_percentage', response.output.ProgrammeRAGBreakdown.StartDate);
+                    setBarGraphData('bar_endDate_val', 'bar_endDate_percentage', response.output.ProgrammeRAGBreakdown.EndDate);
+                    setBarGraphData('bar_sector_val', 'bar_sector_percentage', response.output.ProgrammeRAGBreakdown.Sector);
+                    setBarGraphData('bar_loc_val', 'bar_loc_percentage', response.output.ProgrammeRAGBreakdown.Location);
+                    setBarGraphData('bar_partiOrg_val', 'bar_partiOrg_percentage', response.output.ProgrammeRAGBreakdown.ParticipatingOrg);
+                    //
+                    setBarGraphData('proj_bar_title_val', 'proj_bar_title_percentage', response.output.ProjectRAGBreakdown.Title);
+                    setBarGraphData('proj_bar_desc_val', 'proj_bar_desc_percentage', response.output.ProjectRAGBreakdown.Description);
+                    setBarGraphData('proj_bar_startDate_val', 'proj_bar_startDate_percentage', response.output.ProjectRAGBreakdown.StartDate);
+                    setBarGraphData('proj_bar_endDate_val', 'proj_bar_endDate_percentage', response.output.ProjectRAGBreakdown.EndDate);
+                    setBarGraphData('proj_bar_sector_val', 'proj_bar_sector_percentage', response.output.ProjectRAGBreakdown.Sector);
+                    setBarGraphData('proj_bar_loc_val', 'proj_bar_loc_percentage', response.output.ProjectRAGBreakdown.Location);
+                    setBarGraphData('proj_bar_partiOrg_val', 'proj_bar_partiOrg_percentage', response.output.ProjectRAGBreakdown.ParticipatingOrg);
+                    //
+                    setBarGraphData('bar_bc_val', 'bar_bc_percentage', response.output.DocumentRAGBreakdown.BusinessCase);
+                    setBarGraphData('bar_lf_val', 'bar_lf_percentage', response.output.DocumentRAGBreakdown.LogFrame);
+                    setBarGraphData('bar_ar_val', 'bar_ar_percentage', response.output.DocumentRAGBreakdown.AnnualReview);
+                    setBarGraphData('bar_pcr_val', 'bar_pcr_percentage', response.output.DocumentRAGBreakdown.PCR);
+                    // Overall RAG breakdowns
+                    setBarGraphData('overall_bar_title_val', 'overall_bar_title_percentage', response.output.OverallRAGBreakdown.Title);
+                    setBarGraphData('overall_bar_desc_val', 'overall_bar_desc_percentage', response.output.OverallRAGBreakdown.Description);
+                    setBarGraphData('overall_bar_startDate_val', 'overall_bar_startDate_percentage', response.output.OverallRAGBreakdown.StartDate);
+                    setBarGraphData('overall_bar_endDate_val', 'overall_bar_endDate_percentage', response.output.OverallRAGBreakdown.EndDate);
+                    setBarGraphData('overall_bar_sector_val', 'overall_bar_sector_percentage', response.output.OverallRAGBreakdown.Sector);
+                    setBarGraphData('overall_bar_loc_val', 'overall_bar_loc_percentage', response.output.OverallRAGBreakdown.Location);
+                    setBarGraphData('overall_bar_partiOrg_val', 'overall_bar_partiOrg_percentage', response.output.OverallRAGBreakdown.ParticipatingOrg);
+                    setBarGraphData('overall_bar_bc_val', 'overall_bar_bc_percentage', response.output.OverallRAGBreakdown.BusinessCase);
+                    setBarGraphData('overall_bar_lf_val', 'overall_bar_lf_percentage', response.output.OverallRAGBreakdown.LogFrame);
+                    setBarGraphData('overall_bar_ar_val', 'overall_bar_ar_percentage', response.output.OverallRAGBreakdown.AnnualReview);
+                    setBarGraphData('overall_bar_pcr_val', 'overall_bar_pcr_percentage', response.output.OverallRAGBreakdown.PCR);
+                    setBarGraphData('overall_bar_partners_val', 'overall_bar_partners_percentage', response.output.OverallRAGBreakdown.PartnerLinks);
+                  },
+                  complete: function(jqXHR, textStatus){
+                    // if(jqXHR.responseJSON.output.ActiveProgrammeCount == 0 && jqXHR.responseJSON.output.ActiveProjectCount == 0){
+                    //   $('#dashboard_no_data').show();
+                    //   $('#dashboard_loading').hide();
+                    //   $('#dashboard_loading_content').hide();
+                    // }
+                    // else {
+                    //   $('#dashboard_loading').hide();
+                    //   $('#dashboard_loading_content').hide();
+                    //   $('#main_content').show();
+                    //   $('#dashboard_V1_content').show();
+                    //   $('#dashboard_no_data').hide();
+                    // }
+                    $('#dashboard_loading').hide();
+                    $('#dashboard_loading_content').hide();
+                    $('#main_content').show();
+                    $('#dashboard_V1_content').show();
+                    $('#dashboard_no_data').hide();
+                  }
+                });
+              //}
+            }
+            generateCharts('GB-GOV-1', '', '', 1);
+            $('#sort_Organisation').on('change', function(){
+              var data = $(this).val();
+              $('#selected_org').val(data);
+              $('#selected_country_region').val('');
+              $.ajax({
+                url: '/dqa-dropdown-list',
+                type: 'POST',
+                data: { org_id: data },
+                dataType: 'json',
+                success: function(response) {
+                  var $dropdown = $('#sort_Country');
+                  $dropdown.empty();
+                  $dropdown.append($('<option></option>').val('').html('All'));
+                  $.each(response.output, function(index, item) {
+                      $dropdown.append(
+                          $('<option></option>').val(item.code).html(item.name)
+                      );
+                  });
+                }
+              });
+              $('#selected_sector').val('');
+              $('#sort_Sector').prop('selectedIndex', 0);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 1)
+            });
+            $('#sort_Country').on('change', function(){
+              var data = $(this).val();
+              $('#selected_country_region').val(data);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
+            });
+            $('#sort_Sector').on('change', function(){
+              var data = $(this).val();
+              $('#selected_sector').val(data);
+              generateCharts($('#selected_org').val(), $('#selected_country_region').val(), $('#selected_sector').val(), 0)
+            });
+            $('#openModal_V2').click(function(){
+              $('#dashboard_helptext_V2').show();
+            });
+            $('#closeBtn_V2').click(function(){
+              $('#dashboard_helptext_V2').hide();
+            });
+            $('#openModal_V1').click(function(){
+              $('#dashboard_helptext_V1').show();
+            });
+            $('#closeBtn_V1').click(function(){
+              $('#dashboard_helptext_V1').hide();
+            });
+            $('#openModal_V3').click(function(){
+              $('#dashboard_helptext_V3').show();
+            });
+            $('#closeBtn_V3').click(function(){
+              $('#dashboard_helptext_V3').hide();
+            });
+          });
+    </script>
+  </div>
+</div>
