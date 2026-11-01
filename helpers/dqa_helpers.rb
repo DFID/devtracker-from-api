@@ -191,4 +191,39 @@ module DqaHelpers
         country_region_list = filtered_country_list + filtered_region_list
         @data = country_region_list
     end
+
+    def getSectorDropDownListForDCD(org_id,country_region_string)
+        url = 'https://fcdo.iati.cloud/dqa'
+        if org_id == 'all'
+            depts = settings.goverment_department_ids.split(",")
+        else
+            depts = org_id
+        end
+        regionList = []
+        countryList = []
+        if country_region_string.match?(/\d/)
+            regionList = country_region_string.split(",")
+        else
+            countryList = country_region_string.split(",")
+        end
+        payload = {
+            "organisation": depts,
+            "segmentation": {
+                "countries": countryList,
+                "regions": regionList
+            },
+            "failed_activities": false,
+            "require_funding_and_accountable": true,
+            "include_exemptions": false,
+            "skip_cache": true,
+            "use_budget_date_filter": false
+        }
+        response = RestClient.post(url, payload.to_json, { content_type: :json, accept: :json })
+        # 4. Parse the JSON response into a Ruby variable (Hash)
+        resp = JSON.parse(response.body)
+        filtered_sectors = resp['available_segmentations']['sectors']
+        mapped_sectors = Oj.load(File.read('data/dqa-sector-map.json'))
+        filtered_sector_list = mapped_sectors.select {|_key, values| (values & filtered_sectors).any? }.keys
+        @data = filtered_sector_list
+    end
 end

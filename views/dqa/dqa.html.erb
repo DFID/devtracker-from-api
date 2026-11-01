@@ -1074,7 +1074,25 @@
               generateCharts($('#selected_org').val(), $('#sort_Country').val(), $('#sort_Sector').val(), 1)
             });
             $('#sort_Country').on('change', function(){
-              generateCharts($('#selected_org').val(), $(this).val(), $('#sort_Sector').val(), 0)
+              //generateCharts($('#selected_org').val(), $(this).val(), $('#sort_Sector').val(), 0)
+              var selectedCountry = $(this).val();
+              $.ajax({
+                url: '/dqa-sector-dropdown-list',
+                type: 'POST',
+                data: { org_id: 'GB-GOV-1', c_r_string: selectedCountry },
+                dataType: 'json',
+                success: function(response) {
+                  var $dropdown = $('#sort_Sector');
+                  $dropdown.empty();
+                  $dropdown.append($('<option></option>').val('').html('All'));
+                  $.each(response.output, function(index, item) {
+                      $dropdown.append(
+                          $('<option></option>').val(item[0]).html(item[1])
+                      );
+                  });
+                  generateCharts($('#selected_org').val(), selectedCountry, '', 0)
+                }
+              });
             });
             $('#sort_Sector').on('change', function(){
               generateCharts($('#selected_org').val(), $('#sort_Country').val(), $(this).val(), 0)

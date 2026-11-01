@@ -1599,6 +1599,22 @@ post '/dqa-request?' do
 	json :output => dqaResponse(org_string, country_region_string, sector_string)
 end
 
+post '/dqa-sector-dropdown-list?' do
+	org_string = params['org_id']
+	country_region_string = params['c_r_string']
+	matched_keys = getSectorDropDownListForDCD(org_string, country_region_string)
+	sector_list = Oj.load(File.read('data/sectors-v2.json'))
+	sector_list = sector_list.map do |item|
+		[item["High Level Code (L1)"], item["High Level Sector Description"]]
+	end
+	sector_list = sector_list.uniq
+	sector_list = sector_list.sort_by { |_key, value| value }
+	out = sector_list.select do |id, _name|
+		matched_keys.include?(id.to_s)
+	end
+	json :output => out
+end
+
 post '/dqa-dropdown-list' do
 	org_string = params['org_id']
 	json :output => getCountryRegionDropDownList(org_string)
