@@ -21475,3 +21475,7 @@ a.app-back-to-top__link svg {
     text-align: center;
     white-space: nowrap
 }
+
+.app-display-none {
+  display: none;
+}
