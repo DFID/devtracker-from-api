@@ -75,7 +75,8 @@ set :oipa_api_url, 'http://127.0.0.1:6081/search/'
 set :prod_api_url, 'https://fcdo.iati.cloud'
 set :dev_api_url, 'https://fcdo-staging.iati.cloud'
 
-enable :sessions
+#enable :sessions
+set :sessions, secure: production?
 use Rack::Protection
 
 #ensures that we can use the extension html.erb rather than just .erb
@@ -94,8 +95,8 @@ set :goverment_department_ids, 'GB-GOV-11,GB-GOV-14,GB-GOV-27,GB-GOV-53,GB-GOV-2
 set :google_recaptcha_publicKey, ENV["GOOGLE_PUBLIC_KEY"]
 set :google_recaptcha_privateKey, ENV["GOOGLE_PRIVATE_KEY"]
 
-set :raise_errors, true
-set :show_exceptions, true
+set :raise_errors, false
+set :show_exceptions, false
 set :log_api_calls, false
 
 set :devtracker_page_title, ''
@@ -887,60 +888,60 @@ end
 #####################################################################
 
 get '/search_p/?' do
-	if (!params['query'])
-		query= ''
-		filters = []
-		response = {}
+	# if (!params['query'])
+	# 	query= ''
+	# 	filters = []
+	 	response = {}
 		response['response'] = 
 		{
 			'numFound' => -1,
 			'docs' => []
 		}
-		settings.devtracker_page_title = 'Search Page'
-		didYouMeanData = {}
-		didYouMeanData['dfidCountryBudgets'] = 0
-		didYouMeanData['dfidRegionBudgets'] = 0
-	else
-		query = params['query']
-		activityStatuses = 'AND activity_status_code:(2)'
-		filters = prepareFilters(query.to_s, 'F')
-		response = solrResponse(query, activityStatuses, 'F', 0, '', '')
-		##Clean any unnecessary activity
-		## TODO
-		# elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
-		# if elist.length > 0
-		# 	tempResponseList = response['response']['docs']
-		# 	tempResponseList.each do |data|
-		# 		if elist.include?(data['iati_identifier'])
-		# 			tempResponseList.delete(data)
-		# 		end
-		# 	end
-		# 	response['response']['docs'] = tempResponseList
-		# end
-		##
-		if(response['response']['numFound'].to_i > 0)
-			response['response'] = addTotalBudgetWithCurrency(response['response'])
-			response = addHighlightingToFTSTerms(response)
-		end
-		settings.devtracker_page_title = 'Search Results For : ' + query
-		didYouMeanQuery = sanitize_input(params['query'],"a")
-		didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
-	end
+	# 	settings.devtracker_page_title = 'Search Page'
+	# 	didYouMeanData = {}
+	# 	didYouMeanData['dfidCountryBudgets'] = 0
+	# 	didYouMeanData['dfidRegionBudgets'] = 0
+	# else
+	# 	query = params['query']
+	# 	activityStatuses = 'AND activity_status_code:(2)'
+	# 	filters = prepareFilters(query.to_s, 'F')
+	# 	response = solrResponse(query, activityStatuses, 'F', 0, '', '')
+	# 	##Clean any unnecessary activity
+	# 	## TODO
+	# 	# elist = Oj.load(RestClient.get 'https://iati.fcdo.gov.uk/iati_files/elist.json')
+	# 	# if elist.length > 0
+	# 	# 	tempResponseList = response['response']['docs']
+	# 	# 	tempResponseList.each do |data|
+	# 	# 		if elist.include?(data['iati_identifier'])
+	# 	# 			tempResponseList.delete(data)
+	# 	# 		end
+	# 	# 	end
+	# 	# 	response['response']['docs'] = tempResponseList
+	# 	# end
+	# 	##
+	# 	if(response['response']['numFound'].to_i > 0)
+	# 		response['response'] = addTotalBudgetWithCurrency(response['response'])
+	# 		response = addHighlightingToFTSTerms(response)
+	# 	end
+	# 	settings.devtracker_page_title = 'Search Results For : ' + query
+	# 	didYouMeanQuery = sanitize_input(params['query'],"a")
+	# 	didYouMeanData = generate_did_you_mean_data(didYouMeanQuery,'2')
+	# end
 	erb :'search/solrTemplate',
 	:layout => :'layouts/layout',
 	:locals => 
 	{
 		oipa_api_url: settings.oipa_api_url,
-		query: query,
-		filters: filters,
+		query: '',
+		filters: {},
 		response: response['response'],
 		solrConfig: Oj.load(File.read('data/solr-config.json')),
 		activityStatus: Oj.load(File.read('data/activity_status.json')),
 		searchType: 'F',
 		breadcrumbURL: '',
 		breadcrumbText: '',
-		fcdoCountryBudgets: didYouMeanData['dfidCountryBudgets'],
- 		fcdoRegionBudgets: didYouMeanData['dfidRegionBudgets'],
+		fcdoCountryBudgets: nil,
+ 		fcdoRegionBudgets: nil,
 		isIncludeClosedProjects: 0
 	}
 end
