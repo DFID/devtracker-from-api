@@ -185,12 +185,25 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-margin-top-4 tab_title">
                   <span class="title_content">Overall Attributes</span>
-                  <button id="openModal_V3" class="govuk-button help_button">
+                  <button
+                    type="button"
+                    id="openModal_V3"
+                    class="govuk-button help_button"
+                    aria-haspopup="dialog"
+                    aria-controls="dashboard_helptext_V3"
+                    aria-describedby="modalTriggerDesc_V3"
+                  >
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
                   </button>
+                  <span id="modalTriggerDesc_V3" class="govuk-visually-hidden">
+                    Opens a modal dialog containing overall validation rules and
+                    methodology: activity scope, April to March financial year
+                    budget calculation, attribute RAG scoring rules, IATI partner
+                    links, and H1 document publication rules.
+                  </span>
                 </h2>
                 <p style="text-align: left; color: #484949; margin-bottom: 4em;">The Overall Data Completeness score is calculated by applying equal weighting across twelve transparency elements used to assess performance. It comprises three components: programme data completeness, the availability of published documents, and the proportion of downstream partners correctly publishing IATI data. For further detail on how Programme Data and Published Documents are assessed, please refer to the relevant tabs.</p>
               </div>
@@ -401,12 +414,25 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
                   <span class="title_content">Project Attributes</span>
-                  <button id="openModal_V4" class="govuk-button help_button">
+                  <button
+                    type="button"
+                    id="openModal_V4"
+                    class="govuk-button help_button"
+                    aria-haspopup="dialog"
+                    aria-controls="dashboard_helptext_V1"
+                    aria-describedby="modalTriggerDesc_V4"
+                  >
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
                   </button>
+                  <span id="modalTriggerDesc_V4" class="govuk-visually-hidden">
+                    Opens a modal dialog containing project and programme data
+                    validation rules and methodology: activity scope, April to
+                    March financial year budget calculation, and attribute RAG
+                    scoring rules.
+                  </span>
                 </h2>
                 <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
               </div>
@@ -540,12 +566,25 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
                   <span class="title_content">Programme Data</span>
-                  <button id="openModal_V1" class="govuk-button help_button">
+                  <button
+                    type="button"
+                    id="openModal_V1"
+                    class="govuk-button help_button"
+                    aria-haspopup="dialog"
+                    aria-controls="dashboard_helptext_V1"
+                    aria-describedby="modalTriggerDesc_V1"
+                  >
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
                   </button>
+                  <span id="modalTriggerDesc_V1" class="govuk-visually-hidden">
+                    Opens a modal dialog containing programme data validation
+                    rules and methodology: activity scope, April to March
+                    financial year budget calculation, and attribute RAG scoring
+                    rules.
+                  </span>
                 </h2>
                 <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme data completeness score is the average of the scores for the seven programme attributes (types of data) for published programmes and projects which are active or closed within the last 18 months.</p>
               </div>
@@ -680,12 +719,24 @@
                 />
                 <h2 class="govuk-heading-l govuk-!-margin-bottom-2 tab_title">
                   <span class="title_content">Document Publication</span>
-                  <button id="openModal_V2" class="govuk-button help_button">
+                  <button
+                    type="button"
+                    id="openModal_V2"
+                    class="govuk-button help_button"
+                    aria-haspopup="dialog"
+                    aria-controls="dashboard_helptext_V2"
+                    aria-describedby="modalTriggerDesc_V2"
+                  >
                     How do we calculate completeness?
                     <span class="hint_text govuk-heading-s"
                       >View validation rules &amp; methodology</span
                     >
                   </button>
+                  <span id="modalTriggerDesc_V2" class="govuk-visually-hidden">
+                    Opens a modal dialog containing H1 document publication
+                    validation rules for Business Case, Logical Framework,
+                    Annual Review, and Programme Completion Review.
+                  </span>
                 </h2>
                 <p style="text-align: left; color: #484949; margin-bottom: 4em;">The programme document completeness score is the average of the scores for the four key documents for each programme, either active or closed within the last 18 months.</p>
               </div>
