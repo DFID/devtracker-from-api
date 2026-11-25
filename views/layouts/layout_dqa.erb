@@ -94,1684 +94,1816 @@
       data-module="govuk-skip-link"
       >Skip to main content</a
     >
-    <div id="dashboard_helptext_V1" class="modals" style="display: none">
-      <div class="modal_wrapper">
-        <div class="modal_content">
-          <!-- HEADER - START -->
-          <div class="header">
-            <span id="closeBtn_V1" class="govuk-heading-s close_button"
-              >close <span class="close">&times;</span></span
-            >
-            <h1 class="govuk-heading-m">
-              Validation Rules & Methodology - Programme Data
-            </h1>
-          </div>
-          <!-- HEADER - END -->
-
-          <!-- CONTENT - START -->
-          <div class="content">
-            <!-- SECTION 1 - START -->
-            <h2 class="govuk-heading-m">Activity Scope</h2>
-            <h3 class="govuk-heading-s">Included Activities</h3>
-            <p>
-              The assessment covers
-              <strong>all Programmes (H1 activities)</strong> at implementation
-              stage and <strong>all Projects (H2 activities)</strong> where
-              appropriate — that is, where the relevant data element exists.
-              Activities closed within the <strong>last 18 months</strong> are
-              also included (month-level accuracy; day precision is not
-              required).
-            </p>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Status Code</th>
-                  <th scope="col" class="govuk-table__header">Label</th>
-                  <th scope="col" class="govuk-table__header">Included</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">1</strong>
-                  </th>
-                  <td class="govuk-table__cell">Pipeline / Identification</td>
-                  <td class="govuk-table__cell">Yes (very few instances)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">2</strong>
-                  </th>
-                  <td class="govuk-table__cell">Implementation</td>
-                  <td class="govuk-table__cell">Yes</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">4</strong>
-                  </th>
-                  <td class="govuk-table__cell">Closed</td>
-                  <td class="govuk-table__cell">
-                    Yes — within last 18 months only
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">3 / 5 / 6</strong>
-                  </th>
-                  <td class="govuk-table__cell">
-                    Finalisation / Cancelled / Suspended
-                  </td>
-                  <td class="govuk-table__cell">No</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 1 - END -->
-
-            <!-- SECTION 2 - START -->
-            <h2 class="govuk-heading-m govuk-!-margin-top-8">
-              Total Budget Calculation
-            </h2>
-            <h3 class="govuk-heading-s">Financial Year (April–March)</h3>
-            <p>
-              The <strong>Total Budget</strong> is the sum of all
-              <strong class="blue">budget</strong> elements across
-              <strong>H2 activities (projects)</strong> whose
-              <strong class="blue">period-start</strong> and
-              <strong class="blue">period-end</strong> fall within the current
-              Financial Year (1 April – 31 March). Budgets are included
-              regardless of the programme's activity status, because the budget
-              period may differ from the 18-month activity scope window.
-            </p>
-            <!-- SECTION 2 - END -->
-
-            <!-- SECTION 3 - START -->
-            <hr
-              class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
-            />
-            <h2 class="govuk-heading-m govuk-!-margin-top-0">
-              Attribute Validation Rules
-            </h2>
-            <p>
-              Applies to both H1 (programmes) and H2 (projects) unless noted.
-              Each attribute contributes a
-              <strong>percentage score</strong> (0–100) which feeds into the RAG
-              ratings.
-            </p>
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Title</h3>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2"
-              >Source: title.narrative (first element)</span
-            >
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Title is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Length &lt 60 characters
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Title is too short (N characters, minimum 60 required)
-                  </td>
-                  <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 3 - END -->
-            <br><br>
-            <!-- SECTION 4 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Description</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Description is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Description equals title (case-insensitive)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Description is a repeat of the title
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    len(description) ≤ len(title)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Description must be longer than title
-                  </td>
-                  <td class="govuk-table__cell align_right">
-                    len(description) ÷ len(title) × 100 < 100%
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 4 - END -->
-            <br><br>
-            <!-- SECTION 5 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Start Date</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Start date is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Matches a known default/system date
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Start date is a default system date: YYYY-MM-DD
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Cannot be parsed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Invalid start date format: ...
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <!-- SECTION 5 - END -->
-            <br><br>
-            <!-- SECTION 6 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">End Date</h3>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2"
-              >Source: activity-date.end-planned (preferred) or
-              activity-date.end-actual</span
-            >
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Both end date fields missing
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">End date is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Cannot be parsed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Invalid end date format: ...
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    End date ≤ start date (when start date present)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    End date must be after start date
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 6 - END -->
-            <br><br>
-            <!-- SECTION 7 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Sector</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    No activity-level AND no transaction-level sectors
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">No sectors defined</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    No activity-level sectors, transaction-level present
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No activity-level sectors defined, only transaction-level
-                    sectors
-                  </td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Any sector code is not exactly 5 digits
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    All sectors must use 5-digit DAC CRS codes
-                  </td>
-                  <td class="govuk-table__cell align_right">
-                    (valid ÷ total) × 100 < 100%
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Sector percentages present and do not sum to 100% (±0.02)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Sector percentages must sum to 100% (got N%)
-                  </td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <br><br>
-            <!-- SECTION 7 - END -->
-
-            <!-- SECTION 8 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Location</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path A — transaction-level country/region codes present
-                    (takes priority)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No activity-level locations defined, only transaction-level
-                    locations
-                  </td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — no codes at all (no percentages, no transaction
-                    codes)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No location (country or region) specified
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — exactly one country/region code (100% implied)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — multiple codes, no percentages
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Multiple locations specified without percentages
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path C — activity-level percentages present, do not sum to
-                    100%
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Location percentages must sum to 100% (got N%)
-                  </td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path C — percentages sum to 100% (±0.02)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">—--</td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 8 - END -->
-            <br><br>
-            <!-- SECTION 9 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
-              Participating Organisations
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or all values empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No participating organisations defined
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    At least one organisation present
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">—--</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 9 - END -->
-            <%#<br><br>
-             <!-- Partner Links -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
-              Partner Links
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    At least one partner organisation has published an activity in IATI that links back to this H1 activity or one of its related H2 Activities
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    —--
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    There are no published activities in IATI that link back to this H1 activity or any of its related H2 Activities
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">No partner organisations have linked their activity data to this activity</td>
-                </tr>
-              </tbody>
-            </table> %>
-          </div>
-          <!-- CONTENT - END -->
-        </div>
+    
+<!-- ==================== MODAL V1: PROGRAMME DATA ==================== -->
+<div
+  id="dashboard_helptext_V1"
+  class="modals"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle_V1"
+  aria-describedby="modalDesc_V1"
+  style="display: none"
+>
+  <div class="modal_wrapper">
+    <div class="modal_content">
+      <!-- HEADER - START -->
+      <div class="header">
+        <button
+          type="button"
+          id="closeBtn_V1"
+          class="govuk-heading-s close_button"
+          aria-label="Close Validation Rules and Methodology - Programme Data"
+        >
+          close <span class="close" aria-hidden="true">&times;</span>
+        </button>
+        <h2 id="modalTitle_V1" class="govuk-heading-m">
+          Validation Rules &amp; Methodology - Programme Data
+        </h2>
+        <p id="modalDesc_V1" class="govuk-visually-hidden">
+          Explains which programme and project activities are in scope, how
+          total budget is calculated by April to March financial year, and how
+          programme data attributes are scored for RAG ratings.
+        </p>
       </div>
-    </div>
-    <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
+      <!-- HEADER - END -->
 
-    <!-- //////////////////////////////////////////// MODAL - START //////////////////////////////////////////// -->
-    <div id="dashboard_helptext_V2" class="modals" style="display: none">
-      <div class="modal_wrapper">
-        <div class="modal_content">
-          <!-- HEADER - START -->
-          <div class="header">
-            <span id="closeBtn_V2" class="govuk-heading-s close_button"
-              >close <span class="close">&times;</span></span
-            >
-            <h1 class="govuk-heading-m">
-              Validation Rules & Methodology - Document Publication
-            </h1>
-          </div>
-          <!-- HEADER - END -->
+      <!-- CONTENT - START -->
+      <div
+        class="content"
+        role="region"
+        aria-label="Programme data validation rules and methodology"
+        tabindex="0"
+      >
+        <!-- SECTION 1 - START -->
+        <h3 class="govuk-heading-m">Activity Scope</h3>
+        <h4 class="govuk-heading-s">Included Activities</h4>
+        <p>
+          The assessment covers
+          <strong>all Programmes (H1 activities)</strong> at implementation
+          stage and <strong>all Projects (H2 activities)</strong> where
+          appropriate — that is, where the relevant data element exists.
+          Activities closed within the <strong>last 18 months</strong> are
+          also included (month-level accuracy; day precision is not
+          required).
+        </p>
+        <table class="govuk-table">
+          <caption class="govuk-visually-hidden">
+            Activity status codes included in programme data assessment
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Status Code</th>
+              <th scope="col" class="govuk-table__header">Label</th>
+              <th scope="col" class="govuk-table__header">Included</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">1</strong>
+              </th>
+              <td class="govuk-table__cell">Pipeline / Identification</td>
+              <td class="govuk-table__cell">Yes (very few instances)</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">2</strong>
+              </th>
+              <td class="govuk-table__cell">Implementation</td>
+              <td class="govuk-table__cell">Yes</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">4</strong>
+              </th>
+              <td class="govuk-table__cell">Closed</td>
+              <td class="govuk-table__cell">
+                Yes — within last 18 months only
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">3 / 5 / 6</strong>
+              </th>
+              <td class="govuk-table__cell">
+                Finalisation / Cancelled / Suspended
+              </td>
+              <td class="govuk-table__cell">No</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 1 - END -->
 
-          <!-- CONTENT - START -->
-          <div class="content">
-            <!-- SECTION 1 - START -->
-            <h2 class="govuk-heading-m">Document Validation Rules</h2>
-            <p>
-              Document checks apply to
-              <strong>H1 activities (programmes) only</strong>.</p>
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
-            >
-              Business Case
-            </h3>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 3 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 3 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Business Case published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Business Case not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Business Case document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 1 - END -->
+        <!-- SECTION 2 - START -->
+        <h3 class="govuk-heading-m govuk-!-margin-top-8">
+          Total Budget Calculation
+        </h3>
+        <h4 class="govuk-heading-s">Financial Year (April–March)</h4>
+        <p>
+          The <strong>Total Budget</strong> is the sum of all
+          <strong class="blue">budget</strong> elements across
+          <strong>H2 activities (projects)</strong> whose
+          <strong class="blue">period-start</strong> and
+          <strong class="blue">period-end</strong> fall within the current
+          Financial Year (1 April – 31 March). Budgets are included
+          regardless of the programme's activity status, because the budget
+          period may differ from the 18-month activity scope window.
+        </p>
+        <!-- SECTION 2 - END -->
 
-            <!-- SECTION 2 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Logical Framework
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 3 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 3 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Logical Framework published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Logical Framework not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Logical Framework document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 2 - END -->
+        <!-- SECTION 3 - START -->
+        <hr
+          class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
+        />
+        <h3 class="govuk-heading-m govuk-!-margin-top-0">
+          Attribute Validation Rules
+        </h3>
+        <p>
+          Applies to both H1 (programmes) and H2 (projects) unless noted.
+          Each attribute contributes a
+          <strong>percentage score</strong> (0–100) which feeds into the RAG
+          ratings.
+        </p>
+        <h4 class="govuk-heading-s govuk-!-margin-bottom-0">Title</h4>
+        <span class="govuk-caption-m govuk-!-margin-bottom-2"
+          >Source: title.narrative (first element)</span
+        >
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Title validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Title is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Length &lt; 60 characters
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Title is too short (N characters, minimum 60 required)
+              </td>
+              <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 3 - END -->
 
-            <!-- SECTION 3 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Annual Review
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 19 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 19 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Annual Review published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Annual Review not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Annual Review document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 3 - END -->
-            <!-- SECTION 4 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Programme Completion Review
-            </h3>
-            <%# <p><strong class="blue">/Annual Review.*Published/i</strong></p> %>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is not set to closed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Actual activity end date is empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Actual activity end date <= 6 months ago
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is set to closed, actual end date is more than 6 months old and PCR is published.
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is set to closed, actual end date is more than 6 months old but PCR has not been published yet.
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Programme Completion Review document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <!-- SECTION 4 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Description
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Description validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Description is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Description equals title (case-insensitive)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Description is a repeat of the title
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                len(description) &le; len(title)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Description must be longer than title
+              </td>
+              <td class="govuk-table__cell align_right">
+                len(description) &divide; len(title) &times; 100 &lt; 100%
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 4 - END -->
 
-          </div>
-          <!-- CONTENT - END -->
-        </div>
+        <!-- SECTION 5 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Start Date
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Start Date validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Start date is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Matches a known default/system date
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Start date is a default system date: YYYY-MM-DD
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Cannot be parsed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Invalid start date format: ...
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 5 - END -->
+
+        <!-- SECTION 6 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          End Date
+        </h4>
+        <span class="govuk-caption-m govuk-!-margin-bottom-2"
+          >Source: activity-date.end-planned (preferred) or
+          activity-date.end-actual</span
+        >
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            End Date validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Both end date fields missing
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">End date is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Cannot be parsed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Invalid end date format: ...
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                End date &le; start date (when start date present)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                End date must be after start date
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 6 - END -->
+
+        <!-- SECTION 7 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Sector
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Sector validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                No activity-level AND no transaction-level sectors
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">No sectors defined</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                No activity-level sectors, transaction-level present
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No activity-level sectors defined, only transaction-level
+                sectors
+              </td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Any sector code is not exactly 5 digits
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                All sectors must use 5-digit DAC CRS codes
+              </td>
+              <td class="govuk-table__cell align_right">
+                (valid &divide; total) &times; 100 &lt; 100%
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Sector percentages present and do not sum to 100% (&plusmn;0.02)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Sector percentages must sum to 100% (got N%)
+              </td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 7 - END -->
+
+        <!-- SECTION 8 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Location
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Location validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path A — transaction-level country/region codes present
+                (takes priority)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No activity-level locations defined, only transaction-level
+                locations
+              </td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — no codes at all (no percentages, no transaction
+                codes)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No location (country or region) specified
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — exactly one country/region code (100% implied)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — multiple codes, no percentages
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Multiple locations specified without percentages
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path C — activity-level percentages present, do not sum to
+                100%
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Location percentages must sum to 100% (got N%)
+              </td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path C — percentages sum to 100% (&plusmn;0.02)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 8 - END -->
+
+        <!-- SECTION 9 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Participating Organisations
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Participating Organisations validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or all values empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No participating organisations defined
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                At least one organisation present
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 9 - END -->
       </div>
+      <!-- CONTENT - END -->
     </div>
-    <!-- //////////////////////////////////////////// HEADER - END //////////////////////////////////////////// -->
-    <!-- Overall calculation guideline -->
-    <div id="dashboard_helptext_V3" class="modals" style="display: none">
-      <div class="modal_wrapper">
-        <div class="modal_content">
-          <!-- HEADER - START -->
-          <div class="header">
-            <span id="closeBtn_V3" class="govuk-heading-s close_button"
-              >close <span class="close">&times;</span></span
-            >
-            <h1 class="govuk-heading-m">
-              Validation Rules & Methodology - Overall Data
-            </h1>
-          </div>
-          <!-- HEADER - END -->
-          <!-- CONTENT - START -->
-          <div class="content">
-            <!-- -->
-            <!-- SECTION 1 - START -->
-            <h2 class="govuk-heading-m">Activity Scope</h2>
-            <h3 class="govuk-heading-s">Included Activities</h3>
-            <p>
-              The assessment covers
-              <strong>all Programmes (H1 activities)</strong> at implementation
-              stage and <strong>all Projects (H2 activities)</strong> where
-              appropriate — that is, where the relevant data element exists.
-              Activities closed within the <strong>last 18 months</strong> are
-              also included (month-level accuracy; day precision is not
-              required).
-            </p>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Status Code</th>
-                  <th scope="col" class="govuk-table__header">Label</th>
-                  <th scope="col" class="govuk-table__header">Included</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">1</strong>
-                  </th>
-                  <td class="govuk-table__cell">Pipeline / Identification</td>
-                  <td class="govuk-table__cell">Yes (very few instances)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">2</strong>
-                  </th>
-                  <td class="govuk-table__cell">Implementation</td>
-                  <td class="govuk-table__cell">Yes</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">4</strong>
-                  </th>
-                  <td class="govuk-table__cell">Closed</td>
-                  <td class="govuk-table__cell">
-                    Yes — within last 18 months only
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    <strong class="govuk-tag">3 / 5 / 6</strong>
-                  </th>
-                  <td class="govuk-table__cell">
-                    Finalisation / Cancelled / Suspended
-                  </td>
-                  <td class="govuk-table__cell">No</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 1 - END -->
+  </div>
+</div>
 
-            <!-- SECTION 2 - START -->
-            <h2 class="govuk-heading-m govuk-!-margin-top-8">
-              Total Budget Calculation
-            </h2>
-            <h3 class="govuk-heading-s">Financial Year (April–March)</h3>
-            <p>
-              The <strong>Total Budget</strong> is the sum of all
-              <strong class="blue">budget</strong> elements across
-              <strong>H2 activities (projects)</strong> whose
-              <strong class="blue">period-start</strong> and
-              <strong class="blue">period-end</strong> fall within the current
-              Financial Year (1 April – 31 March). Budgets are included
-              regardless of the programme's activity status, because the budget
-              period may differ from the 18-month activity scope window.
-            </p>
-            <!-- SECTION 2 - END -->
-
-            <!-- SECTION 3 - START -->
-            <hr
-              class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
-            />
-            <h2 class="govuk-heading-m govuk-!-margin-top-0">
-              Attribute Validation Rules
-            </h2>
-            <p>
-              Applies to both H1 (programmes) and H2 (projects) unless noted.
-              Each attribute contributes a
-              <strong>percentage score</strong> (0–100) which feeds into the RAG
-              ratings.
-            </p>
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Title</h3>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2"
-              >Source: title.narrative (first element)</span
-            >
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Title is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Length &lt 60 characters
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Title is too short (N characters, minimum 60 required)
-                  </td>
-                  <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 3 - END -->
-            <br><br>
-            <!-- SECTION 4 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Description</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Description is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Description equals title (case-insensitive)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Description is a repeat of the title
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    len(description) ≤ len(title)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Description must be longer than title
-                  </td>
-                  <td class="govuk-table__cell align_right">
-                    len(description) ÷ len(title) × 100 < 100%
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 4 - END -->
-            <br><br>
-
-            <!-- SECTION 5 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Start Date</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">Start date is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Matches a known default/system date
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Start date is a default system date: YYYY-MM-DD
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Cannot be parsed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Invalid start date format: ...
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <!-- SECTION 5 - END -->
-            <br><br>
-
-            <!-- SECTION 6 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">End Date</h3>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2"
-              >Source: activity-date.end-planned (preferred) or
-              activity-date.end-actual</span
-            >
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Both end date fields missing
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">End date is missing</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Cannot be parsed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Invalid end date format: ...
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    End date ≤ start date (when start date present)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    End date must be after start date
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 6 - END -->
-            <br><br>
-
-            <!-- SECTION 7 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Sector</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    No activity-level AND no transaction-level sectors
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">No sectors defined</td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    No activity-level sectors, transaction-level present
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No activity-level sectors defined, only transaction-level
-                    sectors
-                  </td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Any sector code is not exactly 5 digits
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    All sectors must use 5-digit DAC CRS codes
-                  </td>
-                  <td class="govuk-table__cell align_right">
-                    (valid ÷ total) × 100 < 100%
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Sector percentages present and do not sum to 100% (±0.02)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Sector percentages must sum to 100% (got N%)
-                  </td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    All checks pass
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 7 - END -->
-            <br><br>
-
-            <!-- SECTION 8 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Location</h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path A — transaction-level country/region codes present
-                    (takes priority)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No activity-level locations defined, only transaction-level
-                    locations
-                  </td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — no codes at all (no percentages, no transaction
-                    codes)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No location (country or region) specified
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — exactly one country/region code (100% implied)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path B — multiple codes, no percentages
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Multiple locations specified without percentages
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path C — activity-level percentages present, do not sum to
-                    100%
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Location percentages must sum to 100% (got N%)
-                  </td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Path C — percentages sum to 100% (±0.02)
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">—--</td>
-                  <td class="govuk-table__cell align_right">actual sum</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 8 - END -->
-            <br><br>
-
-            <!-- SECTION 9 - START -->
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
-              Participating Organisations
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                  <th scope="col" class="govuk-table__header align_right">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Field missing or all values empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    No participating organisations defined
-                  </td>
-                  <td class="govuk-table__cell align_right">0%</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    At least one organisation present
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">—--</td>
-                  <td class="govuk-table__cell align_right">100%</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 9 - END -->
-            <br><br>
-            <!-- Partner Links -->
-            <h2 class="govuk-heading-m">
-              Partner Links
-            </h2>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    At least one partner organisation has published an activity in IATI that links back to this H1 activity or one of its related H2 Activities
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    —--
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    There are no published activities in IATI that link back to this H1 activity or any of its related H2 Activities
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">No partner organisations have linked their activity data to this activity</td>
-                </tr>
-              </tbody>
-            </table>
-            <br><br>
-            <!-- Documents -->
-            <!-- SECTION 1 - START -->
-            <h2 class="govuk-heading-m">Document Validation Rules</h2>
-            <p>
-              Document checks apply to
-              <strong>H1 activities (programmes) only</strong>.</p>
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
-            >
-              Business Case
-            </h3>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 3 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 3 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Business Case published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Business Case not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Business Case document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 1 - END -->
-
-            <!-- SECTION 2 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Logical Framework
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 3 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 3 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Logical Framework published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Logical Framework not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Logical Framework document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 2 - END -->
-
-            <!-- SECTION 3 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Annual Review
-            </h3>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    The H1 activity started within the last 19 months
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    As the activity started less than 19 months ago, it will not be considered for this test
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Annual Review published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Annual Review not published
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Annual Review document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- SECTION 3 - END -->
-            <!-- SECTION 4 - START -->
-            <h3
-              class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
-            >
-              Programme Completion Review
-            </h3>
-            <%# <p><strong class="blue">/Annual Review.*Published/i</strong></p> %>
-            <table class="govuk-table govuk-!-margin-bottom-2">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Condition</th>
-                  <th scope="col" class="govuk-table__header">Status</th>
-                  <th scope="col" class="govuk-table__header">Message</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is not set to closed
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Actual activity end date is empty
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Actual activity end date <= 6 months ago
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--grey">N/A</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Activity is exempt from document requirements
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is set to closed, actual end date is more than 6 months old and PCR is published.
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--green">PASS</strong>
-                  </td>
-                  <td class="govuk-table__cell">---</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">
-                    Activity status code is set to closed, actual end date is more than 6 months old but PCR has not been published yet.
-                  </th>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--red">FAIL</strong>
-                  </td>
-                  <td class="govuk-table__cell">
-                    Programme Completion Review document not published
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- CONTENT - END -->
-        </div>
+<!-- ==================== MODAL V2: DOCUMENT PUBLICATION ==================== -->
+<div
+  id="dashboard_helptext_V2"
+  class="modals"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle_V2"
+  aria-describedby="modalDesc_V2"
+  style="display: none"
+>
+  <div class="modal_wrapper">
+    <div class="modal_content">
+      <!-- HEADER - START -->
+      <div class="header">
+        <button
+          type="button"
+          id="closeBtn_V2"
+          class="govuk-heading-s close_button"
+          aria-label="Close Validation Rules and Methodology - Document Publication"
+        >
+          close <span class="close" aria-hidden="true">&times;</span>
+        </button>
+        <h2 id="modalTitle_V2" class="govuk-heading-m">
+          Validation Rules &amp; Methodology - Document Publication
+        </h2>
+        <p id="modalDesc_V2" class="govuk-visually-hidden">
+          Explains document publication rules for H1 programme activities,
+          covering Business Case, Logical Framework, Annual Review, and
+          Programme Completion Review.
+        </p>
       </div>
+      <!-- HEADER - END -->
+
+      <!-- CONTENT - START -->
+      <div
+        class="content"
+        role="region"
+        aria-label="Document publication validation rules and methodology"
+        tabindex="0"
+      >
+        <!-- SECTION 1 - START -->
+        <h3 class="govuk-heading-m">Document Validation Rules</h3>
+        <p>
+          Document checks apply to
+          <strong>H1 activities (programmes) only</strong>.
+        </p>
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
+        >
+          Business Case
+        </h4>
+        <table class="govuk-table">
+          <caption class="govuk-visually-hidden">
+            Business Case document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 3 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 3 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Business Case published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Business Case not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Business Case document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 1 - END -->
+
+        <!-- SECTION 2 - START -->
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Logical Framework
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Logical Framework document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 3 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 3 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Logical Framework published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Logical Framework not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Logical Framework document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 2 - END -->
+
+        <!-- SECTION 3 - START -->
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Annual Review
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Annual Review document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 19 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 19 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Annual Review published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Annual Review not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Annual Review document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 3 - END -->
+
+        <!-- SECTION 4 - START -->
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Programme Completion Review
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Programme Completion Review document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is not set to closed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Actual activity end date is empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Actual activity end date &le; 6 months ago
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is set to closed, actual end date is more
+                than 6 months old and PCR is published.
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is set to closed, actual end date is more
+                than 6 months old but PCR has not been published yet.
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Programme Completion Review document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 4 - END -->
+      </div>
+      <!-- CONTENT - END -->
     </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL V3: OVERALL DATA ==================== -->
+<div
+  id="dashboard_helptext_V3"
+  class="modals"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle_V3"
+  aria-describedby="modalDesc_V3"
+  style="display: none"
+>
+  <div class="modal_wrapper">
+    <div class="modal_content">
+      <!-- HEADER - START -->
+      <div class="header">
+        <button
+          type="button"
+          id="closeBtn_V3"
+          class="govuk-heading-s close_button"
+          aria-label="Close Validation Rules and Methodology - Overall Data"
+        >
+          close <span class="close" aria-hidden="true">&times;</span>
+        </button>
+        <h2 id="modalTitle_V3" class="govuk-heading-m">
+          Validation Rules &amp; Methodology - Overall Data
+        </h2>
+        <p id="modalDesc_V3" class="govuk-visually-hidden">
+          Explains the complete overall methodology including activity scope,
+          financial year budget calculation, attribute validation rules, IATI
+          partner links, and H1 document publication rules.
+        </p>
+      </div>
+      <!-- HEADER - END -->
+
+      <!-- CONTENT - START -->
+      <div
+        class="content"
+        role="region"
+        aria-label="Overall validation rules and methodology"
+        tabindex="0"
+      >
+        <!-- SECTION 1 - START -->
+        <h3 class="govuk-heading-m">Activity Scope</h3>
+        <h4 class="govuk-heading-s">Included Activities</h4>
+        <p>
+          The assessment covers
+          <strong>all Programmes (H1 activities)</strong> at implementation
+          stage and <strong>all Projects (H2 activities)</strong> where
+          appropriate — that is, where the relevant data element exists.
+          Activities closed within the <strong>last 18 months</strong> are
+          also included (month-level accuracy; day precision is not
+          required).
+        </p>
+        <table class="govuk-table">
+          <caption class="govuk-visually-hidden">
+            Activity status codes included in overall assessment
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Status Code</th>
+              <th scope="col" class="govuk-table__header">Label</th>
+              <th scope="col" class="govuk-table__header">Included</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">1</strong>
+              </th>
+              <td class="govuk-table__cell">Pipeline / Identification</td>
+              <td class="govuk-table__cell">Yes (very few instances)</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">2</strong>
+              </th>
+              <td class="govuk-table__cell">Implementation</td>
+              <td class="govuk-table__cell">Yes</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">4</strong>
+              </th>
+              <td class="govuk-table__cell">Closed</td>
+              <td class="govuk-table__cell">
+                Yes — within last 18 months only
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                <strong class="govuk-tag">3 / 5 / 6</strong>
+              </th>
+              <td class="govuk-table__cell">
+                Finalisation / Cancelled / Suspended
+              </td>
+              <td class="govuk-table__cell">No</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 1 - END -->
+
+        <!-- SECTION 2 - START -->
+        <h3 class="govuk-heading-m govuk-!-margin-top-8">
+          Total Budget Calculation
+        </h3>
+        <h4 class="govuk-heading-s">Financial Year (April–March)</h4>
+        <p>
+          The <strong>Total Budget</strong> is the sum of all
+          <strong class="blue">budget</strong> elements across
+          <strong>H2 activities (projects)</strong> whose
+          <strong class="blue">period-start</strong> and
+          <strong class="blue">period-end</strong> fall within the current
+          Financial Year (1 April – 31 March). Budgets are included
+          regardless of the programme's activity status, because the budget
+          period may differ from the 18-month activity scope window.
+        </p>
+        <!-- SECTION 2 - END -->
+
+        <!-- SECTION 3 - START -->
+        <hr
+          class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
+        />
+        <h3 class="govuk-heading-m govuk-!-margin-top-0">
+          Attribute Validation Rules
+        </h3>
+        <p>
+          Applies to both H1 (programmes) and H2 (projects) unless noted.
+          Each attribute contributes a
+          <strong>percentage score</strong> (0–100) which feeds into the RAG
+          ratings.
+        </p>
+        <h4 class="govuk-heading-s govuk-!-margin-bottom-0">Title</h4>
+        <span class="govuk-caption-m govuk-!-margin-bottom-2"
+          >Source: title.narrative (first element)</span
+        >
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Title validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Title is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Length &lt; 60 characters
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Title is too short (N characters, minimum 60 required)
+              </td>
+              <td class="govuk-table__cell align_right">len ÷ 60 × 100</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 3 - END -->
+
+        <!-- SECTION 4 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Description
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Description validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Description is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Description equals title (case-insensitive)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Description is a repeat of the title
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                len(description) &le; len(title)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Description must be longer than title
+              </td>
+              <td class="govuk-table__cell align_right">
+                len(description) &divide; len(title) &times; 100 &lt; 100%
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 4 - END -->
+
+        <!-- SECTION 5 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Start Date
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Start Date validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">Start date is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Matches a known default/system date
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Start date is a default system date: YYYY-MM-DD
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Cannot be parsed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Invalid start date format: ...
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 5 - END -->
+
+        <!-- SECTION 6 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          End Date
+        </h4>
+        <span class="govuk-caption-m govuk-!-margin-bottom-2"
+          >Source: activity-date.end-planned (preferred) or
+          activity-date.end-actual</span
+        >
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            End Date validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Both end date fields missing
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">End date is missing</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Cannot be parsed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Invalid end date format: ...
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                End date &le; start date (when start date present)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                End date must be after start date
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 6 - END -->
+
+        <!-- SECTION 7 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Sector
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Sector validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                No activity-level AND no transaction-level sectors
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">No sectors defined</td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                No activity-level sectors, transaction-level present
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No activity-level sectors defined, only transaction-level
+                sectors
+              </td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Any sector code is not exactly 5 digits
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                All sectors must use 5-digit DAC CRS codes
+              </td>
+              <td class="govuk-table__cell align_right">
+                (valid &divide; total) &times; 100 &lt; 100%
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Sector percentages present and do not sum to 100% (&plusmn;0.02)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Sector percentages must sum to 100% (got N%)
+              </td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                All checks pass
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 7 - END -->
+
+        <!-- SECTION 8 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Location
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Location validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path A — transaction-level country/region codes present
+                (takes priority)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No activity-level locations defined, only transaction-level
+                locations
+              </td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — no codes at all (no percentages, no transaction
+                codes)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No location (country or region) specified
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — exactly one country/region code (100% implied)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path B — multiple codes, no percentages
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Multiple locations specified without percentages
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path C — activity-level percentages present, do not sum to
+                100%
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Location percentages must sum to 100% (got N%)
+              </td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Path C — percentages sum to 100% (&plusmn;0.02)
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">actual sum</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 8 - END -->
+
+        <!-- SECTION 9 - START -->
+        <h4 class="govuk-heading-s govuk-!-margin-top-6 govuk-!-margin-bottom-0">
+          Participating Organisations
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Participating Organisations validation rules and percentage scores
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+              <th scope="col" class="govuk-table__header align_right">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Field missing or all values empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No participating organisations defined
+              </td>
+              <td class="govuk-table__cell align_right">0%</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                At least one organisation present
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+              <td class="govuk-table__cell align_right">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- SECTION 9 - END -->
+
+        <!-- PARTNER LINKS - START -->
+        <h3 class="govuk-heading-m govuk-!-margin-top-8">Partner Links</h3>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Partner Links validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                At least one partner organisation has published an activity in
+                IATI that links back to this H1 activity or one of its related
+                H2 Activities
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                There are no published activities in IATI that link back to this
+                H1 activity or any of its related H2 Activities
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                No partner organisations have linked their activity data to this
+                activity
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- PARTNER LINKS - END -->
+
+        <!-- DOCUMENTS - START -->
+        <h3 class="govuk-heading-m govuk-!-margin-top-8">
+          Document Validation Rules
+        </h3>
+        <p>
+          Document checks apply to
+          <strong>H1 activities (programmes) only</strong>.
+        </p>
+
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2"
+        >
+          Business Case
+        </h4>
+        <table class="govuk-table">
+          <caption class="govuk-visually-hidden">
+            Business Case document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 3 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 3 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Business Case published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Business Case not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Business Case document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Logical Framework
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Logical Framework document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 3 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 3 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Logical Framework published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Logical Framework not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Logical Framework document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Annual Review
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Annual Review document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                The H1 activity started within the last 19 months
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                As the activity started less than 19 months ago, it will not be
+                considered for this test
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Annual Review published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Annual Review not published
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Annual Review document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4
+          class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-8"
+        >
+          Programme Completion Review
+        </h4>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+          <caption class="govuk-visually-hidden">
+            Programme Completion Review document validation rules
+          </caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Condition</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is not set to closed
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Actual activity end date is empty
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Actual activity end date &le; 6 months ago
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--grey">N/A</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Activity is exempt from document requirements
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is set to closed, actual end date is more
+                than 6 months old and PCR is published.
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">PASS</strong>
+              </td>
+              <td class="govuk-table__cell">Not applicable</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">
+                Activity status code is set to closed, actual end date is more
+                than 6 months old but PCR has not been published yet.
+              </th>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--red">FAIL</strong>
+              </td>
+              <td class="govuk-table__cell">
+                Programme Completion Review document not published
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- DOCUMENTS - END -->
+      </div>
+      <!-- CONTENT - END -->
+    </div>
+  </div>
+</div>
     <!-- //////////////////////////////////////////// HEADER - START //////////////////////////////////////////// -->
     <header class="govuk-template__header old_nav">
       <!-- ====================== GDS BANNER - START ====================== -->
