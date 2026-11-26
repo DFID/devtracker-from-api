@@ -442,7 +442,8 @@ end
 
 # Project summary page
 get '/programme/*/summary' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	#n = sanitize_input(n,"p")
 	check_if_project_exists(n)
 	# get the project data from the API
@@ -496,7 +497,8 @@ end
 
 # Project documents page
 get '/programme/*/documents/?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_documents(n)
@@ -513,7 +515,8 @@ end
 
 #Project transactions page
 get '/programme/*/transactions/?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_detailsv2(n)
@@ -529,7 +532,8 @@ end
 
 #Project transactions page
 get '/programme/*/projects/?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_detailsv2(n)
@@ -559,7 +563,8 @@ post '/transaction-details' do
 end
 
 get '/transaction-count/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	json :output => get_transaction_countv2(n)
 end
 
@@ -580,7 +585,8 @@ post '/transaction-total' do
 end
 
 get '/component-list/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	oipa = RestClient.get  api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=related_activity_ref&rows=1")
     project = JSON.parse(oipa)['response']['docs'].first
 	json :output => project['related_activity_ref']
@@ -588,7 +594,8 @@ end
 
 # Get yearly budget for H1 Activity from the API
 get '/project-yearwise-budget/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	projectYearWiseBudgets= get_project_yearwise_budgetv2(n)
 	json :output=> projectYearWiseBudgets
 end
@@ -607,7 +614,8 @@ end
 
 # Get total project budget
 get '/total-project-budget/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	project = get_h1_project_detailsv2(n)
 	projectYearWiseBudgets= get_project_yearwise_budget(n)
 	totalProjectBudget=get_sum_budget(projectYearWiseBudgets).to_f
@@ -620,7 +628,8 @@ get '/total-project-budget/*?' do
 end
 
 get '/total-project-budgetv2/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	programmeBudgets = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}*&fl=budget_value,default-currency&rows=200")
 	programmeBudgets = JSON.parse(programmeBudgets)['response']['docs']
 	totalBudget = 0
@@ -640,7 +649,8 @@ get '/total-project-budgetv2/*?' do
 end
 
 get '/project-details/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	#oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activities/#{n}/?format=json&fields=iati_identifier,title,description,activity_date")
 	oipa = RestClient.get api_simple_log(settings.oipa_api_url + "activity/?q=iati_identifier:#{n}&fl=iati_identifier,title_narrative,description_narrative,activity_date_type,activity_date_iso_date&rows=1")
 	oipa = JSON.parse(oipa)['response']['docs'].first
@@ -654,32 +664,38 @@ get '/project-details/*?' do
 end
 
 get '/country-or-region/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	json :output=> get_country_or_regionv2(n)
 end
 
 # Get the funding projects Count from the API
 get '/get-funding-projects/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	json :output=> get_funding_project_countv2(n)
 end
 
 # Get funded project counts
 get '/get-funded-projects/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	json :output=> get_funded_project_countv2(n)
 end
 
 # projects that are funded by this target project
 get '/get-funded-projects-page/:page/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
-	page = ERB::Util.url_encode params[:page].to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
+	#page = ERB::Util.url_encode params[:page].to_s
+	page = ERB::Util.html_escape(params[:page].to_s.strip)
 	json :output=> get_funded_project_details_pagev2(n, page, 20)
 end
 
 # projects that are funding this target project
 get '/get-funding-projects-details/*?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	#n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	json :output=> get_funding_project_detailsv2(n)
 end
 
@@ -687,7 +703,7 @@ end
 ######################################################################
 #Project partners page
 get '/programme/*/partners/?' do
-	n = ERB::Util.url_encode (params['splat'][0]).to_s
+	n = ERB::Util.html_escape(params['splat'][0].to_s.strip)
 	check_if_project_exists(n)
 	# get the project data from the API
 	project = get_h1_project_detailsv2(n)
@@ -951,7 +967,8 @@ get '/search/?' do
 end
 
 post '/search_p/?' do
-	query = sanitize_input(params['query'],"newId")
+	#query = sanitize_input(params['query'],"newId")
+	query = h(params['query'].to_s)
 	isIncludeClosedProjects = sanitize_input(params['includeClosedProject'],"newId")
 	if(isIncludeClosedProjects.to_i != 1)
 		activityStatuses = '&fq=activity_status_code:(2)'

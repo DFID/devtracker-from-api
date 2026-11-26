@@ -4,6 +4,10 @@ include ActionView::Helpers::NumberHelper
 
 module CommonHelpers
 
+  def h(text)
+    Rack::Utils.escape_html(text.to_s)
+  end
+  
   def api_simple_log(apiLink)
     if(settings.log_api_calls)
       open('data/apiTelem/api_out.tsv', 'a') do |f|
